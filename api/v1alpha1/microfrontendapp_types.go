@@ -17,11 +17,23 @@ limitations under the License.
 package v1alpha1
 
 import (
+	corev1 "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
 
 // EDIT THIS FILE!  THIS IS SCAFFOLDING FOR YOU TO OWN!
 // NOTE: json tags are required.  Any new fields you add must have json tags for the fields to be serialized.
+
+// MicroFrontEndAppSource defines the source of a micro-frontend application.
+type MicroFrontEndAppSource struct {
+	// URL of the application source. This can be a Git repository, an archive, or an OCI artifact.
+	// +kubebuilder:validation:Required
+	URL string `json:"url"`
+
+	// SecretRef is a reference to a secret containing authentication credentials for the source.
+	// +optional
+	SecretRef *corev1.LocalObjectReference `json:"secretRef,omitempty"`
+}
 
 // MicroFrontEndAppSpec defines the desired state of MicroFrontEndApp
 type MicroFrontEndAppSpec struct {
@@ -30,9 +42,9 @@ type MicroFrontEndAppSpec struct {
 	// The following markers will use OpenAPI v3 schema to validate the value
 	// More info: https://book.kubebuilder.io/reference/markers/crd-validation.html
 
-	// foo is an example field of MicroFrontEndApp. Edit microfrontendapp_types.go to remove/update
-	// +optional
-	Foo *string `json:"foo,omitempty"`
+	// Source defines the source of the micro-frontend application.
+	// +kubebuilder:validation:Required
+	Source MicroFrontEndAppSource `json:"source"`
 }
 
 // MicroFrontEndAppStatus defines the observed state of MicroFrontEndApp.
