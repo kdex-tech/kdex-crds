@@ -24,26 +24,26 @@ import (
 // EDIT THIS FILE!  THIS IS SCAFFOLDING FOR YOU TO OWN!
 // NOTE: json tags are required.  Any new fields you add must have json tags for the fields to be serialized.
 
-// MicroFrontEndAppSource defines the source of a micro-frontend application.
-type MicroFrontEndAppSource struct {
-	// URL of the application source. This can be a Git repository, an archive, or an OCI artifact.
-	// +kubebuilder:validation:Required
-	URL string `json:"url"`
-
-	// SecretRef is a reference to a secret containing authentication credentials for the source.
-	// +optional
-	SecretRef *corev1.LocalObjectReference `json:"secretRef,omitempty"`
-}
-
 // CustomElement defines a custom element exposed by a micro-frontend application.
 type CustomElement struct {
-	// Name of the custom element.
-	// +kubebuilder:validation:Required
-	Name string `json:"name"`
-
 	// Description of the custom element.
 	// +optional
 	Description string `json:"description,omitempty"`
+
+	// Name of the custom element.
+	// +kubebuilder:validation:Required
+	Name string `json:"name"`
+}
+
+// MicroFrontEndAppSource defines the source of a micro-frontend application.
+type MicroFrontEndAppSource struct {
+	// SecretRef is a reference to a secret containing authentication credentials for the source.
+	// +optional
+	SecretRef *corev1.LocalObjectReference `json:"secretRef,omitempty"`
+
+	// URL of the application source. This can be a Git repository, an archive, or an OCI artifact.
+	// +kubebuilder:validation:Required
+	URL string `json:"url"`
 }
 
 // MicroFrontEndAppSpec defines the desired state of MicroFrontEndApp
@@ -53,13 +53,13 @@ type MicroFrontEndAppSpec struct {
 	// The following markers will use OpenAPI v3 schema to validate the value
 	// More info: https://book.kubebuilder.io/reference/markers/crd-validation.html
 
-	// Source defines the source of the micro-frontend application.
-	// +kubebuilder:validation:Required
-	Source MicroFrontEndAppSource `json:"source"`
-
 	// CustomElements is a list of custom elements exposed by the micro-frontend application.
 	// +optional
 	CustomElements []CustomElement `json:"customElements,omitempty"`
+
+	// Source defines the source of the micro-frontend application.
+	// +kubebuilder:validation:Required
+	Source MicroFrontEndAppSource `json:"source"`
 }
 
 // MicroFrontEndAppStatus defines the observed state of MicroFrontEndApp.
