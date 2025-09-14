@@ -60,9 +60,17 @@ type MicroFrontEndAppBindingSpec struct {
 	// The following markers will use OpenAPI v3 schema to validate the value
 	// More info: https://book.kubebuilder.io/reference/markers/crd-validation.html
 
+	// Label is the default name used in menus and for pages before localization occurs (or when no translation exists for the current language).
+	// +kubebuilder:validation:Required
+	Label string `json:"label"`
+
 	// MicroFrontEndAppRef is a reference to the MicroFrontEndApp that this binding is for.
 	// +kubebuilder:validation:Required
 	MicroFrontEndAppRef corev1.LocalObjectReference `json:"microFrontEndAppRef"`
+
+	// Path is the path at which the application will be mounted in the application server context.
+	// +kubebuilder:validation:Required
+	Path string `json:"path"`
 
 	// TemplateRef is a reference to the MicroFrontEndTemplate that will be used to render the application.
 	// +kubebuilder:validation:Required

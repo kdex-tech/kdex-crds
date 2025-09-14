@@ -40,6 +40,11 @@ spec:
           spec:
             description: spec defines the desired state of MicroFrontEndAppBinding
             properties:
+              label:
+                description: Label is the default name used in menus and for pages
+                  before localization occurs (or when no translation exists for the
+                  current language).
+                type: string
               microFrontEndAppRef:
                 description: MicroFrontEndAppRef is a reference to the MicroFrontEndApp
                   that this binding is for.
@@ -55,6 +60,10 @@ spec:
                     type: string
                 type: object
                 x-kubernetes-map-type: atomic
+              path:
+                description: Path is the path at which the application will be mounted
+                  in the application server context.
+                type: string
               templateRef:
                 description: TemplateRef is a reference to the MicroFrontEndTemplate
                   that will be used to render the application.
@@ -71,7 +80,9 @@ spec:
                 type: object
                 x-kubernetes-map-type: atomic
             required:
+            - label
             - microFrontEndAppRef
+            - path
             - templateRef
             type: object
           status:
