@@ -39,6 +39,23 @@ spec:
           spec:
             description: spec defines the desired state of MicroFrontEndApp
             properties:
+              customElements:
+                description: CustomElements is a list of custom elements exposed by
+                  the micro-frontend application.
+                items:
+                  description: CustomElement defines a custom element exposed by a
+                    micro-frontend application.
+                  properties:
+                    description:
+                      description: Description of the custom element.
+                      type: string
+                    name:
+                      description: Name of the custom element.
+                      type: string
+                  required:
+                  - name
+                  type: object
+                type: array
               source:
                 description: Source defines the source of the micro-frontend application.
                 properties:

@@ -35,6 +35,17 @@ type MicroFrontEndAppSource struct {
 	SecretRef *corev1.LocalObjectReference `json:"secretRef,omitempty"`
 }
 
+// CustomElement defines a custom element exposed by a micro-frontend application.
+type CustomElement struct {
+	// Name of the custom element.
+	// +kubebuilder:validation:Required
+	Name string `json:"name"`
+
+	// Description of the custom element.
+	// +optional
+	Description string `json:"description,omitempty"`
+}
+
 // MicroFrontEndAppSpec defines the desired state of MicroFrontEndApp
 type MicroFrontEndAppSpec struct {
 	// INSERT ADDITIONAL SPEC FIELDS - desired state of cluster
@@ -45,6 +56,10 @@ type MicroFrontEndAppSpec struct {
 	// Source defines the source of the micro-frontend application.
 	// +kubebuilder:validation:Required
 	Source MicroFrontEndAppSource `json:"source"`
+
+	// CustomElements is a list of custom elements exposed by the micro-frontend application.
+	// +optional
+	CustomElements []CustomElement `json:"customElements,omitempty"`
 }
 
 // MicroFrontEndAppStatus defines the observed state of MicroFrontEndApp.
