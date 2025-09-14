@@ -60,6 +60,10 @@ spec:
                     type: string
                 type: object
                 x-kubernetes-map-type: atomic
+              parent:
+                description: Parent is an optional menu item property that can express
+                  a hierarchical path using slashes.
+                type: string
               path:
                 description: Path is the path at which the application will be mounted
                   in the application server context.
@@ -79,6 +83,14 @@ spec:
                     type: string
                 type: object
                 x-kubernetes-map-type: atomic
+              weight:
+                anyOf:
+                - type: integer
+                - type: string
+                description: Weight is an optional property that can influence the
+                  position of the application menu entry.
+                pattern: ^(\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))(([KMGTPE]i)|[numkMGTPE]|([eE](\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))))?$
+                x-kubernetes-int-or-string: true
             required:
             - label
             - microFrontEndAppRef

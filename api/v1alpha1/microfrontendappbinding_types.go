@@ -18,6 +18,7 @@ package v1alpha1
 
 import (
 	corev1 "k8s.io/api/core/v1"
+	"k8s.io/apimachinery/pkg/api/resource"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
 
@@ -68,6 +69,10 @@ type MicroFrontEndAppBindingSpec struct {
 	// +kubebuilder:validation:Required
 	MicroFrontEndAppRef corev1.LocalObjectReference `json:"microFrontEndAppRef"`
 
+	// Parent is an optional menu item property that can express a hierarchical path using slashes.
+	// +optional
+	Parent string `json:"parent,omitempty"`
+
 	// Path is the path at which the application will be mounted in the application server context.
 	// +kubebuilder:validation:Required
 	Path string `json:"path"`
@@ -75,6 +80,10 @@ type MicroFrontEndAppBindingSpec struct {
 	// TemplateRef is a reference to the MicroFrontEndTemplate that will be used to render the application.
 	// +kubebuilder:validation:Required
 	TemplateRef corev1.LocalObjectReference `json:"templateRef"`
+
+	// Weight is an optional property that can influence the position of the application menu entry.
+	// +optional
+	Weight resource.Quantity `json:"weight,omitempty"`
 }
 
 // MicroFrontEndAppBindingStatus defines the observed state of MicroFrontEndAppBinding.
