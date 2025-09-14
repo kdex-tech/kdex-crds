@@ -3,6 +3,7 @@
 # It should be run by config/default
 resources:
 - bases/kdex.dev_microfrontendapps.yaml
+- bases/kdex.dev_microfrontendappbindings.yaml
 # +kubebuilder:scaffold:crdkustomizeresource
 
 patches:
