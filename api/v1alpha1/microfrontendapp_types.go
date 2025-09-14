@@ -35,6 +35,35 @@ type CustomElement struct {
 	Name string `json:"name"`
 }
 
+// +kubebuilder:object:root=true
+// +kubebuilder:subresource:status
+
+// MicroFrontEndApp is the Schema for the microfrontendapps API
+type MicroFrontEndApp struct {
+	metav1.TypeMeta `json:",inline"`
+
+	// metadata is a standard object metadata
+	// +optional
+	metav1.ObjectMeta `json:"metadata,omitempty,omitzero"`
+
+	// spec defines the desired state of MicroFrontEndApp
+	// +required
+	Spec MicroFrontEndAppSpec `json:"spec"`
+
+	// status defines the observed state of MicroFrontEndApp
+	// +optional
+	Status MicroFrontEndAppStatus `json:"status,omitempty,omitzero"`
+}
+
+// +kubebuilder:object:root=true
+
+// MicroFrontEndAppList contains a list of MicroFrontEndApp
+type MicroFrontEndAppList struct {
+	metav1.TypeMeta `json:",inline"`
+	metav1.ListMeta `json:"metadata,omitempty"`
+	Items           []MicroFrontEndApp `json:"items"`
+}
+
 // MicroFrontEndAppSource defines the source of a micro-frontend application.
 type MicroFrontEndAppSource struct {
 	// SecretRef is a reference to a secret containing authentication credentials for the source.
@@ -83,35 +112,6 @@ type MicroFrontEndAppStatus struct {
 	// +listMapKey=type
 	// +optional
 	Conditions []metav1.Condition `json:"conditions,omitempty"`
-}
-
-// +kubebuilder:object:root=true
-// +kubebuilder:subresource:status
-
-// MicroFrontEndApp is the Schema for the microfrontendapps API
-type MicroFrontEndApp struct {
-	metav1.TypeMeta `json:",inline"`
-
-	// metadata is a standard object metadata
-	// +optional
-	metav1.ObjectMeta `json:"metadata,omitempty,omitzero"`
-
-	// spec defines the desired state of MicroFrontEndApp
-	// +required
-	Spec MicroFrontEndAppSpec `json:"spec"`
-
-	// status defines the observed state of MicroFrontEndApp
-	// +optional
-	Status MicroFrontEndAppStatus `json:"status,omitempty,omitzero"`
-}
-
-// +kubebuilder:object:root=true
-
-// MicroFrontEndAppList contains a list of MicroFrontEndApp
-type MicroFrontEndAppList struct {
-	metav1.TypeMeta `json:",inline"`
-	metav1.ListMeta `json:"metadata,omitempty"`
-	Items           []MicroFrontEndApp `json:"items"`
 }
 
 func init() {
