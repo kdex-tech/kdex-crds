@@ -4,6 +4,7 @@
 resources:
 - bases/kdex.dev_microfrontendapps.yaml
 - bases/kdex.dev_microfrontendappbindings.yaml
+- bases/kdex.dev_microfrontendtemplates.yaml
 # +kubebuilder:scaffold:crdkustomizeresource
 
 patches:
