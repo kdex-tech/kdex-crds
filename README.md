@@ -1,8 +1,74 @@
 # kdex-crds
-// TODO(user): Add simple overview of use/purpose
+
+This project contains a set of Custom Resource Definitions (CRDs) for managing micro-frontend applications in Kubernetes.
 
 ## Description
-// TODO(user): An in-depth paragraph about your project and overview of use
+
+The `kdex-crds` project provides the following CRDs:
+
+- `MicroFrontEndApp`: Represents a micro-frontend application, including its source code and the custom elements it exposes.
+- `MicroFrontEndTemplate`: Defines an HTML template for rendering a micro-frontend.
+- `MicroFrontEndAppBinding`: Binds a `MicroFrontEndApp` to a `MicroFrontEndTemplate` at a specific path, making it accessible.
+
+These CRDs work together to provide a flexible and declarative way to manage micro-frontends in a Kubernetes environment.
+
+### MicroFrontEndApp
+
+A `MicroFrontEndApp` resource defines a micro-frontend application. Here is an example:
+
+```yaml
+apiVersion: kdex.dev/v1alpha1
+kind: MicroFrontEndApp
+metadata:
+  name: my-app
+spec:
+  source:
+    url: "https://github.com/my-org/my-app.git"
+  customElements:
+    - name: "my-element"
+      description: "A custom element"
+```
+
+### MicroFrontEndTemplate
+
+A `MicroFrontEndTemplate` resource defines an HTML template for rendering a micro-frontend. Here is an example:
+
+```yaml
+apiVersion: kdex.dev/v1alpha1
+kind: MicroFrontEndTemplate
+metadata:
+  name: my-template
+spec:
+  body: |
+    <!DOCTYPE html>
+    <html>
+      <head>
+        <title>{{ .Values.label }}</title>
+      </head>
+      <body>
+        <div id="root"></div>
+        <script src="{{ .Values.path }}"></script>
+      </body>
+    </html>
+```
+
+### MicroFrontEndAppBinding
+
+A `MicroFrontEndAppBinding` resource binds a `MicroFrontEndApp` to a `MicroFrontEndTemplate` at a specific path. Here is an example:
+
+```yaml
+apiVersion: kdex.dev/v1alpha1
+kind: MicroFrontEndAppBinding
+metadata:
+  name: my-app-binding
+spec:
+  label: "My App"
+  path: "/my-app"
+  microFrontEndAppRef:
+    name: "my-app"
+  templateRef:
+    name: "my-template"
+```
 
 ## Getting Started
 
