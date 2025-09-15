@@ -40,20 +40,22 @@ spec:
           spec:
             description: spec defines the desired state of MicroFrontEndPageBinding
             properties:
-              label:
-                description: label is the value used in menus and page titles before
-                  localization occurs (or when no translation exists for the current
-                  language).
-                type: string
-              microFrontEndAppEntries:
-                description: microFrontEndAppEntries is a set of MicroFrontEndApps
-                  to bind to this page.
+              contentEntries:
+                description: contentEntries is a set of content entries to bind to
+                  this page. They may be either raw HTML fragments or MicroFrontEndApp
+                  references.
                 items:
                   properties:
                     customElementName:
                       description: customElementName is the name of the MicroFrontEndApp
-                        custom element to render in the template.
+                        custom element to render in the specified slot (if present
+                        in the template).
                       type: string
+                      x-kubernetes-validations:
+                      - message: exactly one of rawHTML or both customElementName
+                          and microFrontEndAppRef must be set
+                        rule: has(self.rawHTML) != (has(self.customElementName) &&
+                          has(self.microFrontEndAppRef))
                     microFrontEndAppRef:
                       description: microFrontEndAppRef is a reference to the MicroFrontEndApp
                         that this binding is for.
@@ -69,14 +71,15 @@ spec:
                           type: string
                       type: object
                       x-kubernetes-map-type: atomic
+                    rawHTML:
+                      description: rawHTML is a raw HTML string to be rendered in
+                        the specified slot (if present in the template).
+                      type: string
                     slot:
                       description: slot is the name of the App slot to which this
                         entry will be bound. If omitted, the slot used will be `main`.
                         No more than one entry can be bound to a slot.
                       type: string
-                  required:
-                  - customElementName
-                  - microFrontEndAppRef
                   type: object
                 maxItems: 8
                 minItems: 1
@@ -86,6 +89,11 @@ spec:
                     one must be 'main'
                   rule: self.all(x, self.filter(y, y.slot == x.slot).size() == 1)
                     && (size(self) <= 1 || self.exists(x, x.slot == 'main'))
+              label:
+                description: label is the value used in menus and page titles before
+                  localization occurs (or when no translation exists for the current
+                  language).
+                type: string
               microFrontEndPageArchetypeRef:
                 description: microFrontEndPageArchetypeRef is a reference to the MicroFrontEndPageArchetype
                   that this binding is for.
@@ -171,8 +179,8 @@ spec:
                 pattern: ^(\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))(([KMGTPE]i)|[numkMGTPE]|([eE](\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))))?$
                 x-kubernetes-int-or-string: true
             required:
+            - contentEntries
             - label
-            - microFrontEndAppEntries
             - microFrontEndPageArchetypeRef
             - path
             type: object

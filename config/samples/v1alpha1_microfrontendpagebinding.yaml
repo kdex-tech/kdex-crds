@@ -6,11 +6,15 @@ metadata:
     app.kubernetes.io/managed-by: kustomize
   name: my-page
 spec:
-  label: My Page
-  microFrontEndAppEntries:
+  contentEntries:
     - customElementName: my-element
       microFrontEndAppRef:
         name: my-app
+      slot: main
+    - rawHTML: |
+        <p>Hello world!</p>
+      slot: column-2
+  label: My Page
   microFrontEndPageArchetypeRef:
     name: generic-page
   overrideFooterRef:

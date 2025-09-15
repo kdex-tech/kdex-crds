@@ -22,14 +22,20 @@ import (
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
 
-type MicroFrontEndAppEntry struct {
-	// customElementName is the name of the MicroFrontEndApp custom element to render in the template.
-	// +kubebuilder:validation:Required
-	CustomElementName string `json:"customElementName"`
+type ContentEntry struct {
+	// +kubebuilder:validation:XValidation:rule="has(self.rawHTML) != (has(self.customElementName) && has(self.microFrontEndAppRef))",message="exactly one of rawHTML or both customElementName and microFrontEndAppRef must be set"
+
+	// customElementName is the name of the MicroFrontEndApp custom element to render in the specified slot (if present in the template).
+	// +optional
+	CustomElementName string `json:"customElementName,omitempty"`
 
 	// microFrontEndAppRef is a reference to the MicroFrontEndApp that this binding is for.
-	// +kubebuilder:validation:Required
-	MicroFrontEndAppRef corev1.LocalObjectReference `json:"microFrontEndAppRef"`
+	// +optional
+	MicroFrontEndAppRef *corev1.LocalObjectReference `json:"microFrontEndAppRef,omitempty"`
+
+	// rawHTML is a raw HTML string to be rendered in the specified slot (if present in the template).
+	// +optional
+	RawHTML string `json:"rawHTML,omitempty"`
 
 	// slot is the name of the App slot to which this entry will be bound. If omitted, the slot used will be `main`. No more than one entry can be bound to a slot.
 	// +optional
@@ -42,12 +48,12 @@ type MicroFrontEndPageBindingSpec struct {
 	// +kubebuilder:validation:Required
 	Label string `json:"label"`
 
-	// microFrontEndAppEntries is a set of MicroFrontEndApps to bind to this page.
+	// contentEntries is a set of content entries to bind to this page. They may be either raw HTML fragments or MicroFrontEndApp references.
 	// +kubebuilder:validation:MaxItems=8
 	// +kubebuilder:validation:MinItems=1
 	// +kubebuilder:validation:Required
 	// +kubebuilder:validation:XValidation:rule="self.all(x, self.filter(y, y.slot == x.slot).size() == 1) && (size(self) <= 1 || self.exists(x, x.slot == 'main'))",message="slot names must be unique, and if there are multiple entries, one must be 'main'"
-	MicroFrontEndAppEntries []MicroFrontEndAppEntry `json:"microFrontEndAppEntries"`
+	ContentEntries []ContentEntry `json:"contentEntries"`
 
 	// microFrontEndPageArchetypeRef is a reference to the MicroFrontEndPageArchetype that this binding is for.
 	// +kubebuilder:validation:Required

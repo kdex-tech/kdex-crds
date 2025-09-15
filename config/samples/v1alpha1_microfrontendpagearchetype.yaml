@@ -23,7 +23,7 @@ spec:
           {{ .Values.navigation["main"] }}
         </nav>
         <main>
-          {{ .Values.app["main"] }}
+          {{ .Values.content["main"] }}
         </main>
         <footer>
           {{ .Values.footer }}
