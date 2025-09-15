@@ -39,6 +39,11 @@ e.g.
 The `kdex-crds` project provides the following CRDs:
 
 - `MicroFrontEndApp`: Represents a micro-frontend application, including its source code and the custom elements it exposes.
+- `MicroFrontEndPageArchetype`: Defines the structure of an App Server page.
+- `MicroFrontEndPageBinding`: Binds a set of MicroFrontEndApps to a page.
+- `MicroFrontEndPageFooter`: Defines the content of an App Server page footer section.
+- `MicroFrontEndPageHeader`: Defines the content of an App Server page header section.
+- `MicroFrontEndPageNavigation`: Defines the content of an App Server page navigation.
 
 
 These CRDs work together to provide a flexible and declarative way to manage micro-frontends in a Kubernetes environment.

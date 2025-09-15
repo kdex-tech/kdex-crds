@@ -31,3 +31,9 @@ spec:
         {{ .Values.footScript }}
       </body>
     </html>
+  defaultFooterRef:
+    name: generic-footer
+  defaultHeaderRef:
+    name: generic-header
+  defaultNavigationRef:
+    name: generic-navigation

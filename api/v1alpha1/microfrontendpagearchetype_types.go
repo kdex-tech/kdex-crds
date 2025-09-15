@@ -17,6 +17,7 @@ limitations under the License.
 package v1alpha1
 
 import (
+	corev1 "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
 
@@ -26,6 +27,18 @@ type MicroFrontEndPageArchetypeSpec struct {
 	// +kubebuilder:validation:Required
 	// +kubebuilder:validation:MinLength=5
 	Content string `json:"content"`
+
+	// DefaultFooterRef is an optional reference to a MicroFrontEndPageFooter resource. If not specified, no footer will be displayed.
+	// +optional
+	DefaultFooterRef *corev1.LocalObjectReference `json:"defaultFooterRef,omitempty"`
+
+	// DefaultHeaderRef is an optional reference to a MicroFrontEndPageHeader resource. If not specified, no header will be displayed.
+	// +optional
+	DefaultHeaderRef *corev1.LocalObjectReference `json:"defaultHeaderRef,omitempty"`
+
+	// DefaultNavigationRef is an optional reference to a MicroFrontEndPageNavigation resource. If not specified, no navigation will be displayed.
+	// +optional
+	DefaultNavigationRef *corev1.LocalObjectReference `json:"defaultNavigationRef,omitempty"`
 }
 
 // MicroFrontEndPageArchetypeStatus defines the observed state of MicroFrontEndPageArchetype.
