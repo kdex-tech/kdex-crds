@@ -2,10 +2,9 @@
 
 This project contains a set of Custom Resource Definitions (CRDs) for managing micro-frontend applications in Kubernetes.
 
-The architecture of the KDEX App Server's micro-frontend application pages is a follows:
+The architecture of the KDEX App Server's micro-frontend pages follows Semantic HTML as described in [MDN's Structuring documents](https://developer.mozilla.org/en-US/docs/Learn_web_development/Core/Structuring_content/Structuring_documents).
 
-**Path** - derived from MicroFrontEndAppBinding CR `spec.path`
-
+e.g.
 ```html
 <!DOCTYPE html>
 <html lang="en">
@@ -17,16 +16,19 @@ The architecture of the KDEX App Server's micro-frontend application pages is a 
   </head>
   <body>
     <header>
-      <!-- TODO: CRD -->
+      <!-- Renders a MicroFrontEndPageHeader CR -->
     </header>
     <nav>
-      <!-- A hierarchical menu containing links to pages derived from MicroFrontEndAppBinding CR `spec.parent` + `spec.label` + `spec.path` -->
+      <!-- Renders a hierarchical menu containing links to pages derived from MicroFrontEndAppBinding CR `spec.parent` + `spec.label` + `spec.path` -->
     </nav>
     <main>
-      <!-- Renders a MicroFrontEndApp custom element -->
+      <!-- Renders MicroFrontEndApp custom elements -->
+      <aside>
+        <!-- TODO: CRD -->
+      </aside>
     </main>
     <footer>
-      <!-- TODO: CRD -->
+      <!-- Renders a MicroFrontEndPageFooter CR -->
     </footer>
   </body>
 </html>
