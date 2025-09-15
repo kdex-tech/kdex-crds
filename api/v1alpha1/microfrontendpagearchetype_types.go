@@ -22,7 +22,7 @@ import (
 
 // MicroFrontEndPageArchetypeSpec defines the desired state of MicroFrontEndPageArchetype
 type MicroFrontEndPageArchetypeSpec struct {
-	// Content is a go string template that defines the entire structure of a App Server page. The template uses the provided go objects that model the to render page contents.
+	// content is a go string template that defines the structure of an App Server page. The template accesses `.Values` properties to render its contents.
 	// +kubebuilder:validation:Required
 	// +kubebuilder:validation:MinLength=5
 	Content string `json:"content"`
@@ -30,7 +30,6 @@ type MicroFrontEndPageArchetypeSpec struct {
 
 // MicroFrontEndPageArchetypeStatus defines the observed state of MicroFrontEndPageArchetype.
 type MicroFrontEndPageArchetypeStatus struct {
-
 	// For Kubernetes API conventions, see:
 	// https://github.com/kubernetes/community/blob/master/contributors/devel/sig-architecture/api-conventions.md#typical-status-properties
 

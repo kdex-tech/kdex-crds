@@ -41,21 +41,21 @@ spec:
             description: spec defines the desired state of MicroFrontEndPageBinding
             properties:
               label:
-                description: Label is the default name used in menus and for pages
-                  before localization occurs (or when no translation exists for the
-                  current language).
+                description: label is the value used in menus and page titles before
+                  localization occurs (or when no translation exists for the current
+                  language).
                 type: string
               microFrontEndAppEntries:
-                description: MicroFrontEndAppEntries the set of MicroFrontEndApps
+                description: microFrontEndAppEntries is a set of MicroFrontEndApps
                   to bind to this page.
                 items:
                   properties:
                     customElementName:
-                      description: CustomElementName is the name of the MicroFrontEndApp
+                      description: customElementName is the name of the MicroFrontEndApp
                         custom element to render in the template.
                       type: string
                     microFrontEndAppRef:
-                      description: MicroFrontEndAppRef is a reference to the MicroFrontEndApp
+                      description: microFrontEndAppRef is a reference to the MicroFrontEndApp
                         that this binding is for.
                       properties:
                         name:
@@ -70,7 +70,7 @@ spec:
                       type: object
                       x-kubernetes-map-type: atomic
                     slot:
-                      description: Slot is the name of the App slot to which this
+                      description: slot is the name of the App slot to which this
                         entry will be bound. If omitted, the slot used will be `main`.
                         No more than one entry can be bound to a slot.
                       type: string
@@ -87,7 +87,7 @@ spec:
                   rule: self.all(x, self.filter(y, y.slot == x.slot).size() == 1)
                     && (size(self) <= 1 || self.exists(x, x.slot == 'main'))
               microFrontEndPageArchetypeRef:
-                description: MicroFrontEndPageArchetypeRef is a reference to the MicroFrontEndPageArchetype
+                description: microFrontEndPageArchetypeRef is a reference to the MicroFrontEndPageArchetype
                   that this binding is for.
                 properties:
                   name:
@@ -102,21 +102,23 @@ spec:
                 type: object
                 x-kubernetes-map-type: atomic
               parent:
-                description: Parent is an optional property that expresses the parent
-                  under which this the menu entry for this page will be added in the
-                  main navigation. A hierarchical path using slashes is supported.
+                description: parent specifies the menu entry that is the parent under
+                  which the menu entry for this page will be added in the main navigation.
+                  A hierarchical path using slashes is supported.
                 type: string
               path:
-                description: Path is the path at which the page will be mounted in
-                  the application server context.
+                description: path is the URI path at which the page will be accessible
+                  in the application server context. The final absolute path will
+                  contain this path and may be prefixed by additional context like
+                  a language identifier.
                 type: string
               weight:
                 anyOf:
                 - type: integer
                 - type: string
-                description: Weight is an optional property that can influence the
-                  position of the page menu entry. Heavier items fall lower in the
-                  order.
+                description: weight is a property that influences the position of
+                  the page menu entry. Items are sorted first by ascending weight
+                  and then ascending lexicographically.
                 pattern: ^(\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))(([KMGTPE]i)|[numkMGTPE]|([eE](\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))))?$
                 x-kubernetes-int-or-string: true
             required:

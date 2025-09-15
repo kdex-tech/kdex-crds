@@ -23,11 +23,11 @@ import (
 
 // CustomElement defines a custom element exposed by a micro-frontend application.
 type CustomElement struct {
-	// Description of the custom element.
+	// description of the custom element.
 	// +optional
 	Description string `json:"description,omitempty"`
 
-	// Name of the custom element.
+	// name of the custom element.
 	// +kubebuilder:validation:Required
 	Name string `json:"name"`
 }
@@ -63,29 +63,28 @@ type MicroFrontEndAppList struct {
 
 // MicroFrontEndAppSource defines the source of a micro-frontend application.
 type MicroFrontEndAppSource struct {
-	// SecretRef is a reference to a secret containing authentication credentials for the source.
+	// secretRef is a reference to a secret containing authentication credentials for the source.
 	// +optional
 	SecretRef *corev1.LocalObjectReference `json:"secretRef,omitempty"`
 
-	// URL of the application source. This can be a Git repository, an archive, or an OCI artifact.
+	// url of the application source. This can be a Git repository, an archive, or an OCI artifact.
 	// +kubebuilder:validation:Required
 	URL string `json:"url"`
 }
 
 // MicroFrontEndAppSpec defines the desired state of MicroFrontEndApp
 type MicroFrontEndAppSpec struct {
-	// CustomElements is a list of custom elements exposed by the micro-frontend application.
+	// customElements is a list of custom elements implemented by the micro-frontend application.
 	// +optional
 	CustomElements []CustomElement `json:"customElements,omitempty"`
 
-	// Source defines the source of the micro-frontend application. The source must contain a valid package.json that produces ES modules. Dependencies must be externalized otherwise the CR will not validate.
+	// source configures the location of the source code of the micro-frontend application. The source code must contain a valid package.json that produces ES modules. Based on App Server configuration embedded dependencies may not be allowed. In this case dependencies must be externalized otherwise the app CR will not validate.
 	// +kubebuilder:validation:Required
 	Source MicroFrontEndAppSource `json:"source"`
 }
 
 // MicroFrontEndAppStatus defines the observed state of MicroFrontEndApp.
 type MicroFrontEndAppStatus struct {
-
 	// For Kubernetes API conventions, see:
 	// https://github.com/kubernetes/community/blob/master/contributors/devel/sig-architecture/api-conventions.md#typical-status-properties
 

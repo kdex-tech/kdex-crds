@@ -40,29 +40,31 @@ spec:
             description: spec defines the desired state of MicroFrontEndApp
             properties:
               customElements:
-                description: CustomElements is a list of custom elements exposed by
-                  the micro-frontend application.
+                description: customElements is a list of custom elements implemented
+                  by the micro-frontend application.
                 items:
                   description: CustomElement defines a custom element exposed by a
                     micro-frontend application.
                   properties:
                     description:
-                      description: Description of the custom element.
+                      description: description of the custom element.
                       type: string
                     name:
-                      description: Name of the custom element.
+                      description: name of the custom element.
                       type: string
                   required:
                   - name
                   type: object
                 type: array
               source:
-                description: Source defines the source of the micro-frontend application.
-                  The source must contain a valid package.json that produces ES modules.
-                  Dependencies must be externalized otherwise the CR will not validate.
+                description: source configures the location of the source code of
+                  the micro-frontend application. The source code must contain a valid
+                  package.json that produces ES modules. Based on App Server configuration
+                  embedded dependencies may not be allowed. In this case dependencies
+                  must be externalized otherwise the app CR will not validate.
                 properties:
                   secretRef:
-                    description: SecretRef is a reference to a secret containing authentication
+                    description: secretRef is a reference to a secret containing authentication
                       credentials for the source.
                     properties:
                       name:
@@ -77,7 +79,7 @@ spec:
                     type: object
                     x-kubernetes-map-type: atomic
                   url:
-                    description: URL of the application source. This can be a Git
+                    description: url of the application source. This can be a Git
                       repository, an archive, or an OCI artifact.
                     type: string
                 required:

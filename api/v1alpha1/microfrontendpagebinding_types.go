@@ -23,54 +23,51 @@ import (
 )
 
 type MicroFrontEndAppEntry struct {
-	// CustomElementName is the name of the MicroFrontEndApp custom element to render in the template.
+	// customElementName is the name of the MicroFrontEndApp custom element to render in the template.
 	// +kubebuilder:validation:Required
 	CustomElementName string `json:"customElementName"`
 
-	// MicroFrontEndAppRef is a reference to the MicroFrontEndApp that this binding is for.
+	// microFrontEndAppRef is a reference to the MicroFrontEndApp that this binding is for.
 	// +kubebuilder:validation:Required
 	MicroFrontEndAppRef corev1.LocalObjectReference `json:"microFrontEndAppRef"`
 
-	// Slot is the name of the App slot to which this entry will be bound. If omitted, the slot used will be `main`. No more than one entry can be bound to a slot.
+	// slot is the name of the App slot to which this entry will be bound. If omitted, the slot used will be `main`. No more than one entry can be bound to a slot.
 	// +optional
 	Slot string `json:"slot"`
 }
 
 // MicroFrontEndPageBindingSpec defines the desired state of MicroFrontEndPageBinding
 type MicroFrontEndPageBindingSpec struct {
-	// Label is the default name used in menus and for pages before localization occurs (or when no translation exists for the current language).
+	// label is the value used in menus and page titles before localization occurs (or when no translation exists for the current language).
 	// +kubebuilder:validation:Required
 	Label string `json:"label"`
 
-	// MicroFrontEndAppEntries the set of MicroFrontEndApps to bind to this page.
+	// microFrontEndAppEntries is a set of MicroFrontEndApps to bind to this page.
 	// +kubebuilder:validation:MaxItems=8
 	// +kubebuilder:validation:MinItems=1
 	// +kubebuilder:validation:Required
 	// +kubebuilder:validation:XValidation:rule="self.all(x, self.filter(y, y.slot == x.slot).size() == 1) && (size(self) <= 1 || self.exists(x, x.slot == 'main'))",message="slot names must be unique, and if there are multiple entries, one must be 'main'"
 	MicroFrontEndAppEntries []MicroFrontEndAppEntry `json:"microFrontEndAppEntries"`
 
-	// MicroFrontEndPageArchetypeRef is a reference to the MicroFrontEndPageArchetype that this binding is for.
+	// microFrontEndPageArchetypeRef is a reference to the MicroFrontEndPageArchetype that this binding is for.
 	// +kubebuilder:validation:Required
 	MicroFrontEndPageArchetypeRef corev1.LocalObjectReference `json:"microFrontEndPageArchetypeRef"`
 
-	// Parent is an optional property that expresses the parent under which this the menu entry for this page will be added in the main navigation. A hierarchical path using slashes is supported.
+	// parent specifies the menu entry that is the parent under which the menu entry for this page will be added in the main navigation. A hierarchical path using slashes is supported.
 	// +optional
 	Parent string `json:"parent,omitempty"`
 
-	// Path is the path at which the page will be mounted in the application server context.
+	// path is the URI path at which the page will be accessible in the application server context. The final absolute path will contain this path and may be prefixed by additional context like a language identifier.
 	// +kubebuilder:validation:Required
 	Path string `json:"path"`
 
-	// Weight is an optional property that can influence the position of the page menu entry. Heavier items fall lower in the order.
+	// weight is a property that influences the position of the page menu entry. Items are sorted first by ascending weight and then ascending lexicographically.
 	// +optional
 	Weight resource.Quantity `json:"weight,omitempty"`
 }
 
 // MicroFrontEndPageBindingStatus defines the observed state of MicroFrontEndPageBinding.
 type MicroFrontEndPageBindingStatus struct {
-	// INSERT ADDITIONAL STATUS FIELD - define observed state of cluster
-	// Important: Run "make" to regenerate code after modifying this file
-
 	// For Kubernetes API conventions, see:
 	// https://github.com/kubernetes/community/blob/master/contributors/devel/sig-architecture/api-conventions.md#typical-status-properties
 
