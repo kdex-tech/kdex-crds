@@ -81,6 +81,12 @@ spec:
 | `secretRef` | `*corev1.LocalObjectReference` | A reference to a secret containing authentication credentials for the source. | No |
 | `url` | `string` | URL of the application source. This can be a Git repository, an archive, or an OCI artifact. | Yes |
 
+**Status Fields:**
+
+| Field | Type | Description |
+|---|---|---|
+| `conditions` | `[]metav1.Condition` | Represents the current state of the MicroFrontEndApp resource. |
+
 ### MicroFrontEndAppBinding
 
 A `MicroFrontEndAppBinding` resource binds a `MicroFrontEndApp` to a `MicroFrontEndTemplate` at a specific path. Here is an example:
@@ -91,6 +97,7 @@ kind: MicroFrontEndAppBinding
 metadata:
   name: my-app-binding
 spec:
+  customElementName: "my-element"
   label: "My App"
   path: "/my-app"
   microFrontEndAppRef:
@@ -103,12 +110,19 @@ spec:
 
 | Field | Type | Description | Required |
 |---|---|---|---|
+| `customElementName` | `string` | The name of the MicroFrontEndApp custom element to render in the template. | Yes |
 | `label` | `string` | The default name used in menus and for pages before localization occurs (or when no translation exists for the current language). | Yes |
 | `microFrontEndAppRef` | `corev1.LocalObjectReference` | A reference to the MicroFrontEndApp that this binding is for. | Yes |
 | `parent` | `string` | An optional menu item property that can express a hierarchical path using slashes. | No |
 | `path` | `string` | The path at which the application will be mounted in the application server context. | Yes |
 | `templateRef` | `corev1.LocalObjectReference` | A reference to the MicroFrontEndTemplate that will be used to render the application. | Yes |
 | `weight` | `resource.Quantity` | An optional property that can influence the position of the application menu entry. | No |
+
+**Status Fields:**
+
+| Field | Type | Description |
+|---|---|---|
+| `conditions` | `[]metav1.Condition` | Represents the current state of the MicroFrontEndAppBinding resource. |
 
 ### MicroFrontEndTemplate
 
@@ -130,6 +144,12 @@ spec:
 | Field | Type | Description | Required |
 |---|---|---|---|
 | `main` | `string` | A go string template that will be used to generate the HTML <main> element that renders the microfrontend custom element. | Yes |
+
+**Status Fields:**
+
+| Field | Type | Description |
+|---|---|---|
+| `conditions` | `[]metav1.Condition` | Represents the current state of the MicroFrontEndTemplate resource. |
 
 ## Getting Started
 
