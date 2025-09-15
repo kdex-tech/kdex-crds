@@ -78,7 +78,7 @@ type MicroFrontEndAppSpec struct {
 	// +optional
 	CustomElements []CustomElement `json:"customElements,omitempty"`
 
-	// Source defines the source of the micro-frontend application.
+	// Source defines the source of the micro-frontend application. The source must contain a valid package.json that produces ES modules. Dependencies must be externalized otherwise the CR will not validate.
 	// +kubebuilder:validation:Required
 	Source MicroFrontEndAppSource `json:"source"`
 }

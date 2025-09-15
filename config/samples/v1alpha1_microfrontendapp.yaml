@@ -6,4 +6,8 @@ metadata:
     app.kubernetes.io/managed-by: kustomize
   name: microfrontendapp-sample
 spec:
-  # TODO(user): Add fields here
+  customElements:
+    - description: "A custom element"
+      name: "my-element"
+  source:
+    url: "https://github.com/my-org/my-app.git"

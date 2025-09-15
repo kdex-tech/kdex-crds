@@ -58,6 +58,8 @@ spec:
                 type: array
               source:
                 description: Source defines the source of the micro-frontend application.
+                  The source must contain a valid package.json that produces ES modules.
+                  Dependencies must be externalized otherwise the CR will not validate.
                 properties:
                   secretRef:
                     description: SecretRef is a reference to a secret containing authentication
