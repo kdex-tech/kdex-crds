@@ -28,9 +28,6 @@ resources:
 - microfrontendpagearchetype_admin_role.yaml
 - microfrontendpagearchetype_editor_role.yaml
 - microfrontendpagearchetype_viewer_role.yaml
-- microfrontendtemplate_admin_role.yaml
-- microfrontendtemplate_editor_role.yaml
-- microfrontendtemplate_viewer_role.yaml
 - microfrontendappbinding_admin_role.yaml
 - microfrontendappbinding_editor_role.yaml
 - microfrontendappbinding_viewer_role.yaml

@@ -73,10 +73,6 @@ type MicroFrontEndAppBindingSpec struct {
 	// +kubebuilder:validation:Required
 	Path string `json:"path"`
 
-	// TemplateRef is a reference to the MicroFrontEndTemplate that will be used to render the application.
-	// +kubebuilder:validation:Required
-	TemplateRef corev1.LocalObjectReference `json:"templateRef"`
-
 	// Weight is an optional property that can influence the position of the application menu entry.
 	// +optional
 	Weight resource.Quantity `json:"weight,omitempty"`

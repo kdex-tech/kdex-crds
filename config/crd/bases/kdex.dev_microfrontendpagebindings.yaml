@@ -4,20 +4,20 @@ kind: CustomResourceDefinition
 metadata:
   annotations:
     controller-gen.kubebuilder.io/version: v0.18.0
-  name: microfrontendtemplates.kdex.dev
+  name: microfrontendpagebindings.kdex.dev
 spec:
   group: kdex.dev
   names:
-    kind: MicroFrontEndTemplate
-    listKind: MicroFrontEndTemplateList
-    plural: microfrontendtemplates
-    singular: microfrontendtemplate
+    kind: MicroFrontEndPageBinding
+    listKind: MicroFrontEndPageBindingList
+    plural: microfrontendpagebindings
+    singular: microfrontendpagebinding
   scope: Namespaced
   versions:
   - name: v1alpha1
     schema:
       openAPIV3Schema:
-        description: MicroFrontEndTemplate is the Schema for the microfrontendtemplates
+        description: MicroFrontEndPageBinding is the Schema for the microfrontendpagebindings
           API
         properties:
           apiVersion:
@@ -38,22 +38,82 @@ spec:
           metadata:
             type: object
           spec:
-            description: spec defines the desired state of MicroFrontEndTemplate
+            description: spec defines the desired state of MicroFrontEndPageBinding
             properties:
-              main:
-                description: Main is a go string template that will be used to generate
-                  the content of the HTML <main> element that renders a microfrontend
-                  custom element.
+              MicroFrontEndAppEntries:
+                description: MicroFrontEndAppEntries the set of MicroFrontEndApps
+                  to bind to this page.
+                items:
+                  properties:
+                    customElementName:
+                      description: CustomElementName is the name of the MicroFrontEndApp
+                        custom element to render in the template.
+                      type: string
+                    microFrontEndAppRef:
+                      description: MicroFrontEndAppRef is a reference to the MicroFrontEndApp
+                        that this binding is for.
+                      properties:
+                        name:
+                          default: ""
+                          description: |-
+                            Name of the referent.
+                            This field is effectively required, but due to backwards compatibility is
+                            allowed to be empty. Instances of this type with an empty value here are
+                            almost certainly wrong.
+                            More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#names
+                          type: string
+                      type: object
+                      x-kubernetes-map-type: atomic
+                    slot:
+                      description: Slot is the name of the App slot to which this
+                        entry will be bound. If omitted, the slot used will be `main`.
+                        No more than one entry can be bound to a slot.
+                      type: string
+                  required:
+                  - customElementName
+                  - microFrontEndAppRef
+                  type: object
+                maxItems: 8
+                minItems: 1
+                type: array
+                x-kubernetes-validations:
+                - message: slot names must be unique, and if there are multiple entries,
+                    one must be 'main'
+                  rule: self.all(x, self.filter(y, y.slot == x.slot).size() == 1)
+                    && (size(self) <= 1 || self.exists(x, x.slot == 'main'))
+              label:
+                description: Label is the default name used in menus and for pages
+                  before localization occurs (or when no translation exists for the
+                  current language).
                 type: string
+              parent:
+                description: Parent is an optional property that expresses the parent
+                  under which this the menu entry for this page will be added in the
+                  main navigation. A hierarchical path using slashes is supported.
+                type: string
+              path:
+                description: Path is the path at which the page will be mounted in
+                  the application server context.
+                type: string
+              weight:
+                anyOf:
+                - type: integer
+                - type: string
+                description: Weight is an optional property that can influence the
+                  position of the page menu entry.
+                pattern: ^(\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))(([KMGTPE]i)|[numkMGTPE]|([eE](\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))))?$
+                x-kubernetes-int-or-string: true
             required:
-            - main
+            - MicroFrontEndAppEntries
+            - label
+            - path
             type: object
           status:
-            description: status defines the observed state of MicroFrontEndTemplate
+            description: status defines the observed state of MicroFrontEndPageBinding
             properties:
               conditions:
                 description: |-
-                  conditions represent the current state of the MicroFrontEndTemplate resource.
+                  conditions represent the current state of the MicroFrontEndPageBinding resource.
                   Each condition has a unique type and reflects the status of a specific aspect of the resource.
 
                   Standard condition types include:

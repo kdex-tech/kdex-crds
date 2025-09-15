@@ -23,8 +23,7 @@ The architecture of the KDEX App Server's micro-frontend application pages is a 
       <!-- A hierarchical menu containing links to pages derived from MicroFrontEndAppBinding CR `spec.parent` + `spec.label` + `spec.path` -->
     </nav>
     <main>
-      <!-- MicroFrontEndTemplate renders a MicroFrontEndApp custom element
-      -->
+      <!-- Renders a MicroFrontEndApp custom element -->
     </main>
     <footer>
       <!-- TODO: CRD -->
@@ -38,8 +37,7 @@ The architecture of the KDEX App Server's micro-frontend application pages is a 
 The `kdex-crds` project provides the following CRDs:
 
 - `MicroFrontEndApp`: Represents a micro-frontend application, including its source code and the custom elements it exposes.
-- `MicroFrontEndAppBinding`: Binds a `MicroFrontEndApp` to a `MicroFrontEndTemplate` at a specific path, making it accessible.
-- `MicroFrontEndTemplate`: Defines an HTML template for rendering a micro-frontend.
+- `MicroFrontEndAppBinding`: Binds a `MicroFrontEndApp` to a specific path, making it accessible.
 
 These CRDs work together to provide a flexible and declarative way to manage micro-frontends in a Kubernetes environment.
 
@@ -89,7 +87,7 @@ spec:
 
 ### MicroFrontEndAppBinding
 
-A `MicroFrontEndAppBinding` resource binds a `MicroFrontEndApp` to a `MicroFrontEndTemplate` at a specific path. Here is an example:
+A `MicroFrontEndAppBinding` resource binds a `MicroFrontEndApp` to a specific path. Here is an example:
 
 ```yaml
 apiVersion: kdex.dev/v1alpha1
@@ -102,8 +100,6 @@ spec:
   path: "/my-app"
   microFrontEndAppRef:
     name: "my-app"
-  templateRef:
-    name: "my-template"
 ```
 
 **Spec Fields:**
@@ -115,7 +111,6 @@ spec:
 | `microFrontEndAppRef` | `corev1.LocalObjectReference` | A reference to the MicroFrontEndApp that this binding is for. | Yes |
 | `parent` | `string` | An optional menu item property that can express a hierarchical path using slashes. | No |
 | `path` | `string` | The path at which the application will be mounted in the application server context. | Yes |
-| `templateRef` | `corev1.LocalObjectReference` | A reference to the MicroFrontEndTemplate that will be used to render the application. | Yes |
 | `weight` | `resource.Quantity` | An optional property that can influence the position of the application menu entry. | No |
 
 **Status Fields:**
@@ -123,33 +118,6 @@ spec:
 | Field | Type | Description |
 |---|---|---|
 | `conditions` | `[]metav1.Condition` | Represents the current state of the MicroFrontEndAppBinding resource. |
-
-### MicroFrontEndTemplate
-
-A `MicroFrontEndTemplate` resource defines an HTML template for rendering a micro-frontend. Here is an example:
-
-```yaml
-apiVersion: kdex.dev/v1alpha1
-kind: MicroFrontEndTemplate
-metadata:
-  name: my-template
-spec:
-  main: |
-    <{{ .Values.customElement }} {{ .Values.attributes }}>
-    </{{ .Values.customElement }}>
-```
-
-**Spec Fields:**
-
-| Field | Type | Description | Required |
-|---|---|---|---|
-| `main` | `string` | A go string template that will be used to generate the HTML <main> element that renders the microfrontend custom element. | Yes |
-
-**Status Fields:**
-
-| Field | Type | Description |
-|---|---|---|
-| `conditions` | `[]metav1.Condition` | Represents the current state of the MicroFrontEndTemplate resource. |
 
 ## Getting Started
 
