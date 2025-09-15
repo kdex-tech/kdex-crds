@@ -70,7 +70,7 @@ type MicroFrontEndPageHeader struct {
 	metav1.ObjectMeta `json:"metadata,omitempty,omitzero"`
 
 	// spec defines the desired state of MicroFrontEndPageHeader
-	// +required
+	// +kubebuilder:validation:Required
 	Spec MicroFrontEndPageHeaderSpec `json:"spec"`
 
 	// status defines the observed state of MicroFrontEndPageHeader

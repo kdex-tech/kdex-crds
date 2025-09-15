@@ -44,6 +44,7 @@ spec:
                 description: Content is a go string template that defines the entire
                   structure of a App Server page. The template uses the provided go
                   objects that model the to render page contents.
+                minLength: 5
                 type: string
             required:
             - content

@@ -44,7 +44,7 @@ type MicroFrontEndApp struct {
 	metav1.ObjectMeta `json:"metadata,omitempty,omitzero"`
 
 	// spec defines the desired state of MicroFrontEndApp
-	// +required
+	// +kubebuilder:validation:Required
 	Spec MicroFrontEndAppSpec `json:"spec"`
 
 	// status defines the observed state of MicroFrontEndApp
