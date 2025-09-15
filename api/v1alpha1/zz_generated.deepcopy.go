@@ -358,6 +358,21 @@ func (in *MicroFrontEndPageBindingSpec) DeepCopyInto(out *MicroFrontEndPageBindi
 		copy(*out, *in)
 	}
 	out.MicroFrontEndPageArchetypeRef = in.MicroFrontEndPageArchetypeRef
+	if in.OverrideFooterRef != nil {
+		in, out := &in.OverrideFooterRef, &out.OverrideFooterRef
+		*out = new(v1.LocalObjectReference)
+		**out = **in
+	}
+	if in.OverrideHeaderRef != nil {
+		in, out := &in.OverrideHeaderRef, &out.OverrideHeaderRef
+		*out = new(v1.LocalObjectReference)
+		**out = **in
+	}
+	if in.OverrideNavigationRef != nil {
+		in, out := &in.OverrideNavigationRef, &out.OverrideNavigationRef
+		*out = new(v1.LocalObjectReference)
+		**out = **in
+	}
 	out.Weight = in.Weight.DeepCopy()
 }
 

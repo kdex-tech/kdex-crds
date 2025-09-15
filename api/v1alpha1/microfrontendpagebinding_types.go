@@ -53,6 +53,18 @@ type MicroFrontEndPageBindingSpec struct {
 	// +kubebuilder:validation:Required
 	MicroFrontEndPageArchetypeRef corev1.LocalObjectReference `json:"microFrontEndPageArchetypeRef"`
 
+	// overrideFooterRef is an optional reference to a MicroFrontEndPageFooter resource. If not specified, the footer from the archetype will be used.
+	// +optional
+	OverrideFooterRef *corev1.LocalObjectReference `json:"overrideFooterRef,omitempty"`
+
+	// overrideHeaderRef is an optional reference to a MicroFrontEndPageHeader resource. If not specified, the header from the archetype will be used.
+	// +optional
+	OverrideHeaderRef *corev1.LocalObjectReference `json:"overrideHeaderRef,omitempty"`
+
+	// overrideNavigationRef is an optional reference to a MicroFrontEndPageNavigation resource. If not specified, the navigation from the archetype will be used.
+	// +optional
+	OverrideNavigationRef *corev1.LocalObjectReference `json:"overrideNavigationRef,omitempty"`
+
 	// parent specifies the menu entry that is the parent under which the menu entry for this page will be added in the main navigation. A hierarchical path using slashes is supported.
 	// +optional
 	Parent string `json:"parent,omitempty"`
