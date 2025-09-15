@@ -40,12 +40,13 @@ spec:
           spec:
             description: spec defines the desired state of MicroFrontEndTemplate
             properties:
-              body:
-                description: Body is a go string template that will be used to generate
-                  the HTML body of the microfrontend.
+              main:
+                description: Main is a go string template that will be used to generate
+                  the content of the HTML <main> element that renders a microfrontend
+                  custom element.
                 type: string
             required:
-            - body
+            - main
             type: object
           status:
             description: status defines the observed state of MicroFrontEndTemplate

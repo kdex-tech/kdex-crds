@@ -59,9 +59,9 @@ type MicroFrontEndTemplateSpec struct {
 	// The following markers will use OpenAPI v3 schema to validate the value
 	// More info: https://book.kubebuilder.io/reference/markers/crd-validation.html
 
-	// Body is a go string template that will be used to generate the HTML body of the microfrontend.
+	// Main is a go string template that will be used to generate the content of the HTML <main> element that renders a microfrontend custom element.
 	// +kubebuilder:validation:Required
-	Body string `json:"body"`
+	Main string `json:"main"`
 }
 
 // MicroFrontEndTemplateStatus defines the observed state of MicroFrontEndTemplate.
