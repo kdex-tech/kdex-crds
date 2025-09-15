@@ -40,7 +40,12 @@ spec:
           spec:
             description: spec defines the desired state of MicroFrontEndPageBinding
             properties:
-              MicroFrontEndAppEntries:
+              label:
+                description: Label is the default name used in menus and for pages
+                  before localization occurs (or when no translation exists for the
+                  current language).
+                type: string
+              microFrontEndAppEntries:
                 description: MicroFrontEndAppEntries the set of MicroFrontEndApps
                   to bind to this page.
                 items:
@@ -81,11 +86,6 @@ spec:
                     one must be 'main'
                   rule: self.all(x, self.filter(y, y.slot == x.slot).size() == 1)
                     && (size(self) <= 1 || self.exists(x, x.slot == 'main'))
-              label:
-                description: Label is the default name used in menus and for pages
-                  before localization occurs (or when no translation exists for the
-                  current language).
-                type: string
               parent:
                 description: Parent is an optional property that expresses the parent
                   under which this the menu entry for this page will be added in the
@@ -104,8 +104,8 @@ spec:
                 pattern: ^(\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))(([KMGTPE]i)|[numkMGTPE]|([eE](\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))))?$
                 x-kubernetes-int-or-string: true
             required:
-            - MicroFrontEndAppEntries
             - label
+            - microFrontEndAppEntries
             - path
             type: object
           status:
