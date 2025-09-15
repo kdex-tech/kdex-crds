@@ -342,6 +342,7 @@ func (in *MicroFrontEndPageBindingSpec) DeepCopyInto(out *MicroFrontEndPageBindi
 		*out = make([]MicroFrontEndAppEntry, len(*in))
 		copy(*out, *in)
 	}
+	out.MicroFrontEndPageArchetypeRef = in.MicroFrontEndPageArchetypeRef
 	out.Weight = in.Weight.DeepCopy()
 }
 

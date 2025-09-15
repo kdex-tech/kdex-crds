@@ -49,6 +49,10 @@ type MicroFrontEndPageBindingSpec struct {
 	// +kubebuilder:validation:XValidation:rule="self.all(x, self.filter(y, y.slot == x.slot).size() == 1) && (size(self) <= 1 || self.exists(x, x.slot == 'main'))",message="slot names must be unique, and if there are multiple entries, one must be 'main'"
 	MicroFrontEndAppEntries []MicroFrontEndAppEntry `json:"microFrontEndAppEntries"`
 
+	// MicroFrontEndPageArchetypeRef is a reference to the MicroFrontEndPageArchetype that this binding is for.
+	// +kubebuilder:validation:Required
+	MicroFrontEndPageArchetypeRef corev1.LocalObjectReference `json:"microFrontEndPageArchetypeRef"`
+
 	// Parent is an optional property that expresses the parent under which this the menu entry for this page will be added in the main navigation. A hierarchical path using slashes is supported.
 	// +optional
 	Parent string `json:"parent,omitempty"`
