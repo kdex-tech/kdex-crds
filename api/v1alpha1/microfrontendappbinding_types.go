@@ -61,6 +61,10 @@ type MicroFrontEndAppBindingSpec struct {
 	// The following markers will use OpenAPI v3 schema to validate the value
 	// More info: https://book.kubebuilder.io/reference/markers/crd-validation.html
 
+	// CustomElementName is the name of the MicroFrontEndApp custom element to render in the template.
+	// +kubebuilder:validation:Required
+	CustomElementName string `json:"customElementName"`
+
 	// Label is the default name used in menus and for pages before localization occurs (or when no translation exists for the current language).
 	// +kubebuilder:validation:Required
 	Label string `json:"label"`

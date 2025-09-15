@@ -40,6 +40,10 @@ spec:
           spec:
             description: spec defines the desired state of MicroFrontEndAppBinding
             properties:
+              customElementName:
+                description: CustomElementName is the name of the MicroFrontEndApp
+                  custom element to render in the template.
+                type: string
               label:
                 description: Label is the default name used in menus and for pages
                   before localization occurs (or when no translation exists for the
@@ -92,6 +96,7 @@ spec:
                 pattern: ^(\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))(([KMGTPE]i)|[numkMGTPE]|([eE](\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))))?$
                 x-kubernetes-int-or-string: true
             required:
+            - customElementName
             - label
             - microFrontEndAppRef
             - path
