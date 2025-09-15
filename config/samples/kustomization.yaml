@@ -3,4 +3,5 @@ resources:
 - v1alpha1_microfrontendapp.yaml
 - v1alpha1_microfrontendappbinding.yaml
 - v1alpha1_microfrontendtemplate.yaml
+- v1alpha1_microfrontendpagearchetype.yaml
 # +kubebuilder:scaffold:manifestskustomizesamples
