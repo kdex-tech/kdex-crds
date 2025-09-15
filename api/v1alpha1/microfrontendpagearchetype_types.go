@@ -39,6 +39,11 @@ type MicroFrontEndPageArchetypeSpec struct {
 	// defaultMainNavigationRef is an optional reference to a MicroFrontEndPageNavigation resource referenced as `{{ .Values.navigation["main"] }}`. If not specified, no navigation will be displayed.
 	// +optional
 	DefaultMainNavigationRef *corev1.LocalObjectReference `json:"defaultMainNavigationRef,omitempty"`
+
+	// extraNavigations is an optional map of named navigation object references that will be available in page templates as `{{ .Values.navigation["name"] }}`.
+	// +optional
+	// +kubebuilder:validation:XValidation:rule="!has(self.main)",message="'main' is a reserved name for an extra navigation"
+	ExtraNavigations map[string]corev1.LocalObjectReference `json:"extraNavigations,omitempty"`
 }
 
 // MicroFrontEndPageArchetypeStatus defines the observed state of MicroFrontEndPageArchetype.
