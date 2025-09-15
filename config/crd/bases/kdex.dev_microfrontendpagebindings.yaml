@@ -46,19 +46,9 @@ spec:
                   references.
                 items:
                   properties:
-                    customElementName:
-                      description: customElementName is the name of the MicroFrontEndApp
-                        custom element to render in the specified slot (if present
-                        in the template).
-                      type: string
-                      x-kubernetes-validations:
-                      - message: exactly one of rawHTML or both customElementName
-                          and microFrontEndAppRef must be set
-                        rule: has(self.rawHTML) != (has(self.customElementName) &&
-                          has(self.microFrontEndAppRef))
-                    microFrontEndAppRef:
-                      description: microFrontEndAppRef is a reference to the MicroFrontEndApp
-                        that this binding is for.
+                    appRef:
+                      description: appRef is a reference to the MicroFrontEndApp to
+                        include in this binding.
                       properties:
                         name:
                           default: ""
@@ -71,6 +61,16 @@ spec:
                           type: string
                       type: object
                       x-kubernetes-map-type: atomic
+                    customElementName:
+                      description: customElementName is the name of the MicroFrontEndApp
+                        custom element to render in the specified slot (if present
+                        in the template).
+                      type: string
+                      x-kubernetes-validations:
+                      - message: exactly one of rawHTML or both customElementName
+                          and microFrontEndAppRef must be set
+                        rule: has(self.rawHTML) != (has(self.customElementName) &&
+                          has(self.microFrontEndAppRef))
                     rawHTML:
                       description: rawHTML is a raw HTML string to be rendered in
                         the specified slot (if present in the template).
@@ -94,21 +94,6 @@ spec:
                   localization occurs (or when no translation exists for the current
                   language).
                 type: string
-              microFrontEndPageArchetypeRef:
-                description: microFrontEndPageArchetypeRef is a reference to the MicroFrontEndPageArchetype
-                  that this binding is for.
-                properties:
-                  name:
-                    default: ""
-                    description: |-
-                      Name of the referent.
-                      This field is effectively required, but due to backwards compatibility is
-                      allowed to be empty. Instances of this type with an empty value here are
-                      almost certainly wrong.
-                      More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#names
-                    type: string
-                type: object
-                x-kubernetes-map-type: atomic
               overrideFooterRef:
                 description: overrideFooterRef is an optional reference to a MicroFrontEndPageFooter
                   resource. If not specified, the footer from the archetype will be
@@ -158,6 +143,21 @@ spec:
                     type: string
                 type: object
                 x-kubernetes-map-type: atomic
+              pageArchetypeRef:
+                description: pageArchetypeRef is a reference to the MicroFrontEndPageArchetype
+                  that this binding is for.
+                properties:
+                  name:
+                    default: ""
+                    description: |-
+                      Name of the referent.
+                      This field is effectively required, but due to backwards compatibility is
+                      allowed to be empty. Instances of this type with an empty value here are
+                      almost certainly wrong.
+                      More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#names
+                    type: string
+                type: object
+                x-kubernetes-map-type: atomic
               parent:
                 description: parent specifies the menu entry that is the parent under
                   which the menu entry for this page will be added in the main navigation.
@@ -181,7 +181,7 @@ spec:
             required:
             - contentEntries
             - label
-            - microFrontEndPageArchetypeRef
+            - pageArchetypeRef
             - path
             type: object
           status:

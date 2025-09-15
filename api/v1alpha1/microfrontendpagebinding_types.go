@@ -29,9 +29,9 @@ type ContentEntry struct {
 	// +optional
 	CustomElementName string `json:"customElementName,omitempty"`
 
-	// microFrontEndAppRef is a reference to the MicroFrontEndApp that this binding is for.
+	// appRef is a reference to the MicroFrontEndApp to include in this binding.
 	// +optional
-	MicroFrontEndAppRef *corev1.LocalObjectReference `json:"microFrontEndAppRef,omitempty"`
+	AppRef *corev1.LocalObjectReference `json:"appRef,omitempty"`
 
 	// rawHTML is a raw HTML string to be rendered in the specified slot (if present in the template).
 	// +optional
@@ -55,9 +55,9 @@ type MicroFrontEndPageBindingSpec struct {
 	// +kubebuilder:validation:XValidation:rule="self.all(x, self.filter(y, y.slot == x.slot).size() == 1) && (size(self) <= 1 || self.exists(x, x.slot == 'main'))",message="slot names must be unique, and if there are multiple entries, one must be 'main'"
 	ContentEntries []ContentEntry `json:"contentEntries"`
 
-	// microFrontEndPageArchetypeRef is a reference to the MicroFrontEndPageArchetype that this binding is for.
+	// pageArchetypeRef is a reference to the MicroFrontEndPageArchetype that this binding is for.
 	// +kubebuilder:validation:Required
-	MicroFrontEndPageArchetypeRef corev1.LocalObjectReference `json:"microFrontEndPageArchetypeRef"`
+	PageArchetypeRef corev1.LocalObjectReference `json:"pageArchetypeRef"`
 
 	// overrideFooterRef is an optional reference to a MicroFrontEndPageFooter resource. If not specified, the footer from the archetype will be used.
 	// +optional

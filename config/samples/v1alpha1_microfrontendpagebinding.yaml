@@ -7,22 +7,22 @@ metadata:
   name: my-page
 spec:
   contentEntries:
-    - customElementName: my-element
-      microFrontEndAppRef:
+    - appRef:
         name: my-app
+      customElementName: my-element
       slot: main
     - rawHTML: |
         <p>Hello world!</p>
       slot: column-2
   label: My Page
-  microFrontEndPageArchetypeRef:
-    name: generic-page
   overrideFooterRef:
     name: generic-footer
   overrideHeaderRef:
     name: generic-header
   overrideMainNavigationRef:
     name: generic-navigation
+  pageArchetypeRef:
+    name: generic-page
   parent: Home
   path: /my-app-page
   weight: 1

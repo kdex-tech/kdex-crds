@@ -7,4 +7,4 @@ metadata:
   name: generic-footer
 spec:
   content: |
-    <small>&copy; {{ .Values.currentYear }} {{ .Values.organizationName }}. All Rights Reserved.</small>
+    <small>&copy; {{ .Values.date["year"] }} {{ .Values.organizationName }}. All Rights Reserved.</small>
