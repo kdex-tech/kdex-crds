@@ -30,9 +30,8 @@ type MicroFrontEndPageArchetypeSpec struct {
 	// The following markers will use OpenAPI v3 schema to validate the value
 	// More info: https://book.kubebuilder.io/reference/markers/crd-validation.html
 
-	// foo is an example field of MicroFrontEndPageArchetype. Edit microfrontendpagearchetype_types.go to remove/update
-	// +optional
-	Foo *string `json:"foo,omitempty"`
+	// Content is a go string template that defines the entire structure of a App Server page. The template uses the provided go objects that model the to render page contents.
+	Content string `json:"content"`
 }
 
 // MicroFrontEndPageArchetypeStatus defines the observed state of MicroFrontEndPageArchetype.
