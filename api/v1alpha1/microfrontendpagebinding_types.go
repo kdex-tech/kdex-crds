@@ -17,22 +17,49 @@ limitations under the License.
 package v1alpha1
 
 import (
+	corev1 "k8s.io/api/core/v1"
+	"k8s.io/apimachinery/pkg/api/resource"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
 
-// EDIT THIS FILE!  THIS IS SCAFFOLDING FOR YOU TO OWN!
-// NOTE: json tags are required.  Any new fields you add must have json tags for the fields to be serialized.
+type MicroFrontEndAppEntry struct {
+	// CustomElementName is the name of the MicroFrontEndApp custom element to render in the template.
+	// +kubebuilder:validation:Required
+	CustomElementName string `json:"customElementName"`
+
+	// MicroFrontEndAppRef is a reference to the MicroFrontEndApp that this binding is for.
+	// +kubebuilder:validation:Required
+	MicroFrontEndAppRef corev1.LocalObjectReference `json:"microFrontEndAppRef"`
+
+	// Slot is the name of the App slot to which this entry will be bound. If omitted, the slot used will be `main`. No more than one entry can be bound to a slot.
+	// +optional
+	Slot string `json:"slot"`
+}
 
 // MicroFrontEndPageBindingSpec defines the desired state of MicroFrontEndPageBinding
 type MicroFrontEndPageBindingSpec struct {
-	// INSERT ADDITIONAL SPEC FIELDS - desired state of cluster
-	// Important: Run "make" to regenerate code after modifying this file
-	// The following markers will use OpenAPI v3 schema to validate the value
-	// More info: https://book.kubebuilder.io/reference/markers/crd-validation.html
+	// Label is the default name used in menus and for pages before localization occurs (or when no translation exists for the current language).
+	// +kubebuilder:validation:Required
+	Label string `json:"label"`
 
-	// foo is an example field of MicroFrontEndPageBinding. Edit microfrontendpagebinding_types.go to remove/update
+	// MicroFrontEndAppEntries the set of MicroFrontEndApps to bind to this page.
+	// +kubebuilder:validation:MaxItems=8
+	// +kubebuilder:validation:MinItems=1
+	// +kubebuilder:validation:Required
+	// +kubebuilder:validation:XValidation:rule="self.all(x, self.filter(y, y.slot == x.slot).size() == 1) && (size(self) <= 1 || self.exists(x, x.slot == 'main'))",message="slot names must be unique, and if there are multiple entries, one must be 'main'"
+	MicroFrontEndAppEntries []MicroFrontEndAppEntry `json:"MicroFrontEndAppEntries"`
+
+	// Parent is an optional property that expresses the parent under which this the menu entry for this page will be added in the main navigation. A hierarchical path using slashes is supported.
 	// +optional
-	Foo *string `json:"foo,omitempty"`
+	Parent string `json:"parent,omitempty"`
+
+	// Path is the path at which the page will be mounted in the application server context.
+	// +kubebuilder:validation:Required
+	Path string `json:"path"`
+
+	// Weight is an optional property that can influence the position of the page menu entry.
+	// +optional
+	Weight resource.Quantity `json:"weight,omitempty"`
 }
 
 // MicroFrontEndPageBindingStatus defines the observed state of MicroFrontEndPageBinding.
