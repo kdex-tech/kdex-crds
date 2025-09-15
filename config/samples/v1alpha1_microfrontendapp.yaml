@@ -4,7 +4,7 @@ metadata:
   labels:
     app.kubernetes.io/name: kdex-crds
     app.kubernetes.io/managed-by: kustomize
-  name: microfrontendapp-sample
+  name: my-app
 spec:
   customElements:
     - description: "A custom element"

@@ -4,13 +4,15 @@ metadata:
   labels:
     app.kubernetes.io/name: kdex-crds
     app.kubernetes.io/managed-by: kustomize
-  name: microfrontendpagebinding-sample
+  name: my-page
 spec:
-  label: My App Page
+  label: My Page
   microFrontEndAppEntries:
     - customElementName: my-element
       microFrontEndAppRef:
-        name: microfrontendapp-sample
+        name: my-app
+  microFrontEndPageArchetypeRef:
+    name: generic-page
   parent: Home
   path: /my-app-page
   weight: 1

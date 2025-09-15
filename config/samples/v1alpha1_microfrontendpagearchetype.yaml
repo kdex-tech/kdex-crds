@@ -4,7 +4,7 @@ metadata:
   labels:
     app.kubernetes.io/name: kdex-crds
     app.kubernetes.io/managed-by: kustomize
-  name: generic-page-archetype
+  name: generic-page
 spec:
   content: |
     <!DOCTYPE html>
@@ -23,11 +23,11 @@ spec:
           {{ .Values.navigation["main"] }}
         </nav>
         <main>
-          {{ .Values.customElement["main"] }}
+          {{ .Values.app["main"] }}
         </main>
         <footer>
           {{ .Values.footer }}
         </footer>
-        {{ .Values.footerScript }}
+        {{ .Values.footScript }}
       </body>
     </html>
