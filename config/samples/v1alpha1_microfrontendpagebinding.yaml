@@ -17,7 +17,7 @@ spec:
     name: generic-footer
   overrideHeaderRef:
     name: generic-header
-  overrideNavigationRef:
+  overrideMainNavigationRef:
     name: generic-navigation
   parent: Home
   path: /my-app-page

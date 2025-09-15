@@ -133,9 +133,10 @@ spec:
                     type: string
                 type: object
                 x-kubernetes-map-type: atomic
-              overrideNavigationRef:
-                description: overrideNavigationRef is an optional reference to a MicroFrontEndPageNavigation
-                  resource. If not specified, the navigation from the archetype will
+              overrideMainNavigationRef:
+                description: overrideMainNavigationRef is an optional reference to
+                  a MicroFrontEndPageNavigation resource referenced as `{{ .Values.navigation["main"]
+                  }}. If not specified, the main navigation from the archetype will
                   be used.
                 properties:
                   name:

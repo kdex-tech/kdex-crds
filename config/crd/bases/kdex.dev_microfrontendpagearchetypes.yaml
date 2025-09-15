@@ -76,9 +76,10 @@ spec:
                     type: string
                 type: object
                 x-kubernetes-map-type: atomic
-              defaultNavigationRef:
-                description: defaultNavigationRef is an optional reference to a MicroFrontEndPageNavigation
-                  resource. If not specified, no navigation will be displayed.
+              defaultMainNavigationRef:
+                description: defaultMainNavigationRef is an optional reference to
+                  a MicroFrontEndPageNavigation resource referenced as `{{ .Values.navigation["main"]
+                  }}`. If not specified, no navigation will be displayed.
                 properties:
                   name:
                     default: ""

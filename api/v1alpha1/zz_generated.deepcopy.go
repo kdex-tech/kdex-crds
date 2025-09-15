@@ -251,8 +251,8 @@ func (in *MicroFrontEndPageArchetypeSpec) DeepCopyInto(out *MicroFrontEndPageArc
 		*out = new(v1.LocalObjectReference)
 		**out = **in
 	}
-	if in.DefaultNavigationRef != nil {
-		in, out := &in.DefaultNavigationRef, &out.DefaultNavigationRef
+	if in.DefaultMainNavigationRef != nil {
+		in, out := &in.DefaultMainNavigationRef, &out.DefaultMainNavigationRef
 		*out = new(v1.LocalObjectReference)
 		**out = **in
 	}
@@ -368,8 +368,8 @@ func (in *MicroFrontEndPageBindingSpec) DeepCopyInto(out *MicroFrontEndPageBindi
 		*out = new(v1.LocalObjectReference)
 		**out = **in
 	}
-	if in.OverrideNavigationRef != nil {
-		in, out := &in.OverrideNavigationRef, &out.OverrideNavigationRef
+	if in.OverrideMainNavigationRef != nil {
+		in, out := &in.OverrideMainNavigationRef, &out.OverrideMainNavigationRef
 		*out = new(v1.LocalObjectReference)
 		**out = **in
 	}

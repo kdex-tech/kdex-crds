@@ -36,9 +36,9 @@ type MicroFrontEndPageArchetypeSpec struct {
 	// +optional
 	DefaultHeaderRef *corev1.LocalObjectReference `json:"defaultHeaderRef,omitempty"`
 
-	// defaultNavigationRef is an optional reference to a MicroFrontEndPageNavigation resource. If not specified, no navigation will be displayed.
+	// defaultMainNavigationRef is an optional reference to a MicroFrontEndPageNavigation resource referenced as `{{ .Values.navigation["main"] }}`. If not specified, no navigation will be displayed.
 	// +optional
-	DefaultNavigationRef *corev1.LocalObjectReference `json:"defaultNavigationRef,omitempty"`
+	DefaultMainNavigationRef *corev1.LocalObjectReference `json:"defaultMainNavigationRef,omitempty"`
 }
 
 // MicroFrontEndPageArchetypeStatus defines the observed state of MicroFrontEndPageArchetype.

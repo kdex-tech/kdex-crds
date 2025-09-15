@@ -35,5 +35,5 @@ spec:
     name: generic-footer
   defaultHeaderRef:
     name: generic-header
-  defaultNavigationRef:
+  defaultMainNavigationRef:
     name: generic-navigation
