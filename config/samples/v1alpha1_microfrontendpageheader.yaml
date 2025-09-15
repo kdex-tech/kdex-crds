@@ -4,6 +4,7 @@ metadata:
   labels:
     app.kubernetes.io/name: kdex-crds
     app.kubernetes.io/managed-by: kustomize
-  name: microfrontendpageheader-sample
+  name: generic-header
 spec:
-  # TODO(user): Add fields here
+  content: |
+    <h1>{{ .Values.title }}</h1>
