@@ -2,13 +2,44 @@
 
 This project contains a set of Custom Resource Definitions (CRDs) for managing micro-frontend applications in Kubernetes.
 
+The architecture of the KDEX App Server's micro-frontend application pages is a follows:
+
+**Path** - derived from MicroFrontEndAppBinding CR `spec.path`
+
+```html
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <!-- App Server managed head contents; css, meta, scripts & importmap -->
+    <title>
+      <!-- The title of the page derived from MicroFrontEndAppBinding CR `spec.label` -->
+    </title>
+  </head>
+  <body>
+    <header>
+      <!-- TODO: CRD -->
+    </header>
+    <nav>
+      <!-- A hierarchical menu containing links to pages derived from MicroFrontEndAppBinding CR `spec.parent` + `spec.label` + `spec.path` -->
+    </nav>
+    <main>
+      <!-- MicroFrontEndTemplate renders a MicroFrontEndApp custom element
+      -->
+    </main>
+    <footer>
+      <!-- TODO: CRD -->
+    </footer>
+  </body>
+</html>
+```
+
 ## Description
 
 The `kdex-crds` project provides the following CRDs:
 
 - `MicroFrontEndApp`: Represents a micro-frontend application, including its source code and the custom elements it exposes.
-- `MicroFrontEndTemplate`: Defines an HTML template for rendering a micro-frontend.
 - `MicroFrontEndAppBinding`: Binds a `MicroFrontEndApp` to a `MicroFrontEndTemplate` at a specific path, making it accessible.
+- `MicroFrontEndTemplate`: Defines an HTML template for rendering a micro-frontend.
 
 These CRDs work together to provide a flexible and declarative way to manage micro-frontends in a Kubernetes environment.
 
@@ -29,28 +60,26 @@ spec:
       description: "A custom element"
 ```
 
-### MicroFrontEndTemplate
+**Spec Fields:**
 
-A `MicroFrontEndTemplate` resource defines an HTML template for rendering a micro-frontend. Here is an example:
+| Field | Type | Description | Required |
+|---|---|---|---|
+| `customElements` | `[]CustomElement` | A list of custom elements exposed by the micro-frontend application. | No |
+| `source` | `MicroFrontEndAppSource` | Defines the source of the micro-frontend application. | Yes |
 
-```yaml
-apiVersion: kdex.dev/v1alpha1
-kind: MicroFrontEndTemplate
-metadata:
-  name: my-template
-spec:
-  body: |
-    <!DOCTYPE html>
-    <html>
-      <head>
-        <title>{{ .Values.label }}</title>
-      </head>
-      <body>
-        <div id="root"></div>
-        <script src="{{ .Values.path }}"></script>
-      </body>
-    </html>
-```
+**CustomElement Fields:**
+
+| Field | Type | Description | Required |
+|---|---|---|---|
+| `description` | `string` | Description of the custom element. | No |
+| `name` | `string` | Name of the custom element. | Yes |
+
+**MicroFrontEndAppSource Fields:**
+
+| Field | Type | Description | Required |
+|---|---|---|---|
+| `secretRef` | `*corev1.LocalObjectReference` | A reference to a secret containing authentication credentials for the source. | No |
+| `url` | `string` | URL of the application source. This can be a Git repository, an archive, or an OCI artifact. | Yes |
 
 ### MicroFrontEndAppBinding
 
@@ -70,10 +99,42 @@ spec:
     name: "my-template"
 ```
 
+**Spec Fields:**
+
+| Field | Type | Description | Required |
+|---|---|---|---|
+| `label` | `string` | The default name used in menus and for pages before localization occurs (or when no translation exists for the current language). | Yes |
+| `microFrontEndAppRef` | `corev1.LocalObjectReference` | A reference to the MicroFrontEndApp that this binding is for. | Yes |
+| `parent` | `string` | An optional menu item property that can express a hierarchical path using slashes. | No |
+| `path` | `string` | The path at which the application will be mounted in the application server context. | Yes |
+| `templateRef` | `corev1.LocalObjectReference` | A reference to the MicroFrontEndTemplate that will be used to render the application. | Yes |
+| `weight` | `resource.Quantity` | An optional property that can influence the position of the application menu entry. | No |
+
+### MicroFrontEndTemplate
+
+A `MicroFrontEndTemplate` resource defines an HTML template for rendering a micro-frontend. Here is an example:
+
+```yaml
+apiVersion: kdex.dev/v1alpha1
+kind: MicroFrontEndTemplate
+metadata:
+  name: my-template
+spec:
+  main: |
+    <{{ .Values.customElement }} {{ .Values.attributes }}>
+    </{{ .Values.customElement }}>
+```
+
+**Spec Fields:**
+
+| Field | Type | Description | Required |
+|---|---|---|---|
+| `main` | `string` | A go string template that will be used to generate the HTML <main> element that renders the microfrontend custom element. | Yes |
+
 ## Getting Started
 
 ### Prerequisites
-- go version v1.24.0+
+- go version v1.24.5+
 - docker version 17.03+.
 - kubectl version v1.11.3+.
 - Access to a Kubernetes v1.11.3+ cluster.
@@ -177,7 +238,8 @@ previously added to 'dist/chart/values.yaml' or 'dist/chart/manager/manager.yaml
 is manually re-applied afterwards.
 
 ## Contributing
-// TODO(user): Add detailed information on how you would like others to contribute to this project
+
+We welcome contributions from the community. If you find a bug or have a feature request, please open an issue. If you want to contribute code, please open a pull request.
 
 **NOTE:** Run `make help` for more information on all potential `make` targets
 
@@ -198,4 +260,3 @@ distributed under the License is distributed on an "AS IS" BASIS,
 WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
-
