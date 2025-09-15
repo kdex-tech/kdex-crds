@@ -20,9 +20,6 @@ import (
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
 
-// EDIT THIS FILE!  THIS IS SCAFFOLDING FOR YOU TO OWN!
-// NOTE: json tags are required.  Any new fields you add must have json tags for the fields to be serialized.
-
 // +kubebuilder:object:root=true
 // +kubebuilder:subresource:status
 
@@ -54,11 +51,6 @@ type MicroFrontEndTemplateList struct {
 
 // MicroFrontEndTemplateSpec defines the desired state of MicroFrontEndTemplate
 type MicroFrontEndTemplateSpec struct {
-	// INSERT ADDITIONAL SPEC FIELDS - desired state of cluster
-	// Important: Run "make" to regenerate code after modifying this file
-	// The following markers will use OpenAPI v3 schema to validate the value
-	// More info: https://book.kubebuilder.io/reference/markers/crd-validation.html
-
 	// Main is a go string template that will be used to generate the content of the HTML <main> element that renders a microfrontend custom element.
 	// +kubebuilder:validation:Required
 	Main string `json:"main"`
@@ -66,8 +58,6 @@ type MicroFrontEndTemplateSpec struct {
 
 // MicroFrontEndTemplateStatus defines the observed state of MicroFrontEndTemplate.
 type MicroFrontEndTemplateStatus struct {
-	// INSERT ADDITIONAL STATUS FIELD - define observed state of cluster
-	// Important: Run "make" to regenerate code after modifying this file
 
 	// For Kubernetes API conventions, see:
 	// https://github.com/kubernetes/community/blob/master/contributors/devel/sig-architecture/api-conventions.md#typical-status-properties

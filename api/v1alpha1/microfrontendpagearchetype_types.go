@@ -20,24 +20,14 @@ import (
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
 
-// EDIT THIS FILE!  THIS IS SCAFFOLDING FOR YOU TO OWN!
-// NOTE: json tags are required.  Any new fields you add must have json tags for the fields to be serialized.
-
 // MicroFrontEndPageArchetypeSpec defines the desired state of MicroFrontEndPageArchetype
 type MicroFrontEndPageArchetypeSpec struct {
-	// INSERT ADDITIONAL SPEC FIELDS - desired state of cluster
-	// Important: Run "make" to regenerate code after modifying this file
-	// The following markers will use OpenAPI v3 schema to validate the value
-	// More info: https://book.kubebuilder.io/reference/markers/crd-validation.html
-
 	// Content is a go string template that defines the entire structure of a App Server page. The template uses the provided go objects that model the to render page contents.
 	Content string `json:"content"`
 }
 
 // MicroFrontEndPageArchetypeStatus defines the observed state of MicroFrontEndPageArchetype.
 type MicroFrontEndPageArchetypeStatus struct {
-	// INSERT ADDITIONAL STATUS FIELD - define observed state of cluster
-	// Important: Run "make" to regenerate code after modifying this file
 
 	// For Kubernetes API conventions, see:
 	// https://github.com/kubernetes/community/blob/master/contributors/devel/sig-architecture/api-conventions.md#typical-status-properties
