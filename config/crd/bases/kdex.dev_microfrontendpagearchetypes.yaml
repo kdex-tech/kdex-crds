@@ -47,7 +47,7 @@ spec:
                 minLength: 5
                 type: string
               defaultFooterRef:
-                description: DefaultFooterRef is an optional reference to a MicroFrontEndPageFooter
+                description: defaultFooterRef is an optional reference to a MicroFrontEndPageFooter
                   resource. If not specified, no footer will be displayed.
                 properties:
                   name:
@@ -62,7 +62,7 @@ spec:
                 type: object
                 x-kubernetes-map-type: atomic
               defaultHeaderRef:
-                description: DefaultHeaderRef is an optional reference to a MicroFrontEndPageHeader
+                description: defaultHeaderRef is an optional reference to a MicroFrontEndPageHeader
                   resource. If not specified, no header will be displayed.
                 properties:
                   name:
@@ -77,7 +77,7 @@ spec:
                 type: object
                 x-kubernetes-map-type: atomic
               defaultNavigationRef:
-                description: DefaultNavigationRef is an optional reference to a MicroFrontEndPageNavigation
+                description: defaultNavigationRef is an optional reference to a MicroFrontEndPageNavigation
                   resource. If not specified, no navigation will be displayed.
                 properties:
                   name:
