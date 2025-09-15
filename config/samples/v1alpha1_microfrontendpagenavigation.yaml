@@ -4,6 +4,23 @@ metadata:
   labels:
     app.kubernetes.io/name: kdex-crds
     app.kubernetes.io/managed-by: kustomize
-  name: microfrontendpagenavigation-sample
+  name: generic-navigation
 spec:
-  # TODO(user): Add fields here
+  content: |
+    {{- define "menu" -}}
+      <ul>
+        {{- range $label, $value := . }}
+          <li>
+            {{- if ($value.path != "") -}}
+              <a href="{{ $value.path }}">{{ $label }}</a>
+            {{- else -}}
+              <span>{{ $label }}</span>
+            {{- end -}}
+            {{- if ($value.children != nil) -}}
+              {{- template "menu" $value.children -}}
+            {{- end -}}
+          </li>
+        {{- end -}}
+      </ul>
+    {{- end -}}
+    {{- template "menu" .Values.menuEntries -}}
