@@ -57,7 +57,7 @@ type MicroFrontEndPageBindingSpec struct {
 	// +kubebuilder:validation:Required
 	Path string `json:"path"`
 
-	// Weight is an optional property that can influence the position of the page menu entry.
+	// Weight is an optional property that can influence the position of the page menu entry. Heavier items fall lower in the order.
 	// +optional
 	Weight resource.Quantity `json:"weight,omitempty"`
 }
