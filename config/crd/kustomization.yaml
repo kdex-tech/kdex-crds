@@ -8,6 +8,7 @@ resources:
 - bases/kdex.dev_microfrontendpagebindings.yaml
 - bases/kdex.dev_microfrontendpageheaders.yaml
 - bases/kdex.dev_microfrontendpagefooters.yaml
+- bases/kdex.dev_microfrontendpagenavigations.yaml
 # +kubebuilder:scaffold:crdkustomizeresource
 
 patches:

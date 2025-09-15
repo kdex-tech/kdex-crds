@@ -6,4 +6,5 @@ resources:
 - v1alpha1_microfrontendpagebinding.yaml
 - v1alpha1_microfrontendpageheader.yaml
 - v1alpha1_microfrontendpagefooter.yaml
+- v1alpha1_microfrontendpagenavigation.yaml
 # +kubebuilder:scaffold:manifestskustomizesamples
