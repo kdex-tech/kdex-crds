@@ -1,7 +1,5 @@
 
 processor:
   ignoreFields:
-    - "TypeMeta"
-    - "ObjectMeta"
-    - "ListMeta"
-    - "Status"
+    - "status$"
+    - "TypeMeta$"

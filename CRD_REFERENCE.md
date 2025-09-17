@@ -77,7 +77,6 @@ _Appears in:_
 | `kind` _string_ | `MicroFrontEndApp` | | |
 | `metadata` _[ObjectMeta](https://kubernetes.io/docs/reference/generated/kubernetes-api/v/#objectmeta-v1-meta)_ | Refer to Kubernetes API documentation for fields of `metadata`. |  |  |
 | `spec` _[MicroFrontEndAppSpec](#microfrontendappspec)_ | spec defines the desired state of MicroFrontEndApp |  | Required: \{\} <br /> |
-| `status` _[MicroFrontEndAppStatus](#microfrontendappstatus)_ | status defines the observed state of MicroFrontEndApp |  |  |
 
 
 #### MicroFrontEndAppList
@@ -132,17 +131,6 @@ _Appears in:_
 | `source` _[MicroFrontEndAppSource](#microfrontendappsource)_ | source configures the location of the source code of the micro-frontend application. The source code must contain a valid package.json that produces ES modules. Based on App Server configuration embedded dependencies may not be allowed. In this case dependencies must be externalized otherwise the app CR will not validate. |  | Required: \{\} <br /> |
 
 
-#### MicroFrontEndAppStatus
-
-
-
-MicroFrontEndAppStatus defines the observed state of MicroFrontEndApp.
-
-
-
-_Appears in:_
-- [MicroFrontEndApp](#microfrontendapp)
-
 
 
 #### MicroFrontEndPageArchetype
@@ -162,7 +150,6 @@ _Appears in:_
 | `kind` _string_ | `MicroFrontEndPageArchetype` | | |
 | `metadata` _[ObjectMeta](https://kubernetes.io/docs/reference/generated/kubernetes-api/v/#objectmeta-v1-meta)_ | Refer to Kubernetes API documentation for fields of `metadata`. |  |  |
 | `spec` _[MicroFrontEndPageArchetypeSpec](#microfrontendpagearchetypespec)_ | spec defines the desired state of MicroFrontEndPageArchetype |  | Required: \{\} <br /> |
-| `status` _[MicroFrontEndPageArchetypeStatus](#microfrontendpagearchetypestatus)_ | status defines the observed state of MicroFrontEndPageArchetype |  |  |
 
 
 #### MicroFrontEndPageArchetypeList
@@ -203,17 +190,6 @@ _Appears in:_
 | `extraNavigations` _object (keys:string, values:[LocalObjectReference](https://kubernetes.io/docs/reference/generated/kubernetes-api/v/#localobjectreference-v1-core))_ | extraNavigations is an optional map of named navigation object references that will be available in page templates as `\{\{ .Values.navigation["name"] \}\}`. |  |  |
 
 
-#### MicroFrontEndPageArchetypeStatus
-
-
-
-MicroFrontEndPageArchetypeStatus defines the observed state of MicroFrontEndPageArchetype.
-
-
-
-_Appears in:_
-- [MicroFrontEndPageArchetype](#microfrontendpagearchetype)
-
 
 
 #### MicroFrontEndPageBinding
@@ -233,7 +209,6 @@ _Appears in:_
 | `kind` _string_ | `MicroFrontEndPageBinding` | | |
 | `metadata` _[ObjectMeta](https://kubernetes.io/docs/reference/generated/kubernetes-api/v/#objectmeta-v1-meta)_ | Refer to Kubernetes API documentation for fields of `metadata`. |  |  |
 | `spec` _[MicroFrontEndPageBindingSpec](#microfrontendpagebindingspec)_ | spec defines the desired state of MicroFrontEndPageBinding |  | Required: \{\} <br /> |
-| `status` _[MicroFrontEndPageBindingStatus](#microfrontendpagebindingstatus)_ | status defines the observed state of MicroFrontEndPageBinding |  |  |
 
 
 #### MicroFrontEndPageBindingList
@@ -278,17 +253,6 @@ _Appears in:_
 | `weight` _[Quantity](https://kubernetes.io/docs/reference/generated/kubernetes-api/v/#quantity-resource-api)_ | weight is a property that influences the position of the page menu entry. Items are sorted first by ascending weight and then ascending lexicographically. |  |  |
 
 
-#### MicroFrontEndPageBindingStatus
-
-
-
-MicroFrontEndPageBindingStatus defines the observed state of MicroFrontEndPageBinding.
-
-
-
-_Appears in:_
-- [MicroFrontEndPageBinding](#microfrontendpagebinding)
-
 
 
 #### MicroFrontEndPageFooter
@@ -308,7 +272,6 @@ _Appears in:_
 | `kind` _string_ | `MicroFrontEndPageFooter` | | |
 | `metadata` _[ObjectMeta](https://kubernetes.io/docs/reference/generated/kubernetes-api/v/#objectmeta-v1-meta)_ | Refer to Kubernetes API documentation for fields of `metadata`. |  |  |
 | `spec` _[MicroFrontEndPageFooterSpec](#microfrontendpagefooterspec)_ | spec defines the desired state of MicroFrontEndPageFooter |  |  |
-| `status` _[MicroFrontEndPageFooterStatus](#microfrontendpagefooterstatus)_ | status defines the observed state of MicroFrontEndPageFooter |  |  |
 
 
 #### MicroFrontEndPageFooterList
@@ -345,17 +308,6 @@ _Appears in:_
 | `content` _string_ | content is a go string template that defines the content of an App Server page footer section. The template accesses `.Values` properties to render its contents. |  | MinLength: 5 <br />Required: \{\} <br /> |
 
 
-#### MicroFrontEndPageFooterStatus
-
-
-
-MicroFrontEndPageFooterStatus defines the observed state of MicroFrontEndPageFooter.
-
-
-
-_Appears in:_
-- [MicroFrontEndPageFooter](#microfrontendpagefooter)
-
 
 
 #### MicroFrontEndPageHeader
@@ -375,7 +327,6 @@ _Appears in:_
 | `kind` _string_ | `MicroFrontEndPageHeader` | | |
 | `metadata` _[ObjectMeta](https://kubernetes.io/docs/reference/generated/kubernetes-api/v/#objectmeta-v1-meta)_ | Refer to Kubernetes API documentation for fields of `metadata`. |  |  |
 | `spec` _[MicroFrontEndPageHeaderSpec](#microfrontendpageheaderspec)_ | spec defines the desired state of MicroFrontEndPageHeader |  | Required: \{\} <br /> |
-| `status` _[MicroFrontEndPageHeaderStatus](#microfrontendpageheaderstatus)_ | status defines the observed state of MicroFrontEndPageHeader |  |  |
 
 
 #### MicroFrontEndPageHeaderList
@@ -412,17 +363,6 @@ _Appears in:_
 | `content` _string_ | content is a go string template that defines the content of an App Server page header section. The template accesses `.Values` properties to render its contents. |  | MinLength: 5 <br />Required: \{\} <br /> |
 
 
-#### MicroFrontEndPageHeaderStatus
-
-
-
-MicroFrontEndPageHeaderStatus defines the observed state of MicroFrontEndPageHeader.
-
-
-
-_Appears in:_
-- [MicroFrontEndPageHeader](#microfrontendpageheader)
-
 
 
 #### MicroFrontEndPageNavigation
@@ -442,7 +382,6 @@ _Appears in:_
 | `kind` _string_ | `MicroFrontEndPageNavigation` | | |
 | `metadata` _[ObjectMeta](https://kubernetes.io/docs/reference/generated/kubernetes-api/v/#objectmeta-v1-meta)_ | Refer to Kubernetes API documentation for fields of `metadata`. |  |  |
 | `spec` _[MicroFrontEndPageNavigationSpec](#microfrontendpagenavigationspec)_ | spec defines the desired state of MicroFrontEndPageNavigation |  |  |
-| `status` _[MicroFrontEndPageNavigationStatus](#microfrontendpagenavigationstatus)_ | status defines the observed state of MicroFrontEndPageNavigation |  |  |
 
 
 #### MicroFrontEndPageNavigationList
@@ -478,17 +417,6 @@ _Appears in:_
 | --- | --- | --- | --- |
 | `content` _string_ | content is a go string template that defines the content of an App Server page navigation. The template accesses `.Values` properties to render its contents. |  | MinLength: 5 <br />Required: \{\} <br /> |
 
-
-#### MicroFrontEndPageNavigationStatus
-
-
-
-MicroFrontEndPageNavigationStatus defines the observed state of MicroFrontEndPageNavigation.
-
-
-
-_Appears in:_
-- [MicroFrontEndPageNavigation](#microfrontendpagenavigation)
 
 
 

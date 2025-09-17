@@ -15,49 +15,7 @@ The `kdex-crds` project provides a declarative way to manage micro-frontends in 
 
 These CRDs work together to provide a flexible and declarative way to manage micro-frontends in a Kubernetes environment.
 
-### MicroFrontEndApp
-
-A `MicroFrontEndApp` resource defines a micro-frontend application. Here is an example:
-
-```yaml
-apiVersion: kdex.dev/v1alpha1
-kind: MicroFrontEndApp
-metadata:
-  name: my-app
-spec:
-  source:
-    url: "https://github.com/my-org/my-app.git"
-  customElements:
-    - name: "my-element"
-      description: "A custom element"
-```
-
-**Spec Fields:**
-
-| Field | Type | Description | Required |
-|---|---|---|---|
-| `customElements` | `[]CustomElement` | A list of custom elements exposed by the micro-frontend application. | No |
-| `source` | `MicroFrontEndAppSource` | Defines the source of the micro-frontend application. | Yes |
-
-**CustomElement Fields:**
-
-| Field | Type | Description | Required |
-|---|---|---|---|
-| `description` | `string` | Description of the custom element. | No |
-| `name` | `string` | Name of the custom element. | Yes |
-
-**MicroFrontEndAppSource Fields:**
-
-| Field | Type | Description | Required |
-|---|---|---|---|
-| `secretRef` | `*corev1.LocalObjectReference` | A reference to a secret containing authentication credentials for the source. | No |
-| `url` | `string` | URL of the application source. This can be a Git repository, an archive, or an OCI artifact. | Yes |
-
-**Status Fields:**
-
-| Field | Type | Description |
-|---|---|---|
-| `conditions` | `[]metav1.Condition` | Represents the current state of the MicroFrontEndApp resource. |
+See [CRD_REFERENCE.md](CRD_REFERENCE.md) for reference documentation.
 
 ## Design Notes
 
