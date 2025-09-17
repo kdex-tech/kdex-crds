@@ -1,0 +1,7 @@
+
+processor:
+  ignoreFields:
+    - "TypeMeta"
+    - "ObjectMeta"
+    - "ListMeta"
+    - "Status"
