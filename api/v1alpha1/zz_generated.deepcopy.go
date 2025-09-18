@@ -262,9 +262,13 @@ func (in *MicroFrontEndPageArchetypeSpec) DeepCopyInto(out *MicroFrontEndPageArc
 	}
 	if in.ExtraNavigations != nil {
 		in, out := &in.ExtraNavigations, &out.ExtraNavigations
-		*out = make(map[string]v1.LocalObjectReference, len(*in))
-		for key, val := range *in {
-			(*out)[key] = val
+		*out = new(map[string]v1.LocalObjectReference)
+		if **in != nil {
+			in, out := *in, *out
+			*out = make(map[string]v1.LocalObjectReference, len(*in))
+			for key, val := range *in {
+				(*out)[key] = val
+			}
 		}
 	}
 }
