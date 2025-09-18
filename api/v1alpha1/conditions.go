@@ -42,36 +42,3 @@ func GetCondition(conditions []metav1.Condition, condType ConditionType) *metav1
 	}
 	return nil
 }
-
-// SetCondition sets the provided condition in the conditions slice.
-func SetCondition(conditions *[]metav1.Condition, newCond metav1.Condition) {
-	if conditions == nil {
-		conditions = &[]metav1.Condition{}
-	}
-	currentCond := GetCondition(*conditions, ConditionType(newCond.Type))
-	if currentCond != nil {
-		if currentCond.Status == newCond.Status {
-			newCond.LastTransitionTime = currentCond.LastTransitionTime
-		}
-		currentCond.Status = newCond.Status
-		currentCond.Reason = newCond.Reason
-		currentCond.Message = newCond.Message
-		currentCond.LastTransitionTime = newCond.LastTransitionTime
-	} else {
-		*conditions = append(*conditions, newCond)
-	}
-}
-
-// RemoveCondition removes the condition with the provided type from the conditions slice.
-func RemoveCondition(conditions *[]metav1.Condition, condType ConditionType) {
-	if conditions == nil {
-		return
-	}
-	newConditions := []metav1.Condition{}
-	for i := range *conditions {
-		if (*conditions)[i].Type != string(condType) {
-			newConditions = append(newConditions, (*conditions)[i])
-		}
-	}
-	*conditions = newConditions
-}
