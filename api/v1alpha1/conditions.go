@@ -10,21 +10,36 @@ type ConditionType string
 const (
 	// ConditionTypeAppNotFound is the type when the referenced app is not found.
 	ConditionTypeAppNotFound ConditionType = "AppNotFound"
+	// ConditionTypeAppNotReady is the type when the referenced app is not ready.
+	ConditionTypeAppNotReady ConditionType = "AppNotReady"
 
 	// ConditionTypeFooterNotFound is the type when the referenced footer is not found.
 	ConditionTypeFooterNotFound ConditionType = "FooterNotFound"
+	// ConditionTypeFooterNotReady is the type when the referenced footer is not ready.
+	ConditionTypeFooterNotReady ConditionType = "FooterNotReady"
 
 	// ConditionTypeHeaderNotFound is the type when the referenced header is not found.
 	ConditionTypeHeaderNotFound ConditionType = "HeaderNotFound"
+	// ConditionTypeHeaderNotReady is the type when the referenced header is not ready.
+	ConditionTypeHeaderNotReady ConditionType = "HeaderNotReady"
 
 	// ConditionTypeNavigationNotFound is the type when the referenced navigation is not found.
 	ConditionTypeNavigationNotFound ConditionType = "NavigationNotFound"
+	// ConditionTypeNavigationNotReady is the type when the referenced navigation is not ready.
+	ConditionTypeNavigationNotReady ConditionType = "NavigationNotReady"
 
 	// ConditionTypePageArchetypeNotFound is the type when the referenced page archetype is not found.
 	ConditionTypePageArchetypeNotFound ConditionType = "PageArchetypeNotFound"
+	// ConditionTypePageArchetypeNotReady is the type when the referenced page archetype is not ready.
+	ConditionTypePageArchetypeNotReady ConditionType = "PageArchetypeNotReady"
 
-	// ConditionTypePageReady is the type of the PageReady condition.
-	ConditionTypePageReady ConditionType = "PageReady"
+	// ConditionTypePageBindingNotFound is the type when the referenced page binding is not found.
+	ConditionTypePageBindingNotFound ConditionType = "PageBindingNotFound"
+	// ConditionTypePageBindingNotReady is the type when the referenced page binding is not ready.
+	ConditionTypePageBindingNotReady ConditionType = "PageBindingNotReady"
+
+	// ConditionTypeReady is the type of the Ready condition.
+	ConditionTypeReady ConditionType = "Ready"
 )
 
 // ConditionReason is the reason for the condition's last transition.
