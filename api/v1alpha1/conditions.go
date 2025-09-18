@@ -8,6 +8,9 @@ import (
 type ConditionType string
 
 const (
+	// ConditionTypeAppNotFound is the type when the referenced app is not found.
+	ConditionTypeAppNotFound ConditionType = "AppNotFound"
+
 	// ConditionTypeFooterNotFound is the type when the referenced footer is not found.
 	ConditionTypeFooterNotFound ConditionType = "FooterNotFound"
 
