@@ -24,6 +24,10 @@ Package v1alpha1 contains API Schema definitions for the  v1alpha1 API group.
 
 
 
+
+
+
+
 #### ContentEntry
 
 
@@ -187,7 +191,7 @@ _Appears in:_
 | `defaultFooterRef` _[LocalObjectReference](https://kubernetes.io/docs/reference/generated/kubernetes-api/v/#localobjectreference-v1-core)_ | defaultFooterRef is an optional reference to a MicroFrontEndPageFooter resource. If not specified, no footer will be displayed. |  |  |
 | `defaultHeaderRef` _[LocalObjectReference](https://kubernetes.io/docs/reference/generated/kubernetes-api/v/#localobjectreference-v1-core)_ | defaultHeaderRef is an optional reference to a MicroFrontEndPageHeader resource. If not specified, no header will be displayed. |  |  |
 | `defaultMainNavigationRef` _[LocalObjectReference](https://kubernetes.io/docs/reference/generated/kubernetes-api/v/#localobjectreference-v1-core)_ | defaultMainNavigationRef is an optional reference to a MicroFrontEndPageNavigation resource referenced as `\{\{ .Values.navigation["main"] \}\}`. If not specified, no navigation will be displayed. |  |  |
-| `extraNavigations` _object (keys:string, values:[LocalObjectReference](https://kubernetes.io/docs/reference/generated/kubernetes-api/v/#localobjectreference-v1-core))_ | extraNavigations is an optional map of named navigation object references that will be available in page templates as `\{\{ .Values.navigation["name"] \}\}`. |  |  |
+| `extraNavigations` _[LocalObjectReference](https://kubernetes.io/docs/reference/generated/kubernetes-api/v/#localobjectreference-v1-core)_ | extraNavigations is an optional map of named navigation object references that will be available in page templates as `\{\{ .Values.navigation["name"] \}\}`. |  |  |
 
 
 

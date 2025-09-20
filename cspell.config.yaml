@@ -1,0 +1,39 @@
+version: "0.2"
+ignorePaths: []
+dictionaryDefinitions: []
+dictionaries: []
+words: []
+ignoreWords:
+  - apimachinery
+  - corev
+  - crdkustomizeresource
+  - crdkustomizewebhookpatch
+  - crds
+  - deepcopy
+  - frontends
+  - GOBIN
+  - golangci
+  - kdex
+  - KMGTPE
+  - kubebuilder
+  - kustomizeconfig
+  - LOCALBIN
+  - manifestskustomizesamples
+  - metav
+  - microfrontendapp
+  - microfrontendapps
+  - microfrontendpagearchetype
+  - microfrontendpagearchetypes
+  - microfrontendpagebinding
+  - microfrontendpagebindings
+  - microfrontendpagefooter
+  - microfrontendpageheader
+  - microfrontendpageheaders
+  - microfrontendpagenavigation
+  - microfrontendpagenavigations
+  - Navigations
+  - numkMGTPE
+  - pipefail
+  - readlink
+  - subresource
+import: []
