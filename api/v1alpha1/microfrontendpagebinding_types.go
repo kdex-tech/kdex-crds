@@ -42,12 +42,22 @@ type ContentEntry struct {
 	Slot string `json:"slot"`
 }
 
+type NavigationHints struct {
+	// icon is the name of the icon to display next to the menu entry for this page.
+	// +optional
+	Icon string `json:"icon,omitempty"`
+
+	// parent specifies the menu entry that is the parent under which the menu entry for this page will be added in the main navigation. A hierarchical path using slashes is supported.
+	// +optional
+	Parent string `json:"parent,omitempty"`
+
+	// weight is a property that influences the position of the page menu entry. Items at each level are sorted first by ascending weight and then ascending lexicographically.
+	// +optional
+	Weight resource.Quantity `json:"weight,omitempty"`
+}
+
 // MicroFrontEndPageBindingSpec defines the desired state of MicroFrontEndPageBinding
 type MicroFrontEndPageBindingSpec struct {
-	// label is the value used in menus and page titles before localization occurs (or when no translation exists for the current language).
-	// +kubebuilder:validation:Required
-	Label string `json:"label"`
-
 	// contentEntries is a set of content entries to bind to this page. They may be either raw HTML fragments or MicroFrontEndApp references.
 	// +kubebuilder:validation:MaxItems=8
 	// +kubebuilder:validation:MinItems=1
@@ -55,9 +65,9 @@ type MicroFrontEndPageBindingSpec struct {
 	// +kubebuilder:validation:XValidation:rule="self.all(x, self.filter(y, y.slot == x.slot).size() == 1) && (size(self) <= 1 || self.exists(x, x.slot == 'main'))",message="slot names must be unique, and if there are multiple entries, one must be 'main'"
 	ContentEntries []ContentEntry `json:"contentEntries"`
 
-	// pageArchetypeRef is a reference to the MicroFrontEndPageArchetype that this binding is for.
+	// label is the value used in menus and page titles before localization occurs (or when no translation exists for the current language).
 	// +kubebuilder:validation:Required
-	PageArchetypeRef corev1.LocalObjectReference `json:"pageArchetypeRef"`
+	Label string `json:"label"`
 
 	// overrideFooterRef is an optional reference to a MicroFrontEndPageFooter resource. If not specified, the footer from the archetype will be used.
 	// +optional
@@ -71,17 +81,17 @@ type MicroFrontEndPageBindingSpec struct {
 	// +optional
 	OverrideMainNavigationRef *corev1.LocalObjectReference `json:"overrideMainNavigationRef,omitempty"`
 
-	// parent specifies the menu entry that is the parent under which the menu entry for this page will be added in the main navigation. A hierarchical path using slashes is supported.
+	// navigationHints are optional navigation properties that if omitted result in the page being hidden from the navigation.
 	// +optional
-	Parent string `json:"parent,omitempty"`
+	NavigationHints *NavigationHints `json:"navigationHints,omitempty"`
+
+	// pageArchetypeRef is a reference to the MicroFrontEndPageArchetype that this binding is for.
+	// +kubebuilder:validation:Required
+	PageArchetypeRef corev1.LocalObjectReference `json:"pageArchetypeRef"`
 
 	// path is the URI path at which the page will be accessible in the application server context. The final absolute path will contain this path and may be prefixed by additional context like a language identifier.
 	// +kubebuilder:validation:Required
 	Path string `json:"path"`
-
-	// weight is a property that influences the position of the page menu entry. Items are sorted first by ascending weight and then ascending lexicographically.
-	// +optional
-	Weight resource.Quantity `json:"weight,omitempty"`
 }
 
 // MicroFrontEndPageBindingStatus defines the observed state of MicroFrontEndPageBinding.

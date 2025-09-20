@@ -94,6 +94,29 @@ spec:
                   localization occurs (or when no translation exists for the current
                   language).
                 type: string
+              navigationHints:
+                description: navigationHints are optional navigation properties that
+                  if omitted result in the page being hidden from the navigation.
+                properties:
+                  icon:
+                    description: icon is the name of the icon to display next to the
+                      menu entry for this page.
+                    type: string
+                  parent:
+                    description: parent specifies the menu entry that is the parent
+                      under which the menu entry for this page will be added in the
+                      main navigation. A hierarchical path using slashes is supported.
+                    type: string
+                  weight:
+                    anyOf:
+                    - type: integer
+                    - type: string
+                    description: weight is a property that influences the position
+                      of the page menu entry. Items at each level are sorted first
+                      by ascending weight and then ascending lexicographically.
+                    pattern: ^(\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))(([KMGTPE]i)|[numkMGTPE]|([eE](\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))))?$
+                    x-kubernetes-int-or-string: true
+                type: object
               overrideFooterRef:
                 description: overrideFooterRef is an optional reference to a MicroFrontEndPageFooter
                   resource. If not specified, the footer from the archetype will be
@@ -158,26 +181,12 @@ spec:
                     type: string
                 type: object
                 x-kubernetes-map-type: atomic
-              parent:
-                description: parent specifies the menu entry that is the parent under
-                  which the menu entry for this page will be added in the main navigation.
-                  A hierarchical path using slashes is supported.
-                type: string
               path:
                 description: path is the URI path at which the page will be accessible
                   in the application server context. The final absolute path will
                   contain this path and may be prefixed by additional context like
                   a language identifier.
                 type: string
-              weight:
-                anyOf:
-                - type: integer
-                - type: string
-                description: weight is a property that influences the position of
-                  the page menu entry. Items are sorted first by ascending weight
-                  and then ascending lexicographically.
-                pattern: ^(\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))(([KMGTPE]i)|[numkMGTPE]|([eE](\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))))?$
-                x-kubernetes-int-or-string: true
             required:
             - contentEntries
             - label
