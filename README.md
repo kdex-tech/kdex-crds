@@ -21,6 +21,17 @@ See [CRD_REFERENCE.md](CRD_REFERENCE.md) for reference documentation.
 
 The architecture of the KDEX App Server's micro-frontend pages follows Semantic HTML as described in [MDN's Structuring documents](https://developer.mozilla.org/en-US/docs/Learn_web_development/Core/Structuring_content/Structuring_documents).
 
+### TODO
+
+- Add MicroFrontEndSite CRD to form the nexus under which page bindings are collected.
+    Investigate if adding a reference to each page binding is the correct approach.
+    This CRD should also hold the common metadata about the site such as the name of the Organization, the default stylesheet and so on.
+    It's possible that this resource should also result in either a managed Ingress instance or a managed Gateway API HTTPRoute.
+- Implement policy for `strict` vs. `non-strict` app compliancy.
+    When the strict policy is enabled, an app may not embed JavaScript dependencies. Validation of the application source code will fail if dependencies are not fully externalized.
+    This should probably be set on the Site CRD in order to place this policy outside the hands of app developers.
+    A Site which defines the `script` app policy must not accept apps which do not comply. While a non-strict Site may accept both strict and non-strict apps.
+
 ## Getting Started
 
 ### Prerequisites
