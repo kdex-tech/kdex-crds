@@ -11,16 +11,16 @@ spec:
       <ul>
         {{- range $label, $value := . }}
           <li>
-            {{- if ($value.path != "") -}}
-              <a href="{{ $value.path }}">{{ $label }}</a>
+            {{- if ($value.Path != "") -}}
+              <a href="{{ $value.Path }}">{{ $label }}</a>
             {{- else -}}
               <span>{{ $label }}</span>
             {{- end -}}
-            {{- if ($value.children != nil) -}}
-              {{- template "menu" $value.children -}}
+            {{- if ($value.Children != nil) -}}
+              {{- template "menu" $value.Children -}}
             {{- end -}}
           </li>
         {{- end -}}
       </ul>
     {{- end -}}
-    {{- template "menu" .Values.menuEntries -}}
+    {{- template "menu" .Values.MenuEntries -}}

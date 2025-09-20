@@ -8,27 +8,27 @@ metadata:
 spec:
   content: |
     <!DOCTYPE html>
-    <html lang="{{ .Values.lang }}">
+    <html lang="{{ .Values.Lang }}">
       <head>
-        {{ .Values.meta }}
-        {{ .Values.title }}
-        {{ .Values.stylesheet }}
-        {{ .Values.headScript }}
+        {{ .Values.Meta }}
+        {{ .Values.Title }}
+        {{ .Values.Stylesheet }}
+        {{ .Values.HeadScript }}
       </head>
       <body>
         <header>
-          {{ .Values.header }}
+          {{ .Values.Header }}
         </header>
         <nav>
-          {{ .Values.navigation["main"] }}
+          {{ .Values.Navigation["main"] }}
         </nav>
         <main>
-          {{ .Values.content["main"] }}
+          {{ .Values.Content["main"] }}
         </main>
         <footer>
-          {{ .Values.footer }}
+          {{ .Values.Footer }}
         </footer>
-        {{ .Values.footScript }}
+        {{ .Values.FootScript }}
       </body>
     </html>
   defaultFooterRef:
