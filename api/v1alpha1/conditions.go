@@ -7,6 +7,10 @@ import (
 // ConditionType is the type of the condition.
 type ConditionType string
 
+func (c ConditionType) String() string {
+	return string(c)
+}
+
 const (
 	// ConditionTypeReady is the type of the Ready condition.
 	ConditionTypeReady ConditionType = "Ready"
