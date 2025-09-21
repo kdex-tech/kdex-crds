@@ -40,6 +40,21 @@ spec:
           spec:
             description: spec defines the desired state of MicroFrontEndRenderPage
             properties:
+              hostRef:
+                description: hostRef is a reference to the MicroFrontEndHost that
+                  this render page is for.
+                properties:
+                  name:
+                    default: ""
+                    description: |-
+                      Name of the referent.
+                      This field is effectively required, but due to backwards compatibility is
+                      allowed to be empty. Instances of this type with an empty value here are
+                      almost certainly wrong.
+                      More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#names
+                    type: string
+                type: object
+                x-kubernetes-map-type: atomic
               navigationHints:
                 description: navigationHints are optional navigation properties that
                   if omitted result in the page being hidden from the navigation.
@@ -98,6 +113,7 @@ spec:
                   a language identifier.
                 type: string
             required:
+            - hostRef
             - pageComponents
             - path
             type: object

@@ -17,11 +17,16 @@ limitations under the License.
 package v1alpha1
 
 import (
+	corev1 "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
 
 // MicroFrontEndRenderPageSpec defines the desired state of MicroFrontEndRenderPage
 type MicroFrontEndRenderPageSpec struct {
+	// hostRef is a reference to the MicroFrontEndHost that this render page is for.
+	// +kubebuilder:validation:Required
+	HostRef corev1.LocalObjectReference `json:"hostRef"`
+
 	// navigationHints are optional navigation properties that if omitted result in the page being hidden from the navigation.
 	// +optional
 	NavigationHints *NavigationHints `json:"navigationHints,omitempty"`
