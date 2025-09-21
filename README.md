@@ -23,6 +23,7 @@ The architecture of the KDEX App Server's micro-frontend pages follows Semantic 
 
 ### TODO
 
+- Add a MicroFrontEndRenderPage CRD that contains the assembled contents of the PageBinding
 - Add MicroFrontEndSite CRD to form the nexus under which page bindings are collected.
     Investigate if adding a reference to each page binding is the correct approach.
     This CRD should also hold the common metadata about the site such as the name of the Organization, the default stylesheet and so on.
