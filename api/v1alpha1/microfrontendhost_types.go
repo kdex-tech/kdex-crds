@@ -20,19 +20,48 @@ import (
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
 
-// EDIT THIS FILE!  THIS IS SCAFFOLDING FOR YOU TO OWN!
-// NOTE: json tags are required.  Any new fields you add must have json tags for the fields to be serialized.
+// AppPolicy defines the policy for apps.
+// +kubebuilder:validation:Enum=Strict;NonStrict
+type AppPolicy string
+
+const (
+	// StrictAppPolicy means that apps may not embed JavaScript dependencies.
+	StrictAppPolicy AppPolicy = "Strict"
+	// NonStrictAppPolicy means that apps may embed JavaScript dependencies.
+	NonStrictAppPolicy AppPolicy = "NonStrict"
+)
 
 // MicroFrontEndHostSpec defines the desired state of MicroFrontEndHost
 type MicroFrontEndHostSpec struct {
-	// INSERT ADDITIONAL SPEC FIELDS - desired state of cluster
-	// Important: Run "make" to regenerate code after modifying this file
-	// The following markers will use OpenAPI v3 schema to validate the value
-	// More info: https://book.kubebuilder.io/reference/markers/crd-validation.html
+	// AppPolicy defines the policy for apps.
+	// When the strict policy is enabled, an app may not embed JavaScript dependencies.
+	// Validation of the application source code will fail if dependencies are not fully externalized.
+	// A Host which defines the `script` app policy must not accept apps which do not comply.
+	// While a non-strict Host may accept both strict and non-strict apps.
+	// +kubebuilder:validation:Required
+	AppPolicy AppPolicy `json:"appPolicy"`
 
-	// foo is an example field of MicroFrontEndHost. Edit microfrontendhost_types.go to remove/update
+	// baseMeta is a string containing a base set of meta tags to use on every page rendered for the host.
 	// +optional
-	Foo *string `json:"foo,omitempty"`
+	// +kubebuilder:validation:MinLength=5
+	BaseMeta *string `json:"baseMeta"`
+
+	// domains are the names by which this host is addressed. The first domain listed is the preferred domain.
+	// +kubebuilder:validation:Required
+	// +kubebuilder:validation:MinItems=1
+	// +kubebuilder:validation:Items:Format=hostname
+	Domains []string `json:"domains"`
+
+	// Organization is the name of the Organization.
+	// +kubebuilder:validation:Required
+	// +kubebuilder:validation:MinLength=5
+	Organization string `json:"organization"`
+
+	// Stylesheet is the URL to the default stylesheet.
+	// +kubebuilder:validation:Required
+	// +kubebuilder:validation:MinLength=5
+	// +kubebuilder:validation:Pattern=`^https?://`
+	Stylesheet string `json:"stylesheet"`
 }
 
 // MicroFrontEndHostStatus defines the observed state of MicroFrontEndHost.
