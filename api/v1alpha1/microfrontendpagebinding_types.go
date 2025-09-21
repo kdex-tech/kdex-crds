@@ -22,8 +22,8 @@ import (
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
 
+// +kubebuilder:validation:XValidation:rule="has(self.rawHTML) != (has(self.customElementName) && has(self.appRef))",message="exactly one of rawHTML or both customElementName and appRef must be set"
 type ContentEntry struct {
-	// +kubebuilder:validation:XValidation:rule="has(self.rawHTML) != (has(self.customElementName) && has(self.microFrontEndAppRef))",message="exactly one of rawHTML or both customElementName and microFrontEndAppRef must be set"
 
 	// customElementName is the name of the MicroFrontEndApp custom element to render in the specified slot (if present in the template).
 	// +optional
@@ -62,7 +62,7 @@ type MicroFrontEndPageBindingSpec struct {
 	// +kubebuilder:validation:MaxItems=8
 	// +kubebuilder:validation:MinItems=1
 	// +kubebuilder:validation:Required
-	// +kubebuilder:validation:XValidation:rule="self.all(x, self.filter(y, y.slot == x.slot).size() == 1) && (size(self) <= 1 || self.exists(x, x.slot == 'main'))",message="slot names must be unique, and if there are multiple entries, one must be 'main'"
+	// +kubebuilder:validation:XValidation:rule="self.size() <= 1 || self.exists(x, x.slot == 'main')",message="if there are multiple entries, one must be 'main'"
 	ContentEntries []ContentEntry `json:"contentEntries"`
 
 	// hostRef is a reference to the MicroFrontEndHost that this binding is for.

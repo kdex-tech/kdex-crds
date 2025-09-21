@@ -66,11 +66,6 @@ spec:
                         custom element to render in the specified slot (if present
                         in the template).
                       type: string
-                      x-kubernetes-validations:
-                      - message: exactly one of rawHTML or both customElementName
-                          and microFrontEndAppRef must be set
-                        rule: has(self.rawHTML) != (has(self.customElementName) &&
-                          has(self.microFrontEndAppRef))
                     rawHTML:
                       description: rawHTML is a raw HTML string to be rendered in
                         the specified slot (if present in the template).
@@ -81,14 +76,16 @@ spec:
                         No more than one entry can be bound to a slot.
                       type: string
                   type: object
+                  x-kubernetes-validations:
+                  - message: exactly one of rawHTML or both customElementName and
+                      appRef must be set
+                    rule: has(self.rawHTML) != (has(self.customElementName) && has(self.appRef))
                 maxItems: 8
                 minItems: 1
                 type: array
                 x-kubernetes-validations:
-                - message: slot names must be unique, and if there are multiple entries,
-                    one must be 'main'
-                  rule: self.all(x, self.filter(y, y.slot == x.slot).size() == 1)
-                    && (size(self) <= 1 || self.exists(x, x.slot == 'main'))
+                - message: if there are multiple entries, one must be 'main'
+                  rule: self.size() <= 1 || self.exists(x, x.slot == 'main')
               hostRef:
                 description: hostRef is a reference to the MicroFrontEndHost that
                   this binding is for.
