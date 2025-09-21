@@ -20,19 +20,19 @@ import (
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
 
-// EDIT THIS FILE!  THIS IS SCAFFOLDING FOR YOU TO OWN!
-// NOTE: json tags are required.  Any new fields you add must have json tags for the fields to be serialized.
-
 // MicroFrontEndRenderPageSpec defines the desired state of MicroFrontEndRenderPage
 type MicroFrontEndRenderPageSpec struct {
-	// INSERT ADDITIONAL SPEC FIELDS - desired state of cluster
-	// Important: Run "make" to regenerate code after modifying this file
-	// The following markers will use OpenAPI v3 schema to validate the value
-	// More info: https://book.kubebuilder.io/reference/markers/crd-validation.html
-
-	// foo is an example field of MicroFrontEndRenderPage. Edit microfrontendrenderpage_types.go to remove/update
+	// navigationHints are optional navigation properties that if omitted result in the page being hidden from the navigation.
 	// +optional
-	Foo *string `json:"foo,omitempty"`
+	NavigationHints *NavigationHints `json:"navigationHints,omitempty"`
+
+	// pageComponents make up the elements of an HTML page that will be rendered by a web server.
+	// +kubebuilder:validation:Required
+	PageComponents PageComponents `json:"pageComponents"`
+
+	// path is the URI path at which the page will be accessible in the application server context. The final absolute path will contain this path and may be prefixed by additional context like a language identifier.
+	// +kubebuilder:validation:Required
+	Path string `json:"path"`
 }
 
 // MicroFrontEndRenderPageStatus defines the observed state of MicroFrontEndRenderPage.
@@ -85,6 +85,15 @@ type MicroFrontEndRenderPageList struct {
 	metav1.TypeMeta `json:",inline"`
 	metav1.ListMeta `json:"metadata,omitempty"`
 	Items           []MicroFrontEndRenderPage `json:"items"`
+}
+
+type PageComponents struct {
+	Contents        map[string]string `json:"contents"`
+	Footer          string            `json:"footer"`
+	Header          string            `json:"header"`
+	Navigations     map[string]string `json:"navigations"`
+	PrimaryTemplate string            `json:"primaryTemplate"`
+	Title           string            `json:"title"`
 }
 
 func init() {
