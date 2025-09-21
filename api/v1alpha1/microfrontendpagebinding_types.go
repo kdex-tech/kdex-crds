@@ -65,6 +65,10 @@ type MicroFrontEndPageBindingSpec struct {
 	// +kubebuilder:validation:XValidation:rule="self.all(x, self.filter(y, y.slot == x.slot).size() == 1) && (size(self) <= 1 || self.exists(x, x.slot == 'main'))",message="slot names must be unique, and if there are multiple entries, one must be 'main'"
 	ContentEntries []ContentEntry `json:"contentEntries"`
 
+	// hostRef is a reference to the MicroFrontEndHost that this binding is for.
+	// +kubebuilder:validation:Required
+	HostRef corev1.LocalObjectReference `json:"hostRef"`
+
 	// label is the value used in menus and page titles before localization occurs (or when no translation exists for the current language).
 	// +kubebuilder:validation:Required
 	Label string `json:"label"`

@@ -10,6 +10,7 @@ resources:
 - bases/kdex.dev_microfrontendpagefooters.yaml
 - bases/kdex.dev_microfrontendpagenavigations.yaml
 - bases/kdex.dev_microfrontendrenderpages.yaml
+- bases/kdex.dev_microfrontendhosts.yaml
 # +kubebuilder:scaffold:crdkustomizeresource
 
 patches: []
