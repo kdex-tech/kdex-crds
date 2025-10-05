@@ -9,5 +9,6 @@ spec:
   customElements:
     - description: "A custom element"
       name: "my-element"
-  source:
-    url: "https://github.com/my-org/my-app.git"
+  packageReference:
+    name: "@kdex-samples/simple-form"
+    version: "1.0.0"

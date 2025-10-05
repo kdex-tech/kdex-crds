@@ -56,16 +56,17 @@ spec:
                   - name
                   type: object
                 type: array
-              source:
-                description: source configures the location of the source code of
-                  the micro-frontend application. The source code must contain a valid
-                  package.json that produces ES modules. Based on App Server configuration
-                  embedded dependencies may not be allowed. In this case dependencies
-                  must be externalized otherwise the app CR will not validate.
+              packageReference:
+                description: packageReference specifies the name and version of an
+                  NPM package that contains the micro-frontend application. The package
+                  must have a package.json that contains ES modules.
                 properties:
+                  name:
+                    description: name contains a scoped npm package name.
+                    type: string
                   secretRef:
                     description: secretRef is a reference to a secret containing authentication
-                      credentials for the source.
+                      credentials for the NPM registry that holds the package.
                     properties:
                       name:
                         default: ""
@@ -78,15 +79,15 @@ spec:
                         type: string
                     type: object
                     x-kubernetes-map-type: atomic
-                  url:
-                    description: url of the application source. This can be a Git
-                      repository, an archive, or an OCI artifact.
+                  version:
+                    description: version contains a specific npm package version.
                     type: string
                 required:
-                - url
+                - name
+                - version
                 type: object
             required:
-            - source
+            - packageReference
             type: object
           status:
             description: status defines the observed state of MicroFrontEndApp

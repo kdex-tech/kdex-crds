@@ -61,26 +61,15 @@ type MicroFrontEndAppList struct {
 	Items           []MicroFrontEndApp `json:"items"`
 }
 
-// MicroFrontEndAppSource defines the source of a micro-frontend application.
-type MicroFrontEndAppSource struct {
-	// secretRef is a reference to a secret containing authentication credentials for the source.
-	// +optional
-	SecretRef *corev1.LocalObjectReference `json:"secretRef,omitempty"`
-
-	// url of the application source. This can be a Git repository, an archive, or an OCI artifact.
-	// +kubebuilder:validation:Required
-	URL string `json:"url"`
-}
-
 // MicroFrontEndAppSpec defines the desired state of MicroFrontEndApp
 type MicroFrontEndAppSpec struct {
 	// customElements is a list of custom elements implemented by the micro-frontend application.
 	// +optional
 	CustomElements []CustomElement `json:"customElements,omitempty"`
 
-	// source configures the location of the source code of the micro-frontend application. The source code must contain a valid package.json that produces ES modules. Based on App Server configuration embedded dependencies may not be allowed. In this case dependencies must be externalized otherwise the app CR will not validate.
+	// packageReference specifies the name and version of an NPM package that contains the micro-frontend application. The package must have a package.json that contains ES modules.
 	// +kubebuilder:validation:Required
-	Source MicroFrontEndAppSource `json:"source"`
+	PackageReference PackageReference `json:"packageReference"`
 }
 
 // MicroFrontEndAppStatus defines the observed state of MicroFrontEndApp.
@@ -101,6 +90,21 @@ type MicroFrontEndAppStatus struct {
 	// +listMapKey=type
 	// +optional
 	Conditions []metav1.Condition `json:"conditions,omitempty"`
+}
+
+// PackageReference specifies the name and version of an NPM package that contains the micro-frontend application.
+type PackageReference struct {
+	// secretRef is a reference to a secret containing authentication credentials for the NPM registry that holds the package.
+	// +optional
+	SecretRef *corev1.LocalObjectReference `json:"secretRef,omitempty"`
+
+	// name contains a scoped npm package name.
+	// +kubebuilder:validation:Required
+	Name string `json:"name"`
+
+	// version contains a specific npm package version.
+	// +kubebuilder:validation:Required
+	Version string `json:"version"`
 }
 
 func init() {
