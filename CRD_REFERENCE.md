@@ -11,6 +11,8 @@ Package v1alpha1 contains API Schema definitions for the  v1alpha1 API group.
 ### Resource Types
 - [MicroFrontEndApp](#microfrontendapp)
 - [MicroFrontEndAppList](#microfrontendapplist)
+- [MicroFrontEndHost](#microfrontendhost)
+- [MicroFrontEndHostList](#microfrontendhostlist)
 - [MicroFrontEndPageArchetype](#microfrontendpagearchetype)
 - [MicroFrontEndPageArchetypeList](#microfrontendpagearchetypelist)
 - [MicroFrontEndPageBinding](#microfrontendpagebinding)
@@ -21,7 +23,27 @@ Package v1alpha1 contains API Schema definitions for the  v1alpha1 API group.
 - [MicroFrontEndPageHeaderList](#microfrontendpageheaderlist)
 - [MicroFrontEndPageNavigation](#microfrontendpagenavigation)
 - [MicroFrontEndPageNavigationList](#microfrontendpagenavigationlist)
+- [MicroFrontEndRenderPage](#microfrontendrenderpage)
+- [MicroFrontEndRenderPageList](#microfrontendrenderpagelist)
 
+
+
+#### AppPolicy
+
+_Underlying type:_ _string_
+
+AppPolicy defines the policy for apps.
+
+_Validation:_
+- Enum: [Strict NonStrict]
+
+_Appears in:_
+- [MicroFrontEndHostSpec](#microfrontendhostspec)
+
+| Field | Description |
+| --- | --- |
+| `Strict` | StrictAppPolicy means that apps may not embed JavaScript dependencies.<br /> |
+| `NonStrict` | NonStrictAppPolicy means that apps may embed JavaScript dependencies.<br /> |
 
 
 
@@ -101,23 +123,6 @@ MicroFrontEndAppList contains a list of MicroFrontEndApp
 | `items` _[MicroFrontEndApp](#microfrontendapp) array_ |  |  |  |
 
 
-#### MicroFrontEndAppSource
-
-
-
-MicroFrontEndAppSource defines the source of a micro-frontend application.
-
-
-
-_Appears in:_
-- [MicroFrontEndAppSpec](#microfrontendappspec)
-
-| Field | Description | Default | Validation |
-| --- | --- | --- | --- |
-| `secretRef` _[LocalObjectReference](https://kubernetes.io/docs/reference/generated/kubernetes-api/v/#localobjectreference-v1-core)_ | secretRef is a reference to a secret containing authentication credentials for the source. |  |  |
-| `url` _string_ | url of the application source. This can be a Git repository, an archive, or an OCI artifact. |  | Required: \{\} <br /> |
-
-
 #### MicroFrontEndAppSpec
 
 
@@ -132,7 +137,67 @@ _Appears in:_
 | Field | Description | Default | Validation |
 | --- | --- | --- | --- |
 | `customElements` _[CustomElement](#customelement) array_ | customElements is a list of custom elements implemented by the micro-frontend application. |  |  |
-| `source` _[MicroFrontEndAppSource](#microfrontendappsource)_ | source configures the location of the source code of the micro-frontend application. The source code must contain a valid package.json that produces ES modules. Based on App Server configuration embedded dependencies may not be allowed. In this case dependencies must be externalized otherwise the app CR will not validate. |  | Required: \{\} <br /> |
+| `packageReference` _[PackageReference](#packagereference)_ | packageReference specifies the name and version of an NPM package that contains the micro-frontend application. The package must have a package.json that contains ES modules. |  | Required: \{\} <br /> |
+
+
+
+
+#### MicroFrontEndHost
+
+
+
+MicroFrontEndHost is the Schema for the microfrontendhosts API
+
+
+
+_Appears in:_
+- [MicroFrontEndHostList](#microfrontendhostlist)
+
+| Field | Description | Default | Validation |
+| --- | --- | --- | --- |
+| `apiVersion` _string_ | `kdex.dev/v1alpha1` | | |
+| `kind` _string_ | `MicroFrontEndHost` | | |
+| `metadata` _[ObjectMeta](https://kubernetes.io/docs/reference/generated/kubernetes-api/v/#objectmeta-v1-meta)_ | Refer to Kubernetes API documentation for fields of `metadata`. |  |  |
+| `spec` _[MicroFrontEndHostSpec](#microfrontendhostspec)_ | spec defines the desired state of MicroFrontEndHost |  |  |
+
+
+#### MicroFrontEndHostList
+
+
+
+MicroFrontEndHostList contains a list of MicroFrontEndHost
+
+
+
+
+
+| Field | Description | Default | Validation |
+| --- | --- | --- | --- |
+| `apiVersion` _string_ | `kdex.dev/v1alpha1` | | |
+| `kind` _string_ | `MicroFrontEndHostList` | | |
+| `metadata` _[ListMeta](https://kubernetes.io/docs/reference/generated/kubernetes-api/v/#listmeta-v1-meta)_ | Refer to Kubernetes API documentation for fields of `metadata`. |  |  |
+| `items` _[MicroFrontEndHost](#microfrontendhost) array_ |  |  |  |
+
+
+#### MicroFrontEndHostSpec
+
+
+
+MicroFrontEndHostSpec defines the desired state of MicroFrontEndHost
+
+
+
+_Appears in:_
+- [MicroFrontEndHost](#microfrontendhost)
+
+| Field | Description | Default | Validation |
+| --- | --- | --- | --- |
+| `appPolicy` _[AppPolicy](#apppolicy)_ | AppPolicy defines the policy for apps.<br />When the strict policy is enabled, an app may not embed JavaScript dependencies.<br />Validation of the application source code will fail if dependencies are not fully externalized.<br />A Host which defines the `script` app policy must not accept apps which do not comply.<br />While a non-strict Host may accept both strict and non-strict apps. |  | Enum: [Strict NonStrict] <br />Required: \{\} <br /> |
+| `baseMeta` _string_ | baseMeta is a string containing a base set of meta tags to use on every page rendered for the host. |  | MinLength: 5 <br /> |
+| `defaultLang` _string_ | defaultLang is a string containing a BCP 47 language tag.<br />See https://developer.mozilla.org/en-US/docs/Glossary/BCP_47_language_tag.<br />When render page paths do not specify a 'lang' path parameter this will be the value used. When not set the default will be 'en'. |  |  |
+| `domains` _string array_ | domains are the names by which this host is addressed. The first domain listed is the preferred domain. The domains may contain wildcard prefix in the form '*.'. Longest match always wins. |  | MinItems: 1 <br />Required: \{\} <br /> |
+| `organization` _string_ | Organization is the name of the Organization. |  | MinLength: 5 <br />Required: \{\} <br /> |
+| `stylesheet` _string_ | Stylesheet is the URL to the default stylesheet. |  | MinLength: 5 <br />Pattern: `^https?://` <br />Required: \{\} <br /> |
 
 
 
@@ -246,15 +311,15 @@ _Appears in:_
 
 | Field | Description | Default | Validation |
 | --- | --- | --- | --- |
-| `label` _string_ | label is the value used in menus and page titles before localization occurs (or when no translation exists for the current language). |  | Required: \{\} <br /> |
 | `contentEntries` _[ContentEntry](#contententry) array_ | contentEntries is a set of content entries to bind to this page. They may be either raw HTML fragments or MicroFrontEndApp references. |  | MaxItems: 8 <br />MinItems: 1 <br />Required: \{\} <br /> |
-| `pageArchetypeRef` _[LocalObjectReference](https://kubernetes.io/docs/reference/generated/kubernetes-api/v/#localobjectreference-v1-core)_ | pageArchetypeRef is a reference to the MicroFrontEndPageArchetype that this binding is for. |  | Required: \{\} <br /> |
+| `hostRef` _[LocalObjectReference](https://kubernetes.io/docs/reference/generated/kubernetes-api/v/#localobjectreference-v1-core)_ | hostRef is a reference to the MicroFrontEndHost that this binding is for. |  | Required: \{\} <br /> |
+| `label` _string_ | label is the value used in menus and page titles before localization occurs (or when no translation exists for the current language). |  | Required: \{\} <br /> |
 | `overrideFooterRef` _[LocalObjectReference](https://kubernetes.io/docs/reference/generated/kubernetes-api/v/#localobjectreference-v1-core)_ | overrideFooterRef is an optional reference to a MicroFrontEndPageFooter resource. If not specified, the footer from the archetype will be used. |  |  |
 | `overrideHeaderRef` _[LocalObjectReference](https://kubernetes.io/docs/reference/generated/kubernetes-api/v/#localobjectreference-v1-core)_ | overrideHeaderRef is an optional reference to a MicroFrontEndPageHeader resource. If not specified, the header from the archetype will be used. |  |  |
 | `overrideMainNavigationRef` _[LocalObjectReference](https://kubernetes.io/docs/reference/generated/kubernetes-api/v/#localobjectreference-v1-core)_ | overrideMainNavigationRef is an optional reference to a MicroFrontEndPageNavigation resource referenced as `\{\{ .Values.navigation["main"] \}\}. If not specified, the main navigation from the archetype will be used. |  |  |
-| `parent` _string_ | parent specifies the menu entry that is the parent under which the menu entry for this page will be added in the main navigation. A hierarchical path using slashes is supported. |  |  |
+| `navigationHints` _[NavigationHints](#navigationhints)_ | navigationHints are optional navigation properties that if omitted result in the page being hidden from the navigation. |  |  |
+| `pageArchetypeRef` _[LocalObjectReference](https://kubernetes.io/docs/reference/generated/kubernetes-api/v/#localobjectreference-v1-core)_ | pageArchetypeRef is a reference to the MicroFrontEndPageArchetype that this binding is for. |  | Required: \{\} <br /> |
 | `path` _string_ | path is the URI path at which the page will be accessible in the application server context. The final absolute path will contain this path and may be prefixed by additional context like a language identifier. |  | Required: \{\} <br /> |
-| `weight` _[Quantity](https://kubernetes.io/docs/reference/generated/kubernetes-api/v/#quantity-resource-api)_ | weight is a property that influences the position of the page menu entry. Items are sorted first by ascending weight and then ascending lexicographically. |  |  |
 
 
 
@@ -422,5 +487,121 @@ _Appears in:_
 | `content` _string_ | content is a go string template that defines the content of an App Server page navigation. The template accesses `.Values` properties to render its contents. |  | MinLength: 5 <br />Required: \{\} <br /> |
 
 
+
+
+#### MicroFrontEndRenderPage
+
+
+
+MicroFrontEndRenderPage is the Schema for the microfrontendrenderpages API
+
+
+
+_Appears in:_
+- [MicroFrontEndRenderPageList](#microfrontendrenderpagelist)
+
+| Field | Description | Default | Validation |
+| --- | --- | --- | --- |
+| `apiVersion` _string_ | `kdex.dev/v1alpha1` | | |
+| `kind` _string_ | `MicroFrontEndRenderPage` | | |
+| `metadata` _[ObjectMeta](https://kubernetes.io/docs/reference/generated/kubernetes-api/v/#objectmeta-v1-meta)_ | Refer to Kubernetes API documentation for fields of `metadata`. |  |  |
+| `spec` _[MicroFrontEndRenderPageSpec](#microfrontendrenderpagespec)_ | spec defines the desired state of MicroFrontEndRenderPage |  |  |
+
+
+#### MicroFrontEndRenderPageList
+
+
+
+MicroFrontEndRenderPageList contains a list of MicroFrontEndRenderPage
+
+
+
+
+
+| Field | Description | Default | Validation |
+| --- | --- | --- | --- |
+| `apiVersion` _string_ | `kdex.dev/v1alpha1` | | |
+| `kind` _string_ | `MicroFrontEndRenderPageList` | | |
+| `metadata` _[ListMeta](https://kubernetes.io/docs/reference/generated/kubernetes-api/v/#listmeta-v1-meta)_ | Refer to Kubernetes API documentation for fields of `metadata`. |  |  |
+| `items` _[MicroFrontEndRenderPage](#microfrontendrenderpage) array_ |  |  |  |
+
+
+#### MicroFrontEndRenderPageSpec
+
+
+
+MicroFrontEndRenderPageSpec defines the desired state of MicroFrontEndRenderPage
+
+
+
+_Appears in:_
+- [MicroFrontEndRenderPage](#microfrontendrenderpage)
+
+| Field | Description | Default | Validation |
+| --- | --- | --- | --- |
+| `hostRef` _[LocalObjectReference](https://kubernetes.io/docs/reference/generated/kubernetes-api/v/#localobjectreference-v1-core)_ | hostRef is a reference to the MicroFrontEndHost that this render page is for. |  | Required: \{\} <br /> |
+| `navigationHints` _[NavigationHints](#navigationhints)_ | navigationHints are optional navigation properties that if omitted result in the page being hidden from the navigation. |  |  |
+| `pageComponents` _[PageComponents](#pagecomponents)_ | pageComponents make up the elements of an HTML page that will be rendered by a web server. |  | Required: \{\} <br /> |
+| `path` _string_ | path is the URI path at which the page will be accessible in the application server context. The final absolute path will contain this path and may be prefixed by additional context like a language identifier. |  | Required: \{\} <br /> |
+
+
+
+
+#### NavigationHints
+
+
+
+
+
+
+
+_Appears in:_
+- [MicroFrontEndPageBindingSpec](#microfrontendpagebindingspec)
+- [MicroFrontEndRenderPageSpec](#microfrontendrenderpagespec)
+
+| Field | Description | Default | Validation |
+| --- | --- | --- | --- |
+| `icon` _string_ | icon is the name of the icon to display next to the menu entry for this page. |  |  |
+| `parent` _string_ | parent specifies the menu entry that is the parent under which the menu entry for this page will be added in the main navigation. A hierarchical path using slashes is supported. |  |  |
+| `weight` _[Quantity](https://kubernetes.io/docs/reference/generated/kubernetes-api/v/#quantity-resource-api)_ | weight is a property that influences the position of the page menu entry. Items at each level are sorted first by ascending weight and then ascending lexicographically. |  |  |
+
+
+#### PackageReference
+
+
+
+PackageReference specifies the name and version of an NPM package that contains the micro-frontend application.
+
+
+
+_Appears in:_
+- [MicroFrontEndAppSpec](#microfrontendappspec)
+
+| Field | Description | Default | Validation |
+| --- | --- | --- | --- |
+| `secretRef` _[LocalObjectReference](https://kubernetes.io/docs/reference/generated/kubernetes-api/v/#localobjectreference-v1-core)_ | secretRef is a reference to a secret containing authentication credentials for the NPM registry that holds the package. |  |  |
+| `name` _string_ | name contains a scoped npm package name. |  | Required: \{\} <br /> |
+| `version` _string_ | version contains a specific npm package version. |  | Required: \{\} <br /> |
+
+
+#### PageComponents
+
+
+
+
+
+
+
+_Appears in:_
+- [MicroFrontEndRenderPageSpec](#microfrontendrenderpagespec)
+
+| Field | Description | Default | Validation |
+| --- | --- | --- | --- |
+| `contents` _object (keys:string, values:string)_ |  |  |  |
+| `footer` _string_ |  |  |  |
+| `header` _string_ |  |  |  |
+| `navigations` _object (keys:string, values:string)_ |  |  |  |
+| `primaryTemplate` _string_ |  |  |  |
+| `title` _string_ |  |  |  |
 
 
