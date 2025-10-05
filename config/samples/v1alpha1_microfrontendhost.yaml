@@ -6,4 +6,19 @@ metadata:
     app.kubernetes.io/managed-by: kustomize
   name: microfrontendhost-sample
 spec:
-  # TODO(user): Add fields here
+  appPolicy: NonStrict
+  baseMeta: |
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width" />
+  defaultLang: en
+  domains:
+    - "*.docker.localhost"
+  organization: KDex Tech Inc.
+  stylesheet: |
+    <style>
+      body: {
+        font:
+          1.2rem/2 "Fira Sans",
+          sans-serif;
+      }
+    </style>

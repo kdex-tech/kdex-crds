@@ -46,7 +46,13 @@ type MicroFrontEndHostSpec struct {
 	// +kubebuilder:validation:MinLength=5
 	BaseMeta *string `json:"baseMeta"`
 
-	// domains are the names by which this host is addressed. The first domain listed is the preferred domain.
+	// defaultLang is a string containing a BCP 47 language tag.
+	// See https://developer.mozilla.org/en-US/docs/Glossary/BCP_47_language_tag.
+	// When render page paths do not specify a 'lang' path parameter this will be the value used. When not set the default will be 'en'.
+	// +optional
+	DefaultLang string `json:"defaultLang"`
+
+	// domains are the names by which this host is addressed. The first domain listed is the preferred domain. The domains may contain wildcard prefix in the form '*.'. Longest match always wins.
 	// +kubebuilder:validation:Required
 	// +kubebuilder:validation:MinItems=1
 	// +kubebuilder:validation:Items:Format=hostname

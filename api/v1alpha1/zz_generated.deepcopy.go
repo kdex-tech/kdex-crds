@@ -21,8 +21,8 @@ limitations under the License.
 package v1alpha1
 
 import (
-	"k8s.io/api/core/v1"
-	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
+	corev1 "k8s.io/api/core/v1"
+	"k8s.io/apimachinery/pkg/apis/meta/v1"
 	runtime "k8s.io/apimachinery/pkg/runtime"
 )
 
@@ -31,7 +31,7 @@ func (in *ContentEntry) DeepCopyInto(out *ContentEntry) {
 	*out = *in
 	if in.AppRef != nil {
 		in, out := &in.AppRef, &out.AppRef
-		*out = new(v1.LocalObjectReference)
+		*out = new(corev1.LocalObjectReference)
 		**out = **in
 	}
 }
@@ -166,7 +166,7 @@ func (in *MicroFrontEndAppStatus) DeepCopyInto(out *MicroFrontEndAppStatus) {
 	*out = *in
 	if in.Conditions != nil {
 		in, out := &in.Conditions, &out.Conditions
-		*out = make([]metav1.Condition, len(*in))
+		*out = make([]v1.Condition, len(*in))
 		for i := range *in {
 			(*in)[i].DeepCopyInto(&(*out)[i])
 		}
@@ -272,7 +272,7 @@ func (in *MicroFrontEndHostStatus) DeepCopyInto(out *MicroFrontEndHostStatus) {
 	*out = *in
 	if in.Conditions != nil {
 		in, out := &in.Conditions, &out.Conditions
-		*out = make([]metav1.Condition, len(*in))
+		*out = make([]v1.Condition, len(*in))
 		for i := range *in {
 			(*in)[i].DeepCopyInto(&(*out)[i])
 		}
@@ -353,25 +353,25 @@ func (in *MicroFrontEndPageArchetypeSpec) DeepCopyInto(out *MicroFrontEndPageArc
 	*out = *in
 	if in.DefaultFooterRef != nil {
 		in, out := &in.DefaultFooterRef, &out.DefaultFooterRef
-		*out = new(v1.LocalObjectReference)
+		*out = new(corev1.LocalObjectReference)
 		**out = **in
 	}
 	if in.DefaultHeaderRef != nil {
 		in, out := &in.DefaultHeaderRef, &out.DefaultHeaderRef
-		*out = new(v1.LocalObjectReference)
+		*out = new(corev1.LocalObjectReference)
 		**out = **in
 	}
 	if in.DefaultMainNavigationRef != nil {
 		in, out := &in.DefaultMainNavigationRef, &out.DefaultMainNavigationRef
-		*out = new(v1.LocalObjectReference)
+		*out = new(corev1.LocalObjectReference)
 		**out = **in
 	}
 	if in.ExtraNavigations != nil {
 		in, out := &in.ExtraNavigations, &out.ExtraNavigations
-		*out = new(map[string]v1.LocalObjectReference)
+		*out = new(map[string]corev1.LocalObjectReference)
 		if **in != nil {
 			in, out := *in, *out
-			*out = make(map[string]v1.LocalObjectReference, len(*in))
+			*out = make(map[string]corev1.LocalObjectReference, len(*in))
 			for key, val := range *in {
 				(*out)[key] = val
 			}
@@ -394,7 +394,7 @@ func (in *MicroFrontEndPageArchetypeStatus) DeepCopyInto(out *MicroFrontEndPageA
 	*out = *in
 	if in.Conditions != nil {
 		in, out := &in.Conditions, &out.Conditions
-		*out = make([]metav1.Condition, len(*in))
+		*out = make([]v1.Condition, len(*in))
 		for i := range *in {
 			(*in)[i].DeepCopyInto(&(*out)[i])
 		}
@@ -483,17 +483,17 @@ func (in *MicroFrontEndPageBindingSpec) DeepCopyInto(out *MicroFrontEndPageBindi
 	out.HostRef = in.HostRef
 	if in.OverrideFooterRef != nil {
 		in, out := &in.OverrideFooterRef, &out.OverrideFooterRef
-		*out = new(v1.LocalObjectReference)
+		*out = new(corev1.LocalObjectReference)
 		**out = **in
 	}
 	if in.OverrideHeaderRef != nil {
 		in, out := &in.OverrideHeaderRef, &out.OverrideHeaderRef
-		*out = new(v1.LocalObjectReference)
+		*out = new(corev1.LocalObjectReference)
 		**out = **in
 	}
 	if in.OverrideMainNavigationRef != nil {
 		in, out := &in.OverrideMainNavigationRef, &out.OverrideMainNavigationRef
-		*out = new(v1.LocalObjectReference)
+		*out = new(corev1.LocalObjectReference)
 		**out = **in
 	}
 	if in.NavigationHints != nil {
@@ -519,7 +519,7 @@ func (in *MicroFrontEndPageBindingStatus) DeepCopyInto(out *MicroFrontEndPageBin
 	*out = *in
 	if in.Conditions != nil {
 		in, out := &in.Conditions, &out.Conditions
-		*out = make([]metav1.Condition, len(*in))
+		*out = make([]v1.Condition, len(*in))
 		for i := range *in {
 			(*in)[i].DeepCopyInto(&(*out)[i])
 		}
@@ -615,7 +615,7 @@ func (in *MicroFrontEndPageFooterStatus) DeepCopyInto(out *MicroFrontEndPageFoot
 	*out = *in
 	if in.Conditions != nil {
 		in, out := &in.Conditions, &out.Conditions
-		*out = make([]metav1.Condition, len(*in))
+		*out = make([]v1.Condition, len(*in))
 		for i := range *in {
 			(*in)[i].DeepCopyInto(&(*out)[i])
 		}
@@ -711,7 +711,7 @@ func (in *MicroFrontEndPageHeaderStatus) DeepCopyInto(out *MicroFrontEndPageHead
 	*out = *in
 	if in.Conditions != nil {
 		in, out := &in.Conditions, &out.Conditions
-		*out = make([]metav1.Condition, len(*in))
+		*out = make([]v1.Condition, len(*in))
 		for i := range *in {
 			(*in)[i].DeepCopyInto(&(*out)[i])
 		}
@@ -807,7 +807,7 @@ func (in *MicroFrontEndPageNavigationStatus) DeepCopyInto(out *MicroFrontEndPage
 	*out = *in
 	if in.Conditions != nil {
 		in, out := &in.Conditions, &out.Conditions
-		*out = make([]metav1.Condition, len(*in))
+		*out = make([]v1.Condition, len(*in))
 		for i := range *in {
 			(*in)[i].DeepCopyInto(&(*out)[i])
 		}
@@ -910,7 +910,7 @@ func (in *MicroFrontEndRenderPageStatus) DeepCopyInto(out *MicroFrontEndRenderPa
 	*out = *in
 	if in.Conditions != nil {
 		in, out := &in.Conditions, &out.Conditions
-		*out = make([]metav1.Condition, len(*in))
+		*out = make([]v1.Condition, len(*in))
 		for i := range *in {
 			(*in)[i].DeepCopyInto(&(*out)[i])
 		}

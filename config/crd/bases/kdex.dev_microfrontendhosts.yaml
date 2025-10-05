@@ -55,9 +55,16 @@ spec:
                   to use on every page rendered for the host.
                 minLength: 5
                 type: string
+              defaultLang:
+                description: |-
+                  defaultLang is a string containing a BCP 47 language tag.
+                  See https://developer.mozilla.org/en-US/docs/Glossary/BCP_47_language_tag.
+                  When render page paths do not specify a 'lang' path parameter this will be the value used. When not set the default will be 'en'.
+                type: string
               domains:
                 description: domains are the names by which this host is addressed.
-                  The first domain listed is the preferred domain.
+                  The first domain listed is the preferred domain. The domains may
+                  contain wildcard prefix in the form '*.'. Longest match always wins.
                 items:
                   type: string
                 minItems: 1
