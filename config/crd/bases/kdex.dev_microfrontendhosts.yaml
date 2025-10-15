@@ -82,7 +82,6 @@ spec:
             - appPolicy
             - domains
             - organization
-            - stylesheet
             type: object
           status:
             description: status defines the observed state of MicroFrontEndHost

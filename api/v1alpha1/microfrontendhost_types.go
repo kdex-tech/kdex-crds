@@ -44,13 +44,13 @@ type MicroFrontEndHostSpec struct {
 	// baseMeta is a string containing a base set of meta tags to use on every page rendered for the host.
 	// +optional
 	// +kubebuilder:validation:MinLength=5
-	BaseMeta *string `json:"baseMeta"`
+	BaseMeta string `json:"baseMeta,omitempty"`
 
 	// defaultLang is a string containing a BCP 47 language tag.
 	// See https://developer.mozilla.org/en-US/docs/Glossary/BCP_47_language_tag.
 	// When render page paths do not specify a 'lang' path parameter this will be the value used. When not set the default will be 'en'.
 	// +optional
-	DefaultLang string `json:"defaultLang"`
+	DefaultLang string `json:"defaultLang,omitempty"`
 
 	// domains are the names by which this host is addressed. The first domain listed is the preferred domain. The domains may contain wildcard prefix in the form '*.'. Longest match always wins.
 	// +kubebuilder:validation:Required
@@ -64,10 +64,10 @@ type MicroFrontEndHostSpec struct {
 	Organization string `json:"organization"`
 
 	// Stylesheet is the URL to the default stylesheet.
-	// +kubebuilder:validation:Required
+	// +optional
 	// +kubebuilder:validation:MinLength=5
 	// +kubebuilder:validation:Pattern=`^https?://`
-	Stylesheet string `json:"stylesheet"`
+	Stylesheet string `json:"stylesheet,omitempty"`
 }
 
 // MicroFrontEndHostStatus defines the observed state of MicroFrontEndHost.

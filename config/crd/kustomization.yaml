@@ -3,7 +3,6 @@
 # It should be run by config/default
 resources:
 - bases/kdex.dev_microfrontendapps.yaml
-
 - bases/kdex.dev_microfrontendpagearchetypes.yaml
 - bases/kdex.dev_microfrontendpagebindings.yaml
 - bases/kdex.dev_microfrontendpageheaders.yaml
