@@ -11,6 +11,8 @@ spec:
     kind: MicroFrontEndPageHeader
     listKind: MicroFrontEndPageHeaderList
     plural: microfrontendpageheaders
+    shortNames:
+    - mf_ph
     singular: microfrontendpageheader
   scope: Namespaced
   versions:

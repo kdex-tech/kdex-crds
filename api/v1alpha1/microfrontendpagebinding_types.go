@@ -119,6 +119,7 @@ type MicroFrontEndPageBindingStatus struct {
 }
 
 // +kubebuilder:object:root=true
+// +kubebuilder:resource:scope=Namespaced,shortName=mf_pb
 // +kubebuilder:subresource:status
 
 // MicroFrontEndPageBinding is the Schema for the microfrontendpagebindings API

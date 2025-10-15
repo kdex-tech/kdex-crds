@@ -11,6 +11,8 @@ spec:
     kind: MicroFrontEndHost
     listKind: MicroFrontEndHostList
     plural: microfrontendhosts
+    shortNames:
+    - mf_h
     singular: microfrontendhost
   scope: Namespaced
   versions:

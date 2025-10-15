@@ -11,6 +11,8 @@ spec:
     kind: MicroFrontEndPageBinding
     listKind: MicroFrontEndPageBindingList
     plural: microfrontendpagebindings
+    shortNames:
+    - mf_pb
     singular: microfrontendpagebinding
   scope: Namespaced
   versions:

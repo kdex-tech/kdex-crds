@@ -11,6 +11,8 @@ spec:
     kind: MicroFrontEndApp
     listKind: MicroFrontEndAppList
     plural: microfrontendapps
+    shortNames:
+    - mf_a
     singular: microfrontendapp
   scope: Namespaced
   versions:

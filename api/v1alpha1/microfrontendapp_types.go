@@ -33,6 +33,7 @@ type CustomElement struct {
 }
 
 // +kubebuilder:object:root=true
+// +kubebuilder:resource:scope=Namespaced,shortName=mf_a
 // +kubebuilder:subresource:status
 
 // MicroFrontEndApp is the Schema for the microfrontendapps API

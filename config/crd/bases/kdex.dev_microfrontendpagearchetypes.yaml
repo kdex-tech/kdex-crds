@@ -11,6 +11,8 @@ spec:
     kind: MicroFrontEndPageArchetype
     listKind: MicroFrontEndPageArchetypeList
     plural: microfrontendpagearchetypes
+    shortNames:
+    - mf_pa
     singular: microfrontendpagearchetype
   scope: Namespaced
   versions:

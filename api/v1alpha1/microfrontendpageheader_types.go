@@ -52,6 +52,7 @@ type MicroFrontEndPageHeaderStatus struct {
 }
 
 // +kubebuilder:object:root=true
+// +kubebuilder:resource:scope=Namespaced,shortName=mf_ph
 // +kubebuilder:subresource:status
 
 // MicroFrontEndPageHeader is the Schema for the microfrontendpageheaders API
