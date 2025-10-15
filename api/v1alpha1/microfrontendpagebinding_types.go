@@ -47,10 +47,6 @@ type NavigationHints struct {
 	// +optional
 	Icon string `json:"icon,omitempty"`
 
-	// parent specifies the menu entry that is the parent under which the menu entry for this page will be added in the main navigation. A hierarchical path using slashes is supported.
-	// +optional
-	Parent string `json:"parent,omitempty"`
-
 	// weight is a property that influences the position of the page menu entry. Items at each level are sorted first by ascending weight and then ascending lexicographically.
 	// +optional
 	Weight resource.Quantity `json:"weight,omitempty"`
@@ -92,6 +88,10 @@ type MicroFrontEndPageBindingSpec struct {
 	// pageArchetypeRef is a reference to the MicroFrontEndPageArchetype that this binding is for.
 	// +kubebuilder:validation:Required
 	PageArchetypeRef corev1.LocalObjectReference `json:"pageArchetypeRef"`
+
+	// parentPageRef is a reference to the MicroFrontEndPageBinding bellow which this page will appear in the main navigation. If not set, the page will be placed in the top level of the navigation.
+	// +optional
+	ParentPageRef *corev1.LocalObjectReference `json:"parentPageRef"`
 
 	// path is the URI path at which the page will be accessible in the application server context. The final absolute path will contain this path and may be prefixed by additional context like a language identifier.
 	// +kubebuilder:validation:Required

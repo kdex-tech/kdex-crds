@@ -14,9 +14,10 @@ spec:
     - rawHTML: |
         <p>Hello world!</p>
       slot: column-2
+  hostRef:
+    name: sample-host
   label: My Page
   navigationHints:
-    parent: Home
     weight: 1
   overrideFooterRef:
     name: generic-footer

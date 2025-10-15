@@ -116,11 +116,6 @@ spec:
                     description: icon is the name of the icon to display next to the
                       menu entry for this page.
                     type: string
-                  parent:
-                    description: parent specifies the menu entry that is the parent
-                      under which the menu entry for this page will be added in the
-                      main navigation. A hierarchical path using slashes is supported.
-                    type: string
                   weight:
                     anyOf:
                     - type: integer
@@ -183,6 +178,22 @@ spec:
               pageArchetypeRef:
                 description: pageArchetypeRef is a reference to the MicroFrontEndPageArchetype
                   that this binding is for.
+                properties:
+                  name:
+                    default: ""
+                    description: |-
+                      Name of the referent.
+                      This field is effectively required, but due to backwards compatibility is
+                      allowed to be empty. Instances of this type with an empty value here are
+                      almost certainly wrong.
+                      More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#names
+                    type: string
+                type: object
+                x-kubernetes-map-type: atomic
+              parentPageRef:
+                description: parentPageRef is a reference to the MicroFrontEndPageBinding
+                  bellow which this page will appear in the main navigation. If not
+                  set, the page will be placed in the top level of the navigation.
                 properties:
                   name:
                     default: ""
