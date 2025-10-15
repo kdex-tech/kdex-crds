@@ -12,7 +12,7 @@ spec:
     listKind: MicroFrontEndPageBindingList
     plural: microfrontendpagebindings
     shortNames:
-    - mf_pb
+    - mf-pb
     singular: microfrontendpagebinding
   scope: Namespaced
   versions:

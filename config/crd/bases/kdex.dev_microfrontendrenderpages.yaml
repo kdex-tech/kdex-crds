@@ -12,7 +12,7 @@ spec:
     listKind: MicroFrontEndRenderPageList
     plural: microfrontendrenderpages
     shortNames:
-    - mf_rp
+    - mf-rp
     singular: microfrontendrenderpage
   scope: Namespaced
   versions:

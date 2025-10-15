@@ -64,7 +64,7 @@ type MicroFrontEndRenderPageStatus struct {
 }
 
 // +kubebuilder:object:root=true
-// +kubebuilder:resource:scope=Namespaced,shortName=mf_rp
+// +kubebuilder:resource:scope=Namespaced,shortName=mf-rp
 // +kubebuilder:subresource:status
 
 // MicroFrontEndRenderPage is the Schema for the microfrontendrenderpages API

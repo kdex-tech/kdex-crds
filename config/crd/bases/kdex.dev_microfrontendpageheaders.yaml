@@ -12,7 +12,7 @@ spec:
     listKind: MicroFrontEndPageHeaderList
     plural: microfrontendpageheaders
     shortNames:
-    - mf_ph
+    - mf-ph
     singular: microfrontendpageheader
   scope: Namespaced
   versions:

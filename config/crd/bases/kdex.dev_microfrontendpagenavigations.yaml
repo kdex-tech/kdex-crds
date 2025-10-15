@@ -12,7 +12,7 @@ spec:
     listKind: MicroFrontEndPageNavigationList
     plural: microfrontendpagenavigations
     shortNames:
-    - mf_pn
+    - mf-pn
     singular: microfrontendpagenavigation
   scope: Namespaced
   versions:

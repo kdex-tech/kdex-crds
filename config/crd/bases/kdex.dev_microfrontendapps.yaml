@@ -12,7 +12,7 @@ spec:
     listKind: MicroFrontEndAppList
     plural: microfrontendapps
     shortNames:
-    - mf_a
+    - mf-a
     singular: microfrontendapp
   scope: Namespaced
   versions:

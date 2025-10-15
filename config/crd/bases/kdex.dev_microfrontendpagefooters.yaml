@@ -12,7 +12,7 @@ spec:
     listKind: MicroFrontEndPageFooterList
     plural: microfrontendpagefooters
     shortNames:
-    - mf_pf
+    - mf-pf
     singular: microfrontendpagefooter
   scope: Namespaced
   versions:

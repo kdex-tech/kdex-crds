@@ -94,7 +94,7 @@ type MicroFrontEndHostStatus struct {
 }
 
 // +kubebuilder:object:root=true
-// +kubebuilder:resource:scope=Namespaced,shortName=mf_h
+// +kubebuilder:resource:scope=Namespaced,shortName=mf-h
 // +kubebuilder:subresource:status
 
 // MicroFrontEndHost is the Schema for the microfrontendhosts API
