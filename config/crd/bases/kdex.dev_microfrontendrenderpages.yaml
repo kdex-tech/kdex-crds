@@ -103,6 +103,22 @@ spec:
                 - primaryTemplate
                 - title
                 type: object
+              parentPageRef:
+                description: parentPageRef is a reference to the MicroFrontEndRenderPage
+                  bellow which this page will appear in the main navigation. If not
+                  set, the page will be placed in the top level of the navigation.
+                properties:
+                  name:
+                    default: ""
+                    description: |-
+                      Name of the referent.
+                      This field is effectively required, but due to backwards compatibility is
+                      allowed to be empty. Instances of this type with an empty value here are
+                      almost certainly wrong.
+                      More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#names
+                    type: string
+                type: object
+                x-kubernetes-map-type: atomic
               path:
                 description: path is the URI path at which the page will be accessible
                   in the application server context. The final absolute path will

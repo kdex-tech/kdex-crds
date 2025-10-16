@@ -35,6 +35,10 @@ type MicroFrontEndRenderPageSpec struct {
 	// +kubebuilder:validation:Required
 	PageComponents PageComponents `json:"pageComponents"`
 
+	// parentPageRef is a reference to the MicroFrontEndRenderPage bellow which this page will appear in the main navigation. If not set, the page will be placed in the top level of the navigation.
+	// +optional
+	ParentPageRef *corev1.LocalObjectReference `json:"parentPageRef"`
+
 	// path is the URI path at which the page will be accessible in the application server context. The final absolute path will contain this path and may be prefixed by additional context like a language identifier.
 	// +kubebuilder:validation:Required
 	Path string `json:"path"`
