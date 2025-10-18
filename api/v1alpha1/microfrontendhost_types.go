@@ -68,6 +68,13 @@ type MicroFrontEndHostSpec struct {
 	// +kubebuilder:validation:MinLength=5
 	// +kubebuilder:validation:Pattern=`^https?://`
 	Stylesheet string `json:"stylesheet,omitempty"`
+
+	// supportedLangs is an array of strings containing BCP 47 language tags.
+	// See https://developer.mozilla.org/en-US/docs/Glossary/BCP_47_language_tag.
+	// Render pages will be pre-rendered for each of the supported languages.
+	// When not set the default will be `["en"]`.
+	// +optional
+	SupportedLangs []string `json:"supportedLangs"`
 }
 
 // MicroFrontEndHostStatus defines the observed state of MicroFrontEndHost.

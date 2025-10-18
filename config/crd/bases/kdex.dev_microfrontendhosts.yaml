@@ -80,6 +80,15 @@ spec:
                 minLength: 5
                 pattern: ^https?://
                 type: string
+              supportedLangs:
+                description: |-
+                  supportedLangs is an array of strings containing BCP 47 language tags.
+                  See https://developer.mozilla.org/en-US/docs/Glossary/BCP_47_language_tag.
+                  Render pages will be pre-rendered for each of the supported languages.
+                  When not set the default will be `["en"]`.
+                items:
+                  type: string
+                type: array
             required:
             - appPolicy
             - domains
