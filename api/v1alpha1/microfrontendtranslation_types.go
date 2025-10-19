@@ -21,16 +21,33 @@ import (
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
 
-type Translation struct {
-	// lang is a string containing a BCP 47 language tag that identifies the set of translations.
-	// See https://developer.mozilla.org/en-US/docs/Glossary/BCP_47_language_tag.
-	// +kubebuilder:validation:Required
-	Lang string `json:"lang"`
+// MicroFrontEndTranslation is the Schema for the microfrontendtranslations API
+// +kubebuilder:object:root=true
+// +kubebuilder:resource:scope=Namespaced,shortName=mfe-t
+// +kubebuilder:subresource:status
+type MicroFrontEndTranslation struct {
+	metav1.TypeMeta `json:",inline"`
 
-	// keysAndValues is a map of key=/value pairs where the key is the identifier and the value is the translation of that key in the language specified by the lang property.
-	// +kubebuilder:validation:Required
-	// +kubebuilder:validation:MinProperties=1
-	KeysAndValues map[string]string `json:"keysAndValues"`
+	// metadata is a standard object metadata
+	// +optional
+	metav1.ObjectMeta `json:"metadata,omitempty,omitzero"`
+
+	// spec defines the desired state of MicroFrontEndTranslation
+	// +required
+	Spec MicroFrontEndTranslationSpec `json:"spec"`
+
+	// status defines the observed state of MicroFrontEndTranslation
+	// +optional
+	Status MicroFrontEndTranslationStatus `json:"status,omitempty,omitzero"`
+}
+
+// +kubebuilder:object:root=true
+
+// MicroFrontEndTranslationList contains a list of MicroFrontEndTranslation
+type MicroFrontEndTranslationList struct {
+	metav1.TypeMeta `json:",inline"`
+	metav1.ListMeta `json:"metadata,omitempty"`
+	Items           []MicroFrontEndTranslation `json:"items"`
 }
 
 // MicroFrontEndTranslationSpec defines the desired state of MicroFrontEndTranslation
@@ -65,34 +82,16 @@ type MicroFrontEndTranslationStatus struct {
 	Conditions []metav1.Condition `json:"conditions,omitempty"`
 }
 
-// +kubebuilder:object:root=true
-// +kubebuilder:resource:scope=Namespaced,shortName=mfe-t
-// +kubebuilder:subresource:status
+type Translation struct {
+	// keysAndValues is a map of key=/value pairs where the key is the identifier and the value is the translation of that key in the language specified by the lang property.
+	// +kubebuilder:validation:MinProperties=1
+	// +kubebuilder:validation:Required
+	KeysAndValues map[string]string `json:"keysAndValues"`
 
-// MicroFrontEndTranslation is the Schema for the microfrontendtranslations API
-type MicroFrontEndTranslation struct {
-	metav1.TypeMeta `json:",inline"`
-
-	// metadata is a standard object metadata
-	// +optional
-	metav1.ObjectMeta `json:"metadata,omitempty,omitzero"`
-
-	// spec defines the desired state of MicroFrontEndTranslation
-	// +required
-	Spec MicroFrontEndTranslationSpec `json:"spec"`
-
-	// status defines the observed state of MicroFrontEndTranslation
-	// +optional
-	Status MicroFrontEndTranslationStatus `json:"status,omitempty,omitzero"`
-}
-
-// +kubebuilder:object:root=true
-
-// MicroFrontEndTranslationList contains a list of MicroFrontEndTranslation
-type MicroFrontEndTranslationList struct {
-	metav1.TypeMeta `json:",inline"`
-	metav1.ListMeta `json:"metadata,omitempty"`
-	Items           []MicroFrontEndTranslation `json:"items"`
+	// lang is a string containing a BCP 47 language tag that identifies the set of translations.
+	// See https://developer.mozilla.org/en-US/docs/Glossary/BCP_47_language_tag.
+	// +kubebuilder:validation:Required
+	Lang string `json:"lang"`
 }
 
 func init() {

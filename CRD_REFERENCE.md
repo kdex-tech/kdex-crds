@@ -25,6 +25,8 @@ Package v1alpha1 contains API Schema definitions for the  v1alpha1 API group.
 - [MicroFrontEndPageNavigationList](#microfrontendpagenavigationlist)
 - [MicroFrontEndRenderPage](#microfrontendrenderpage)
 - [MicroFrontEndRenderPageList](#microfrontendrenderpagelist)
+- [MicroFrontEndTranslation](#microfrontendtranslation)
+- [MicroFrontEndTranslationList](#microfrontendtranslationlist)
 
 
 
@@ -550,6 +552,62 @@ _Appears in:_
 
 
 
+#### MicroFrontEndTranslation
+
+
+
+MicroFrontEndTranslation is the Schema for the microfrontendtranslations API
+
+
+
+_Appears in:_
+- [MicroFrontEndTranslationList](#microfrontendtranslationlist)
+
+| Field | Description | Default | Validation |
+| --- | --- | --- | --- |
+| `apiVersion` _string_ | `kdex.dev/v1alpha1` | | |
+| `kind` _string_ | `MicroFrontEndTranslation` | | |
+| `metadata` _[ObjectMeta](https://kubernetes.io/docs/reference/generated/kubernetes-api/v/#objectmeta-v1-meta)_ | Refer to Kubernetes API documentation for fields of `metadata`. |  |  |
+| `spec` _[MicroFrontEndTranslationSpec](#microfrontendtranslationspec)_ | spec defines the desired state of MicroFrontEndTranslation |  |  |
+
+
+#### MicroFrontEndTranslationList
+
+
+
+MicroFrontEndTranslationList contains a list of MicroFrontEndTranslation
+
+
+
+
+
+| Field | Description | Default | Validation |
+| --- | --- | --- | --- |
+| `apiVersion` _string_ | `kdex.dev/v1alpha1` | | |
+| `kind` _string_ | `MicroFrontEndTranslationList` | | |
+| `metadata` _[ListMeta](https://kubernetes.io/docs/reference/generated/kubernetes-api/v/#listmeta-v1-meta)_ | Refer to Kubernetes API documentation for fields of `metadata`. |  |  |
+| `items` _[MicroFrontEndTranslation](#microfrontendtranslation) array_ |  |  |  |
+
+
+#### MicroFrontEndTranslationSpec
+
+
+
+MicroFrontEndTranslationSpec defines the desired state of MicroFrontEndTranslation
+
+
+
+_Appears in:_
+- [MicroFrontEndTranslation](#microfrontendtranslation)
+
+| Field | Description | Default | Validation |
+| --- | --- | --- | --- |
+| `hostRef` _[LocalObjectReference](https://kubernetes.io/docs/reference/generated/kubernetes-api/v/#localobjectreference-v1-core)_ | hostRef is a reference to the MicroFrontEndHost that this render page is for. |  | Required: \{\} <br /> |
+| `translations` _[Translation](#translation) array_ | translations is an array of objects where each one specifies a language and a map consisting of key/value pairs. |  | MinItems: 1 <br />Required: \{\} <br /> |
+
+
+
+
 #### NavigationHints
 
 
@@ -605,5 +663,22 @@ _Appears in:_
 | `navigations` _object (keys:string, values:string)_ |  |  |  |
 | `primaryTemplate` _string_ |  |  |  |
 | `title` _string_ |  |  |  |
+
+
+#### Translation
+
+
+
+
+
+
+
+_Appears in:_
+- [MicroFrontEndTranslationSpec](#microfrontendtranslationspec)
+
+| Field | Description | Default | Validation |
+| --- | --- | --- | --- |
+| `keysAndValues` _object (keys:string, values:string)_ | keysAndValues is a map of key=/value pairs where the key is the identifier and the value is the translation of that key in the language specified by the lang property. |  | MinProperties: 1 <br />Required: \{\} <br /> |
+| `lang` _string_ | lang is a string containing a BCP 47 language tag that identifies the set of translations.<br />See https://developer.mozilla.org/en-US/docs/Glossary/BCP_47_language_tag. |  | Required: \{\} <br /> |
 
 
