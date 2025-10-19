@@ -23,24 +23,25 @@ import (
 
 // MicroFrontEndPageArchetypeSpec defines the desired state of MicroFrontEndPageArchetype
 type MicroFrontEndPageArchetypeSpec struct {
-	// content is a go string template that defines the structure of an App Server page. The template accesses `.Values` properties to render its contents.
+	// content is a go string template that defines the structure of an HTML page.
 	// +kubebuilder:validation:Required
 	// +kubebuilder:validation:MinLength=5
+	// +kubebuilder:example=`<!DOCTYPE html>\n<html lang="{{ .Lang }}">\n  <head>\n    {{ .Meta }}\n    {{ .Title }}\n    {{ .Stylesheet }}\n    {{ .HeadScript }}\n  </head>\n  <body>\n    <header>\n      {{ .Header }}\n    </header>\n    <nav>\n      {{ .Navigation["main"] }}\n    </nav>\n    <main>\n      {{ .Content["main"] }}\n    </main>\n    <footer>\n      {{ .Footer }}\n    </footer>\n    {{ .FootScript }}\n  </body>\n</html>`
 	Content string `json:"content"`
 
-	// defaultFooterRef is an optional reference to a MicroFrontEndPageFooter resource. If not specified, no footer will be displayed.
+	// defaultFooterRef is an optional reference to a MicroFrontEndPageFooter resource. If not specified, no footer will be displayed. Use the `.Footer` property to position its content in the template.
 	// +optional
 	DefaultFooterRef *corev1.LocalObjectReference `json:"defaultFooterRef,omitempty"`
 
-	// defaultHeaderRef is an optional reference to a MicroFrontEndPageHeader resource. If not specified, no header will be displayed.
+	// defaultHeaderRef is an optional reference to a MicroFrontEndPageHeader resource. If not specified, no header will be displayed. Use the `.Header` property to position its content in the template.
 	// +optional
 	DefaultHeaderRef *corev1.LocalObjectReference `json:"defaultHeaderRef,omitempty"`
 
-	// defaultMainNavigationRef is an optional reference to a MicroFrontEndPageNavigation resource referenced as `{{ .Values.navigation["main"] }}`. If not specified, no navigation will be displayed.
+	// defaultMainNavigationRef is an optional reference to a MicroFrontEndPageNavigation resource. If not specified, no navigation will be displayed. Use the `.Navigation["main"]` property to position its content in the template.
 	// +optional
 	DefaultMainNavigationRef *corev1.LocalObjectReference `json:"defaultMainNavigationRef,omitempty"`
 
-	// extraNavigations is an optional map of named navigation object references that will be available in page templates as `{{ .Values.navigation["name"] }}`.
+	// extraNavigations is an optional map of named navigation object references. Use `.Navigation["<name>"]` to position the named navigation's content in the template.
 	// +optional
 	// +kubebuilder:validation:XValidation:rule="!has(self.main)",message="'main' is a reserved name for an extra navigation"
 	ExtraNavigations *map[string]corev1.LocalObjectReference `json:"extraNavigations,omitempty"`

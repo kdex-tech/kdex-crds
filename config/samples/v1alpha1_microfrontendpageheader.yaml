@@ -7,4 +7,4 @@ metadata:
   name: generic-header
 spec:
   content: |
-    <h1>{{ .Values.Title }}</h1>
+    <a class="logo" href="#">{{ .Title }}</a>

@@ -197,7 +197,8 @@ _Appears in:_
 | `defaultLang` _string_ | defaultLang is a string containing a BCP 47 language tag.<br />See https://developer.mozilla.org/en-US/docs/Glossary/BCP_47_language_tag.<br />When render page paths do not specify a 'lang' path parameter this will be the value used. When not set the default will be 'en'. |  |  |
 | `domains` _string array_ | domains are the names by which this host is addressed. The first domain listed is the preferred domain. The domains may contain wildcard prefix in the form '*.'. Longest match always wins. |  | MinItems: 1 <br />Required: \{\} <br /> |
 | `organization` _string_ | Organization is the name of the Organization. |  | MinLength: 5 <br />Required: \{\} <br /> |
-| `stylesheet` _string_ | Stylesheet is the URL to the default stylesheet. |  | MinLength: 5 <br />Pattern: `^https?://` <br />Required: \{\} <br /> |
+| `stylesheet` _string_ | Stylesheet is the URL to the default stylesheet. |  | MinLength: 5 <br />Pattern: `^https?://` <br /> |
+| `supportedLangs` _string array_ | supportedLangs is an array of strings containing BCP 47 language tags.<br />See https://developer.mozilla.org/en-US/docs/Glossary/BCP_47_language_tag.<br />Render pages will be pre-rendered for each of the supported languages.<br />When not set the default will be `["en"]`. |  |  |
 
 
 
@@ -252,11 +253,11 @@ _Appears in:_
 
 | Field | Description | Default | Validation |
 | --- | --- | --- | --- |
-| `content` _string_ | content is a go string template that defines the structure of an App Server page. The template accesses `.Values` properties to render its contents. |  | MinLength: 5 <br />Required: \{\} <br /> |
-| `defaultFooterRef` _[LocalObjectReference](https://kubernetes.io/docs/reference/generated/kubernetes-api/v/#localobjectreference-v1-core)_ | defaultFooterRef is an optional reference to a MicroFrontEndPageFooter resource. If not specified, no footer will be displayed. |  |  |
-| `defaultHeaderRef` _[LocalObjectReference](https://kubernetes.io/docs/reference/generated/kubernetes-api/v/#localobjectreference-v1-core)_ | defaultHeaderRef is an optional reference to a MicroFrontEndPageHeader resource. If not specified, no header will be displayed. |  |  |
-| `defaultMainNavigationRef` _[LocalObjectReference](https://kubernetes.io/docs/reference/generated/kubernetes-api/v/#localobjectreference-v1-core)_ | defaultMainNavigationRef is an optional reference to a MicroFrontEndPageNavigation resource referenced as `\{\{ .Values.navigation["main"] \}\}`. If not specified, no navigation will be displayed. |  |  |
-| `extraNavigations` _[LocalObjectReference](https://kubernetes.io/docs/reference/generated/kubernetes-api/v/#localobjectreference-v1-core)_ | extraNavigations is an optional map of named navigation object references that will be available in page templates as `\{\{ .Values.navigation["name"] \}\}`. |  |  |
+| `content` _string_ | content is a go string template that defines the structure of an HTML page. |  | MinLength: 5 <br />Required: \{\} <br /> |
+| `defaultFooterRef` _[LocalObjectReference](https://kubernetes.io/docs/reference/generated/kubernetes-api/v/#localobjectreference-v1-core)_ | defaultFooterRef is an optional reference to a MicroFrontEndPageFooter resource. If not specified, no footer will be displayed. Use the `.Footer` property to position its content in the template. |  |  |
+| `defaultHeaderRef` _[LocalObjectReference](https://kubernetes.io/docs/reference/generated/kubernetes-api/v/#localobjectreference-v1-core)_ | defaultHeaderRef is an optional reference to a MicroFrontEndPageHeader resource. If not specified, no header will be displayed. Use the `.Header` property to position its content in the template. |  |  |
+| `defaultMainNavigationRef` _[LocalObjectReference](https://kubernetes.io/docs/reference/generated/kubernetes-api/v/#localobjectreference-v1-core)_ | defaultMainNavigationRef is an optional reference to a MicroFrontEndPageNavigation resource. If not specified, no navigation will be displayed. Use the `.Navigation["main"]` property to position its content in the template. |  |  |
+| `extraNavigations` _[LocalObjectReference](https://kubernetes.io/docs/reference/generated/kubernetes-api/v/#localobjectreference-v1-core)_ | extraNavigations is an optional map of named navigation object references. Use `.Navigation["<name>"]` to position the named navigation's content in the template. |  |  |
 
 
 
@@ -316,9 +317,10 @@ _Appears in:_
 | `label` _string_ | label is the value used in menus and page titles before localization occurs (or when no translation exists for the current language). |  | Required: \{\} <br /> |
 | `overrideFooterRef` _[LocalObjectReference](https://kubernetes.io/docs/reference/generated/kubernetes-api/v/#localobjectreference-v1-core)_ | overrideFooterRef is an optional reference to a MicroFrontEndPageFooter resource. If not specified, the footer from the archetype will be used. |  |  |
 | `overrideHeaderRef` _[LocalObjectReference](https://kubernetes.io/docs/reference/generated/kubernetes-api/v/#localobjectreference-v1-core)_ | overrideHeaderRef is an optional reference to a MicroFrontEndPageHeader resource. If not specified, the header from the archetype will be used. |  |  |
-| `overrideMainNavigationRef` _[LocalObjectReference](https://kubernetes.io/docs/reference/generated/kubernetes-api/v/#localobjectreference-v1-core)_ | overrideMainNavigationRef is an optional reference to a MicroFrontEndPageNavigation resource referenced as `\{\{ .Values.navigation["main"] \}\}. If not specified, the main navigation from the archetype will be used. |  |  |
+| `overrideMainNavigationRef` _[LocalObjectReference](https://kubernetes.io/docs/reference/generated/kubernetes-api/v/#localobjectreference-v1-core)_ | overrideMainNavigationRef is an optional reference to a MicroFrontEndPageNavigation resource. If not specified, the main navigation from the archetype will be used. |  |  |
 | `navigationHints` _[NavigationHints](#navigationhints)_ | navigationHints are optional navigation properties that if omitted result in the page being hidden from the navigation. |  |  |
 | `pageArchetypeRef` _[LocalObjectReference](https://kubernetes.io/docs/reference/generated/kubernetes-api/v/#localobjectreference-v1-core)_ | pageArchetypeRef is a reference to the MicroFrontEndPageArchetype that this binding is for. |  | Required: \{\} <br /> |
+| `parentPageRef` _[LocalObjectReference](https://kubernetes.io/docs/reference/generated/kubernetes-api/v/#localobjectreference-v1-core)_ | parentPageRef is a reference to the MicroFrontEndPageBinding bellow which this page will appear in the main navigation. If not set, the page will be placed in the top level of the navigation. |  |  |
 | `path` _string_ | path is the URI path at which the page will be accessible in the application server context. The final absolute path will contain this path and may be prefixed by additional context like a language identifier. |  | Required: \{\} <br /> |
 
 
@@ -374,7 +376,7 @@ _Appears in:_
 
 | Field | Description | Default | Validation |
 | --- | --- | --- | --- |
-| `content` _string_ | content is a go string template that defines the content of an App Server page footer section. The template accesses `.Values` properties to render its contents. |  | MinLength: 5 <br />Required: \{\} <br /> |
+| `content` _string_ | content is a go string template that defines the content of an App Server page footer section. Use the `.Footer` property to position its content in the template. |  | MinLength: 5 <br />Required: \{\} <br /> |
 
 
 
@@ -429,7 +431,7 @@ _Appears in:_
 
 | Field | Description | Default | Validation |
 | --- | --- | --- | --- |
-| `content` _string_ | content is a go string template that defines the content of an App Server page header section. The template accesses `.Values` properties to render its contents. |  | MinLength: 5 <br />Required: \{\} <br /> |
+| `content` _string_ | content is a go string template that defines the content of an App Server page header section. Use the `.Header` property to position its content in the template. |  | MinLength: 5 <br />Required: \{\} <br /> |
 
 
 
@@ -484,7 +486,7 @@ _Appears in:_
 
 | Field | Description | Default | Validation |
 | --- | --- | --- | --- |
-| `content` _string_ | content is a go string template that defines the content of an App Server page navigation. The template accesses `.Values` properties to render its contents. |  | MinLength: 5 <br />Required: \{\} <br /> |
+| `content` _string_ | content is a go string template that defines the content of an App Server page navigation. Use the `.Navigation["<name>"]` property to position its content in the template. |  | MinLength: 5 <br />Required: \{\} <br /> |
 
 
 
@@ -542,6 +544,7 @@ _Appears in:_
 | `hostRef` _[LocalObjectReference](https://kubernetes.io/docs/reference/generated/kubernetes-api/v/#localobjectreference-v1-core)_ | hostRef is a reference to the MicroFrontEndHost that this render page is for. |  | Required: \{\} <br /> |
 | `navigationHints` _[NavigationHints](#navigationhints)_ | navigationHints are optional navigation properties that if omitted result in the page being hidden from the navigation. |  |  |
 | `pageComponents` _[PageComponents](#pagecomponents)_ | pageComponents make up the elements of an HTML page that will be rendered by a web server. |  | Required: \{\} <br /> |
+| `parentPageRef` _[LocalObjectReference](https://kubernetes.io/docs/reference/generated/kubernetes-api/v/#localobjectreference-v1-core)_ | parentPageRef is a reference to the MicroFrontEndRenderPage bellow which this page will appear in the main navigation. If not set, the page will be placed in the top level of the navigation. |  |  |
 | `path` _string_ | path is the URI path at which the page will be accessible in the application server context. The final absolute path will contain this path and may be prefixed by additional context like a language identifier. |  | Required: \{\} <br /> |
 
 
@@ -562,7 +565,6 @@ _Appears in:_
 | Field | Description | Default | Validation |
 | --- | --- | --- | --- |
 | `icon` _string_ | icon is the name of the icon to display next to the menu entry for this page. |  |  |
-| `parent` _string_ | parent specifies the menu entry that is the parent under which the menu entry for this page will be added in the main navigation. A hierarchical path using slashes is supported. |  |  |
 | `weight` _[Quantity](https://kubernetes.io/docs/reference/generated/kubernetes-api/v/#quantity-resource-api)_ | weight is a property that influences the position of the page menu entry. Items at each level are sorted first by ascending weight and then ascending lexicographically. |  |  |
 
 

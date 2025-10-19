@@ -77,7 +77,7 @@ type MicroFrontEndPageBindingSpec struct {
 	// +optional
 	OverrideHeaderRef *corev1.LocalObjectReference `json:"overrideHeaderRef,omitempty"`
 
-	// overrideMainNavigationRef is an optional reference to a MicroFrontEndPageNavigation resource referenced as `{{ .Values.navigation["main"] }}. If not specified, the main navigation from the archetype will be used.
+	// overrideMainNavigationRef is an optional reference to a MicroFrontEndPageNavigation resource. If not specified, the main navigation from the archetype will be used.
 	// +optional
 	OverrideMainNavigationRef *corev1.LocalObjectReference `json:"overrideMainNavigationRef,omitempty"`
 

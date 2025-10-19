@@ -22,9 +22,10 @@ import (
 
 // MicroFrontEndPageNavigationSpec defines the desired state of MicroFrontEndPageNavigation
 type MicroFrontEndPageNavigationSpec struct {
-	// content is a go string template that defines the content of an App Server page navigation. The template accesses `.Values` properties to render its contents.
+	// content is a go string template that defines the content of an App Server page navigation. Use the `.Navigation["<name>"]` property to position its content in the template.
 	// +kubebuilder:validation:Required
 	// +kubebuilder:validation:MinLength=5
+	// +kubebuilder:example=`{{- define "menu" -}}\n  <ul>\n    {{- range $label, $value := . }}\n      <li>\n        {{- if ($value.Path != "") -}}\n          <a href="{{ $value.Path }}">{{ $label }}</a>\n        {{- else -}}\n          <span>{{ $label }}</span>\n        {{- end -}}\n        {{- if ($value.Children != nil) -}}\n          {{- template "menu" $value.Children -}}\n        {{- end -}}\n      </li>\n    {{- end -}}\n  </ul>\n{{- end -}}\n{{- template "menu" .MenuEntries -}}`
 	Content string `json:"content"`
 }
 

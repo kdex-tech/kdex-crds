@@ -22,9 +22,10 @@ import (
 
 // MicroFrontEndPageHeaderSpec defines the desired state of MicroFrontEndPageHeader
 type MicroFrontEndPageHeaderSpec struct {
-	// content is a go string template that defines the content of an App Server page header section. The template accesses `.Values` properties to render its contents.
+	// content is a go string template that defines the content of an App Server page header section. Use the `.Header` property to position its content in the template.
 	// +kubebuilder:validation:Required
 	// +kubebuilder:validation:MinLength=5
+	// +kubebuilder:example:=`<a class="logo" href="#">{{ .Title }}</a>`
 	Content string `json:"content"`
 }
 

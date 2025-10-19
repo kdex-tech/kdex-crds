@@ -22,9 +22,10 @@ import (
 
 // MicroFrontEndPageFooterSpec defines the desired state of MicroFrontEndPageFooter
 type MicroFrontEndPageFooterSpec struct {
-	// content is a go string template that defines the content of an App Server page footer section. The template accesses `.Values` properties to render its contents.
+	// content is a go string template that defines the content of an App Server page footer section. Use the `.Footer` property to position its content in the template.
 	// +kubebuilder:validation:Required
 	// +kubebuilder:validation:MinLength=5
+	// +kubebuilder:example:=`<small>&copy; {{ .Date.Year() }} {{ .Organization }}. All Rights Reserved.</small>`
 	Content string `json:"content"`
 }
 

@@ -23,4 +23,4 @@ spec:
         {{- end -}}
       </ul>
     {{- end -}}
-    {{- template "menu" .Values.MenuEntries -}}
+    {{- template "menu" .MenuEntries -}}

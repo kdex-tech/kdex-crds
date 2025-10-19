@@ -44,13 +44,19 @@ spec:
             properties:
               content:
                 description: content is a go string template that defines the structure
-                  of an App Server page. The template accesses `.Values` properties
-                  to render its contents.
+                  of an HTML page.
+                example: <!DOCTYPE html>\n<html lang="{{ .Lang }}">\n  <head>\n    {{
+                  .Meta }}\n    {{ .Title }}\n    {{ .Stylesheet }}\n    {{ .HeadScript
+                  }}\n  </head>\n  <body>\n    <header>\n      {{ .Header }}\n    </header>\n    <nav>\n      {{
+                  .Navigation["main"] }}\n    </nav>\n    <main>\n      {{ .Content["main"]
+                  }}\n    </main>\n    <footer>\n      {{ .Footer }}\n    </footer>\n    {{
+                  .FootScript }}\n  </body>\n</html>
                 minLength: 5
                 type: string
               defaultFooterRef:
                 description: defaultFooterRef is an optional reference to a MicroFrontEndPageFooter
-                  resource. If not specified, no footer will be displayed.
+                  resource. If not specified, no footer will be displayed. Use the
+                  `.Footer` property to position its content in the template.
                 properties:
                   name:
                     default: ""
@@ -65,7 +71,8 @@ spec:
                 x-kubernetes-map-type: atomic
               defaultHeaderRef:
                 description: defaultHeaderRef is an optional reference to a MicroFrontEndPageHeader
-                  resource. If not specified, no header will be displayed.
+                  resource. If not specified, no header will be displayed. Use the
+                  `.Header` property to position its content in the template.
                 properties:
                   name:
                     default: ""
@@ -80,8 +87,9 @@ spec:
                 x-kubernetes-map-type: atomic
               defaultMainNavigationRef:
                 description: defaultMainNavigationRef is an optional reference to
-                  a MicroFrontEndPageNavigation resource referenced as `{{ .Values.navigation["main"]
-                  }}`. If not specified, no navigation will be displayed.
+                  a MicroFrontEndPageNavigation resource. If not specified, no navigation
+                  will be displayed. Use the `.Navigation["main"]` property to position
+                  its content in the template.
                 properties:
                   name:
                     default: ""
@@ -112,8 +120,8 @@ spec:
                   type: object
                   x-kubernetes-map-type: atomic
                 description: extraNavigations is an optional map of named navigation
-                  object references that will be available in page templates as `{{
-                  .Values.navigation["name"] }}`.
+                  object references. Use `.Navigation["<name>"]` to position the named
+                  navigation's content in the template.
                 type: object
                 x-kubernetes-validations:
                 - message: '''main'' is a reserved name for an extra navigation'
