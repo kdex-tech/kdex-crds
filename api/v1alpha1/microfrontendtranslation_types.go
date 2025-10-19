@@ -39,10 +39,9 @@ type MicroFrontEndTranslationSpec struct {
 	// +kubebuilder:validation:Required
 	HostRef corev1.LocalObjectReference `json:"hostRef"`
 
-	// translations is an array of objects where each one specifies a language and a map consisting of key/value pairs.
+	// translations is an array of objects where each one specifies a language (lang) and a map (keysAndValues) consisting of key/value pairs. If the lang property is not unique in the array and its keysAndValues map contains the same keys, the last one takes precedence.
 	// +kubebuilder:validation:MinItems=1
 	// +kubebuilder:validation:Required
-	// +kubebuilder:validation:XValidation:rule="self.all(x, self.filter(y, y.lang == x.lang).size() == 1)",message="lang must be unique"
 	Translations []Translation `json:"translations"`
 }
 
