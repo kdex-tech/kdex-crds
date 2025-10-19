@@ -8,4 +8,5 @@ resources:
 - v1alpha1_microfrontendpagenavigation.yaml
 - v1alpha1_microfrontendrenderpage.yaml
 - v1alpha1_microfrontendhost.yaml
+- v1alpha1_microfrontendtranslation.yaml
 # +kubebuilder:scaffold:manifestskustomizesamples
