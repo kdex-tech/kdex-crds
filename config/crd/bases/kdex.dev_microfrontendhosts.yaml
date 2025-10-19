@@ -12,7 +12,7 @@ spec:
     listKind: MicroFrontEndHostList
     plural: microfrontendhosts
     shortNames:
-    - mf-h
+    - mfe-h
     singular: microfrontendhost
   scope: Namespaced
   versions:

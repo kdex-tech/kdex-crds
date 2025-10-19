@@ -53,7 +53,7 @@ type MicroFrontEndPageNavigationStatus struct {
 }
 
 // +kubebuilder:object:root=true
-// +kubebuilder:resource:scope=Namespaced,shortName=mf-pn
+// +kubebuilder:resource:scope=Namespaced,shortName=mfe-pn
 // +kubebuilder:subresource:status
 
 // MicroFrontEndPageNavigation is the Schema for the microfrontendpagenavigations API

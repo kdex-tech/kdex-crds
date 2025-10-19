@@ -68,7 +68,7 @@ type MicroFrontEndPageArchetypeStatus struct {
 }
 
 // +kubebuilder:object:root=true
-// +kubebuilder:resource:scope=Namespaced,shortName=mf-pa
+// +kubebuilder:resource:scope=Namespaced,shortName=mfe-pa
 // +kubebuilder:subresource:status
 
 // MicroFrontEndPageArchetype is the Schema for the microfrontendpagearchetypes API

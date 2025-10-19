@@ -12,7 +12,7 @@ spec:
     listKind: MicroFrontEndPageArchetypeList
     plural: microfrontendpagearchetypes
     shortNames:
-    - mf-pa
+    - mfe-pa
     singular: microfrontendpagearchetype
   scope: Namespaced
   versions:

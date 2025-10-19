@@ -50,7 +50,7 @@ type MicroFrontEndPageFooterStatus struct {
 }
 
 // +kubebuilder:object:root=true
-// +kubebuilder:resource:scope=Namespaced,shortName=mf-pf
+// +kubebuilder:resource:scope=Namespaced,shortName=mfe-pf
 // +kubebuilder:subresource:status
 
 // MicroFrontEndPageFooter is the Schema for the microfrontendpagefooters API
