@@ -65,7 +65,7 @@ spec:
                   type: object
                   x-kubernetes-validations:
                   - message: exactly one of linkHref or style must be set
-                    rule: has(self.linkHref) != has(self.style))
+                    rule: has(self.linkHref) != has(self.style)
                 maxItems: 16
                 minItems: 1
                 type: array

@@ -20,7 +20,7 @@ import (
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
 
-// +kubebuilder:validation:XValidation:rule="has(self.linkHref) != has(self.style))",message="exactly one of linkHref or style must be set"
+// +kubebuilder:validation:XValidation:rule="has(self.linkHref) != has(self.style)",message="exactly one of linkHref or style must be set"
 type StyleItem struct {
 	// attributes are key/value pairs that will be added to the element [link|style] when rendered.
 	// +optional
