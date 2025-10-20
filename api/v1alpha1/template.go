@@ -1,0 +1,46 @@
+package v1alpha1
+
+import (
+	"html/template"
+	"time"
+
+	"k8s.io/apimachinery/pkg/api/resource"
+)
+
+type PageEntry struct {
+	Children *map[string]*PageEntry `json:"children,omitempty" yaml:"children,omitempty"`
+	Icon     string                 `json:"icon,omitempty" yaml:"icon,omitempty"`
+	Label    string                 `json:"label" yaml:"label"`
+	Name     string                 `json:"name" yaml:"name"`
+	Href     string                 `json:"href,omitempty" yaml:"href,omitempty"`
+	Weight   resource.Quantity      `json:"weight,omitempty" yaml:"weight,omitempty"`
+}
+
+// Struct passed as Data when rendering templates.
+type TemplateData struct {
+	Content      map[string]template.HTML `json:"content" yaml:"content"`
+	Footer       template.HTML            `json:"footer,omitempty" yaml:"footer,omitempty"`
+	FootScript   template.HTML            `json:"footScript,omitempty" yaml:"footScript,omitempty"`
+	Header       template.HTML            `json:"header,omitempty" yaml:"header,omitempty"`
+	HeadScript   template.HTML            `json:"headScript,omitempty" yaml:"headScript,omitempty"`
+	Language     string                   `json:"language" yaml:"language"`
+	Languages    []string                 `json:"languages" yaml:"languages"`
+	LastModified time.Time                `json:"lastModified" yaml:"lastModified"`
+	LeftToRight  bool                     `json:"leftToRight" yaml:"leftToRight"`
+	PageMap      map[string]*PageEntry    `json:"pageMap" yaml:"pageMap"`
+	Meta         template.HTML            `json:"meta,omitempty" yaml:"meta,omitempty"`
+	Navigation   map[string]template.HTML `json:"navigation" yaml:"navigation"`
+	Organization string                   `json:"organization" yaml:"organization"`
+	Stylesheet   template.HTML            `json:"stylesheet,omitempty" yaml:"stylesheet,omitempty"`
+	Title        string                   `json:"title" yaml:"title"`
+}
+
+// Functions passed as Funcs when rendering templates
+type TemplateFuncs struct {
+
+	// Return the key's translated form based on the current value of Language.
+	// If no value is found the key is returned. If the translation contains
+	// placeholders the arguments will be positionally interpolated into the
+	// result.
+	l10n func(key string, args ...interface{}) string
+}
