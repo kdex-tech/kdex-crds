@@ -889,6 +889,7 @@ func (in *MicroFrontEndRenderPageSpec) DeepCopyInto(out *MicroFrontEndRenderPage
 		*out = new(corev1.LocalObjectReference)
 		**out = **in
 	}
+	out.Paths = in.Paths
 	if in.StylesheetRef != nil {
 		in, out := &in.StylesheetRef, &out.StylesheetRef
 		*out = new(corev1.LocalObjectReference)
