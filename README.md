@@ -4,24 +4,11 @@ This project contains a set of Custom Resource Definitions (CRDs) for managing m
 
 ## Description
 
-The `kdex-crds` project provides a declarative way to manage micro-frontends in a Kubernetes environment. It is composed of the following CRDs:
+The `kdex-crds` project provides a declarative way to manage micro-frontends in a Kubernetes environment.
 
-- `MicroFrontEndApp`: Represents a micro-frontend application, including its source code and the custom elements it exposes.
-- `MicroFrontEndPageArchetype`: Defines the structure of an App Server page, including optional default header, footer, and navigation.
-- `MicroFrontEndPageBinding`: Binds a set of `MicroFrontEndApp`s or raw HTML fragments to a page, and allows overriding the default header, footer, and navigation defined in the archetype.
-- `MicroFrontEndPageFooter`: Defines the content of an App Server page footer section.
-- `MicroFrontEndPageHeader`: Defines the content of an App Server page header section.
-- `MicroFrontEndPageNavigation`: Defines the content of an App Server page navigation section.
-
-These CRDs work together to provide a flexible and declarative way to manage micro-frontends in a Kubernetes environment.
+These CRDs work together to provide a flexible and declarative way to manage complex sites composed of multiple micro-frontends in a Kubernetes environment.
 
 See [CRD_REFERENCE.md](CRD_REFERENCE.md) for reference documentation.
-
-## Design Notes
-
-The architecture of the KDEX App Server's micro-frontend pages follows Semantic HTML as described in [MDN's Structuring documents](https://developer.mozilla.org/en-US/docs/Learn_web_development/Core/Structuring_content/Structuring_documents).
-
-### TODO
 
 ## Getting Started
 
