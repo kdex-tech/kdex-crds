@@ -45,7 +45,7 @@ spec:
               content:
                 description: content is a go string template that defines the structure
                   of an HTML page.
-                example: <!DOCTYPE html>\n<html lang="{{ .Lang }}">\n  <head>\n    {{
+                example: <!DOCTYPE html>\n<html lang="{{ .Language }}">\n  <head>\n    {{
                   .Meta }}\n    {{ .Title }}\n    {{ .Stylesheet }}\n    {{ .HeadScript
                   }}\n  </head>\n  <body>\n    <header>\n      {{ .Header }}\n    </header>\n    <nav>\n      {{
                   .Navigation["main"] }}\n    </nav>\n    <main>\n      {{ .Content["main"]

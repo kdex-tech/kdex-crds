@@ -8,10 +8,10 @@ metadata:
 spec:
   content: |
     <!DOCTYPE html>
-    <html lang="{{ .Lang }}">
+    <html lang="{{ .Language }}">
       <head>
         {{ .Meta }}
-        {{ .Title }}
+        <title>{{ .Title }}<title>
         {{ .Stylesheet }}
         {{ .HeadScript }}
       </head>

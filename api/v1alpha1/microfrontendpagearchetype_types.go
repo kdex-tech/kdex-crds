@@ -26,7 +26,7 @@ type MicroFrontEndPageArchetypeSpec struct {
 	// content is a go string template that defines the structure of an HTML page.
 	// +kubebuilder:validation:Required
 	// +kubebuilder:validation:MinLength=5
-	// +kubebuilder:example=`<!DOCTYPE html>\n<html lang="{{ .Lang }}">\n  <head>\n    {{ .Meta }}\n    {{ .Title }}\n    {{ .Stylesheet }}\n    {{ .HeadScript }}\n  </head>\n  <body>\n    <header>\n      {{ .Header }}\n    </header>\n    <nav>\n      {{ .Navigation["main"] }}\n    </nav>\n    <main>\n      {{ .Content["main"] }}\n    </main>\n    <footer>\n      {{ .Footer }}\n    </footer>\n    {{ .FootScript }}\n  </body>\n</html>`
+	// +kubebuilder:example=`<!DOCTYPE html>\n<html lang="{{ .Language }}">\n  <head>\n    {{ .Meta }}\n    {{ .Title }}\n    {{ .Stylesheet }}\n    {{ .HeadScript }}\n  </head>\n  <body>\n    <header>\n      {{ .Header }}\n    </header>\n    <nav>\n      {{ .Navigation["main"] }}\n    </nav>\n    <main>\n      {{ .Content["main"] }}\n    </main>\n    <footer>\n      {{ .Footer }}\n    </footer>\n    {{ .FootScript }}\n  </body>\n</html>`
 	Content string `json:"content"`
 
 	// defaultFooterRef is an optional reference to a MicroFrontEndPageFooter resource. If not specified, no footer will be displayed. Use the `.Footer` property to position its content in the template.
