@@ -125,6 +125,21 @@ spec:
                   contain this path and may be prefixed by additional context like
                   a language identifier.
                 type: string
+              stylesheetRef:
+                description: stylesheetRef is a reference to the stylesheet that will
+                  apply to this render page.
+                properties:
+                  name:
+                    default: ""
+                    description: |-
+                      Name of the referent.
+                      This field is effectively required, but due to backwards compatibility is
+                      allowed to be empty. Instances of this type with an empty value here are
+                      almost certainly wrong.
+                      More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#names
+                    type: string
+                type: object
+                x-kubernetes-map-type: atomic
             required:
             - hostRef
             - pageComponents

@@ -42,6 +42,10 @@ type MicroFrontEndRenderPageSpec struct {
 	// path is the URI path at which the page will be accessible in the application server context. The final absolute path will contain this path and may be prefixed by additional context like a language identifier.
 	// +kubebuilder:validation:Required
 	Path string `json:"path"`
+
+	// stylesheetRef is a reference to the stylesheet that will apply to this render page.
+	// +optional
+	StylesheetRef *corev1.LocalObjectReference `json:"stylesheetRef,omitempty"`
 }
 
 // MicroFrontEndRenderPageStatus defines the observed state of MicroFrontEndRenderPage.
