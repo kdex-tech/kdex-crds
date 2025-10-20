@@ -92,9 +92,7 @@ type MicroFrontEndPageBindingSpec struct {
 	// +optional
 	ParentPageRef *corev1.LocalObjectReference `json:"parentPageRef"`
 
-	// path is the URI path at which the page will be accessible in the application server context. The final absolute path will contain this path and may be prefixed by additional context like a language identifier.
-	// +kubebuilder:validation:Required
-	Path string `json:"path"`
+	Paths `json:",inline"`
 }
 
 // MicroFrontEndPageBindingStatus defines the observed state of MicroFrontEndPageBinding.
@@ -145,6 +143,16 @@ type MicroFrontEndPageBindingList struct {
 	metav1.TypeMeta `json:",inline"`
 	metav1.ListMeta `json:"metadata,omitempty"`
 	Items           []MicroFrontEndPageBinding `json:"items"`
+}
+
+type Paths struct {
+	// basePath is the shortest path by which the page may be accessed. It must not contain path parameters. This path will be used in site navigation. This path is subject to being prefixed for localization by `/{l10n}` and will be when the user selects a non-default language.
+	// +kubebuilder:validation:Required
+	BasePath string `json:"basePath"`
+
+	// patternPath is an alternate path by which the page may be accessed. It can contain path parameters. This path is subject to being prefixed for localization by `/{l10n}` and will be when the user selects a non-default language.
+	// +optional
+	PatterPath string `json:"patternPath,omitempty"`
 }
 
 func init() {

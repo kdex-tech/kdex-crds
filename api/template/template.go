@@ -1,4 +1,4 @@
-package v1alpha1
+package template
 
 import (
 	"html/template"
@@ -16,7 +16,7 @@ type PageEntry struct {
 	Weight   resource.Quantity      `json:"weight,omitempty" yaml:"weight,omitempty"`
 }
 
-// Struct passed as Data when rendering templates.
+// Fields available when rendering templates.
 type TemplateData struct {
 	Content      map[string]template.HTML `json:"content" yaml:"content"`
 	Footer       template.HTML            `json:"footer,omitempty" yaml:"footer,omitempty"`
@@ -35,12 +35,11 @@ type TemplateData struct {
 	Title        string                   `json:"title" yaml:"title"`
 }
 
-// Functions passed as Funcs when rendering templates
-type TemplateFuncs struct {
-
+// Functions available when rendering templates
+type TemplateFuncs interface {
 	// Return the key's translated form based on the current value of Language.
 	// If no value is found the key is returned. If the translation contains
 	// placeholders the arguments will be positionally interpolated into the
 	// result.
-	l10n func(key string, args ...interface{}) string
+	l10n(key string, args ...interface{}) string
 }
