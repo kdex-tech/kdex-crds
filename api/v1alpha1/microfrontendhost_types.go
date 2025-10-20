@@ -17,6 +17,7 @@ limitations under the License.
 package v1alpha1
 
 import (
+	corev1 "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
 
@@ -52,29 +53,20 @@ type MicroFrontEndHostSpec struct {
 	// +optional
 	DefaultLang string `json:"defaultLang,omitempty"`
 
+	// defaultStylesheetRef is a reference to the default stylesheet that should apply to all pages bound to this host.
+	// +optional
+	DefaultStylesheetRef *corev1.LocalObjectReference `json:"defaultStylesheetRef,omitempty"`
+
 	// domains are the names by which this host is addressed. The first domain listed is the preferred domain. The domains may contain wildcard prefix in the form '*.'. Longest match always wins.
 	// +kubebuilder:validation:Required
 	// +kubebuilder:validation:MinItems=1
 	// +kubebuilder:validation:Items:Format=hostname
 	Domains []string `json:"domains"`
 
-	// Organization is the name of the Organization.
+	// organization is the name of the Organization.
 	// +kubebuilder:validation:Required
 	// +kubebuilder:validation:MinLength=5
 	Organization string `json:"organization"`
-
-	// Stylesheet is the URL to the default stylesheet.
-	// +optional
-	// +kubebuilder:validation:MinLength=5
-	// +kubebuilder:validation:Pattern=`^https?://`
-	Stylesheet string `json:"stylesheet,omitempty"`
-
-	// supportedLangs is an array of strings containing BCP 47 language tags.
-	// See https://developer.mozilla.org/en-US/docs/Glossary/BCP_47_language_tag.
-	// Render pages will be pre-rendered for each of the supported languages.
-	// When not set the default will be `["en"]`.
-	// +optional
-	SupportedLangs []string `json:"supportedLangs"`
 }
 
 // MicroFrontEndHostStatus defines the observed state of MicroFrontEndHost.

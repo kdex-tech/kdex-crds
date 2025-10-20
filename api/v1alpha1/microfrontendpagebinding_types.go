@@ -24,7 +24,6 @@ import (
 
 // +kubebuilder:validation:XValidation:rule="has(self.rawHTML) != (has(self.customElementName) && has(self.appRef))",message="exactly one of rawHTML or both customElementName and appRef must be set"
 type ContentEntry struct {
-
 	// customElementName is the name of the MicroFrontEndApp custom element to render in the specified slot (if present in the template).
 	// +optional
 	CustomElementName string `json:"customElementName,omitempty"`

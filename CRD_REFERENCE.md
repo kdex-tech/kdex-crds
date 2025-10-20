@@ -25,6 +25,8 @@ Package v1alpha1 contains API Schema definitions for the  v1alpha1 API group.
 - [MicroFrontEndPageNavigationList](#microfrontendpagenavigationlist)
 - [MicroFrontEndRenderPage](#microfrontendrenderpage)
 - [MicroFrontEndRenderPageList](#microfrontendrenderpagelist)
+- [MicroFrontEndStylesheet](#microfrontendstylesheet)
+- [MicroFrontEndStylesheetList](#microfrontendstylesheetlist)
 - [MicroFrontEndTranslation](#microfrontendtranslation)
 - [MicroFrontEndTranslationList](#microfrontendtranslationlist)
 
@@ -197,10 +199,9 @@ _Appears in:_
 | `appPolicy` _[AppPolicy](#apppolicy)_ | AppPolicy defines the policy for apps.<br />When the strict policy is enabled, an app may not embed JavaScript dependencies.<br />Validation of the application source code will fail if dependencies are not fully externalized.<br />A Host which defines the `script` app policy must not accept apps which do not comply.<br />While a non-strict Host may accept both strict and non-strict apps. |  | Enum: [Strict NonStrict] <br />Required: \{\} <br /> |
 | `baseMeta` _string_ | baseMeta is a string containing a base set of meta tags to use on every page rendered for the host. |  | MinLength: 5 <br /> |
 | `defaultLang` _string_ | defaultLang is a string containing a BCP 47 language tag.<br />See https://developer.mozilla.org/en-US/docs/Glossary/BCP_47_language_tag.<br />When render page paths do not specify a 'lang' path parameter this will be the value used. When not set the default will be 'en'. |  |  |
+| `defaultStylesheetRef` _[LocalObjectReference](https://kubernetes.io/docs/reference/generated/kubernetes-api/v/#localobjectreference-v1-core)_ | defaultStylesheetRef is a reference to the default stylesheet that should apply to all pages bound to this host. |  |  |
 | `domains` _string array_ | domains are the names by which this host is addressed. The first domain listed is the preferred domain. The domains may contain wildcard prefix in the form '*.'. Longest match always wins. |  | MinItems: 1 <br />Required: \{\} <br /> |
-| `organization` _string_ | Organization is the name of the Organization. |  | MinLength: 5 <br />Required: \{\} <br /> |
-| `stylesheet` _string_ | Stylesheet is the URL to the default stylesheet. |  | MinLength: 5 <br />Pattern: `^https?://` <br /> |
-| `supportedLangs` _string array_ | supportedLangs is an array of strings containing BCP 47 language tags.<br />See https://developer.mozilla.org/en-US/docs/Glossary/BCP_47_language_tag.<br />Render pages will be pre-rendered for each of the supported languages.<br />When not set the default will be `["en"]`. |  |  |
+| `organization` _string_ | organization is the name of the Organization. |  | MinLength: 5 <br />Required: \{\} <br /> |
 
 
 
@@ -260,6 +261,7 @@ _Appears in:_
 | `defaultHeaderRef` _[LocalObjectReference](https://kubernetes.io/docs/reference/generated/kubernetes-api/v/#localobjectreference-v1-core)_ | defaultHeaderRef is an optional reference to a MicroFrontEndPageHeader resource. If not specified, no header will be displayed. Use the `.Header` property to position its content in the template. |  |  |
 | `defaultMainNavigationRef` _[LocalObjectReference](https://kubernetes.io/docs/reference/generated/kubernetes-api/v/#localobjectreference-v1-core)_ | defaultMainNavigationRef is an optional reference to a MicroFrontEndPageNavigation resource. If not specified, no navigation will be displayed. Use the `.Navigation["main"]` property to position its content in the template. |  |  |
 | `extraNavigations` _[LocalObjectReference](https://kubernetes.io/docs/reference/generated/kubernetes-api/v/#localobjectreference-v1-core)_ | extraNavigations is an optional map of named navigation object references. Use `.Navigation["<name>"]` to position the named navigation's content in the template. |  |  |
+| `overrideStylesheetRef` _[LocalObjectReference](https://kubernetes.io/docs/reference/generated/kubernetes-api/v/#localobjectreference-v1-core)_ | overrideStylesheetRef is a reference to the stylesheet that should apply to all pages that use this archetype. It overrides the default stylesheet defined on the host. |  |  |
 
 
 
@@ -552,6 +554,61 @@ _Appears in:_
 
 
 
+#### MicroFrontEndStylesheet
+
+
+
+MicroFrontEndStylesheet is the Schema for the microfrontendstylesheets API
+
+
+
+_Appears in:_
+- [MicroFrontEndStylesheetList](#microfrontendstylesheetlist)
+
+| Field | Description | Default | Validation |
+| --- | --- | --- | --- |
+| `apiVersion` _string_ | `kdex.dev/v1alpha1` | | |
+| `kind` _string_ | `MicroFrontEndStylesheet` | | |
+| `metadata` _[ObjectMeta](https://kubernetes.io/docs/reference/generated/kubernetes-api/v/#objectmeta-v1-meta)_ | Refer to Kubernetes API documentation for fields of `metadata`. |  |  |
+| `spec` _[MicroFrontEndStylesheetSpec](#microfrontendstylesheetspec)_ | spec defines the desired state of MicroFrontEndStylesheet |  |  |
+
+
+#### MicroFrontEndStylesheetList
+
+
+
+MicroFrontEndStylesheetList contains a list of MicroFrontEndStylesheet
+
+
+
+
+
+| Field | Description | Default | Validation |
+| --- | --- | --- | --- |
+| `apiVersion` _string_ | `kdex.dev/v1alpha1` | | |
+| `kind` _string_ | `MicroFrontEndStylesheetList` | | |
+| `metadata` _[ListMeta](https://kubernetes.io/docs/reference/generated/kubernetes-api/v/#listmeta-v1-meta)_ | Refer to Kubernetes API documentation for fields of `metadata`. |  |  |
+| `items` _[MicroFrontEndStylesheet](#microfrontendstylesheet) array_ |  |  |  |
+
+
+#### MicroFrontEndStylesheetSpec
+
+
+
+MicroFrontEndStylesheetSpec defines the desired state of MicroFrontEndStylesheet
+
+
+
+_Appears in:_
+- [MicroFrontEndStylesheet](#microfrontendstylesheet)
+
+| Field | Description | Default | Validation |
+| --- | --- | --- | --- |
+| `styleItems` _[StyleItem](#styleitem) array_ | styleItems is a set of elements that define a portable set of design rules. They may contain URLs that point to resources hosted at some public address and/or they may contain the literal CSS. |  | MaxItems: 16 <br />MinItems: 1 <br />Required: \{\} <br /> |
+
+
+
+
 #### MicroFrontEndTranslation
 
 
@@ -603,7 +660,7 @@ _Appears in:_
 | Field | Description | Default | Validation |
 | --- | --- | --- | --- |
 | `hostRef` _[LocalObjectReference](https://kubernetes.io/docs/reference/generated/kubernetes-api/v/#localobjectreference-v1-core)_ | hostRef is a reference to the MicroFrontEndHost that this render page is for. |  | Required: \{\} <br /> |
-| `translations` _[Translation](#translation) array_ | translations is an array of objects where each one specifies a language and a map consisting of key/value pairs. |  | MinItems: 1 <br />Required: \{\} <br /> |
+| `translations` _[Translation](#translation) array_ | translations is an array of objects where each one specifies a language (lang) and a map (keysAndValues) consisting of key/value pairs. If the lang property is not unique in the array and its keysAndValues map contains the same keys, the last one takes precedence. |  | MinItems: 1 <br />Required: \{\} <br /> |
 
 
 
@@ -663,6 +720,24 @@ _Appears in:_
 | `navigations` _object (keys:string, values:string)_ |  |  |  |
 | `primaryTemplate` _string_ |  |  |  |
 | `title` _string_ |  |  |  |
+
+
+#### StyleItem
+
+
+
+
+
+
+
+_Appears in:_
+- [MicroFrontEndStylesheetSpec](#microfrontendstylesheetspec)
+
+| Field | Description | Default | Validation |
+| --- | --- | --- | --- |
+| `attributes` _object (keys:string, values:string)_ | attributes are key/value pairs that will be added to the element [link\|style] when rendered. |  |  |
+| `linkHref` _string_ | linkHref is the content of a <link> href attribute. |  |  |
+| `style` _string_ | style is the text content to be added into a <script> element when rendered. |  |  |
 
 
 #### Translation

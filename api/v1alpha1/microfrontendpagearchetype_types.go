@@ -45,6 +45,10 @@ type MicroFrontEndPageArchetypeSpec struct {
 	// +optional
 	// +kubebuilder:validation:XValidation:rule="!has(self.main)",message="'main' is a reserved name for an extra navigation"
 	ExtraNavigations *map[string]corev1.LocalObjectReference `json:"extraNavigations,omitempty"`
+
+	// overrideStylesheetRef is a reference to the stylesheet that should apply to all pages that use this archetype. It overrides the default stylesheet defined on the host.
+	// +optional
+	OverrideStylesheetRef *corev1.LocalObjectReference `json:"overrideStylesheetRef,omitempty"`
 }
 
 // MicroFrontEndPageArchetypeStatus defines the observed state of MicroFrontEndPageArchetype.

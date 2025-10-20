@@ -1,0 +1,26 @@
+apiVersion: kdex.dev/v1alpha1
+kind: MicroFrontEndStylesheet
+metadata:
+  labels:
+    app.kubernetes.io/name: kdex-crds
+    app.kubernetes.io/managed-by: kustomize
+  name: microfrontendstylesheet-sample
+spec:
+  styleItems:
+    - attributes:
+        media: (width < 500px)
+      style: |
+        p {
+          color: blue;
+          background-color: yellow;
+        }
+    - style: |
+        p {
+          color: white;
+          background-color: blue;
+          padding: 5px;
+          border: 1px solid black;
+        }
+    - linkHref: https://cdn.tailwindcss.com
+      attributes:
+        rel: stylesheet

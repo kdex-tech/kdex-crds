@@ -22,6 +22,9 @@ resources:
 # default, aiding admins in cluster management. Those roles are
 # not used by the kdex-crds itself. You can comment the following lines
 # if you do not want those helpers be installed with your Project.
+- microfrontendstylesheet_admin_role.yaml
+- microfrontendstylesheet_editor_role.yaml
+- microfrontendstylesheet_viewer_role.yaml
 - microfrontendtranslation_admin_role.yaml
 - microfrontendtranslation_editor_role.yaml
 - microfrontendtranslation_viewer_role.yaml
@@ -46,7 +49,6 @@ resources:
 - microfrontendpagearchetype_admin_role.yaml
 - microfrontendpagearchetype_editor_role.yaml
 - microfrontendpagearchetype_viewer_role.yaml
-
 - microfrontendapp_admin_role.yaml
 - microfrontendapp_editor_role.yaml
 - microfrontendapp_viewer_role.yaml

@@ -126,6 +126,22 @@ spec:
                 x-kubernetes-validations:
                 - message: '''main'' is a reserved name for an extra navigation'
                   rule: '!has(self.main)'
+              overrideStylesheetRef:
+                description: overrideStylesheetRef is a reference to the stylesheet
+                  that should apply to all pages that use this archetype. It overrides
+                  the default stylesheet defined on the host.
+                properties:
+                  name:
+                    default: ""
+                    description: |-
+                      Name of the referent.
+                      This field is effectively required, but due to backwards compatibility is
+                      allowed to be empty. Instances of this type with an empty value here are
+                      almost certainly wrong.
+                      More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#names
+                    type: string
+                type: object
+                x-kubernetes-map-type: atomic
             required:
             - content
             type: object
