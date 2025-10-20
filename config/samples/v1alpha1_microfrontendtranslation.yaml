@@ -6,4 +6,12 @@ metadata:
     app.kubernetes.io/managed-by: kustomize
   name: microfrontendtranslation-sample
 spec:
-  # TODO(user): Add fields here
+  hostRef:
+    name: sample-host
+  translations:
+    - keysAndValues:
+        name: Name
+      lang: en
+    - keysAndValues:
+        name: Nom
+      lang: fr
