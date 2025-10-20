@@ -1,3 +1,7 @@
+## CRD Relationships
+
+See [CRD_REFERENCE.md](CRD_REFERENCE.md) for reference documentation.
+
 ```mermaid
 erDiagram
     MicroFrontEndHost ||--o{ MicroFrontEndPageBinding : "hosts"
