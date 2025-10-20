@@ -9,6 +9,7 @@ The `kdex-crds` project provides a declarative way to manage micro-frontends in 
 These CRDs work together to provide a flexible and declarative way to manage complex sites composed of multiple micro-frontends in a Kubernetes environment.
 
 See [CRD_REFERENCE.md](CRD_REFERENCE.md) for reference documentation.
+See [CRD_RELATIONSHIPS.md](CRD_RELATIONSHIPS.md) for relationship reference.
 
 ## Getting Started
 
