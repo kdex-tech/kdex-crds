@@ -48,6 +48,8 @@ spec:
                   used in site navigation. This path is subject to being prefixed
                   for localization by `/{l10n}` and will be when the user selects
                   a non-default language.
+                minLength: 2
+                pattern: ^/
                 type: string
               hostRef:
                 description: hostRef is a reference to the MicroFrontEndHost that
@@ -127,10 +129,10 @@ spec:
                 type: object
                 x-kubernetes-map-type: atomic
               patternPath:
-                description: patternPath is an alternate path by which the page may
-                  be accessed. It can contain path parameters. This path is subject
-                  to being prefixed for localization by `/{l10n}` and will be when
-                  the user selects a non-default language.
+                description: patternPath, which must be prefixed by BasePath, is an
+                  extension of basePath that adds pattern matching as defined by https://pkg.go.dev/net/http#hdr-Patterns-ServeMux.
+                  This path is subject to being prefixed for localization by `/{l10n}`
+                  such as when the user selects a non-default language.
                 type: string
               stylesheetRef:
                 description: stylesheetRef is a reference to the stylesheet that will
@@ -152,6 +154,9 @@ spec:
             - hostRef
             - pageComponents
             type: object
+            x-kubernetes-validations:
+            - message: if patternPath is specified, basePath must be a prefix of patternPath
+              rule: '!has(self.patternPath) || self.patternPath.startsWith(self.basePath)'
           status:
             description: status defines the observed state of MicroFrontEndRenderPage
             properties:

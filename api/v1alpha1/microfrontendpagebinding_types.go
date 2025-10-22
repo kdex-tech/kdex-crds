@@ -24,13 +24,12 @@ import (
 
 // +kubebuilder:validation:XValidation:rule="has(self.rawHTML) != (has(self.customElementName) && has(self.appRef))",message="exactly one of rawHTML or both customElementName and appRef must be set"
 type ContentEntry struct {
-	// customElementName is the name of the MicroFrontEndApp custom element to render in the specified slot (if present in the template).
-	// +optional
-	CustomElementName string `json:"customElementName,omitempty"`
-
 	// appRef is a reference to the MicroFrontEndApp to include in this binding.
 	// +optional
 	AppRef *corev1.LocalObjectReference `json:"appRef,omitempty"`
+	// customElementName is the name of the MicroFrontEndApp custom element to render in the specified slot (if present in the template).
+	// +optional
+	CustomElementName string `json:"customElementName,omitempty"`
 
 	// rawHTML is a raw HTML string to be rendered in the specified slot (if present in the template).
 	// +optional
@@ -68,6 +67,10 @@ type MicroFrontEndPageBindingSpec struct {
 	// +kubebuilder:validation:Required
 	Label string `json:"label"`
 
+	// navigationHints are optional navigation properties that if omitted result in the page being hidden from the navigation.
+	// +optional
+	NavigationHints *NavigationHints `json:"navigationHints,omitempty"`
+
 	// overrideFooterRef is an optional reference to a MicroFrontEndPageFooter resource. If not specified, the footer from the archetype will be used.
 	// +optional
 	OverrideFooterRef *corev1.LocalObjectReference `json:"overrideFooterRef,omitempty"`
@@ -79,10 +82,6 @@ type MicroFrontEndPageBindingSpec struct {
 	// overrideMainNavigationRef is an optional reference to a MicroFrontEndPageNavigation resource. If not specified, the main navigation from the archetype will be used.
 	// +optional
 	OverrideMainNavigationRef *corev1.LocalObjectReference `json:"overrideMainNavigationRef,omitempty"`
-
-	// navigationHints are optional navigation properties that if omitted result in the page being hidden from the navigation.
-	// +optional
-	NavigationHints *NavigationHints `json:"navigationHints,omitempty"`
 
 	// pageArchetypeRef is a reference to the MicroFrontEndPageArchetype that this binding is for.
 	// +kubebuilder:validation:Required
@@ -145,14 +144,17 @@ type MicroFrontEndPageBindingList struct {
 	Items           []MicroFrontEndPageBinding `json:"items"`
 }
 
+// +kubebuilder:validation:XValidation:rule="!has(self.patternPath) || self.patternPath.startsWith(self.basePath)",message="if patternPath is specified, basePath must be a prefix of patternPath"
 type Paths struct {
 	// basePath is the shortest path by which the page may be accessed. It must not contain path parameters. This path will be used in site navigation. This path is subject to being prefixed for localization by `/{l10n}` and will be when the user selects a non-default language.
+	// +kubebuilder:validation:MinLength=2
+	// +kubebuilder:validation:Pattern=`^/`
 	// +kubebuilder:validation:Required
 	BasePath string `json:"basePath"`
 
-	// patternPath is an alternate path by which the page may be accessed. It can contain path parameters. This path is subject to being prefixed for localization by `/{l10n}` and will be when the user selects a non-default language.
+	// patternPath, which must be prefixed by BasePath, is an extension of basePath that adds pattern matching as defined by https://pkg.go.dev/net/http#hdr-Patterns-ServeMux. This path is subject to being prefixed for localization by `/{l10n}` such as when the user selects a non-default language.
 	// +optional
-	PatterPath string `json:"patternPath,omitempty"`
+	PatternPath string `json:"patternPath,omitempty"`
 }
 
 func init() {

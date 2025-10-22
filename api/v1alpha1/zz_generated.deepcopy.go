@@ -466,6 +466,11 @@ func (in *MicroFrontEndPageBindingSpec) DeepCopyInto(out *MicroFrontEndPageBindi
 		}
 	}
 	out.HostRef = in.HostRef
+	if in.NavigationHints != nil {
+		in, out := &in.NavigationHints, &out.NavigationHints
+		*out = new(NavigationHints)
+		(*in).DeepCopyInto(*out)
+	}
 	if in.OverrideFooterRef != nil {
 		in, out := &in.OverrideFooterRef, &out.OverrideFooterRef
 		*out = new(corev1.LocalObjectReference)
@@ -480,11 +485,6 @@ func (in *MicroFrontEndPageBindingSpec) DeepCopyInto(out *MicroFrontEndPageBindi
 		in, out := &in.OverrideMainNavigationRef, &out.OverrideMainNavigationRef
 		*out = new(corev1.LocalObjectReference)
 		**out = **in
-	}
-	if in.NavigationHints != nil {
-		in, out := &in.NavigationHints, &out.NavigationHints
-		*out = new(NavigationHints)
-		(*in).DeepCopyInto(*out)
 	}
 	out.PageArchetypeRef = in.PageArchetypeRef
 	if in.ParentPageRef != nil {
