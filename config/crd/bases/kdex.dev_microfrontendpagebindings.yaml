@@ -48,7 +48,6 @@ spec:
                   used in site navigation. This path is subject to being prefixed
                   for localization by `/{l10n}` and will be when the user selects
                   a non-default language.
-                minLength: 2
                 pattern: ^/
                 type: string
               contentEntries:

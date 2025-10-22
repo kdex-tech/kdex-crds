@@ -147,7 +147,6 @@ type MicroFrontEndPageBindingList struct {
 // +kubebuilder:validation:XValidation:rule="!has(self.patternPath) || self.patternPath.startsWith(self.basePath)",message="if patternPath is specified, basePath must be a prefix of patternPath"
 type Paths struct {
 	// basePath is the shortest path by which the page may be accessed. It must not contain path parameters. This path will be used in site navigation. This path is subject to being prefixed for localization by `/{l10n}` and will be when the user selects a non-default language.
-	// +kubebuilder:validation:MinLength=2
 	// +kubebuilder:validation:Pattern=`^/`
 	// +kubebuilder:validation:Required
 	BasePath string `json:"basePath"`
