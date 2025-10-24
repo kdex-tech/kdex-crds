@@ -5,22 +5,20 @@ import (
 	"fmt"
 	"html/template"
 	"time"
-
-	kdextemplate "kdex.dev/crds/template"
 )
 
 func (r *Renderer) RenderPage(page Page) (string, error) {
-	date := r.RenderTime
+	date := r.LastModified
 	if date.IsZero() {
 		date = time.Now()
 	}
 
-	pageMap := map[string]*kdextemplate.PageEntry{}
+	pageMap := map[string]*PageEntry{}
 	if r.PageMap != nil {
 		pageMap = *r.PageMap
 	}
 
-	templateData := kdextemplate.TemplateData{
+	templateData := TemplateData{
 		FootScript:   template.HTML(r.FootScript),
 		HeadScript:   template.HTML(r.HeadScript),
 		Language:     r.Language,
@@ -76,7 +74,7 @@ func (r *Renderer) RenderPage(page Page) (string, error) {
 func (r *Renderer) RenderOne(
 	templateName string,
 	templateContent string,
-	data kdextemplate.TemplateData,
+	data TemplateData,
 ) (string, error) {
 	funcs := template.FuncMap{
 		"l10n": func(key string, args ...string) string {

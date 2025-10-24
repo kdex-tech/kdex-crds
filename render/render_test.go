@@ -5,51 +5,50 @@ import (
 	"time"
 
 	"github.com/stretchr/testify/assert"
-	kdextemplate "kdex.dev/crds/template"
 )
 
 func TestRenderOne(t *testing.T) {
-	r := &Renderer{}
-	templateContent := "Hello, {{.Title}}!"
-	data := kdextemplate.TemplateData{
+	data := TemplateData{
 		Title: "World",
 	}
-	expected := "Hello, World!"
+	templateContent := "Hello, {{.Title}}!"
+
+	r := &Renderer{}
 	actual, err := r.RenderOne("test", templateContent, data)
 	assert.NoError(t, err)
-	assert.Equal(t, expected, actual)
+	assert.Equal(t, "Hello, World!", actual)
 }
 
 func TestRenderOne_InvalidTemplate(t *testing.T) {
-	r := &Renderer{}
-	templateContent := "Hello, {{.Invalid}}!"
-	data := kdextemplate.TemplateData{
+	data := TemplateData{
 		Title: "World",
 	}
+	templateContent := "Hello, {{.Invalid}}!"
+
+	r := &Renderer{}
 	_, err := r.RenderOne("test", templateContent, data)
 	assert.Error(t, err)
 }
 
 func TestRenderAll(t *testing.T) {
-	testDate, _ := time.Parse("2006-01-02", "2025-09-20")
-	r := &Renderer{
-		RenderTime:   testDate,
-		FootScript:   "<script>foot</script>",
-		HeadScript:   "<script>head</script>",
-		Language:     "en",
-		PageMap:      &map[string]*kdextemplate.PageEntry{"home": {Href: "/"}},
-		Meta:         `<meta name="description" content="test">`,
-		Organization: "Test Inc.",
-		Stylesheet:   "<style>body{}</style>",
-	}
+	lastModified, _ := time.Parse("2006-01-02", "2025-09-20")
 
 	page := Page{
+		Contents: map[string]string{
+			"main":    "<h1>Welcome</h1>",
+			"sidebar": `<my-app-element id="sidebar" data-date="{{.LastModified.Format "2006-01-02"}}"></my-app-element>`,
+		},
+		Footer: "Page Footer",
+		Header: "Page Header",
+		Navigations: map[string]string{
+			"main": "main-nav",
+		},
 		Title:        "Test Page",
 		TemplateName: "main",
-		TemplateContent: `
-<html>
+		TemplateContent: `<!DOCTYPE html>
+<html lang="{{ .Language }}">
 	<head>
-		<title>{{.Title}}</title>
+	<title>{{.Title}}</title>
 		{{.Meta}}
 		{{.HeadScript}}
 		{{.Stylesheet}}
@@ -57,26 +56,27 @@ func TestRenderAll(t *testing.T) {
 	<body>
 		<header>{{.Header}}</header>
 		<nav>{{range $key, $value := .Navigation}}
-			{{$key}}: {{$value}}
+		{{$key}}: {{$value}}
 		{{end}}</nav>
 		<main>{{range $key, $value := .Content}}
-			<div id="slot-{{$key}}">{{$value}}</div>
+		<div id="slot-{{$key}}">{{$value}}</div>
 		{{end}}</main>
 		<footer>{{.Footer}}</footer>
 		{{.FootScript}}
 	</body>
 </html>`,
-		Contents: map[string]string{
-			"main":    "<h1>Welcome</h1>",
-			"sidebar": `<my-app-element id="sidebar" data-date="{{.LastModified.Format "2006-01-02"}}"></my-app-element>`,
-		},
-		Navigations: map[string]string{
-			"main": "main-nav",
-		},
-		Header: "Page Header",
-		Footer: "Page Footer",
 	}
 
+	r := &Renderer{
+		FootScript:   "<script>foot</script>",
+		HeadScript:   "<script>head</script>",
+		Language:     "en",
+		LastModified: lastModified,
+		PageMap:      &map[string]*PageEntry{"home": {Href: "/"}},
+		Meta:         `<meta name="description" content="test">`,
+		Organization: "Test Inc.",
+		Stylesheet:   "<style>body{}</style>",
+	}
 	actual, err := r.RenderPage(page)
 	assert.NoError(t, err)
 
