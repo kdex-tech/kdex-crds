@@ -11,7 +11,7 @@ type Page struct {
 	Contents        map[string]string
 	Footer          string
 	Header          string
-	Label           string
+	Title           string
 	Navigations     map[string]string
 	TemplateContent string
 	TemplateName    string

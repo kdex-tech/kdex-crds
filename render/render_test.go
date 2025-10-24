@@ -44,7 +44,7 @@ func TestRenderAll(t *testing.T) {
 	}
 
 	page := Page{
-		Label:        "Test Page",
+		Title:        "Test Page",
 		TemplateName: "main",
 		TemplateContent: `
 <html>

@@ -30,7 +30,7 @@ func (r *Renderer) RenderPage(page Page) (string, error) {
 		Meta:         template.HTML(r.Meta),
 		Organization: r.Organization,
 		Stylesheet:   template.HTML(r.Stylesheet),
-		Title:        page.Label,
+		Title:        page.Title,
 	}
 
 	headerOutput, err := r.RenderOne(fmt.Sprintf("%s-header", page.TemplateName), page.Header, templateData)
