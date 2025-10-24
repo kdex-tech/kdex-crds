@@ -41,6 +41,17 @@ fmt: ## Run go fmt against code.
 vet: ## Run go vet against code.
 	go vet ./...
 
+.PHONY: test
+TEST_PKGS ?= $(shell go list ./... | grep -v /e2e)
+TEST_ARGS ?=
+
+test: manifests generate fmt vet ## Run tests.
+ifeq ($(DEBUG),true)
+	dlv test $(TEST_PKGS) --headless --listen=:2345 --api-version=2 -- $(TEST_ARGS)
+else
+	go test $(TEST_PKGS) -coverprofile cover.out $(TEST_ARGS)
+endif
+
 .PHONY: docs
 docs: generate crd-ref-docs ## Generate CRD reference documentation.
 	$(CRD_REF_DOCS) --source-path=api/v1alpha1 --config=crd-ref-docs-config.yaml --renderer=markdown --output-path=CRD_REFERENCE.md
