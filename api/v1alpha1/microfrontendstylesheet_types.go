@@ -69,6 +69,7 @@ type MicroFrontEndStylesheetStatus struct {
 // +kubebuilder:subresource:status
 
 // MicroFrontEndStylesheet is the Schema for the microfrontendstylesheets API
+// +kubebuilder:printcolumn:name="Ready",type=string,JSONPath=`.status.conditions[?(@.type=="Ready")].status`,description="The state of the Ready condition"
 type MicroFrontEndStylesheet struct {
 	metav1.TypeMeta `json:",inline"`
 

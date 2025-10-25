@@ -74,6 +74,7 @@ type MicroFrontEndRenderPageStatus struct {
 // +kubebuilder:subresource:status
 
 // MicroFrontEndRenderPage is the Schema for the microfrontendrenderpages API
+// +kubebuilder:printcolumn:name="Ready",type=string,JSONPath=`.status.conditions[?(@.type=="Ready")].status`,description="The state of the Ready condition"
 type MicroFrontEndRenderPage struct {
 	metav1.TypeMeta `json:",inline"`
 

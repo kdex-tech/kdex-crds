@@ -119,6 +119,7 @@ type MicroFrontEndPageBindingStatus struct {
 // +kubebuilder:subresource:status
 
 // MicroFrontEndPageBinding is the Schema for the microfrontendpagebindings API
+// +kubebuilder:printcolumn:name="Ready",type=string,JSONPath=`.status.conditions[?(@.type=="Ready")].status`,description="The state of the Ready condition"
 type MicroFrontEndPageBinding struct {
 	metav1.TypeMeta `json:",inline"`
 

@@ -97,6 +97,7 @@ type MicroFrontEndHostStatus struct {
 // +kubebuilder:subresource:status
 
 // MicroFrontEndHost is the Schema for the microfrontendhosts API
+// +kubebuilder:printcolumn:name="Ready",type=string,JSONPath=`.status.conditions[?(@.type=="Ready")].status`,description="The state of the Ready condition"
 type MicroFrontEndHost struct {
 	metav1.TypeMeta `json:",inline"`
 

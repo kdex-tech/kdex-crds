@@ -37,6 +37,7 @@ type CustomElement struct {
 // +kubebuilder:subresource:status
 
 // MicroFrontEndApp is the Schema for the microfrontendapps API
+// +kubebuilder:printcolumn:name="Ready",type=string,JSONPath=`.status.conditions[?(@.type=="Ready")].status`,description="The state of the Ready condition"
 type MicroFrontEndApp struct {
 	metav1.TypeMeta `json:",inline"`
 

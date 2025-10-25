@@ -76,6 +76,7 @@ type MicroFrontEndPageArchetypeStatus struct {
 // +kubebuilder:subresource:status
 
 // MicroFrontEndPageArchetype is the Schema for the microfrontendpagearchetypes API
+// +kubebuilder:printcolumn:name="Ready",type=string,JSONPath=`.status.conditions[?(@.type=="Ready")].status`,description="The state of the Ready condition"
 type MicroFrontEndPageArchetype struct {
 	metav1.TypeMeta `json:",inline"`
 

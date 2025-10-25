@@ -21,10 +21,12 @@ import (
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
 
-// MicroFrontEndTranslation is the Schema for the microfrontendtranslations API
 // +kubebuilder:object:root=true
 // +kubebuilder:resource:scope=Namespaced,shortName=mfe-t
 // +kubebuilder:subresource:status
+
+// MicroFrontEndTranslation is the Schema for the microfrontendtranslations API
+// +kubebuilder:printcolumn:name="Ready",type=string,JSONPath=`.status.conditions[?(@.type=="Ready")].status`,description="The state of the Ready condition"
 type MicroFrontEndTranslation struct {
 	metav1.TypeMeta `json:",inline"`
 

@@ -57,6 +57,7 @@ type MicroFrontEndPageHeaderStatus struct {
 // +kubebuilder:subresource:status
 
 // MicroFrontEndPageHeader is the Schema for the microfrontendpageheaders API
+// +kubebuilder:printcolumn:name="Ready",type=string,JSONPath=`.status.conditions[?(@.type=="Ready")].status`,description="The state of the Ready condition"
 type MicroFrontEndPageHeader struct {
 	metav1.TypeMeta `json:",inline"`
 

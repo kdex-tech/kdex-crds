@@ -57,6 +57,7 @@ type MicroFrontEndPageNavigationStatus struct {
 // +kubebuilder:subresource:status
 
 // MicroFrontEndPageNavigation is the Schema for the microfrontendpagenavigations API
+// +kubebuilder:printcolumn:name="Ready",type=string,JSONPath=`.status.conditions[?(@.type=="Ready")].status`,description="The state of the Ready condition"
 type MicroFrontEndPageNavigation struct {
 	metav1.TypeMeta `json:",inline"`
 

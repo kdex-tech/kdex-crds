@@ -54,6 +54,7 @@ type MicroFrontEndPageFooterStatus struct {
 // +kubebuilder:subresource:status
 
 // MicroFrontEndPageFooter is the Schema for the microfrontendpagefooters API
+// +kubebuilder:printcolumn:name="Ready",type=string,JSONPath=`.status.conditions[?(@.type=="Ready")].status`,description="The state of the Ready condition"
 type MicroFrontEndPageFooter struct {
 	metav1.TypeMeta `json:",inline"`
 
