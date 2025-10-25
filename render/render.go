@@ -30,34 +30,15 @@ func (r *Renderer) RenderPage(page Page) (string, error) {
 		Title:           page.Title,
 	}
 
-	contentOutputs := make(map[string]template.HTML)
-	for slot, content := range page.Contents {
-		output, err := r.RenderOne(fmt.Sprintf("%s-content-%s", page.TemplateName, slot), content, templateData)
-		if err != nil {
-			return "", err
-		}
-
-		contentOutputs[slot] = template.HTML(output)
-	}
-	templateData.Content = contentOutputs
-
-	footerOutput, err := r.RenderOne(fmt.Sprintf("%s-footer", page.TemplateName), page.Footer, templateData)
-	if err != nil {
-		return "", err
-	}
-	templateData.Footer = template.HTML(footerOutput)
+	//
+	// These don't need access to content or navigation
+	//
 
 	footerScriptOutput, err := r.RenderOne(fmt.Sprintf("%s-footscript", page.TemplateName), r.FootScript, templateData)
 	if err != nil {
 		return "", err
 	}
 	templateData.FootScript = template.HTML(footerScriptOutput)
-
-	headerOutput, err := r.RenderOne(fmt.Sprintf("%s-header", page.TemplateName), page.Header, templateData)
-	if err != nil {
-		return "", err
-	}
-	templateData.Header = template.HTML(headerOutput)
 
 	headerScriptOutput, err := r.RenderOne(fmt.Sprintf("%s-headscript", page.TemplateName), r.HeadScript, templateData)
 	if err != nil {
@@ -71,6 +52,27 @@ func (r *Renderer) RenderPage(page Page) (string, error) {
 	}
 	templateData.Meta = template.HTML(metaOutput)
 
+	stylesheetOutput, err := r.RenderOne(fmt.Sprintf("%s-stylesheet", page.TemplateName), r.StyleItemsToString(), templateData)
+	if err != nil {
+		return "", err
+	}
+	templateData.Stylesheet = template.HTML(stylesheetOutput)
+
+	//
+	// Content and Navigation
+	//
+
+	contentOutputs := make(map[string]template.HTML)
+	for slot, content := range page.Contents {
+		output, err := r.RenderOne(fmt.Sprintf("%s-content-%s", page.TemplateName, slot), content, templateData)
+		if err != nil {
+			return "", err
+		}
+
+		contentOutputs[slot] = template.HTML(output)
+	}
+	templateData.Content = contentOutputs
+
 	navigationOutputs := make(map[string]template.HTML)
 	for name, content := range page.Navigations {
 		output, err := r.RenderOne(fmt.Sprintf("%s-navigation-%s", page.TemplateName, name), content, templateData)
@@ -81,11 +83,21 @@ func (r *Renderer) RenderPage(page Page) (string, error) {
 	}
 	templateData.Navigation = navigationOutputs
 
-	stylesheetOutput, err := r.RenderOne(fmt.Sprintf("%s-stylesheet", page.TemplateName), r.StyleItemsToString(), templateData)
+	//
+	// Footer, Header may wish to access both content and navigation
+	//
+
+	footerOutput, err := r.RenderOne(fmt.Sprintf("%s-footer", page.TemplateName), page.Footer, templateData)
 	if err != nil {
 		return "", err
 	}
-	templateData.Stylesheet = template.HTML(stylesheetOutput)
+	templateData.Footer = template.HTML(footerOutput)
+
+	headerOutput, err := r.RenderOne(fmt.Sprintf("%s-header", page.TemplateName), page.Header, templateData)
+	if err != nil {
+		return "", err
+	}
+	templateData.Header = template.HTML(headerOutput)
 
 	return r.RenderOne(page.TemplateName, page.TemplateContent, templateData)
 }
