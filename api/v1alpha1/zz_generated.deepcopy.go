@@ -348,13 +348,18 @@ func (in *MicroFrontEndPageArchetypeSpec) DeepCopyInto(out *MicroFrontEndPageArc
 	}
 	if in.ExtraNavigations != nil {
 		in, out := &in.ExtraNavigations, &out.ExtraNavigations
-		*out = new(map[string]corev1.LocalObjectReference)
-		if **in != nil {
-			in, out := *in, *out
-			*out = make(map[string]corev1.LocalObjectReference, len(*in))
-			for key, val := range *in {
-				(*out)[key] = val
+		*out = make(map[string]*corev1.LocalObjectReference, len(*in))
+		for key, val := range *in {
+			var outVal *corev1.LocalObjectReference
+			if val == nil {
+				(*out)[key] = nil
+			} else {
+				inVal := (*in)[key]
+				in, out := &inVal, &outVal
+				*out = new(corev1.LocalObjectReference)
+				**out = **in
 			}
+			(*out)[key] = outVal
 		}
 	}
 	if in.OverrideStylesheetRef != nil {

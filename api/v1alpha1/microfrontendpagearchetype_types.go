@@ -44,7 +44,7 @@ type MicroFrontEndPageArchetypeSpec struct {
 	// extraNavigations is an optional map of named navigation object references. Use `.Navigation["<name>"]` to position the named navigation's content in the template.
 	// +optional
 	// +kubebuilder:validation:XValidation:rule="!has(self.main)",message="'main' is a reserved name for an extra navigation"
-	ExtraNavigations *map[string]corev1.LocalObjectReference `json:"extraNavigations,omitempty"`
+	ExtraNavigations map[string]*corev1.LocalObjectReference `json:"extraNavigations,omitempty"`
 
 	// overrideStylesheetRef is a reference to the stylesheet that should apply to all pages that use this archetype. It overrides the default stylesheet defined on the host.
 	// +optional
