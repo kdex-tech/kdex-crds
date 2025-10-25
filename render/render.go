@@ -19,13 +19,14 @@ func (r *Renderer) RenderPage(page Page) (string, error) {
 	}
 
 	templateData := TemplateData{
-		Language:     r.Language,
-		Languages:    r.Languages,
-		LastModified: date,
-		Organization: r.Organization,
-		PageMap:      pageMap,
-		PageBasePath: "/",
-		Title:        page.Title,
+		DefaultLanguage: r.DefaultLanguage,
+		Language:        r.Language,
+		Languages:       r.Languages,
+		LastModified:    date,
+		Organization:    r.Organization,
+		PageBasePath:    page.BasePath,
+		PageMap:         pageMap,
+		Title:           page.Title,
 	}
 
 	contentOutputs := make(map[string]template.HTML)

@@ -24,17 +24,18 @@ func init() {
 	)
 
 	templateData = TemplateData{
-		Footer:       `<p>footer</p>`,
-		FootScript:   `<script type="text/javascript"></script>`,
-		Header:       `<p>header</p>`,
-		HeadScript:   `<script type="text/javascript"></script>`,
-		Language:     "en",
-		Languages:    []string{"en", "fr"},
-		LastModified: time.Now(),
-		LeftToRight:  true,
-		Meta:         `<meta charset="UTF-8">`,
-		Organization: "KDex Tech Inc.",
-		PageBasePath: "/one",
+		DefaultLanguage: "en",
+		Footer:          `<p>footer</p>`,
+		FootScript:      `<script type="text/javascript"></script>`,
+		Header:          `<p>header</p>`,
+		HeadScript:      `<script type="text/javascript"></script>`,
+		Language:        "en",
+		Languages:       []string{"en", "fr"},
+		LastModified:    time.Now(),
+		LeftToRight:     true,
+		Meta:            `<meta charset="UTF-8">`,
+		Organization:    "KDex Tech Inc.",
+		PageBasePath:    "/one",
 		PageMap: map[string]*PageEntry{
 			"One": {
 				Href:   "/one",
