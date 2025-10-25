@@ -52,6 +52,7 @@ type TemplateData struct {
 	Languages    []string                 `json:"languages" yaml:"languages"`
 	LastModified time.Time                `json:"lastModified" yaml:"lastModified"`
 	LeftToRight  bool                     `json:"leftToRight" yaml:"leftToRight"`
+	PageBasePath string                   `json:"pageBasePath" yaml:"pageBasePath"`
 	PageMap      map[string]*PageEntry    `json:"pageMap" yaml:"pageMap"`
 	Meta         template.HTML            `json:"meta,omitempty" yaml:"meta,omitempty"`
 	Navigation   map[string]template.HTML `json:"navigation" yaml:"navigation"`

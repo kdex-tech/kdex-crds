@@ -24,6 +24,7 @@ func (r *Renderer) RenderPage(page Page) (string, error) {
 		LastModified: date,
 		Organization: r.Organization,
 		PageMap:      pageMap,
+		PageBasePath: "/",
 		Title:        page.Title,
 	}
 
