@@ -83,10 +83,14 @@ func init() {
 	}
 }
 
+func DefaultTemplateData() TemplateData {
+	return templateData
+}
+
 func ValidateContent(
 	name string, content string,
 ) error {
-	_, err := renderer.RenderOne(name, content, templateData)
+	_, err := renderer.RenderOne(name, content, DefaultTemplateData())
 
 	return err
 }
