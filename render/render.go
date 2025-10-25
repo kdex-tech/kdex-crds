@@ -2,6 +2,7 @@ package render
 
 import (
 	"bytes"
+	"encoding/json"
 	"fmt"
 	"html/template"
 	"time"
@@ -95,6 +96,13 @@ func (r *Renderer) RenderOne(
 	data TemplateData,
 ) (string, error) {
 	funcs := template.FuncMap{
+		"json": func(payload interface{}, args ...string) string {
+			b, err := json.Marshal(payload)
+			if err != nil {
+				return err.Error()
+			}
+			return string(b)
+		},
 		"l10n": func(key string, args ...string) string {
 			if r.MessagePrinter == nil {
 				return key
