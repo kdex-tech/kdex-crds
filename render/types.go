@@ -46,7 +46,7 @@ type Renderer struct {
 // Fields available when rendering templates.
 type TemplateData struct {
 	Content         map[string]template.HTML `json:"content" yaml:"content"`
-	DefaultLanguage string
+	DefaultLanguage string                   `json:"defaultLanguage" yaml:"defaultLanguage"`
 	Footer          template.HTML            `json:"footer,omitempty" yaml:"footer,omitempty"`
 	FootScript      template.HTML            `json:"footScript,omitempty" yaml:"footScript,omitempty"`
 	Header          template.HTML            `json:"header,omitempty" yaml:"header,omitempty"`
