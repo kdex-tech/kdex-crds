@@ -26,6 +26,7 @@ type MicroFrontEndPageNavigationSpec struct {
 	// +kubebuilder:validation:Required
 	// +kubebuilder:validation:MinLength=5
 	// +kubebuilder:example=`{{- define "menu" -}}\n  <ul>\n    {{- range $label, $value := . }}\n      <li>\n        {{- if ($value.Path != "") -}}\n          <a href="{{ $value.Path }}">{{ $label }}</a>\n        {{- else -}}\n          <span>{{ $label }}</span>\n        {{- end -}}\n        {{- if ($value.Children != nil) -}}\n          {{- template "menu" $value.Children -}}\n        {{- end -}}\n      </li>\n    {{- end -}}\n  </ul>\n{{- end -}}\n{{- template "menu" .MenuEntries -}}`
+	// +kubebuilder:example=`<ul class="language-navigation" role="navigation">{{- range $language := .Languages }}<li>{{- if eq $.DefaultLanguage $language -}}<a class="flag-{{ $language }}" href="{{ $.PageBasePath }}">{{ l10n $language }}</a>{{- else -}}<a class="flag-{{ $language }}" href="/{{ $language }}{{ $.PageBasePath }}">{{ l10n $language }}</a>{{- end -}}</li>{{- end -}}</ul>`
 	Content string `json:"content"`
 }
 
@@ -59,19 +60,19 @@ type MicroFrontEndPageNavigationStatus struct {
 // MicroFrontEndPageNavigation is the Schema for the microfrontendpagenavigations API
 // +kubebuilder:printcolumn:name="Ready",type=string,JSONPath=`.status.conditions[?(@.type=="Ready")].status`,description="The state of the Ready condition"
 type MicroFrontEndPageNavigation struct {
-	metav1.TypeMeta `json:",inline"`
-
 	// metadata is a standard object metadata
 	// +optional
 	metav1.ObjectMeta `json:"metadata,omitempty,omitzero"`
 
 	// spec defines the desired state of MicroFrontEndPageNavigation
-	// +required
+	// +kubebuilder:validation:Required
 	Spec MicroFrontEndPageNavigationSpec `json:"spec"`
 
 	// status defines the observed state of MicroFrontEndPageNavigation
 	// +optional
 	Status MicroFrontEndPageNavigationStatus `json:"status,omitempty,omitzero"`
+
+	metav1.TypeMeta `json:",inline"`
 }
 
 // +kubebuilder:object:root=true
