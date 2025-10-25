@@ -78,7 +78,7 @@ func (r *Renderer) RenderPage(page Page) (string, error) {
 	}
 	templateData.Navigation = navigationOutputs
 
-	stylesheetOutput, err := r.RenderOne(fmt.Sprintf("%s-stylesheet", page.TemplateName), r.Stylesheet, templateData)
+	stylesheetOutput, err := r.RenderOne(fmt.Sprintf("%s-stylesheet", page.TemplateName), r.StyleItemsToString(), templateData)
 	if err != nil {
 		return "", err
 	}
@@ -112,4 +112,47 @@ func (r *Renderer) RenderOne(
 	}
 
 	return buf.String(), nil
+}
+
+func (h *Renderer) StyleItemsToString() string {
+	var styleBuffer bytes.Buffer
+
+	for _, item := range h.StyleItems {
+		if item.LinkHref != "" {
+			styleBuffer.WriteString(`<link`)
+			for key, value := range item.Attributes {
+				if key == "href" || key == "src" {
+					continue
+				}
+				styleBuffer.WriteRune(' ')
+				styleBuffer.WriteString(key)
+				styleBuffer.WriteString(`="`)
+				styleBuffer.WriteString(value)
+				styleBuffer.WriteRune('"')
+			}
+			styleBuffer.WriteString(` href="`)
+			styleBuffer.WriteString(item.LinkHref)
+			styleBuffer.WriteString(`"/>`)
+			styleBuffer.WriteRune('\n')
+		} else if item.Style != "" {
+			styleBuffer.WriteString(`<style`)
+			for key, value := range item.Attributes {
+				if key == "href" || key == "src" {
+					continue
+				}
+				styleBuffer.WriteRune(' ')
+				styleBuffer.WriteString(key)
+				styleBuffer.WriteString(`="`)
+				styleBuffer.WriteString(value)
+				styleBuffer.WriteRune('"')
+			}
+			styleBuffer.WriteRune('>')
+			styleBuffer.WriteRune('\n')
+			styleBuffer.WriteString(item.Style)
+			styleBuffer.WriteString("</style>")
+			styleBuffer.WriteRune('\n')
+		}
+	}
+
+	return styleBuffer.String()
 }

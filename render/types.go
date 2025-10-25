@@ -6,6 +6,7 @@ import (
 
 	"golang.org/x/text/message"
 	"k8s.io/apimachinery/pkg/api/resource"
+	"kdex.dev/crds/api/v1alpha1"
 )
 
 type Page struct {
@@ -37,7 +38,7 @@ type Renderer struct {
 	Meta           string
 	Organization   string
 	PageMap        *map[string]*PageEntry
-	Stylesheet     string
+	StyleItems     []v1alpha1.StyleItem
 }
 
 // Fields available when rendering templates.

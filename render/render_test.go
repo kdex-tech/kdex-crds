@@ -75,7 +75,6 @@ func TestRenderAll(t *testing.T) {
 		PageMap:      &map[string]*PageEntry{"home": {Href: "/"}},
 		Meta:         `<meta name="description" content="test">`,
 		Organization: "Test Inc.",
-		Stylesheet:   "<style>body{}</style>",
 	}
 	actual, err := r.RenderPage(page)
 	assert.NoError(t, err)
@@ -83,7 +82,6 @@ func TestRenderAll(t *testing.T) {
 	assert.Contains(t, actual, "<title>Test Page</title>")
 	assert.Contains(t, actual, r.Meta)
 	assert.Contains(t, actual, r.HeadScript)
-	assert.Contains(t, actual, r.Stylesheet)
 	assert.Contains(t, actual, "Page Header")
 	assert.Contains(t, actual, "main: main-nav")
 	assert.Contains(t, actual, "<h1>Welcome</h1>")
