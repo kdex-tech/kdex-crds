@@ -125,7 +125,7 @@ type MicroFrontEndPageBinding struct {
 
 	// metadata is a standard object metadata
 	// +optional
-	metav1.ObjectMeta `json:"metadata,omitempty,omitzero"`
+	metav1.ObjectMeta `json:"metadata,omitempty"`
 
 	// spec defines the desired state of MicroFrontEndPageBinding
 	// +kubebuilder:validation:Required
@@ -133,7 +133,7 @@ type MicroFrontEndPageBinding struct {
 
 	// status defines the observed state of MicroFrontEndPageBinding
 	// +optional
-	Status MicroFrontEndPageBindingStatus `json:"status,omitempty,omitzero"`
+	Status MicroFrontEndPageBindingStatus `json:"status,omitempty"`
 }
 
 // +kubebuilder:object:root=true
