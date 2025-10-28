@@ -35,8 +35,8 @@ type StyleItem struct {
 	Style string `json:"style,omitempty"`
 }
 
-// MicroFrontendThemeSpec defines the desired state of MicroFrontendTheme
-type MicroFrontendThemeSpec struct {
+// KDExThemeSpec defines the desired state of KDExTheme
+type KDExThemeSpec struct {
 	// styleItems is a set of elements that define a portable set of design rules. They may contain URLs that point to resources hosted at some public address and/or they may contain the literal CSS.
 	// +kubebuilder:validation:MaxItems=32
 	// +kubebuilder:validation:MinItems=1
@@ -44,12 +44,12 @@ type MicroFrontendThemeSpec struct {
 	StyleItems []StyleItem `json:"styleItems,omitempty"`
 }
 
-// MicroFrontendThemeStatus defines the observed state of MicroFrontendTheme.
-type MicroFrontendThemeStatus struct {
+// KDExThemeStatus defines the observed state of KDExTheme.
+type KDExThemeStatus struct {
 	// For Kubernetes API conventions, see:
 	// https://github.com/kubernetes/community/blob/master/contributors/devel/sig-architecture/api-conventions.md#typical-status-properties
 
-	// conditions represent the current state of the MicroFrontendTheme resource.
+	// conditions represent the current state of the KDExTheme resource.
 	// Each condition has a unique type and reflects the status of a specific aspect of the resource.
 	//
 	// Standard condition types include:
@@ -68,33 +68,33 @@ type MicroFrontendThemeStatus struct {
 // +kubebuilder:resource:scope=Namespaced,shortName=mfe-th
 // +kubebuilder:subresource:status
 
-// MicroFrontendTheme is the Schema for the kdexthemes API
+// KDExTheme is the Schema for the kdexthemes API
 // +kubebuilder:printcolumn:name="Ready",type=string,JSONPath=`.status.conditions[?(@.type=="Ready")].status`,description="The state of the Ready condition"
-type MicroFrontendTheme struct {
+type KDExTheme struct {
 	metav1.TypeMeta `json:",inline"`
 
 	// metadata is a standard object metadata
 	// +optional
 	metav1.ObjectMeta `json:"metadata,omitempty,omitzero"`
 
-	// spec defines the desired state of MicroFrontendTheme
+	// spec defines the desired state of KDExTheme
 	// +required
-	Spec MicroFrontendThemeSpec `json:"spec"`
+	Spec KDExThemeSpec `json:"spec"`
 
-	// status defines the observed state of MicroFrontendTheme
+	// status defines the observed state of KDExTheme
 	// +optional
-	Status MicroFrontendThemeStatus `json:"status,omitempty,omitzero"`
+	Status KDExThemeStatus `json:"status,omitempty,omitzero"`
 }
 
 // +kubebuilder:object:root=true
 
-// MicroFrontendThemeList contains a list of MicroFrontendTheme
-type MicroFrontendThemeList struct {
+// KDExThemeList contains a list of KDExTheme
+type KDExThemeList struct {
 	metav1.TypeMeta `json:",inline"`
 	metav1.ListMeta `json:"metadata,omitempty"`
-	Items           []MicroFrontendTheme `json:"items"`
+	Items           []KDExTheme `json:"items"`
 }
 
 func init() {
-	SchemeBuilder.Register(&MicroFrontendTheme{}, &MicroFrontendThemeList{})
+	SchemeBuilder.Register(&KDExTheme{}, &KDExThemeList{})
 }

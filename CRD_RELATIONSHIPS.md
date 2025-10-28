@@ -7,13 +7,13 @@ erDiagram
     KDexHost ||--o{ KDexPageBinding : "hosts"
     KDexHost ||--o{ KDexRenderPage : "hosts"
     KDexHost ||--o{ KDexTranslation : "hosts"
-    KDexHost ||--o{ MicroFrontendTheme : "default theme"
+    KDexHost ||--o{ KDExTheme : "default theme"
 
     KDexPageArchetype ||--o{ KDexPageBinding : "archetype"
     KDexPageArchetype ||--o{ KDexPageFooter : "default footer"
     KDexPageArchetype ||--o{ KDexPageHeader : "default header"
     KDexPageArchetype ||--o{ KDexPageNavigation : "default navigation"
-    KDexPageArchetype ||--o{ MicroFrontendTheme : "override theme"
+    KDexPageArchetype ||--o{ KDExTheme : "override theme"
 
     KDexPageBinding ||--o{ KDexApp : "uses"
     KDexPageBinding ||--o{ KDexPageFooter : "override footer"
@@ -62,7 +62,7 @@ erDiagram
         string path
     }
 
-    MicroFrontendTheme {
+    KDExTheme {
         string styleItems
     }
 

@@ -4,16 +4,16 @@ kind: CustomResourceDefinition
 metadata:
   annotations:
     controller-gen.kubebuilder.io/version: v0.18.0
-  name: kdexpagenavigations.kdex.dev
+  name: kdexthemes.kdex.dev
 spec:
   group: kdex.dev
   names:
-    kind: KDexPageNavigation
-    listKind: KDexPageNavigationList
-    plural: kdexpagenavigations
+    kind: KDExTheme
+    listKind: KDExThemeList
+    plural: kdexthemes
     shortNames:
-    - mfe-pn
-    singular: kdexpagenavigation
+    - mfe-th
+    singular: kdextheme
   scope: Namespaced
   versions:
   - additionalPrinterColumns:
@@ -24,8 +24,7 @@ spec:
     name: v1alpha1
     schema:
       openAPIV3Schema:
-        description: KDexPageNavigation is the Schema for the kdexpagenavigations
-          API
+        description: KDExTheme is the Schema for the kdexthemes API
         properties:
           apiVersion:
             description: |-
@@ -45,30 +44,44 @@ spec:
           metadata:
             type: object
           spec:
-            description: spec defines the desired state of KDexPageNavigation
+            description: spec defines the desired state of KDExTheme
             properties:
-              content:
-                description: content is a go string template that defines the content
-                  of an App Server page navigation. Use the `.Navigation["<name>"]`
-                  property to position its content in the template.
-                example: '{{- define "menu" -}}\n  <ul>\n    {{- range $label, $value
-                  := . }}\n      <li>\n        {{- if ($value.Path != "") -}}\n          <a
-                  href="{{ $value.Path }}">{{ $label }}</a>\n        {{- else -}}\n          <span>{{
-                  $label }}</span>\n        {{- end -}}\n        {{- if ($value.Children
-                  != nil) -}}\n          {{- template "menu" $value.Children -}}\n        {{-
-                  end -}}\n      </li>\n    {{- end -}}\n  </ul>\n{{- end -}}\n{{-
-                  template "menu" .MenuEntries -}}'
-                minLength: 5
-                type: string
+              styleItems:
+                description: styleItems is a set of elements that define a portable
+                  set of design rules. They may contain URLs that point to resources
+                  hosted at some public address and/or they may contain the literal
+                  CSS.
+                items:
+                  properties:
+                    attributes:
+                      additionalProperties:
+                        type: string
+                      description: attributes are key/value pairs that will be added
+                        to the element [link|style] when rendered.
+                      type: object
+                    linkHref:
+                      description: linkHref is the content of a <link> href attribute.
+                      type: string
+                    style:
+                      description: style is the text content to be added into a <script>
+                        element when rendered.
+                      type: string
+                  type: object
+                  x-kubernetes-validations:
+                  - message: exactly one of linkHref or style must be set
+                    rule: has(self.linkHref) != has(self.style)
+                maxItems: 32
+                minItems: 1
+                type: array
             required:
-            - content
+            - styleItems
             type: object
           status:
-            description: status defines the observed state of KDexPageNavigation
+            description: status defines the observed state of KDExTheme
             properties:
               conditions:
                 description: |-
-                  conditions represent the current state of the KDexPageNavigation resource.
+                  conditions represent the current state of the KDExTheme resource.
                   Each condition has a unique type and reflects the status of a specific aspect of the resource.
 
                   Standard condition types include:

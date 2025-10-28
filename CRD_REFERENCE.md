@@ -27,8 +27,8 @@ Package v1alpha1 contains API Schema definitions for the  v1alpha1 API group.
 - [KDexRenderPageList](#kdexrenderpagelist)
 - [KDexTranslation](#kdextranslation)
 - [KDexTranslationList](#kdextranslationlist)
-- [MicroFrontendTheme](#microfrontendtheme)
-- [MicroFrontendThemeList](#microfrontendthemelist)
+- [KDExTheme](#kdextheme)
+- [KDExThemeList](#kdexthemelist)
 
 
 
@@ -613,30 +613,30 @@ _Appears in:_
 
 
 
-#### MicroFrontendTheme
+#### KDExTheme
 
 
 
-MicroFrontendTheme is the Schema for the kdexthemes API
+KDExTheme is the Schema for the kdexthemes API
 
 
 
 _Appears in:_
-- [MicroFrontendThemeList](#microfrontendthemelist)
+- [KDExThemeList](#kdexthemelist)
 
 | Field | Description | Default | Validation |
 | --- | --- | --- | --- |
 | `apiVersion` _string_ | `kdex.dev/v1alpha1` | | |
-| `kind` _string_ | `MicroFrontendTheme` | | |
+| `kind` _string_ | `KDExTheme` | | |
 | `metadata` _[ObjectMeta](https://kubernetes.io/docs/reference/generated/kubernetes-api/v/#objectmeta-v1-meta)_ | Refer to Kubernetes API documentation for fields of `metadata`. |  |  |
-| `spec` _[MicroFrontendThemeSpec](#microfrontendthemespec)_ | spec defines the desired state of MicroFrontendTheme |  |  |
+| `spec` _[KDExThemeSpec](#kdexthemespec)_ | spec defines the desired state of KDExTheme |  |  |
 
 
-#### MicroFrontendThemeList
+#### KDExThemeList
 
 
 
-MicroFrontendThemeList contains a list of MicroFrontendTheme
+KDExThemeList contains a list of KDExTheme
 
 
 
@@ -645,21 +645,21 @@ MicroFrontendThemeList contains a list of MicroFrontendTheme
 | Field | Description | Default | Validation |
 | --- | --- | --- | --- |
 | `apiVersion` _string_ | `kdex.dev/v1alpha1` | | |
-| `kind` _string_ | `MicroFrontendThemeList` | | |
+| `kind` _string_ | `KDExThemeList` | | |
 | `metadata` _[ListMeta](https://kubernetes.io/docs/reference/generated/kubernetes-api/v/#listmeta-v1-meta)_ | Refer to Kubernetes API documentation for fields of `metadata`. |  |  |
-| `items` _[MicroFrontendTheme](#microfrontendtheme) array_ |  |  |  |
+| `items` _[KDExTheme](#kdextheme) array_ |  |  |  |
 
 
-#### MicroFrontendThemeSpec
+#### KDExThemeSpec
 
 
 
-MicroFrontendThemeSpec defines the desired state of MicroFrontendTheme
+KDExThemeSpec defines the desired state of KDExTheme
 
 
 
 _Appears in:_
-- [MicroFrontendTheme](#microfrontendtheme)
+- [KDExTheme](#kdextheme)
 
 | Field | Description | Default | Validation |
 | --- | --- | --- | --- |
@@ -752,7 +752,7 @@ _Appears in:_
 
 
 _Appears in:_
-- [MicroFrontendThemeSpec](#microfrontendthemespec)
+- [KDExThemeSpec](#kdexthemespec)
 
 | Field | Description | Default | Validation |
 | --- | --- | --- | --- |
