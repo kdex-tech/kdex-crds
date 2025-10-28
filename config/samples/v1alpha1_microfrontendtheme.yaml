@@ -23,4 +23,4 @@ spec:
         }
     - linkHref: https://cdn.tailwindcss.com
       attributes:
-        rel: stylesheet
+        rel: theme

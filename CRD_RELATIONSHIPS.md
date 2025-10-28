@@ -7,13 +7,13 @@ erDiagram
     MicroFrontEndHost ||--o{ MicroFrontEndPageBinding : "hosts"
     MicroFrontEndHost ||--o{ MicroFrontEndRenderPage : "hosts"
     MicroFrontEndHost ||--o{ MicroFrontEndTranslation : "hosts"
-    MicroFrontEndHost ||--o{ MicroFrontendTheme : "default stylesheet"
+    MicroFrontEndHost ||--o{ MicroFrontendTheme : "default theme"
 
     MicroFrontEndPageArchetype ||--o{ MicroFrontEndPageBinding : "archetype"
     MicroFrontEndPageArchetype ||--o{ MicroFrontEndPageFooter : "default footer"
     MicroFrontEndPageArchetype ||--o{ MicroFrontEndPageHeader : "default header"
     MicroFrontEndPageArchetype ||--o{ MicroFrontEndPageNavigation : "default navigation"
-    MicroFrontEndPageArchetype ||--o{ MicroFrontendTheme : "override stylesheet"
+    MicroFrontEndPageArchetype ||--o{ MicroFrontendTheme : "override theme"
 
     MicroFrontEndPageBinding ||--o{ MicroFrontEndApp : "uses"
     MicroFrontEndPageBinding ||--o{ MicroFrontEndPageFooter : "override footer"

@@ -41,9 +41,9 @@ type MicroFrontEndRenderPageSpec struct {
 
 	Paths `json:",inline"`
 
-	// stylesheetRef is a reference to the stylesheet that will apply to this render page.
+	// themeRef is a reference to the theme that will apply to this render page.
 	// +optional
-	StylesheetRef *corev1.LocalObjectReference `json:"stylesheetRef,omitempty"`
+	StylesheetRef *corev1.LocalObjectReference `json:"themeRef,omitempty"`
 }
 
 // MicroFrontEndRenderPageStatus defines the observed state of MicroFrontEndRenderPage.

@@ -138,9 +138,9 @@ spec:
                   This path is subject to being prefixed for localization by `/{l10n}`
                   such as when the user selects a non-default language.
                 type: string
-              stylesheetRef:
-                description: stylesheetRef is a reference to the stylesheet that will
-                  apply to this render page.
+              themeRef:
+                description: themeRef is a reference to the theme that will apply
+                  to this render page.
                 properties:
                   name:
                     default: ""
