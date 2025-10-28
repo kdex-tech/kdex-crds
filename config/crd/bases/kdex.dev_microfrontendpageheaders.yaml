@@ -4,16 +4,16 @@ kind: CustomResourceDefinition
 metadata:
   annotations:
     controller-gen.kubebuilder.io/version: v0.18.0
-  name: microfrontendpageheaders.kdex.dev
+  name: kdexpageheaders.kdex.dev
 spec:
   group: kdex.dev
   names:
-    kind: MicroFrontEndPageHeader
-    listKind: MicroFrontEndPageHeaderList
-    plural: microfrontendpageheaders
+    kind: KDexPageHeader
+    listKind: KDexPageHeaderList
+    plural: kdexpageheaders
     shortNames:
     - mfe-ph
-    singular: microfrontendpageheader
+    singular: kdexpageheader
   scope: Namespaced
   versions:
   - additionalPrinterColumns:
@@ -24,7 +24,7 @@ spec:
     name: v1alpha1
     schema:
       openAPIV3Schema:
-        description: MicroFrontEndPageHeader is the Schema for the microfrontendpageheaders
+        description: KDexPageHeader is the Schema for the kdexpageheaders
           API
         properties:
           apiVersion:
@@ -45,7 +45,7 @@ spec:
           metadata:
             type: object
           spec:
-            description: spec defines the desired state of MicroFrontEndPageHeader
+            description: spec defines the desired state of KDexPageHeader
             properties:
               content:
                 description: content is a go string template that defines the content
@@ -58,11 +58,11 @@ spec:
             - content
             type: object
           status:
-            description: status defines the observed state of MicroFrontEndPageHeader
+            description: status defines the observed state of KDexPageHeader
             properties:
               conditions:
                 description: |-
-                  conditions represent the current state of the MicroFrontEndPageHeader resource.
+                  conditions represent the current state of the KDexPageHeader resource.
                   Each condition has a unique type and reflects the status of a specific aspect of the resource.
 
                   Standard condition types include:

@@ -24,10 +24,10 @@ import (
 
 // +kubebuilder:validation:XValidation:rule="has(self.rawHTML) != (has(self.customElementName) && has(self.appRef))",message="exactly one of rawHTML or both customElementName and appRef must be set"
 type ContentEntry struct {
-	// appRef is a reference to the MicroFrontEndApp to include in this binding.
+	// appRef is a reference to the KDexApp to include in this binding.
 	// +optional
 	AppRef *corev1.LocalObjectReference `json:"appRef,omitempty"`
-	// customElementName is the name of the MicroFrontEndApp custom element to render in the specified slot (if present in the template).
+	// customElementName is the name of the KDexApp custom element to render in the specified slot (if present in the template).
 	// +optional
 	CustomElementName string `json:"customElementName,omitempty"`
 
@@ -50,16 +50,16 @@ type NavigationHints struct {
 	Weight resource.Quantity `json:"weight,omitempty"`
 }
 
-// MicroFrontEndPageBindingSpec defines the desired state of MicroFrontEndPageBinding
-type MicroFrontEndPageBindingSpec struct {
-	// contentEntries is a set of content entries to bind to this page. They may be either raw HTML fragments or MicroFrontEndApp references.
+// KDexPageBindingSpec defines the desired state of KDexPageBinding
+type KDexPageBindingSpec struct {
+	// contentEntries is a set of content entries to bind to this page. They may be either raw HTML fragments or KDexApp references.
 	// +kubebuilder:validation:MaxItems=8
 	// +kubebuilder:validation:MinItems=1
 	// +kubebuilder:validation:Required
 	// +kubebuilder:validation:XValidation:rule="self.size() <= 1 || self.exists(x, x.slot == 'main')",message="if there are multiple entries, one must be 'main'"
 	ContentEntries []ContentEntry `json:"contentEntries"`
 
-	// hostRef is a reference to the MicroFrontEndHost that this binding is for.
+	// hostRef is a reference to the KDexHost that this binding is for.
 	// +kubebuilder:validation:Required
 	HostRef corev1.LocalObjectReference `json:"hostRef"`
 
@@ -71,35 +71,35 @@ type MicroFrontEndPageBindingSpec struct {
 	// +optional
 	NavigationHints *NavigationHints `json:"navigationHints,omitempty"`
 
-	// overrideFooterRef is an optional reference to a MicroFrontEndPageFooter resource. If not specified, the footer from the archetype will be used.
+	// overrideFooterRef is an optional reference to a KDexPageFooter resource. If not specified, the footer from the archetype will be used.
 	// +optional
 	OverrideFooterRef *corev1.LocalObjectReference `json:"overrideFooterRef,omitempty"`
 
-	// overrideHeaderRef is an optional reference to a MicroFrontEndPageHeader resource. If not specified, the header from the archetype will be used.
+	// overrideHeaderRef is an optional reference to a KDexPageHeader resource. If not specified, the header from the archetype will be used.
 	// +optional
 	OverrideHeaderRef *corev1.LocalObjectReference `json:"overrideHeaderRef,omitempty"`
 
-	// overrideMainNavigationRef is an optional reference to a MicroFrontEndPageNavigation resource. If not specified, the main navigation from the archetype will be used.
+	// overrideMainNavigationRef is an optional reference to a KDexPageNavigation resource. If not specified, the main navigation from the archetype will be used.
 	// +optional
 	OverrideMainNavigationRef *corev1.LocalObjectReference `json:"overrideMainNavigationRef,omitempty"`
 
-	// pageArchetypeRef is a reference to the MicroFrontEndPageArchetype that this binding is for.
+	// pageArchetypeRef is a reference to the KDexPageArchetype that this binding is for.
 	// +kubebuilder:validation:Required
 	PageArchetypeRef corev1.LocalObjectReference `json:"pageArchetypeRef"`
 
-	// parentPageRef is a reference to the MicroFrontEndPageBinding bellow which this page will appear in the main navigation. If not set, the page will be placed in the top level of the navigation.
+	// parentPageRef is a reference to the KDexPageBinding bellow which this page will appear in the main navigation. If not set, the page will be placed in the top level of the navigation.
 	// +optional
 	ParentPageRef *corev1.LocalObjectReference `json:"parentPageRef"`
 
 	Paths `json:",inline"`
 }
 
-// MicroFrontEndPageBindingStatus defines the observed state of MicroFrontEndPageBinding.
-type MicroFrontEndPageBindingStatus struct {
+// KDexPageBindingStatus defines the observed state of KDexPageBinding.
+type KDexPageBindingStatus struct {
 	// For Kubernetes API conventions, see:
 	// https://github.com/kubernetes/community/blob/master/contributors/devel/sig-architecture/api-conventions.md#typical-status-properties
 
-	// conditions represent the current state of the MicroFrontEndPageBinding resource.
+	// conditions represent the current state of the KDexPageBinding resource.
 	// Each condition has a unique type and reflects the status of a specific aspect of the resource.
 	//
 	// Standard condition types include:
@@ -118,31 +118,31 @@ type MicroFrontEndPageBindingStatus struct {
 // +kubebuilder:resource:scope=Namespaced,shortName=mfe-pb
 // +kubebuilder:subresource:status
 
-// MicroFrontEndPageBinding is the Schema for the microfrontendpagebindings API
+// KDexPageBinding is the Schema for the kdexpagebindings API
 // +kubebuilder:printcolumn:name="Ready",type=string,JSONPath=`.status.conditions[?(@.type=="Ready")].status`,description="The state of the Ready condition"
-type MicroFrontEndPageBinding struct {
+type KDexPageBinding struct {
 	metav1.TypeMeta `json:",inline"`
 
 	// metadata is a standard object metadata
 	// +optional
 	metav1.ObjectMeta `json:"metadata,omitempty"`
 
-	// spec defines the desired state of MicroFrontEndPageBinding
+	// spec defines the desired state of KDexPageBinding
 	// +kubebuilder:validation:Required
-	Spec MicroFrontEndPageBindingSpec `json:"spec"`
+	Spec KDexPageBindingSpec `json:"spec"`
 
-	// status defines the observed state of MicroFrontEndPageBinding
+	// status defines the observed state of KDexPageBinding
 	// +optional
-	Status MicroFrontEndPageBindingStatus `json:"status,omitempty"`
+	Status KDexPageBindingStatus `json:"status,omitempty"`
 }
 
 // +kubebuilder:object:root=true
 
-// MicroFrontEndPageBindingList contains a list of MicroFrontEndPageBinding
-type MicroFrontEndPageBindingList struct {
+// KDexPageBindingList contains a list of KDexPageBinding
+type KDexPageBindingList struct {
 	metav1.TypeMeta `json:",inline"`
 	metav1.ListMeta `json:"metadata,omitempty"`
-	Items           []MicroFrontEndPageBinding `json:"items"`
+	Items           []KDexPageBinding `json:"items"`
 }
 
 // +kubebuilder:validation:XValidation:rule="!has(self.patternPath) || self.patternPath.startsWith(self.basePath)",message="if patternPath is specified, basePath must be a prefix of patternPath"
@@ -158,5 +158,5 @@ type Paths struct {
 }
 
 func init() {
-	SchemeBuilder.Register(&MicroFrontEndPageBinding{}, &MicroFrontEndPageBindingList{})
+	SchemeBuilder.Register(&KDexPageBinding{}, &KDexPageBindingList{})
 }

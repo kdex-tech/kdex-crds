@@ -20,8 +20,8 @@ import (
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
 
-// MicroFrontEndPageFooterSpec defines the desired state of MicroFrontEndPageFooter
-type MicroFrontEndPageFooterSpec struct {
+// KDexPageFooterSpec defines the desired state of KDexPageFooter
+type KDexPageFooterSpec struct {
 	// content is a go string template that defines the content of an App Server page footer section. Use the `.Footer` property to position its content in the template.
 	// +kubebuilder:validation:Required
 	// +kubebuilder:validation:MinLength=5
@@ -29,12 +29,12 @@ type MicroFrontEndPageFooterSpec struct {
 	Content string `json:"content"`
 }
 
-// MicroFrontEndPageFooterStatus defines the observed state of MicroFrontEndPageFooter.
-type MicroFrontEndPageFooterStatus struct {
+// KDexPageFooterStatus defines the observed state of KDexPageFooter.
+type KDexPageFooterStatus struct {
 	// For Kubernetes API conventions, see:
 	// https://github.com/kubernetes/community/blob/master/contributors/devel/sig-architecture/api-conventions.md#typical-status-properties
 
-	// conditions represent the current state of the MicroFrontEndPageFooter resource.
+	// conditions represent the current state of the KDexPageFooter resource.
 	// Each condition has a unique type and reflects the status of a specific aspect of the resource.
 	//
 	// Standard condition types include:
@@ -53,33 +53,33 @@ type MicroFrontEndPageFooterStatus struct {
 // +kubebuilder:resource:scope=Namespaced,shortName=mfe-pf
 // +kubebuilder:subresource:status
 
-// MicroFrontEndPageFooter is the Schema for the microfrontendpagefooters API
+// KDexPageFooter is the Schema for the kdexpagefooters API
 // +kubebuilder:printcolumn:name="Ready",type=string,JSONPath=`.status.conditions[?(@.type=="Ready")].status`,description="The state of the Ready condition"
-type MicroFrontEndPageFooter struct {
+type KDexPageFooter struct {
 	metav1.TypeMeta `json:",inline"`
 
 	// metadata is a standard object metadata
 	// +optional
 	metav1.ObjectMeta `json:"metadata,omitempty,omitzero"`
 
-	// spec defines the desired state of MicroFrontEndPageFooter
+	// spec defines the desired state of KDexPageFooter
 	// +required
-	Spec MicroFrontEndPageFooterSpec `json:"spec"`
+	Spec KDexPageFooterSpec `json:"spec"`
 
-	// status defines the observed state of MicroFrontEndPageFooter
+	// status defines the observed state of KDexPageFooter
 	// +optional
-	Status MicroFrontEndPageFooterStatus `json:"status,omitempty,omitzero"`
+	Status KDexPageFooterStatus `json:"status,omitempty,omitzero"`
 }
 
 // +kubebuilder:object:root=true
 
-// MicroFrontEndPageFooterList contains a list of MicroFrontEndPageFooter
-type MicroFrontEndPageFooterList struct {
+// KDexPageFooterList contains a list of KDexPageFooter
+type KDexPageFooterList struct {
 	metav1.TypeMeta `json:",inline"`
 	metav1.ListMeta `json:"metadata,omitempty"`
-	Items           []MicroFrontEndPageFooter `json:"items"`
+	Items           []KDexPageFooter `json:"items"`
 }
 
 func init() {
-	SchemeBuilder.Register(&MicroFrontEndPageFooter{}, &MicroFrontEndPageFooterList{})
+	SchemeBuilder.Register(&KDexPageFooter{}, &KDexPageFooterList{})
 }

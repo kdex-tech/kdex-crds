@@ -36,35 +36,35 @@ type CustomElement struct {
 // +kubebuilder:resource:scope=Namespaced,shortName=mfe-a
 // +kubebuilder:subresource:status
 
-// MicroFrontEndApp is the Schema for the microfrontendapps API
+// KDexApp is the Schema for the kdexapps API
 // +kubebuilder:printcolumn:name="Ready",type=string,JSONPath=`.status.conditions[?(@.type=="Ready")].status`,description="The state of the Ready condition"
-type MicroFrontEndApp struct {
+type KDexApp struct {
 	metav1.TypeMeta `json:",inline"`
 
 	// metadata is a standard object metadata
 	// +optional
 	metav1.ObjectMeta `json:"metadata,omitempty,omitzero"`
 
-	// spec defines the desired state of MicroFrontEndApp
+	// spec defines the desired state of KDexApp
 	// +kubebuilder:validation:Required
-	Spec MicroFrontEndAppSpec `json:"spec"`
+	Spec KDexAppSpec `json:"spec"`
 
-	// status defines the observed state of MicroFrontEndApp
+	// status defines the observed state of KDexApp
 	// +optional
-	Status MicroFrontEndAppStatus `json:"status,omitempty,omitzero"`
+	Status KDexAppStatus `json:"status,omitempty,omitzero"`
 }
 
 // +kubebuilder:object:root=true
 
-// MicroFrontEndAppList contains a list of MicroFrontEndApp
-type MicroFrontEndAppList struct {
+// KDexAppList contains a list of KDexApp
+type KDexAppList struct {
 	metav1.TypeMeta `json:",inline"`
 	metav1.ListMeta `json:"metadata,omitempty"`
-	Items           []MicroFrontEndApp `json:"items"`
+	Items           []KDexApp `json:"items"`
 }
 
-// MicroFrontEndAppSpec defines the desired state of MicroFrontEndApp
-type MicroFrontEndAppSpec struct {
+// KDexAppSpec defines the desired state of KDexApp
+type KDexAppSpec struct {
 	// customElements is a list of custom elements implemented by the micro-frontend application.
 	// +optional
 	CustomElements []CustomElement `json:"customElements,omitempty"`
@@ -74,12 +74,12 @@ type MicroFrontEndAppSpec struct {
 	PackageReference PackageReference `json:"packageReference"`
 }
 
-// MicroFrontEndAppStatus defines the observed state of MicroFrontEndApp.
-type MicroFrontEndAppStatus struct {
+// KDexAppStatus defines the observed state of KDexApp.
+type KDexAppStatus struct {
 	// For Kubernetes API conventions, see:
 	// https://github.com/kubernetes/community/blob/master/contributors/devel/sig-architecture/api-conventions.md#typical-status-properties
 
-	// conditions represent the current state of the MicroFrontEndApp resource.
+	// conditions represent the current state of the KDexApp resource.
 	// Each condition has a unique type and reflects the status of a specific aspect of the resource.
 	//
 	// Standard condition types include:
@@ -110,5 +110,5 @@ type PackageReference struct {
 }
 
 func init() {
-	SchemeBuilder.Register(&MicroFrontEndApp{}, &MicroFrontEndAppList{})
+	SchemeBuilder.Register(&KDexApp{}, &KDexAppList{})
 }

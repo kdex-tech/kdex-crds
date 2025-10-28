@@ -4,16 +4,16 @@ kind: CustomResourceDefinition
 metadata:
   annotations:
     controller-gen.kubebuilder.io/version: v0.18.0
-  name: kdexpagenavigations.kdex.dev
+  name: kdexpageheaders.kdex.dev
 spec:
   group: kdex.dev
   names:
-    kind: KDexPageNavigation
-    listKind: KDexPageNavigationList
-    plural: kdexpagenavigations
+    kind: KDexPageHeader
+    listKind: KDexPageHeaderList
+    plural: kdexpageheaders
     shortNames:
-    - mfe-pn
-    singular: kdexpagenavigation
+    - mfe-ph
+    singular: kdexpageheader
   scope: Namespaced
   versions:
   - additionalPrinterColumns:
@@ -24,8 +24,7 @@ spec:
     name: v1alpha1
     schema:
       openAPIV3Schema:
-        description: KDexPageNavigation is the Schema for the kdexpagenavigations
-          API
+        description: KDexPageHeader is the Schema for the kdexpageheaders API
         properties:
           apiVersion:
             description: |-
@@ -45,30 +44,24 @@ spec:
           metadata:
             type: object
           spec:
-            description: spec defines the desired state of KDexPageNavigation
+            description: spec defines the desired state of KDexPageHeader
             properties:
               content:
                 description: content is a go string template that defines the content
-                  of an App Server page navigation. Use the `.Navigation["<name>"]`
-                  property to position its content in the template.
-                example: '{{- define "menu" -}}\n  <ul>\n    {{- range $label, $value
-                  := . }}\n      <li>\n        {{- if ($value.Path != "") -}}\n          <a
-                  href="{{ $value.Path }}">{{ $label }}</a>\n        {{- else -}}\n          <span>{{
-                  $label }}</span>\n        {{- end -}}\n        {{- if ($value.Children
-                  != nil) -}}\n          {{- template "menu" $value.Children -}}\n        {{-
-                  end -}}\n      </li>\n    {{- end -}}\n  </ul>\n{{- end -}}\n{{-
-                  template "menu" .MenuEntries -}}'
+                  of an App Server page header section. Use the `.Header` property
+                  to position its content in the template.
+                example: <a class="logo" href="#">{{ .Title }}</a>
                 minLength: 5
                 type: string
             required:
             - content
             type: object
           status:
-            description: status defines the observed state of KDexPageNavigation
+            description: status defines the observed state of KDexPageHeader
             properties:
               conditions:
                 description: |-
-                  conditions represent the current state of the KDexPageNavigation resource.
+                  conditions represent the current state of the KDexPageHeader resource.
                   Each condition has a unique type and reflects the status of a specific aspect of the resource.
 
                   Standard condition types include:

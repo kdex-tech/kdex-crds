@@ -9,24 +9,24 @@
 Package v1alpha1 contains API Schema definitions for the  v1alpha1 API group.
 
 ### Resource Types
-- [MicroFrontEndApp](#microfrontendapp)
-- [MicroFrontEndAppList](#microfrontendapplist)
-- [MicroFrontEndHost](#microfrontendhost)
-- [MicroFrontEndHostList](#microfrontendhostlist)
-- [MicroFrontEndPageArchetype](#microfrontendpagearchetype)
-- [MicroFrontEndPageArchetypeList](#microfrontendpagearchetypelist)
-- [MicroFrontEndPageBinding](#microfrontendpagebinding)
-- [MicroFrontEndPageBindingList](#microfrontendpagebindinglist)
-- [MicroFrontEndPageFooter](#microfrontendpagefooter)
-- [MicroFrontEndPageFooterList](#microfrontendpagefooterlist)
-- [MicroFrontEndPageHeader](#microfrontendpageheader)
-- [MicroFrontEndPageHeaderList](#microfrontendpageheaderlist)
-- [MicroFrontEndPageNavigation](#microfrontendpagenavigation)
-- [MicroFrontEndPageNavigationList](#microfrontendpagenavigationlist)
-- [MicroFrontEndRenderPage](#microfrontendrenderpage)
-- [MicroFrontEndRenderPageList](#microfrontendrenderpagelist)
-- [MicroFrontEndTranslation](#microfrontendtranslation)
-- [MicroFrontEndTranslationList](#microfrontendtranslationlist)
+- [KDexApp](#kdexapp)
+- [KDexAppList](#kdexapplist)
+- [KDexHost](#kdexhost)
+- [KDexHostList](#kdexhostlist)
+- [KDexPageArchetype](#kdexpagearchetype)
+- [KDexPageArchetypeList](#kdexpagearchetypelist)
+- [KDexPageBinding](#kdexpagebinding)
+- [KDexPageBindingList](#kdexpagebindinglist)
+- [KDexPageFooter](#kdexpagefooter)
+- [KDexPageFooterList](#kdexpagefooterlist)
+- [KDexPageHeader](#kdexpageheader)
+- [KDexPageHeaderList](#kdexpageheaderlist)
+- [KDexPageNavigation](#kdexpagenavigation)
+- [KDexPageNavigationList](#kdexpagenavigationlist)
+- [KDexRenderPage](#kdexrenderpage)
+- [KDexRenderPageList](#kdexrenderpagelist)
+- [KDexTranslation](#kdextranslation)
+- [KDexTranslationList](#kdextranslationlist)
 - [MicroFrontendTheme](#microfrontendtheme)
 - [MicroFrontendThemeList](#microfrontendthemelist)
 
@@ -42,7 +42,7 @@ _Validation:_
 - Enum: [Strict NonStrict]
 
 _Appears in:_
-- [MicroFrontEndHostSpec](#microfrontendhostspec)
+- [KDexHostSpec](#kdexhostspec)
 
 | Field | Description |
 | --- | --- |
@@ -63,12 +63,12 @@ _Appears in:_
 
 
 _Appears in:_
-- [MicroFrontEndPageBindingSpec](#microfrontendpagebindingspec)
+- [KDexPageBindingSpec](#kdexpagebindingspec)
 
 | Field | Description | Default | Validation |
 | --- | --- | --- | --- |
-| `appRef` _[LocalObjectReference](https://kubernetes.io/docs/reference/generated/kubernetes-api/v/#localobjectreference-v1-core)_ | appRef is a reference to the MicroFrontEndApp to include in this binding. |  |  |
-| `customElementName` _string_ | customElementName is the name of the MicroFrontEndApp custom element to render in the specified slot (if present in the template). |  |  |
+| `appRef` _[LocalObjectReference](https://kubernetes.io/docs/reference/generated/kubernetes-api/v/#localobjectreference-v1-core)_ | appRef is a reference to the KDexApp to include in this binding. |  |  |
+| `customElementName` _string_ | customElementName is the name of the KDexApp custom element to render in the specified slot (if present in the template). |  |  |
 | `rawHTML` _string_ | rawHTML is a raw HTML string to be rendered in the specified slot (if present in the template). |  |  |
 | `slot` _string_ | slot is the name of the App slot to which this entry will be bound. If omitted, the slot used will be `main`. No more than one entry can be bound to a slot. |  |  |
 
@@ -82,7 +82,7 @@ CustomElement defines a custom element exposed by a micro-frontend application.
 
 
 _Appears in:_
-- [MicroFrontEndAppSpec](#microfrontendappspec)
+- [KDexAppSpec](#kdexappspec)
 
 | Field | Description | Default | Validation |
 | --- | --- | --- | --- |
@@ -90,30 +90,30 @@ _Appears in:_
 | `name` _string_ | name of the custom element. |  | Required: \{\} <br /> |
 
 
-#### MicroFrontEndApp
+#### KDexApp
 
 
 
-MicroFrontEndApp is the Schema for the microfrontendapps API
+KDexApp is the Schema for the kdexapps API
 
 
 
 _Appears in:_
-- [MicroFrontEndAppList](#microfrontendapplist)
+- [KDexAppList](#kdexapplist)
 
 | Field | Description | Default | Validation |
 | --- | --- | --- | --- |
 | `apiVersion` _string_ | `kdex.dev/v1alpha1` | | |
-| `kind` _string_ | `MicroFrontEndApp` | | |
+| `kind` _string_ | `KDexApp` | | |
 | `metadata` _[ObjectMeta](https://kubernetes.io/docs/reference/generated/kubernetes-api/v/#objectmeta-v1-meta)_ | Refer to Kubernetes API documentation for fields of `metadata`. |  |  |
-| `spec` _[MicroFrontEndAppSpec](#microfrontendappspec)_ | spec defines the desired state of MicroFrontEndApp |  | Required: \{\} <br /> |
+| `spec` _[KDexAppSpec](#kdexappspec)_ | spec defines the desired state of KDexApp |  | Required: \{\} <br /> |
 
 
-#### MicroFrontEndAppList
+#### KDexAppList
 
 
 
-MicroFrontEndAppList contains a list of MicroFrontEndApp
+KDexAppList contains a list of KDexApp
 
 
 
@@ -122,21 +122,21 @@ MicroFrontEndAppList contains a list of MicroFrontEndApp
 | Field | Description | Default | Validation |
 | --- | --- | --- | --- |
 | `apiVersion` _string_ | `kdex.dev/v1alpha1` | | |
-| `kind` _string_ | `MicroFrontEndAppList` | | |
+| `kind` _string_ | `KDexAppList` | | |
 | `metadata` _[ListMeta](https://kubernetes.io/docs/reference/generated/kubernetes-api/v/#listmeta-v1-meta)_ | Refer to Kubernetes API documentation for fields of `metadata`. |  |  |
-| `items` _[MicroFrontEndApp](#microfrontendapp) array_ |  |  |  |
+| `items` _[KDexApp](#kdexapp) array_ |  |  |  |
 
 
-#### MicroFrontEndAppSpec
+#### KDexAppSpec
 
 
 
-MicroFrontEndAppSpec defines the desired state of MicroFrontEndApp
+KDexAppSpec defines the desired state of KDexApp
 
 
 
 _Appears in:_
-- [MicroFrontEndApp](#microfrontendapp)
+- [KDexApp](#kdexapp)
 
 | Field | Description | Default | Validation |
 | --- | --- | --- | --- |
@@ -146,30 +146,30 @@ _Appears in:_
 
 
 
-#### MicroFrontEndHost
+#### KDexHost
 
 
 
-MicroFrontEndHost is the Schema for the microfrontendhosts API
+KDexHost is the Schema for the kdexhosts API
 
 
 
 _Appears in:_
-- [MicroFrontEndHostList](#microfrontendhostlist)
+- [KDexHostList](#kdexhostlist)
 
 | Field | Description | Default | Validation |
 | --- | --- | --- | --- |
 | `apiVersion` _string_ | `kdex.dev/v1alpha1` | | |
-| `kind` _string_ | `MicroFrontEndHost` | | |
+| `kind` _string_ | `KDexHost` | | |
 | `metadata` _[ObjectMeta](https://kubernetes.io/docs/reference/generated/kubernetes-api/v/#objectmeta-v1-meta)_ | Refer to Kubernetes API documentation for fields of `metadata`. |  |  |
-| `spec` _[MicroFrontEndHostSpec](#microfrontendhostspec)_ | spec defines the desired state of MicroFrontEndHost |  |  |
+| `spec` _[KDexHostSpec](#kdexhostspec)_ | spec defines the desired state of KDexHost |  |  |
 
 
-#### MicroFrontEndHostList
+#### KDexHostList
 
 
 
-MicroFrontEndHostList contains a list of MicroFrontEndHost
+KDexHostList contains a list of KDexHost
 
 
 
@@ -178,21 +178,21 @@ MicroFrontEndHostList contains a list of MicroFrontEndHost
 | Field | Description | Default | Validation |
 | --- | --- | --- | --- |
 | `apiVersion` _string_ | `kdex.dev/v1alpha1` | | |
-| `kind` _string_ | `MicroFrontEndHostList` | | |
+| `kind` _string_ | `KDexHostList` | | |
 | `metadata` _[ListMeta](https://kubernetes.io/docs/reference/generated/kubernetes-api/v/#listmeta-v1-meta)_ | Refer to Kubernetes API documentation for fields of `metadata`. |  |  |
-| `items` _[MicroFrontEndHost](#microfrontendhost) array_ |  |  |  |
+| `items` _[KDexHost](#kdexhost) array_ |  |  |  |
 
 
-#### MicroFrontEndHostSpec
+#### KDexHostSpec
 
 
 
-MicroFrontEndHostSpec defines the desired state of MicroFrontEndHost
+KDexHostSpec defines the desired state of KDexHost
 
 
 
 _Appears in:_
-- [MicroFrontEndHost](#microfrontendhost)
+- [KDexHost](#kdexhost)
 
 | Field | Description | Default | Validation |
 | --- | --- | --- | --- |
@@ -206,30 +206,30 @@ _Appears in:_
 
 
 
-#### MicroFrontEndPageArchetype
+#### KDexPageArchetype
 
 
 
-MicroFrontEndPageArchetype is the Schema for the microfrontendpagearchetypes API
+KDexPageArchetype is the Schema for the kdexpagearchetypes API
 
 
 
 _Appears in:_
-- [MicroFrontEndPageArchetypeList](#microfrontendpagearchetypelist)
+- [KDexPageArchetypeList](#kdexpagearchetypelist)
 
 | Field | Description | Default | Validation |
 | --- | --- | --- | --- |
 | `apiVersion` _string_ | `kdex.dev/v1alpha1` | | |
-| `kind` _string_ | `MicroFrontEndPageArchetype` | | |
+| `kind` _string_ | `KDexPageArchetype` | | |
 | `metadata` _[ObjectMeta](https://kubernetes.io/docs/reference/generated/kubernetes-api/v/#objectmeta-v1-meta)_ | Refer to Kubernetes API documentation for fields of `metadata`. |  |  |
-| `spec` _[MicroFrontEndPageArchetypeSpec](#microfrontendpagearchetypespec)_ | spec defines the desired state of MicroFrontEndPageArchetype |  | Required: \{\} <br /> |
+| `spec` _[KDexPageArchetypeSpec](#kdexpagearchetypespec)_ | spec defines the desired state of KDexPageArchetype |  | Required: \{\} <br /> |
 
 
-#### MicroFrontEndPageArchetypeList
+#### KDexPageArchetypeList
 
 
 
-MicroFrontEndPageArchetypeList contains a list of MicroFrontEndPageArchetype
+KDexPageArchetypeList contains a list of KDexPageArchetype
 
 
 
@@ -238,58 +238,58 @@ MicroFrontEndPageArchetypeList contains a list of MicroFrontEndPageArchetype
 | Field | Description | Default | Validation |
 | --- | --- | --- | --- |
 | `apiVersion` _string_ | `kdex.dev/v1alpha1` | | |
-| `kind` _string_ | `MicroFrontEndPageArchetypeList` | | |
+| `kind` _string_ | `KDexPageArchetypeList` | | |
 | `metadata` _[ListMeta](https://kubernetes.io/docs/reference/generated/kubernetes-api/v/#listmeta-v1-meta)_ | Refer to Kubernetes API documentation for fields of `metadata`. |  |  |
-| `items` _[MicroFrontEndPageArchetype](#microfrontendpagearchetype) array_ |  |  |  |
+| `items` _[KDexPageArchetype](#kdexpagearchetype) array_ |  |  |  |
 
 
-#### MicroFrontEndPageArchetypeSpec
+#### KDexPageArchetypeSpec
 
 
 
-MicroFrontEndPageArchetypeSpec defines the desired state of MicroFrontEndPageArchetype
+KDexPageArchetypeSpec defines the desired state of KDexPageArchetype
 
 
 
 _Appears in:_
-- [MicroFrontEndPageArchetype](#microfrontendpagearchetype)
+- [KDexPageArchetype](#kdexpagearchetype)
 
 | Field | Description | Default | Validation |
 | --- | --- | --- | --- |
 | `content` _string_ | content is a go string template that defines the structure of an HTML page. |  | MinLength: 5 <br />Required: \{\} <br /> |
-| `defaultFooterRef` _[LocalObjectReference](https://kubernetes.io/docs/reference/generated/kubernetes-api/v/#localobjectreference-v1-core)_ | defaultFooterRef is an optional reference to a MicroFrontEndPageFooter resource. If not specified, no footer will be displayed. Use the `.Footer` property to position its content in the template. |  |  |
-| `defaultHeaderRef` _[LocalObjectReference](https://kubernetes.io/docs/reference/generated/kubernetes-api/v/#localobjectreference-v1-core)_ | defaultHeaderRef is an optional reference to a MicroFrontEndPageHeader resource. If not specified, no header will be displayed. Use the `.Header` property to position its content in the template. |  |  |
-| `defaultMainNavigationRef` _[LocalObjectReference](https://kubernetes.io/docs/reference/generated/kubernetes-api/v/#localobjectreference-v1-core)_ | defaultMainNavigationRef is an optional reference to a MicroFrontEndPageNavigation resource. If not specified, no navigation will be displayed. Use the `.Navigation["main"]` property to position its content in the template. |  |  |
+| `defaultFooterRef` _[LocalObjectReference](https://kubernetes.io/docs/reference/generated/kubernetes-api/v/#localobjectreference-v1-core)_ | defaultFooterRef is an optional reference to a KDexPageFooter resource. If not specified, no footer will be displayed. Use the `.Footer` property to position its content in the template. |  |  |
+| `defaultHeaderRef` _[LocalObjectReference](https://kubernetes.io/docs/reference/generated/kubernetes-api/v/#localobjectreference-v1-core)_ | defaultHeaderRef is an optional reference to a KDexPageHeader resource. If not specified, no header will be displayed. Use the `.Header` property to position its content in the template. |  |  |
+| `defaultMainNavigationRef` _[LocalObjectReference](https://kubernetes.io/docs/reference/generated/kubernetes-api/v/#localobjectreference-v1-core)_ | defaultMainNavigationRef is an optional reference to a KDexPageNavigation resource. If not specified, no navigation will be displayed. Use the `.Navigation["main"]` property to position its content in the template. |  |  |
 | `extraNavigations` _object (keys:string, values:[LocalObjectReference](https://kubernetes.io/docs/reference/generated/kubernetes-api/v/#localobjectreference-v1-core))_ | extraNavigations is an optional map of named navigation object references. Use `.Navigation["<name>"]` to position the named navigation's content in the template. |  |  |
 | `overrideThemeRef` _[LocalObjectReference](https://kubernetes.io/docs/reference/generated/kubernetes-api/v/#localobjectreference-v1-core)_ | overrideThemeRef is a reference to the theme that should apply to all pages that use this archetype. It overrides the default theme defined on the host. |  |  |
 
 
 
 
-#### MicroFrontEndPageBinding
+#### KDexPageBinding
 
 
 
-MicroFrontEndPageBinding is the Schema for the microfrontendpagebindings API
+KDexPageBinding is the Schema for the kdexpagebindings API
 
 
 
 _Appears in:_
-- [MicroFrontEndPageBindingList](#microfrontendpagebindinglist)
+- [KDexPageBindingList](#kdexpagebindinglist)
 
 | Field | Description | Default | Validation |
 | --- | --- | --- | --- |
 | `apiVersion` _string_ | `kdex.dev/v1alpha1` | | |
-| `kind` _string_ | `MicroFrontEndPageBinding` | | |
+| `kind` _string_ | `KDexPageBinding` | | |
 | `metadata` _[ObjectMeta](https://kubernetes.io/docs/reference/generated/kubernetes-api/v/#objectmeta-v1-meta)_ | Refer to Kubernetes API documentation for fields of `metadata`. |  |  |
-| `spec` _[MicroFrontEndPageBindingSpec](#microfrontendpagebindingspec)_ | spec defines the desired state of MicroFrontEndPageBinding |  | Required: \{\} <br /> |
+| `spec` _[KDexPageBindingSpec](#kdexpagebindingspec)_ | spec defines the desired state of KDexPageBinding |  | Required: \{\} <br /> |
 
 
-#### MicroFrontEndPageBindingList
+#### KDexPageBindingList
 
 
 
-MicroFrontEndPageBindingList contains a list of MicroFrontEndPageBinding
+KDexPageBindingList contains a list of KDexPageBinding
 
 
 
@@ -298,63 +298,63 @@ MicroFrontEndPageBindingList contains a list of MicroFrontEndPageBinding
 | Field | Description | Default | Validation |
 | --- | --- | --- | --- |
 | `apiVersion` _string_ | `kdex.dev/v1alpha1` | | |
-| `kind` _string_ | `MicroFrontEndPageBindingList` | | |
+| `kind` _string_ | `KDexPageBindingList` | | |
 | `metadata` _[ListMeta](https://kubernetes.io/docs/reference/generated/kubernetes-api/v/#listmeta-v1-meta)_ | Refer to Kubernetes API documentation for fields of `metadata`. |  |  |
-| `items` _[MicroFrontEndPageBinding](#microfrontendpagebinding) array_ |  |  |  |
+| `items` _[KDexPageBinding](#kdexpagebinding) array_ |  |  |  |
 
 
-#### MicroFrontEndPageBindingSpec
+#### KDexPageBindingSpec
 
 
 
-MicroFrontEndPageBindingSpec defines the desired state of MicroFrontEndPageBinding
+KDexPageBindingSpec defines the desired state of KDexPageBinding
 
 
 
 _Appears in:_
-- [MicroFrontEndPageBinding](#microfrontendpagebinding)
+- [KDexPageBinding](#kdexpagebinding)
 
 | Field | Description | Default | Validation |
 | --- | --- | --- | --- |
-| `contentEntries` _[ContentEntry](#contententry) array_ | contentEntries is a set of content entries to bind to this page. They may be either raw HTML fragments or MicroFrontEndApp references. |  | MaxItems: 8 <br />MinItems: 1 <br />Required: \{\} <br /> |
-| `hostRef` _[LocalObjectReference](https://kubernetes.io/docs/reference/generated/kubernetes-api/v/#localobjectreference-v1-core)_ | hostRef is a reference to the MicroFrontEndHost that this binding is for. |  | Required: \{\} <br /> |
+| `contentEntries` _[ContentEntry](#contententry) array_ | contentEntries is a set of content entries to bind to this page. They may be either raw HTML fragments or KDexApp references. |  | MaxItems: 8 <br />MinItems: 1 <br />Required: \{\} <br /> |
+| `hostRef` _[LocalObjectReference](https://kubernetes.io/docs/reference/generated/kubernetes-api/v/#localobjectreference-v1-core)_ | hostRef is a reference to the KDexHost that this binding is for. |  | Required: \{\} <br /> |
 | `label` _string_ | label is the value used in menus and page titles before localization occurs (or when no translation exists for the current language). |  | Required: \{\} <br /> |
 | `navigationHints` _[NavigationHints](#navigationhints)_ | navigationHints are optional navigation properties that if omitted result in the page being hidden from the navigation. |  |  |
-| `overrideFooterRef` _[LocalObjectReference](https://kubernetes.io/docs/reference/generated/kubernetes-api/v/#localobjectreference-v1-core)_ | overrideFooterRef is an optional reference to a MicroFrontEndPageFooter resource. If not specified, the footer from the archetype will be used. |  |  |
-| `overrideHeaderRef` _[LocalObjectReference](https://kubernetes.io/docs/reference/generated/kubernetes-api/v/#localobjectreference-v1-core)_ | overrideHeaderRef is an optional reference to a MicroFrontEndPageHeader resource. If not specified, the header from the archetype will be used. |  |  |
-| `overrideMainNavigationRef` _[LocalObjectReference](https://kubernetes.io/docs/reference/generated/kubernetes-api/v/#localobjectreference-v1-core)_ | overrideMainNavigationRef is an optional reference to a MicroFrontEndPageNavigation resource. If not specified, the main navigation from the archetype will be used. |  |  |
-| `pageArchetypeRef` _[LocalObjectReference](https://kubernetes.io/docs/reference/generated/kubernetes-api/v/#localobjectreference-v1-core)_ | pageArchetypeRef is a reference to the MicroFrontEndPageArchetype that this binding is for. |  | Required: \{\} <br /> |
-| `parentPageRef` _[LocalObjectReference](https://kubernetes.io/docs/reference/generated/kubernetes-api/v/#localobjectreference-v1-core)_ | parentPageRef is a reference to the MicroFrontEndPageBinding bellow which this page will appear in the main navigation. If not set, the page will be placed in the top level of the navigation. |  |  |
+| `overrideFooterRef` _[LocalObjectReference](https://kubernetes.io/docs/reference/generated/kubernetes-api/v/#localobjectreference-v1-core)_ | overrideFooterRef is an optional reference to a KDexPageFooter resource. If not specified, the footer from the archetype will be used. |  |  |
+| `overrideHeaderRef` _[LocalObjectReference](https://kubernetes.io/docs/reference/generated/kubernetes-api/v/#localobjectreference-v1-core)_ | overrideHeaderRef is an optional reference to a KDexPageHeader resource. If not specified, the header from the archetype will be used. |  |  |
+| `overrideMainNavigationRef` _[LocalObjectReference](https://kubernetes.io/docs/reference/generated/kubernetes-api/v/#localobjectreference-v1-core)_ | overrideMainNavigationRef is an optional reference to a KDexPageNavigation resource. If not specified, the main navigation from the archetype will be used. |  |  |
+| `pageArchetypeRef` _[LocalObjectReference](https://kubernetes.io/docs/reference/generated/kubernetes-api/v/#localobjectreference-v1-core)_ | pageArchetypeRef is a reference to the KDexPageArchetype that this binding is for. |  | Required: \{\} <br /> |
+| `parentPageRef` _[LocalObjectReference](https://kubernetes.io/docs/reference/generated/kubernetes-api/v/#localobjectreference-v1-core)_ | parentPageRef is a reference to the KDexPageBinding bellow which this page will appear in the main navigation. If not set, the page will be placed in the top level of the navigation. |  |  |
 | `basePath` _string_ | basePath is the shortest path by which the page may be accessed. It must not contain path parameters. This path will be used in site navigation. This path is subject to being prefixed for localization by `/\{l10n\}` and will be when the user selects a non-default language. |  | Pattern: `^/` <br />Required: \{\} <br /> |
 | `patternPath` _string_ | patternPath, which must be prefixed by BasePath, is an extension of basePath that adds pattern matching as defined by https://pkg.go.dev/net/http#hdr-Patterns-ServeMux. This path is subject to being prefixed for localization by `/\{l10n\}` such as when the user selects a non-default language. |  |  |
 
 
 
 
-#### MicroFrontEndPageFooter
+#### KDexPageFooter
 
 
 
-MicroFrontEndPageFooter is the Schema for the microfrontendpagefooters API
+KDexPageFooter is the Schema for the kdexpagefooters API
 
 
 
 _Appears in:_
-- [MicroFrontEndPageFooterList](#microfrontendpagefooterlist)
+- [KDexPageFooterList](#kdexpagefooterlist)
 
 | Field | Description | Default | Validation |
 | --- | --- | --- | --- |
 | `apiVersion` _string_ | `kdex.dev/v1alpha1` | | |
-| `kind` _string_ | `MicroFrontEndPageFooter` | | |
+| `kind` _string_ | `KDexPageFooter` | | |
 | `metadata` _[ObjectMeta](https://kubernetes.io/docs/reference/generated/kubernetes-api/v/#objectmeta-v1-meta)_ | Refer to Kubernetes API documentation for fields of `metadata`. |  |  |
-| `spec` _[MicroFrontEndPageFooterSpec](#microfrontendpagefooterspec)_ | spec defines the desired state of MicroFrontEndPageFooter |  |  |
+| `spec` _[KDexPageFooterSpec](#kdexpagefooterspec)_ | spec defines the desired state of KDexPageFooter |  |  |
 
 
-#### MicroFrontEndPageFooterList
+#### KDexPageFooterList
 
 
 
-MicroFrontEndPageFooterList contains a list of MicroFrontEndPageFooter
+KDexPageFooterList contains a list of KDexPageFooter
 
 
 
@@ -363,21 +363,21 @@ MicroFrontEndPageFooterList contains a list of MicroFrontEndPageFooter
 | Field | Description | Default | Validation |
 | --- | --- | --- | --- |
 | `apiVersion` _string_ | `kdex.dev/v1alpha1` | | |
-| `kind` _string_ | `MicroFrontEndPageFooterList` | | |
+| `kind` _string_ | `KDexPageFooterList` | | |
 | `metadata` _[ListMeta](https://kubernetes.io/docs/reference/generated/kubernetes-api/v/#listmeta-v1-meta)_ | Refer to Kubernetes API documentation for fields of `metadata`. |  |  |
-| `items` _[MicroFrontEndPageFooter](#microfrontendpagefooter) array_ |  |  |  |
+| `items` _[KDexPageFooter](#kdexpagefooter) array_ |  |  |  |
 
 
-#### MicroFrontEndPageFooterSpec
+#### KDexPageFooterSpec
 
 
 
-MicroFrontEndPageFooterSpec defines the desired state of MicroFrontEndPageFooter
+KDexPageFooterSpec defines the desired state of KDexPageFooter
 
 
 
 _Appears in:_
-- [MicroFrontEndPageFooter](#microfrontendpagefooter)
+- [KDexPageFooter](#kdexpagefooter)
 
 | Field | Description | Default | Validation |
 | --- | --- | --- | --- |
@@ -386,30 +386,30 @@ _Appears in:_
 
 
 
-#### MicroFrontEndPageHeader
+#### KDexPageHeader
 
 
 
-MicroFrontEndPageHeader is the Schema for the microfrontendpageheaders API
+KDexPageHeader is the Schema for the kdexpageheaders API
 
 
 
 _Appears in:_
-- [MicroFrontEndPageHeaderList](#microfrontendpageheaderlist)
+- [KDexPageHeaderList](#kdexpageheaderlist)
 
 | Field | Description | Default | Validation |
 | --- | --- | --- | --- |
 | `apiVersion` _string_ | `kdex.dev/v1alpha1` | | |
-| `kind` _string_ | `MicroFrontEndPageHeader` | | |
+| `kind` _string_ | `KDexPageHeader` | | |
 | `metadata` _[ObjectMeta](https://kubernetes.io/docs/reference/generated/kubernetes-api/v/#objectmeta-v1-meta)_ | Refer to Kubernetes API documentation for fields of `metadata`. |  |  |
-| `spec` _[MicroFrontEndPageHeaderSpec](#microfrontendpageheaderspec)_ | spec defines the desired state of MicroFrontEndPageHeader |  | Required: \{\} <br /> |
+| `spec` _[KDexPageHeaderSpec](#kdexpageheaderspec)_ | spec defines the desired state of KDexPageHeader |  | Required: \{\} <br /> |
 
 
-#### MicroFrontEndPageHeaderList
+#### KDexPageHeaderList
 
 
 
-MicroFrontEndPageHeaderList contains a list of MicroFrontEndPageHeader
+KDexPageHeaderList contains a list of KDexPageHeader
 
 
 
@@ -418,21 +418,21 @@ MicroFrontEndPageHeaderList contains a list of MicroFrontEndPageHeader
 | Field | Description | Default | Validation |
 | --- | --- | --- | --- |
 | `apiVersion` _string_ | `kdex.dev/v1alpha1` | | |
-| `kind` _string_ | `MicroFrontEndPageHeaderList` | | |
+| `kind` _string_ | `KDexPageHeaderList` | | |
 | `metadata` _[ListMeta](https://kubernetes.io/docs/reference/generated/kubernetes-api/v/#listmeta-v1-meta)_ | Refer to Kubernetes API documentation for fields of `metadata`. |  |  |
-| `items` _[MicroFrontEndPageHeader](#microfrontendpageheader) array_ |  |  |  |
+| `items` _[KDexPageHeader](#kdexpageheader) array_ |  |  |  |
 
 
-#### MicroFrontEndPageHeaderSpec
+#### KDexPageHeaderSpec
 
 
 
-MicroFrontEndPageHeaderSpec defines the desired state of MicroFrontEndPageHeader
+KDexPageHeaderSpec defines the desired state of KDexPageHeader
 
 
 
 _Appears in:_
-- [MicroFrontEndPageHeader](#microfrontendpageheader)
+- [KDexPageHeader](#kdexpageheader)
 
 | Field | Description | Default | Validation |
 | --- | --- | --- | --- |
@@ -441,30 +441,30 @@ _Appears in:_
 
 
 
-#### MicroFrontEndPageNavigation
+#### KDexPageNavigation
 
 
 
-MicroFrontEndPageNavigation is the Schema for the microfrontendpagenavigations API
+KDexPageNavigation is the Schema for the kdexpagenavigations API
 
 
 
 _Appears in:_
-- [MicroFrontEndPageNavigationList](#microfrontendpagenavigationlist)
+- [KDexPageNavigationList](#kdexpagenavigationlist)
 
 | Field | Description | Default | Validation |
 | --- | --- | --- | --- |
 | `apiVersion` _string_ | `kdex.dev/v1alpha1` | | |
-| `kind` _string_ | `MicroFrontEndPageNavigation` | | |
+| `kind` _string_ | `KDexPageNavigation` | | |
 | `metadata` _[ObjectMeta](https://kubernetes.io/docs/reference/generated/kubernetes-api/v/#objectmeta-v1-meta)_ | Refer to Kubernetes API documentation for fields of `metadata`. |  |  |
-| `spec` _[MicroFrontEndPageNavigationSpec](#microfrontendpagenavigationspec)_ | spec defines the desired state of MicroFrontEndPageNavigation |  | Required: \{\} <br /> |
+| `spec` _[KDexPageNavigationSpec](#kdexpagenavigationspec)_ | spec defines the desired state of KDexPageNavigation |  | Required: \{\} <br /> |
 
 
-#### MicroFrontEndPageNavigationList
+#### KDexPageNavigationList
 
 
 
-MicroFrontEndPageNavigationList contains a list of MicroFrontEndPageNavigation
+KDexPageNavigationList contains a list of KDexPageNavigation
 
 
 
@@ -473,21 +473,21 @@ MicroFrontEndPageNavigationList contains a list of MicroFrontEndPageNavigation
 | Field | Description | Default | Validation |
 | --- | --- | --- | --- |
 | `apiVersion` _string_ | `kdex.dev/v1alpha1` | | |
-| `kind` _string_ | `MicroFrontEndPageNavigationList` | | |
+| `kind` _string_ | `KDexPageNavigationList` | | |
 | `metadata` _[ListMeta](https://kubernetes.io/docs/reference/generated/kubernetes-api/v/#listmeta-v1-meta)_ | Refer to Kubernetes API documentation for fields of `metadata`. |  |  |
-| `items` _[MicroFrontEndPageNavigation](#microfrontendpagenavigation) array_ |  |  |  |
+| `items` _[KDexPageNavigation](#kdexpagenavigation) array_ |  |  |  |
 
 
-#### MicroFrontEndPageNavigationSpec
+#### KDexPageNavigationSpec
 
 
 
-MicroFrontEndPageNavigationSpec defines the desired state of MicroFrontEndPageNavigation
+KDexPageNavigationSpec defines the desired state of KDexPageNavigation
 
 
 
 _Appears in:_
-- [MicroFrontEndPageNavigation](#microfrontendpagenavigation)
+- [KDexPageNavigation](#kdexpagenavigation)
 
 | Field | Description | Default | Validation |
 | --- | --- | --- | --- |
@@ -496,30 +496,30 @@ _Appears in:_
 
 
 
-#### MicroFrontEndRenderPage
+#### KDexRenderPage
 
 
 
-MicroFrontEndRenderPage is the Schema for the microfrontendrenderpages API
+KDexRenderPage is the Schema for the kdexrenderpages API
 
 
 
 _Appears in:_
-- [MicroFrontEndRenderPageList](#microfrontendrenderpagelist)
+- [KDexRenderPageList](#kdexrenderpagelist)
 
 | Field | Description | Default | Validation |
 | --- | --- | --- | --- |
 | `apiVersion` _string_ | `kdex.dev/v1alpha1` | | |
-| `kind` _string_ | `MicroFrontEndRenderPage` | | |
+| `kind` _string_ | `KDexRenderPage` | | |
 | `metadata` _[ObjectMeta](https://kubernetes.io/docs/reference/generated/kubernetes-api/v/#objectmeta-v1-meta)_ | Refer to Kubernetes API documentation for fields of `metadata`. |  |  |
-| `spec` _[MicroFrontEndRenderPageSpec](#microfrontendrenderpagespec)_ | spec defines the desired state of MicroFrontEndRenderPage |  |  |
+| `spec` _[KDexRenderPageSpec](#kdexrenderpagespec)_ | spec defines the desired state of KDexRenderPage |  |  |
 
 
-#### MicroFrontEndRenderPageList
+#### KDexRenderPageList
 
 
 
-MicroFrontEndRenderPageList contains a list of MicroFrontEndRenderPage
+KDexRenderPageList contains a list of KDexRenderPage
 
 
 
@@ -528,28 +528,28 @@ MicroFrontEndRenderPageList contains a list of MicroFrontEndRenderPage
 | Field | Description | Default | Validation |
 | --- | --- | --- | --- |
 | `apiVersion` _string_ | `kdex.dev/v1alpha1` | | |
-| `kind` _string_ | `MicroFrontEndRenderPageList` | | |
+| `kind` _string_ | `KDexRenderPageList` | | |
 | `metadata` _[ListMeta](https://kubernetes.io/docs/reference/generated/kubernetes-api/v/#listmeta-v1-meta)_ | Refer to Kubernetes API documentation for fields of `metadata`. |  |  |
-| `items` _[MicroFrontEndRenderPage](#microfrontendrenderpage) array_ |  |  |  |
+| `items` _[KDexRenderPage](#kdexrenderpage) array_ |  |  |  |
 
 
-#### MicroFrontEndRenderPageSpec
+#### KDexRenderPageSpec
 
 
 
-MicroFrontEndRenderPageSpec defines the desired state of MicroFrontEndRenderPage
+KDexRenderPageSpec defines the desired state of KDexRenderPage
 
 
 
 _Appears in:_
-- [MicroFrontEndRenderPage](#microfrontendrenderpage)
+- [KDexRenderPage](#kdexrenderpage)
 
 | Field | Description | Default | Validation |
 | --- | --- | --- | --- |
-| `hostRef` _[LocalObjectReference](https://kubernetes.io/docs/reference/generated/kubernetes-api/v/#localobjectreference-v1-core)_ | hostRef is a reference to the MicroFrontEndHost that this render page is for. |  | Required: \{\} <br /> |
+| `hostRef` _[LocalObjectReference](https://kubernetes.io/docs/reference/generated/kubernetes-api/v/#localobjectreference-v1-core)_ | hostRef is a reference to the KDexHost that this render page is for. |  | Required: \{\} <br /> |
 | `navigationHints` _[NavigationHints](#navigationhints)_ | navigationHints are optional navigation properties that if omitted result in the page being hidden from the navigation. |  |  |
 | `pageComponents` _[PageComponents](#pagecomponents)_ | pageComponents make up the elements of an HTML page that will be rendered by a web server. |  | Required: \{\} <br /> |
-| `parentPageRef` _[LocalObjectReference](https://kubernetes.io/docs/reference/generated/kubernetes-api/v/#localobjectreference-v1-core)_ | parentPageRef is a reference to the MicroFrontEndRenderPage bellow which this page will appear in the main navigation. If not set, the page will be placed in the top level of the navigation. |  |  |
+| `parentPageRef` _[LocalObjectReference](https://kubernetes.io/docs/reference/generated/kubernetes-api/v/#localobjectreference-v1-core)_ | parentPageRef is a reference to the KDexRenderPage bellow which this page will appear in the main navigation. If not set, the page will be placed in the top level of the navigation. |  |  |
 | `basePath` _string_ | basePath is the shortest path by which the page may be accessed. It must not contain path parameters. This path will be used in site navigation. This path is subject to being prefixed for localization by `/\{l10n\}` and will be when the user selects a non-default language. |  | Pattern: `^/` <br />Required: \{\} <br /> |
 | `patternPath` _string_ | patternPath, which must be prefixed by BasePath, is an extension of basePath that adds pattern matching as defined by https://pkg.go.dev/net/http#hdr-Patterns-ServeMux. This path is subject to being prefixed for localization by `/\{l10n\}` such as when the user selects a non-default language. |  |  |
 | `themeRef` _[LocalObjectReference](https://kubernetes.io/docs/reference/generated/kubernetes-api/v/#localobjectreference-v1-core)_ | themeRef is a reference to the theme that will apply to this render page. |  |  |
@@ -557,30 +557,30 @@ _Appears in:_
 
 
 
-#### MicroFrontEndTranslation
+#### KDexTranslation
 
 
 
-MicroFrontEndTranslation is the Schema for the microfrontendtranslations API
+KDexTranslation is the Schema for the kdextranslations API
 
 
 
 _Appears in:_
-- [MicroFrontEndTranslationList](#microfrontendtranslationlist)
+- [KDexTranslationList](#kdextranslationlist)
 
 | Field | Description | Default | Validation |
 | --- | --- | --- | --- |
 | `apiVersion` _string_ | `kdex.dev/v1alpha1` | | |
-| `kind` _string_ | `MicroFrontEndTranslation` | | |
+| `kind` _string_ | `KDexTranslation` | | |
 | `metadata` _[ObjectMeta](https://kubernetes.io/docs/reference/generated/kubernetes-api/v/#objectmeta-v1-meta)_ | Refer to Kubernetes API documentation for fields of `metadata`. |  |  |
-| `spec` _[MicroFrontEndTranslationSpec](#microfrontendtranslationspec)_ | spec defines the desired state of MicroFrontEndTranslation |  |  |
+| `spec` _[KDexTranslationSpec](#kdextranslationspec)_ | spec defines the desired state of KDexTranslation |  |  |
 
 
-#### MicroFrontEndTranslationList
+#### KDexTranslationList
 
 
 
-MicroFrontEndTranslationList contains a list of MicroFrontEndTranslation
+KDexTranslationList contains a list of KDexTranslation
 
 
 
@@ -589,25 +589,25 @@ MicroFrontEndTranslationList contains a list of MicroFrontEndTranslation
 | Field | Description | Default | Validation |
 | --- | --- | --- | --- |
 | `apiVersion` _string_ | `kdex.dev/v1alpha1` | | |
-| `kind` _string_ | `MicroFrontEndTranslationList` | | |
+| `kind` _string_ | `KDexTranslationList` | | |
 | `metadata` _[ListMeta](https://kubernetes.io/docs/reference/generated/kubernetes-api/v/#listmeta-v1-meta)_ | Refer to Kubernetes API documentation for fields of `metadata`. |  |  |
-| `items` _[MicroFrontEndTranslation](#microfrontendtranslation) array_ |  |  |  |
+| `items` _[KDexTranslation](#kdextranslation) array_ |  |  |  |
 
 
-#### MicroFrontEndTranslationSpec
+#### KDexTranslationSpec
 
 
 
-MicroFrontEndTranslationSpec defines the desired state of MicroFrontEndTranslation
+KDexTranslationSpec defines the desired state of KDexTranslation
 
 
 
 _Appears in:_
-- [MicroFrontEndTranslation](#microfrontendtranslation)
+- [KDexTranslation](#kdextranslation)
 
 | Field | Description | Default | Validation |
 | --- | --- | --- | --- |
-| `hostRef` _[LocalObjectReference](https://kubernetes.io/docs/reference/generated/kubernetes-api/v/#localobjectreference-v1-core)_ | hostRef is a reference to the MicroFrontEndHost that this render page is for. |  | Required: \{\} <br /> |
+| `hostRef` _[LocalObjectReference](https://kubernetes.io/docs/reference/generated/kubernetes-api/v/#localobjectreference-v1-core)_ | hostRef is a reference to the KDexHost that this render page is for. |  | Required: \{\} <br /> |
 | `translations` _[Translation](#translation) array_ | translations is an array of objects where each one specifies a language (lang) and a map (keysAndValues) consisting of key/value pairs. If the lang property is not unique in the array and its keysAndValues map contains the same keys, the last one takes precedence. |  | MinItems: 1 <br />Required: \{\} <br /> |
 
 
@@ -617,7 +617,7 @@ _Appears in:_
 
 
 
-MicroFrontendTheme is the Schema for the microfrontendthemes API
+MicroFrontendTheme is the Schema for the kdexthemes API
 
 
 
@@ -677,8 +677,8 @@ _Appears in:_
 
 
 _Appears in:_
-- [MicroFrontEndPageBindingSpec](#microfrontendpagebindingspec)
-- [MicroFrontEndRenderPageSpec](#microfrontendrenderpagespec)
+- [KDexPageBindingSpec](#kdexpagebindingspec)
+- [KDexRenderPageSpec](#kdexrenderpagespec)
 
 | Field | Description | Default | Validation |
 | --- | --- | --- | --- |
@@ -695,7 +695,7 @@ PackageReference specifies the name and version of an NPM package that contains 
 
 
 _Appears in:_
-- [MicroFrontEndAppSpec](#microfrontendappspec)
+- [KDexAppSpec](#kdexappspec)
 
 | Field | Description | Default | Validation |
 | --- | --- | --- | --- |
@@ -713,7 +713,7 @@ _Appears in:_
 
 
 _Appears in:_
-- [MicroFrontEndRenderPageSpec](#microfrontendrenderpagespec)
+- [KDexRenderPageSpec](#kdexrenderpagespec)
 
 | Field | Description | Default | Validation |
 | --- | --- | --- | --- |
@@ -734,8 +734,8 @@ _Appears in:_
 
 
 _Appears in:_
-- [MicroFrontEndPageBindingSpec](#microfrontendpagebindingspec)
-- [MicroFrontEndRenderPageSpec](#microfrontendrenderpagespec)
+- [KDexPageBindingSpec](#kdexpagebindingspec)
+- [KDexRenderPageSpec](#kdexrenderpagespec)
 
 | Field | Description | Default | Validation |
 | --- | --- | --- | --- |
@@ -770,7 +770,7 @@ _Appears in:_
 
 
 _Appears in:_
-- [MicroFrontEndTranslationSpec](#microfrontendtranslationspec)
+- [KDexTranslationSpec](#kdextranslationspec)
 
 | Field | Description | Default | Validation |
 | --- | --- | --- | --- |

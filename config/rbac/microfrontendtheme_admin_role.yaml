@@ -11,17 +11,17 @@ metadata:
   labels:
     app.kubernetes.io/name: kdex-crds
     app.kubernetes.io/managed-by: kustomize
-  name: microfrontendtheme-admin-role
+  name: kdextheme-admin-role
 rules:
 - apiGroups:
   - kdex.dev
   resources:
-  - microfrontendthemes
+  - kdexthemes
   verbs:
   - '*'
 - apiGroups:
   - kdex.dev
   resources:
-  - microfrontendthemes/status
+  - kdexthemes/status
   verbs:
   - get

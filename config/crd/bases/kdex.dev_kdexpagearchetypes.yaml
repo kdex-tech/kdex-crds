@@ -4,16 +4,16 @@ kind: CustomResourceDefinition
 metadata:
   annotations:
     controller-gen.kubebuilder.io/version: v0.18.0
-  name: kdexhosts.kdex.dev
+  name: kdexpagearchetypes.kdex.dev
 spec:
   group: kdex.dev
   names:
-    kind: KDexHost
-    listKind: KDexHostList
-    plural: kdexhosts
+    kind: KDexPageArchetype
+    listKind: KDexPageArchetypeList
+    plural: kdexpagearchetypes
     shortNames:
-    - mfe-h
-    singular: kdexhost
+    - mfe-pa
+    singular: kdexpagearchetype
   scope: Namespaced
   versions:
   - additionalPrinterColumns:
@@ -24,7 +24,7 @@ spec:
     name: v1alpha1
     schema:
       openAPIV3Schema:
-        description: KDexHost is the Schema for the kdexhosts API
+        description: KDexPageArchetype is the Schema for the kdexpagearchetypes API
         properties:
           apiVersion:
             description: |-
@@ -44,33 +44,23 @@ spec:
           metadata:
             type: object
           spec:
-            description: spec defines the desired state of KDexHost
+            description: spec defines the desired state of KDexPageArchetype
             properties:
-              appPolicy:
-                description: |-
-                  AppPolicy defines the policy for apps.
-                  When the strict policy is enabled, an app may not embed JavaScript dependencies.
-                  Validation of the application source code will fail if dependencies are not fully externalized.
-                  A Host which defines the `script` app policy must not accept apps which do not comply.
-                  While a non-strict Host may accept both strict and non-strict apps.
-                enum:
-                - Strict
-                - NonStrict
-                type: string
-              baseMeta:
-                description: baseMeta is a string containing a base set of meta tags
-                  to use on every page rendered for the host.
+              content:
+                description: content is a go string template that defines the structure
+                  of an HTML page.
+                example: <!DOCTYPE html>\n<html lang="{{ .Language }}">\n  <head>\n    {{
+                  .Meta }}\n    {{ .Title }}\n    {{ .Theme }}\n    {{ .HeadScript
+                  }}\n  </head>\n  <body>\n    <header>\n      {{ .Header }}\n    </header>\n    <nav>\n      {{
+                  .Navigation["main"] }}\n    </nav>\n    <main>\n      {{ .Content["main"]
+                  }}\n    </main>\n    <footer>\n      {{ .Footer }}\n    </footer>\n    {{
+                  .FootScript }}\n  </body>\n</html>
                 minLength: 5
                 type: string
-              defaultLang:
-                description: |-
-                  defaultLang is a string containing a BCP 47 language tag.
-                  See https://developer.mozilla.org/en-US/docs/Glossary/BCP_47_language_tag.
-                  When render page paths do not specify a 'lang' path parameter this will be the value used. When not set the default will be 'en'.
-                type: string
-              defaultThemeRef:
-                description: defaultThemeRef is a reference to the default theme that
-                  should apply to all pages bound to this host.
+              defaultFooterRef:
+                description: defaultFooterRef is an optional reference to a KDexPageFooter
+                  resource. If not specified, no footer will be displayed. Use the
+                  `.Footer` property to position its content in the template.
                 properties:
                   name:
                     default: ""
@@ -83,29 +73,88 @@ spec:
                     type: string
                 type: object
                 x-kubernetes-map-type: atomic
-              domains:
-                description: domains are the names by which this host is addressed.
-                  The first domain listed is the preferred domain. The domains may
-                  contain wildcard prefix in the form '*.'. Longest match always wins.
-                items:
-                  type: string
-                minItems: 1
-                type: array
-              organization:
-                description: organization is the name of the Organization.
-                minLength: 5
-                type: string
+              defaultHeaderRef:
+                description: defaultHeaderRef is an optional reference to a KDexPageHeader
+                  resource. If not specified, no header will be displayed. Use the
+                  `.Header` property to position its content in the template.
+                properties:
+                  name:
+                    default: ""
+                    description: |-
+                      Name of the referent.
+                      This field is effectively required, but due to backwards compatibility is
+                      allowed to be empty. Instances of this type with an empty value here are
+                      almost certainly wrong.
+                      More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#names
+                    type: string
+                type: object
+                x-kubernetes-map-type: atomic
+              defaultMainNavigationRef:
+                description: defaultMainNavigationRef is an optional reference to
+                  a KDexPageNavigation resource. If not specified, no navigation will
+                  be displayed. Use the `.Navigation["main"]` property to position
+                  its content in the template.
+                properties:
+                  name:
+                    default: ""
+                    description: |-
+                      Name of the referent.
+                      This field is effectively required, but due to backwards compatibility is
+                      allowed to be empty. Instances of this type with an empty value here are
+                      almost certainly wrong.
+                      More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#names
+                    type: string
+                type: object
+                x-kubernetes-map-type: atomic
+              extraNavigations:
+                additionalProperties:
+                  description: |-
+                    LocalObjectReference contains enough information to let you locate the
+                    referenced object inside the same namespace.
+                  properties:
+                    name:
+                      default: ""
+                      description: |-
+                        Name of the referent.
+                        This field is effectively required, but due to backwards compatibility is
+                        allowed to be empty. Instances of this type with an empty value here are
+                        almost certainly wrong.
+                        More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#names
+                      type: string
+                  type: object
+                  x-kubernetes-map-type: atomic
+                description: extraNavigations is an optional map of named navigation
+                  object references. Use `.Navigation["<name>"]` to position the named
+                  navigation's content in the template.
+                type: object
+                x-kubernetes-validations:
+                - message: '''main'' is a reserved name for an extra navigation'
+                  rule: '!has(self.main)'
+              overrideThemeRef:
+                description: overrideThemeRef is a reference to the theme that should
+                  apply to all pages that use this archetype. It overrides the default
+                  theme defined on the host.
+                properties:
+                  name:
+                    default: ""
+                    description: |-
+                      Name of the referent.
+                      This field is effectively required, but due to backwards compatibility is
+                      allowed to be empty. Instances of this type with an empty value here are
+                      almost certainly wrong.
+                      More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#names
+                    type: string
+                type: object
+                x-kubernetes-map-type: atomic
             required:
-            - appPolicy
-            - domains
-            - organization
+            - content
             type: object
           status:
-            description: status defines the observed state of KDexHost
+            description: status defines the observed state of KDexPageArchetype
             properties:
               conditions:
                 description: |-
-                  conditions represent the current state of the KDexHost resource.
+                  conditions represent the current state of the KDexPageArchetype resource.
                   Each condition has a unique type and reflects the status of a specific aspect of the resource.
 
                   Standard condition types include:

@@ -20,8 +20,8 @@ import (
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
 
-// MicroFrontEndPageHeaderSpec defines the desired state of MicroFrontEndPageHeader
-type MicroFrontEndPageHeaderSpec struct {
+// KDexPageHeaderSpec defines the desired state of KDexPageHeader
+type KDexPageHeaderSpec struct {
 	// content is a go string template that defines the content of an App Server page header section. Use the `.Header` property to position its content in the template.
 	// +kubebuilder:validation:Required
 	// +kubebuilder:validation:MinLength=5
@@ -29,15 +29,15 @@ type MicroFrontEndPageHeaderSpec struct {
 	Content string `json:"content"`
 }
 
-// MicroFrontEndPageHeaderStatus defines the observed state of MicroFrontEndPageHeader.
-type MicroFrontEndPageHeaderStatus struct {
+// KDexPageHeaderStatus defines the observed state of KDexPageHeader.
+type KDexPageHeaderStatus struct {
 	// INSERT ADDITIONAL STATUS FIELD - define observed state of cluster
 	// Important: Run "make" to regenerate code after modifying this file
 
 	// For Kubernetes API conventions, see:
 	// https://github.com/kubernetes/community/blob/master/contributors/devel/sig-architecture/api-conventions.md#typical-status-properties
 
-	// conditions represent the current state of the MicroFrontEndPageHeader resource.
+	// conditions represent the current state of the KDexPageHeader resource.
 	// Each condition has a unique type and reflects the status of a specific aspect of the resource.
 	//
 	// Standard condition types include:
@@ -56,33 +56,33 @@ type MicroFrontEndPageHeaderStatus struct {
 // +kubebuilder:resource:scope=Namespaced,shortName=mfe-ph
 // +kubebuilder:subresource:status
 
-// MicroFrontEndPageHeader is the Schema for the microfrontendpageheaders API
+// KDexPageHeader is the Schema for the kdexpageheaders API
 // +kubebuilder:printcolumn:name="Ready",type=string,JSONPath=`.status.conditions[?(@.type=="Ready")].status`,description="The state of the Ready condition"
-type MicroFrontEndPageHeader struct {
+type KDexPageHeader struct {
 	metav1.TypeMeta `json:",inline"`
 
 	// metadata is a standard object metadata
 	// +optional
 	metav1.ObjectMeta `json:"metadata,omitempty,omitzero"`
 
-	// spec defines the desired state of MicroFrontEndPageHeader
+	// spec defines the desired state of KDexPageHeader
 	// +kubebuilder:validation:Required
-	Spec MicroFrontEndPageHeaderSpec `json:"spec"`
+	Spec KDexPageHeaderSpec `json:"spec"`
 
-	// status defines the observed state of MicroFrontEndPageHeader
+	// status defines the observed state of KDexPageHeader
 	// +optional
-	Status MicroFrontEndPageHeaderStatus `json:"status,omitempty,omitzero"`
+	Status KDexPageHeaderStatus `json:"status,omitempty,omitzero"`
 }
 
 // +kubebuilder:object:root=true
 
-// MicroFrontEndPageHeaderList contains a list of MicroFrontEndPageHeader
-type MicroFrontEndPageHeaderList struct {
+// KDexPageHeaderList contains a list of KDexPageHeader
+type KDexPageHeaderList struct {
 	metav1.TypeMeta `json:",inline"`
 	metav1.ListMeta `json:"metadata,omitempty"`
-	Items           []MicroFrontEndPageHeader `json:"items"`
+	Items           []KDexPageHeader `json:"items"`
 }
 
 func init() {
-	SchemeBuilder.Register(&MicroFrontEndPageHeader{}, &MicroFrontEndPageHeaderList{})
+	SchemeBuilder.Register(&KDexPageHeader{}, &KDexPageHeaderList{})
 }

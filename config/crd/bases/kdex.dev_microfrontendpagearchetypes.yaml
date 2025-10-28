@@ -4,16 +4,16 @@ kind: CustomResourceDefinition
 metadata:
   annotations:
     controller-gen.kubebuilder.io/version: v0.18.0
-  name: microfrontendpagearchetypes.kdex.dev
+  name: kdexpagearchetypes.kdex.dev
 spec:
   group: kdex.dev
   names:
-    kind: MicroFrontEndPageArchetype
-    listKind: MicroFrontEndPageArchetypeList
-    plural: microfrontendpagearchetypes
+    kind: KDexPageArchetype
+    listKind: KDexPageArchetypeList
+    plural: kdexpagearchetypes
     shortNames:
     - mfe-pa
-    singular: microfrontendpagearchetype
+    singular: kdexpagearchetype
   scope: Namespaced
   versions:
   - additionalPrinterColumns:
@@ -24,7 +24,7 @@ spec:
     name: v1alpha1
     schema:
       openAPIV3Schema:
-        description: MicroFrontEndPageArchetype is the Schema for the microfrontendpagearchetypes
+        description: KDexPageArchetype is the Schema for the kdexpagearchetypes
           API
         properties:
           apiVersion:
@@ -45,7 +45,7 @@ spec:
           metadata:
             type: object
           spec:
-            description: spec defines the desired state of MicroFrontEndPageArchetype
+            description: spec defines the desired state of KDexPageArchetype
             properties:
               content:
                 description: content is a go string template that defines the structure
@@ -59,7 +59,7 @@ spec:
                 minLength: 5
                 type: string
               defaultFooterRef:
-                description: defaultFooterRef is an optional reference to a MicroFrontEndPageFooter
+                description: defaultFooterRef is an optional reference to a KDexPageFooter
                   resource. If not specified, no footer will be displayed. Use the
                   `.Footer` property to position its content in the template.
                 properties:
@@ -75,7 +75,7 @@ spec:
                 type: object
                 x-kubernetes-map-type: atomic
               defaultHeaderRef:
-                description: defaultHeaderRef is an optional reference to a MicroFrontEndPageHeader
+                description: defaultHeaderRef is an optional reference to a KDexPageHeader
                   resource. If not specified, no header will be displayed. Use the
                   `.Header` property to position its content in the template.
                 properties:
@@ -92,7 +92,7 @@ spec:
                 x-kubernetes-map-type: atomic
               defaultMainNavigationRef:
                 description: defaultMainNavigationRef is an optional reference to
-                  a MicroFrontEndPageNavigation resource. If not specified, no navigation
+                  a KDexPageNavigation resource. If not specified, no navigation
                   will be displayed. Use the `.Navigation["main"]` property to position
                   its content in the template.
                 properties:
@@ -151,11 +151,11 @@ spec:
             - content
             type: object
           status:
-            description: status defines the observed state of MicroFrontEndPageArchetype
+            description: status defines the observed state of KDexPageArchetype
             properties:
               conditions:
                 description: |-
-                  conditions represent the current state of the MicroFrontEndPageArchetype resource.
+                  conditions represent the current state of the KDexPageArchetype resource.
                   Each condition has a unique type and reflects the status of a specific aspect of the resource.
 
                   Standard condition types include:

@@ -32,8 +32,8 @@ const (
 	NonStrictAppPolicy AppPolicy = "NonStrict"
 )
 
-// MicroFrontEndHostSpec defines the desired state of MicroFrontEndHost
-type MicroFrontEndHostSpec struct {
+// KDexHostSpec defines the desired state of KDexHost
+type KDexHostSpec struct {
 	// AppPolicy defines the policy for apps.
 	// When the strict policy is enabled, an app may not embed JavaScript dependencies.
 	// Validation of the application source code will fail if dependencies are not fully externalized.
@@ -69,15 +69,15 @@ type MicroFrontEndHostSpec struct {
 	Organization string `json:"organization"`
 }
 
-// MicroFrontEndHostStatus defines the observed state of MicroFrontEndHost.
-type MicroFrontEndHostStatus struct {
+// KDexHostStatus defines the observed state of KDexHost.
+type KDexHostStatus struct {
 	// INSERT ADDITIONAL STATUS FIELD - define observed state of cluster
 	// Important: Run "make" to regenerate code after modifying this file
 
 	// For Kubernetes API conventions, see:
 	// https://github.com/kubernetes/community/blob/master/contributors/devel/sig-architecture/api-conventions.md#typical-status-properties
 
-	// conditions represent the current state of the MicroFrontEndHost resource.
+	// conditions represent the current state of the KDexHost resource.
 	// Each condition has a unique type and reflects the status of a specific aspect of the resource.
 	//
 	// Standard condition types include:
@@ -96,33 +96,33 @@ type MicroFrontEndHostStatus struct {
 // +kubebuilder:resource:scope=Namespaced,shortName=mfe-h
 // +kubebuilder:subresource:status
 
-// MicroFrontEndHost is the Schema for the microfrontendhosts API
+// KDexHost is the Schema for the kdexhosts API
 // +kubebuilder:printcolumn:name="Ready",type=string,JSONPath=`.status.conditions[?(@.type=="Ready")].status`,description="The state of the Ready condition"
-type MicroFrontEndHost struct {
+type KDexHost struct {
 	metav1.TypeMeta `json:",inline"`
 
 	// metadata is a standard object metadata
 	// +optional
 	metav1.ObjectMeta `json:"metadata,omitempty,omitzero"`
 
-	// spec defines the desired state of MicroFrontEndHost
+	// spec defines the desired state of KDexHost
 	// +required
-	Spec MicroFrontEndHostSpec `json:"spec"`
+	Spec KDexHostSpec `json:"spec"`
 
-	// status defines the observed state of MicroFrontEndHost
+	// status defines the observed state of KDexHost
 	// +optional
-	Status MicroFrontEndHostStatus `json:"status,omitempty,omitzero"`
+	Status KDexHostStatus `json:"status,omitempty,omitzero"`
 }
 
 // +kubebuilder:object:root=true
 
-// MicroFrontEndHostList contains a list of MicroFrontEndHost
-type MicroFrontEndHostList struct {
+// KDexHostList contains a list of KDexHost
+type KDexHostList struct {
 	metav1.TypeMeta `json:",inline"`
 	metav1.ListMeta `json:"metadata,omitempty"`
-	Items           []MicroFrontEndHost `json:"items"`
+	Items           []KDexHost `json:"items"`
 }
 
 func init() {
-	SchemeBuilder.Register(&MicroFrontEndHost{}, &MicroFrontEndHostList{})
+	SchemeBuilder.Register(&KDexHost{}, &KDexHostList{})
 }

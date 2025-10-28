@@ -11,12 +11,12 @@ metadata:
   labels:
     app.kubernetes.io/name: kdex-crds
     app.kubernetes.io/managed-by: kustomize
-  name: microfrontendtheme-viewer-role
+  name: kdextheme-viewer-role
 rules:
 - apiGroups:
   - kdex.dev
   resources:
-  - microfrontendthemes
+  - kdexthemes
   verbs:
   - get
   - list
@@ -24,6 +24,6 @@ rules:
 - apiGroups:
   - kdex.dev
   resources:
-  - microfrontendthemes/status
+  - kdexthemes/status
   verbs:
   - get

@@ -11,12 +11,12 @@ metadata:
   labels:
     app.kubernetes.io/name: kdex-crds
     app.kubernetes.io/managed-by: kustomize
-  name: microfrontendpagearchetype-editor-role
+  name: kdexpagearchetype-editor-role
 rules:
 - apiGroups:
   - kdex.dev
   resources:
-  - microfrontendpagearchetypes
+  - kdexpagearchetypes
   verbs:
   - create
   - delete
@@ -28,6 +28,6 @@ rules:
 - apiGroups:
   - kdex.dev
   resources:
-  - microfrontendpagearchetypes/status
+  - kdexpagearchetypes/status
   verbs:
   - get

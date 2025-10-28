@@ -4,16 +4,16 @@ kind: CustomResourceDefinition
 metadata:
   annotations:
     controller-gen.kubebuilder.io/version: v0.18.0
-  name: kdexpagenavigations.kdex.dev
+  name: kdexpagefooters.kdex.dev
 spec:
   group: kdex.dev
   names:
-    kind: KDexPageNavigation
-    listKind: KDexPageNavigationList
-    plural: kdexpagenavigations
+    kind: KDexPageFooter
+    listKind: KDexPageFooterList
+    plural: kdexpagefooters
     shortNames:
-    - mfe-pn
-    singular: kdexpagenavigation
+    - mfe-pf
+    singular: kdexpagefooter
   scope: Namespaced
   versions:
   - additionalPrinterColumns:
@@ -24,8 +24,7 @@ spec:
     name: v1alpha1
     schema:
       openAPIV3Schema:
-        description: KDexPageNavigation is the Schema for the kdexpagenavigations
-          API
+        description: KDexPageFooter is the Schema for the kdexpagefooters API
         properties:
           apiVersion:
             description: |-
@@ -45,30 +44,25 @@ spec:
           metadata:
             type: object
           spec:
-            description: spec defines the desired state of KDexPageNavigation
+            description: spec defines the desired state of KDexPageFooter
             properties:
               content:
                 description: content is a go string template that defines the content
-                  of an App Server page navigation. Use the `.Navigation["<name>"]`
-                  property to position its content in the template.
-                example: '{{- define "menu" -}}\n  <ul>\n    {{- range $label, $value
-                  := . }}\n      <li>\n        {{- if ($value.Path != "") -}}\n          <a
-                  href="{{ $value.Path }}">{{ $label }}</a>\n        {{- else -}}\n          <span>{{
-                  $label }}</span>\n        {{- end -}}\n        {{- if ($value.Children
-                  != nil) -}}\n          {{- template "menu" $value.Children -}}\n        {{-
-                  end -}}\n      </li>\n    {{- end -}}\n  </ul>\n{{- end -}}\n{{-
-                  template "menu" .MenuEntries -}}'
+                  of an App Server page footer section. Use the `.Footer` property
+                  to position its content in the template.
+                example: <small>&copy; {{ .Date.Year() }} {{ .Organization }}. All
+                  Rights Reserved.</small>
                 minLength: 5
                 type: string
             required:
             - content
             type: object
           status:
-            description: status defines the observed state of KDexPageNavigation
+            description: status defines the observed state of KDexPageFooter
             properties:
               conditions:
                 description: |-
-                  conditions represent the current state of the KDexPageNavigation resource.
+                  conditions represent the current state of the KDexPageFooter resource.
                   Each condition has a unique type and reflects the status of a specific aspect of the resource.
 
                   Standard condition types include:

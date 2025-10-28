@@ -11,17 +11,17 @@ metadata:
   labels:
     app.kubernetes.io/name: kdex-crds
     app.kubernetes.io/managed-by: kustomize
-  name: microfrontendpagefooter-admin-role
+  name: kdexpagefooter-admin-role
 rules:
 - apiGroups:
   - kdex.dev
   resources:
-  - microfrontendpagefooters
+  - kdexpagefooters
   verbs:
   - '*'
 - apiGroups:
   - kdex.dev
   resources:
-  - microfrontendpagefooters/status
+  - kdexpagefooters/status
   verbs:
   - get

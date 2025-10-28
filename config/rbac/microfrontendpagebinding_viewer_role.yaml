@@ -11,12 +11,12 @@ metadata:
   labels:
     app.kubernetes.io/name: kdex-crds
     app.kubernetes.io/managed-by: kustomize
-  name: microfrontendpagebinding-viewer-role
+  name: kdexpagebinding-viewer-role
 rules:
 - apiGroups:
   - kdex.dev
   resources:
-  - microfrontendpagebindings
+  - kdexpagebindings
   verbs:
   - get
   - list
@@ -24,6 +24,6 @@ rules:
 - apiGroups:
   - kdex.dev
   resources:
-  - microfrontendpagebindings/status
+  - kdexpagebindings/status
   verbs:
   - get

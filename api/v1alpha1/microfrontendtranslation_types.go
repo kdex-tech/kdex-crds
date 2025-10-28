@@ -25,36 +25,36 @@ import (
 // +kubebuilder:resource:scope=Namespaced,shortName=mfe-t
 // +kubebuilder:subresource:status
 
-// MicroFrontEndTranslation is the Schema for the microfrontendtranslations API
+// KDexTranslation is the Schema for the kdextranslations API
 // +kubebuilder:printcolumn:name="Ready",type=string,JSONPath=`.status.conditions[?(@.type=="Ready")].status`,description="The state of the Ready condition"
-type MicroFrontEndTranslation struct {
+type KDexTranslation struct {
 	metav1.TypeMeta `json:",inline"`
 
 	// metadata is a standard object metadata
 	// +optional
 	metav1.ObjectMeta `json:"metadata,omitempty,omitzero"`
 
-	// spec defines the desired state of MicroFrontEndTranslation
+	// spec defines the desired state of KDexTranslation
 	// +required
-	Spec MicroFrontEndTranslationSpec `json:"spec"`
+	Spec KDexTranslationSpec `json:"spec"`
 
-	// status defines the observed state of MicroFrontEndTranslation
+	// status defines the observed state of KDexTranslation
 	// +optional
-	Status MicroFrontEndTranslationStatus `json:"status,omitempty,omitzero"`
+	Status KDexTranslationStatus `json:"status,omitempty,omitzero"`
 }
 
 // +kubebuilder:object:root=true
 
-// MicroFrontEndTranslationList contains a list of MicroFrontEndTranslation
-type MicroFrontEndTranslationList struct {
+// KDexTranslationList contains a list of KDexTranslation
+type KDexTranslationList struct {
 	metav1.TypeMeta `json:",inline"`
 	metav1.ListMeta `json:"metadata,omitempty"`
-	Items           []MicroFrontEndTranslation `json:"items"`
+	Items           []KDexTranslation `json:"items"`
 }
 
-// MicroFrontEndTranslationSpec defines the desired state of MicroFrontEndTranslation
-type MicroFrontEndTranslationSpec struct {
-	// hostRef is a reference to the MicroFrontEndHost that this render page is for.
+// KDexTranslationSpec defines the desired state of KDexTranslation
+type KDexTranslationSpec struct {
+	// hostRef is a reference to the KDexHost that this render page is for.
 	// +kubebuilder:validation:Required
 	HostRef corev1.LocalObjectReference `json:"hostRef"`
 
@@ -64,12 +64,12 @@ type MicroFrontEndTranslationSpec struct {
 	Translations []Translation `json:"translations"`
 }
 
-// MicroFrontEndTranslationStatus defines the observed state of MicroFrontEndTranslation.
-type MicroFrontEndTranslationStatus struct {
+// KDexTranslationStatus defines the observed state of KDexTranslation.
+type KDexTranslationStatus struct {
 	// For Kubernetes API conventions, see:
 	// https://github.com/kubernetes/community/blob/master/contributors/devel/sig-architecture/api-conventions.md#typical-status-properties
 
-	// conditions represent the current state of the MicroFrontEndTranslation resource.
+	// conditions represent the current state of the KDexTranslation resource.
 	// Each condition has a unique type and reflects the status of a specific aspect of the resource.
 	//
 	// Standard condition types include:
@@ -97,5 +97,5 @@ type Translation struct {
 }
 
 func init() {
-	SchemeBuilder.Register(&MicroFrontEndTranslation{}, &MicroFrontEndTranslationList{})
+	SchemeBuilder.Register(&KDexTranslation{}, &KDexTranslationList{})
 }

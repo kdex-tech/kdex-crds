@@ -11,12 +11,12 @@ metadata:
   labels:
     app.kubernetes.io/name: kdex-crds
     app.kubernetes.io/managed-by: kustomize
-  name: microfrontendtranslation-editor-role
+  name: kdextranslation-editor-role
 rules:
 - apiGroups:
   - kdex.dev
   resources:
-  - microfrontendtranslations
+  - kdextranslations
   verbs:
   - create
   - delete
@@ -28,6 +28,6 @@ rules:
 - apiGroups:
   - kdex.dev
   resources:
-  - microfrontendtranslations/status
+  - kdextranslations/status
   verbs:
   - get

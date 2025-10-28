@@ -11,12 +11,12 @@ metadata:
   labels:
     app.kubernetes.io/name: kdex-crds
     app.kubernetes.io/managed-by: kustomize
-  name: microfrontendpagefooter-editor-role
+  name: kdexpagefooter-editor-role
 rules:
 - apiGroups:
   - kdex.dev
   resources:
-  - microfrontendpagefooters
+  - kdexpagefooters
   verbs:
   - create
   - delete
@@ -28,6 +28,6 @@ rules:
 - apiGroups:
   - kdex.dev
   resources:
-  - microfrontendpagefooters/status
+  - kdexpagefooters/status
   verbs:
   - get

@@ -11,12 +11,12 @@ metadata:
   labels:
     app.kubernetes.io/name: kdex-crds
     app.kubernetes.io/managed-by: kustomize
-  name: microfrontendpagenavigation-editor-role
+  name: kdexpagenavigation-editor-role
 rules:
 - apiGroups:
   - kdex.dev
   resources:
-  - microfrontendpagenavigations
+  - kdexpagenavigations
   verbs:
   - create
   - delete
@@ -28,6 +28,6 @@ rules:
 - apiGroups:
   - kdex.dev
   resources:
-  - microfrontendpagenavigations/status
+  - kdexpagenavigations/status
   verbs:
   - get

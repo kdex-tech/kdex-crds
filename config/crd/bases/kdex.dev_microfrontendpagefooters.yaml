@@ -4,16 +4,16 @@ kind: CustomResourceDefinition
 metadata:
   annotations:
     controller-gen.kubebuilder.io/version: v0.18.0
-  name: microfrontendpagefooters.kdex.dev
+  name: kdexpagefooters.kdex.dev
 spec:
   group: kdex.dev
   names:
-    kind: MicroFrontEndPageFooter
-    listKind: MicroFrontEndPageFooterList
-    plural: microfrontendpagefooters
+    kind: KDexPageFooter
+    listKind: KDexPageFooterList
+    plural: kdexpagefooters
     shortNames:
     - mfe-pf
-    singular: microfrontendpagefooter
+    singular: kdexpagefooter
   scope: Namespaced
   versions:
   - additionalPrinterColumns:
@@ -24,7 +24,7 @@ spec:
     name: v1alpha1
     schema:
       openAPIV3Schema:
-        description: MicroFrontEndPageFooter is the Schema for the microfrontendpagefooters
+        description: KDexPageFooter is the Schema for the kdexpagefooters
           API
         properties:
           apiVersion:
@@ -45,7 +45,7 @@ spec:
           metadata:
             type: object
           spec:
-            description: spec defines the desired state of MicroFrontEndPageFooter
+            description: spec defines the desired state of KDexPageFooter
             properties:
               content:
                 description: content is a go string template that defines the content
@@ -59,11 +59,11 @@ spec:
             - content
             type: object
           status:
-            description: status defines the observed state of MicroFrontEndPageFooter
+            description: status defines the observed state of KDexPageFooter
             properties:
               conditions:
                 description: |-
-                  conditions represent the current state of the MicroFrontEndPageFooter resource.
+                  conditions represent the current state of the KDexPageFooter resource.
                   Each condition has a unique type and reflects the status of a specific aspect of the resource.
 
                   Standard condition types include:

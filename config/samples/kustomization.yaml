@@ -1,13 +1,13 @@
 ## Append samples of your project ##
 resources:
-- v1alpha1_microfrontendapp.yaml
-- v1alpha1_microfrontendpagearchetype.yaml
-- v1alpha1_microfrontendpagebinding.yaml
-- v1alpha1_microfrontendpageheader.yaml
-- v1alpha1_microfrontendpagefooter.yaml
-- v1alpha1_microfrontendpagenavigation.yaml
-- v1alpha1_microfrontendrenderpage.yaml
-- v1alpha1_microfrontendhost.yaml
-- v1alpha1_microfrontendtranslation.yaml
-- v1alpha1_microfrontendtheme.yaml
+- v1alpha1_kdexapp.yaml
+- v1alpha1_kdexpagearchetype.yaml
+- v1alpha1_kdexpagebinding.yaml
+- v1alpha1_kdexpageheader.yaml
+- v1alpha1_kdexpagefooter.yaml
+- v1alpha1_kdexpagenavigation.yaml
+- v1alpha1_kdexrenderpage.yaml
+- v1alpha1_kdexhost.yaml
+- v1alpha1_kdextranslation.yaml
+- v1alpha1_kdextheme.yaml
 # +kubebuilder:scaffold:manifestskustomizesamples

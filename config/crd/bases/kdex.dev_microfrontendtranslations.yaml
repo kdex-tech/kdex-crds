@@ -4,16 +4,16 @@ kind: CustomResourceDefinition
 metadata:
   annotations:
     controller-gen.kubebuilder.io/version: v0.18.0
-  name: microfrontendtranslations.kdex.dev
+  name: kdextranslations.kdex.dev
 spec:
   group: kdex.dev
   names:
-    kind: MicroFrontEndTranslation
-    listKind: MicroFrontEndTranslationList
-    plural: microfrontendtranslations
+    kind: KDexTranslation
+    listKind: KDexTranslationList
+    plural: kdextranslations
     shortNames:
     - mfe-t
-    singular: microfrontendtranslation
+    singular: kdextranslation
   scope: Namespaced
   versions:
   - additionalPrinterColumns:
@@ -24,7 +24,7 @@ spec:
     name: v1alpha1
     schema:
       openAPIV3Schema:
-        description: MicroFrontEndTranslation is the Schema for the microfrontendtranslations
+        description: KDexTranslation is the Schema for the kdextranslations
           API
         properties:
           apiVersion:
@@ -45,10 +45,10 @@ spec:
           metadata:
             type: object
           spec:
-            description: spec defines the desired state of MicroFrontEndTranslation
+            description: spec defines the desired state of KDexTranslation
             properties:
               hostRef:
-                description: hostRef is a reference to the MicroFrontEndHost that
+                description: hostRef is a reference to the KDexHost that
                   this render page is for.
                 properties:
                   name:
@@ -93,11 +93,11 @@ spec:
             - translations
             type: object
           status:
-            description: status defines the observed state of MicroFrontEndTranslation
+            description: status defines the observed state of KDexTranslation
             properties:
               conditions:
                 description: |-
-                  conditions represent the current state of the MicroFrontEndTranslation resource.
+                  conditions represent the current state of the KDexTranslation resource.
                   Each condition has a unique type and reflects the status of a specific aspect of the resource.
 
                   Standard condition types include:

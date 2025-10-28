@@ -13,42 +13,42 @@ resources:
     crdVersion: v1
     namespaced: true
   domain: kdex.dev
-  kind: MicroFrontEndApp
+  kind: KDexApp
   path: kdex.dev/crds/api/v1alpha1
   version: v1alpha1
 - api:
     crdVersion: v1
     namespaced: true
   domain: kdex.dev
-  kind: MicroFrontEndPageArchetype
+  kind: KDexPageArchetype
   path: kdex.dev/crds/api/v1alpha1
   version: v1alpha1
 - api:
     crdVersion: v1
     namespaced: true
   domain: kdex.dev
-  kind: MicroFrontEndPageBinding
+  kind: KDexPageBinding
   path: kdex.dev/crds/api/v1alpha1
   version: v1alpha1
 - api:
     crdVersion: v1
     namespaced: true
   domain: kdex.dev
-  kind: MicroFrontEndPageHeader
+  kind: KDexPageHeader
   path: kdex.dev/crds/api/v1alpha1
   version: v1alpha1
 - api:
     crdVersion: v1
     namespaced: true
   domain: kdex.dev
-  kind: MicroFrontEndPageFooter
+  kind: KDexPageFooter
   path: kdex.dev/crds/api/v1alpha1
   version: v1alpha1
 - api:
     crdVersion: v1
     namespaced: true
   domain: kdex.dev
-  kind: MicroFrontEndPageNavigation
+  kind: KDexPageNavigation
   path: kdex.dev/crds/api/v1alpha1
   version: v1alpha1
 - api:
@@ -56,21 +56,21 @@ resources:
     namespaced: true
   controller: true
   domain: kdex.dev
-  kind: MicroFrontEndRenderPage
+  kind: KDexRenderPage
   path: kdex.dev/crds/api/v1alpha1
   version: v1alpha1
 - api:
     crdVersion: v1
     namespaced: true
   domain: kdex.dev
-  kind: MicroFrontEndHost
+  kind: KDexHost
   path: kdex.dev/crds/api/v1alpha1
   version: v1alpha1
 - api:
     crdVersion: v1
     namespaced: true
   domain: kdex.dev
-  kind: MicroFrontEndTranslation
+  kind: KDexTranslation
   path: kdex.dev/crds/api/v1alpha1
   version: v1alpha1
 - api:

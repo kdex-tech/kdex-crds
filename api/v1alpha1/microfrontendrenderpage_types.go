@@ -21,9 +21,9 @@ import (
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
 
-// MicroFrontEndRenderPageSpec defines the desired state of MicroFrontEndRenderPage
-type MicroFrontEndRenderPageSpec struct {
-	// hostRef is a reference to the MicroFrontEndHost that this render page is for.
+// KDexRenderPageSpec defines the desired state of KDexRenderPage
+type KDexRenderPageSpec struct {
+	// hostRef is a reference to the KDexHost that this render page is for.
 	// +kubebuilder:validation:Required
 	HostRef corev1.LocalObjectReference `json:"hostRef"`
 
@@ -35,7 +35,7 @@ type MicroFrontEndRenderPageSpec struct {
 	// +kubebuilder:validation:Required
 	PageComponents PageComponents `json:"pageComponents"`
 
-	// parentPageRef is a reference to the MicroFrontEndRenderPage bellow which this page will appear in the main navigation. If not set, the page will be placed in the top level of the navigation.
+	// parentPageRef is a reference to the KDexRenderPage bellow which this page will appear in the main navigation. If not set, the page will be placed in the top level of the navigation.
 	// +optional
 	ParentPageRef *corev1.LocalObjectReference `json:"parentPageRef"`
 
@@ -46,15 +46,15 @@ type MicroFrontEndRenderPageSpec struct {
 	StylesheetRef *corev1.LocalObjectReference `json:"themeRef,omitempty"`
 }
 
-// MicroFrontEndRenderPageStatus defines the observed state of MicroFrontEndRenderPage.
-type MicroFrontEndRenderPageStatus struct {
+// KDexRenderPageStatus defines the observed state of KDexRenderPage.
+type KDexRenderPageStatus struct {
 	// INSERT ADDITIONAL STATUS FIELD - define observed state of cluster
 	// Important: Run "make" to regenerate code after modifying this file
 
 	// For Kubernetes API conventions, see:
 	// https://github.com/kubernetes/community/blob/master/contributors/devel/sig-architecture/api-conventions.md#typical-status-properties
 
-	// conditions represent the current state of the MicroFrontEndRenderPage resource.
+	// conditions represent the current state of the KDexRenderPage resource.
 	// Each condition has a unique type and reflects the status of a specific aspect of the resource.
 	//
 	// Standard condition types include:
@@ -73,31 +73,31 @@ type MicroFrontEndRenderPageStatus struct {
 // +kubebuilder:resource:scope=Namespaced,shortName=mfe-rp
 // +kubebuilder:subresource:status
 
-// MicroFrontEndRenderPage is the Schema for the microfrontendrenderpages API
+// KDexRenderPage is the Schema for the kdexrenderpages API
 // +kubebuilder:printcolumn:name="Ready",type=string,JSONPath=`.status.conditions[?(@.type=="Ready")].status`,description="The state of the Ready condition"
-type MicroFrontEndRenderPage struct {
+type KDexRenderPage struct {
 	metav1.TypeMeta `json:",inline"`
 
 	// metadata is a standard object metadata
 	// +optional
 	metav1.ObjectMeta `json:"metadata,omitempty,omitzero"`
 
-	// spec defines the desired state of MicroFrontEndRenderPage
+	// spec defines the desired state of KDexRenderPage
 	// +required
-	Spec MicroFrontEndRenderPageSpec `json:"spec"`
+	Spec KDexRenderPageSpec `json:"spec"`
 
-	// status defines the observed state of MicroFrontEndRenderPage
+	// status defines the observed state of KDexRenderPage
 	// +optional
-	Status MicroFrontEndRenderPageStatus `json:"status,omitempty,omitzero"`
+	Status KDexRenderPageStatus `json:"status,omitempty,omitzero"`
 }
 
 // +kubebuilder:object:root=true
 
-// MicroFrontEndRenderPageList contains a list of MicroFrontEndRenderPage
-type MicroFrontEndRenderPageList struct {
+// KDexRenderPageList contains a list of KDexRenderPage
+type KDexRenderPageList struct {
 	metav1.TypeMeta `json:",inline"`
 	metav1.ListMeta `json:"metadata,omitempty"`
-	Items           []MicroFrontEndRenderPage `json:"items"`
+	Items           []KDexRenderPage `json:"items"`
 }
 
 type PageComponents struct {
@@ -110,5 +110,5 @@ type PageComponents struct {
 }
 
 func init() {
-	SchemeBuilder.Register(&MicroFrontEndRenderPage{}, &MicroFrontEndRenderPageList{})
+	SchemeBuilder.Register(&KDexRenderPage{}, &KDexRenderPageList{})
 }

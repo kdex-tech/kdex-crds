@@ -20,8 +20,8 @@ import (
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
 
-// MicroFrontEndPageNavigationSpec defines the desired state of MicroFrontEndPageNavigation
-type MicroFrontEndPageNavigationSpec struct {
+// KDexPageNavigationSpec defines the desired state of KDexPageNavigation
+type KDexPageNavigationSpec struct {
 	// content is a go string template that defines the content of an App Server page navigation. Use the `.Navigation["<name>"]` property to position its content in the template.
 	// +kubebuilder:validation:Required
 	// +kubebuilder:validation:MinLength=5
@@ -29,15 +29,15 @@ type MicroFrontEndPageNavigationSpec struct {
 	Content string `json:"content"`
 }
 
-// MicroFrontEndPageNavigationStatus defines the observed state of MicroFrontEndPageNavigation.
-type MicroFrontEndPageNavigationStatus struct {
+// KDexPageNavigationStatus defines the observed state of KDexPageNavigation.
+type KDexPageNavigationStatus struct {
 	// INSERT ADDITIONAL STATUS FIELD - define observed state of cluster
 	// Important: Run "make" to regenerate code after modifying this file
 
 	// For Kubernetes API conventions, see:
 	// https://github.com/kubernetes/community/blob/master/contributors/devel/sig-architecture/api-conventions.md#typical-status-properties
 
-	// conditions represent the current state of the MicroFrontEndPageNavigation resource.
+	// conditions represent the current state of the KDexPageNavigation resource.
 	// Each condition has a unique type and reflects the status of a specific aspect of the resource.
 	//
 	// Standard condition types include:
@@ -56,33 +56,33 @@ type MicroFrontEndPageNavigationStatus struct {
 // +kubebuilder:resource:scope=Namespaced,shortName=mfe-pn
 // +kubebuilder:subresource:status
 
-// MicroFrontEndPageNavigation is the Schema for the microfrontendpagenavigations API
+// KDexPageNavigation is the Schema for the kdexpagenavigations API
 // +kubebuilder:printcolumn:name="Ready",type=string,JSONPath=`.status.conditions[?(@.type=="Ready")].status`,description="The state of the Ready condition"
-type MicroFrontEndPageNavigation struct {
+type KDexPageNavigation struct {
 	// metadata is a standard object metadata
 	// +optional
 	metav1.ObjectMeta `json:"metadata,omitempty,omitzero"`
 
-	// spec defines the desired state of MicroFrontEndPageNavigation
+	// spec defines the desired state of KDexPageNavigation
 	// +kubebuilder:validation:Required
-	Spec MicroFrontEndPageNavigationSpec `json:"spec"`
+	Spec KDexPageNavigationSpec `json:"spec"`
 
-	// status defines the observed state of MicroFrontEndPageNavigation
+	// status defines the observed state of KDexPageNavigation
 	// +optional
-	Status MicroFrontEndPageNavigationStatus `json:"status,omitempty,omitzero"`
+	Status KDexPageNavigationStatus `json:"status,omitempty,omitzero"`
 
 	metav1.TypeMeta `json:",inline"`
 }
 
 // +kubebuilder:object:root=true
 
-// MicroFrontEndPageNavigationList contains a list of MicroFrontEndPageNavigation
-type MicroFrontEndPageNavigationList struct {
+// KDexPageNavigationList contains a list of KDexPageNavigation
+type KDexPageNavigationList struct {
 	metav1.TypeMeta `json:",inline"`
 	metav1.ListMeta `json:"metadata,omitempty"`
-	Items           []MicroFrontEndPageNavigation `json:"items"`
+	Items           []KDexPageNavigation `json:"items"`
 }
 
 func init() {
-	SchemeBuilder.Register(&MicroFrontEndPageNavigation{}, &MicroFrontEndPageNavigationList{})
+	SchemeBuilder.Register(&KDexPageNavigation{}, &KDexPageNavigationList{})
 }

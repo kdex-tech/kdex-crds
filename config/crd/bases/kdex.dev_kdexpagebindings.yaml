@@ -24,8 +24,7 @@ spec:
     name: v1alpha1
     schema:
       openAPIV3Schema:
-        description: KDexPageBinding is the Schema for the kdexpagebindings
-          API
+        description: KDexPageBinding is the Schema for the kdexpagebindings API
         properties:
           apiVersion:
             description: |-
@@ -57,13 +56,12 @@ spec:
                 type: string
               contentEntries:
                 description: contentEntries is a set of content entries to bind to
-                  this page. They may be either raw HTML fragments or KDexApp
-                  references.
+                  this page. They may be either raw HTML fragments or KDexApp references.
                 items:
                   properties:
                     appRef:
-                      description: appRef is a reference to the KDexApp to
-                        include in this binding.
+                      description: appRef is a reference to the KDexApp to include
+                        in this binding.
                       properties:
                         name:
                           default: ""
@@ -77,9 +75,9 @@ spec:
                       type: object
                       x-kubernetes-map-type: atomic
                     customElementName:
-                      description: customElementName is the name of the KDexApp
-                        custom element to render in the specified slot (if present
-                        in the template).
+                      description: customElementName is the name of the KDexApp custom
+                        element to render in the specified slot (if present in the
+                        template).
                       type: string
                     rawHTML:
                       description: rawHTML is a raw HTML string to be rendered in
@@ -102,8 +100,8 @@ spec:
                 - message: if there are multiple entries, one must be 'main'
                   rule: self.size() <= 1 || self.exists(x, x.slot == 'main')
               hostRef:
-                description: hostRef is a reference to the KDexHost that
-                  this binding is for.
+                description: hostRef is a reference to the KDexHost that this binding
+                  is for.
                 properties:
                   name:
                     default: ""
@@ -173,8 +171,8 @@ spec:
                 x-kubernetes-map-type: atomic
               overrideMainNavigationRef:
                 description: overrideMainNavigationRef is an optional reference to
-                  a KDexPageNavigation resource. If not specified, the main
-                  navigation from the archetype will be used.
+                  a KDexPageNavigation resource. If not specified, the main navigation
+                  from the archetype will be used.
                 properties:
                   name:
                     default: ""
@@ -203,9 +201,9 @@ spec:
                 type: object
                 x-kubernetes-map-type: atomic
               parentPageRef:
-                description: parentPageRef is a reference to the KDexPageBinding
-                  bellow which this page will appear in the main navigation. If not
-                  set, the page will be placed in the top level of the navigation.
+                description: parentPageRef is a reference to the KDexPageBinding bellow
+                  which this page will appear in the main navigation. If not set,
+                  the page will be placed in the top level of the navigation.
                 properties:
                   name:
                     default: ""

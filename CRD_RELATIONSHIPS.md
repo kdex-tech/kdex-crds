@@ -4,32 +4,32 @@ See [CRD_REFERENCE.md](CRD_REFERENCE.md) for reference documentation.
 
 ```mermaid
 erDiagram
-    MicroFrontEndHost ||--o{ MicroFrontEndPageBinding : "hosts"
-    MicroFrontEndHost ||--o{ MicroFrontEndRenderPage : "hosts"
-    MicroFrontEndHost ||--o{ MicroFrontEndTranslation : "hosts"
-    MicroFrontEndHost ||--o{ MicroFrontendTheme : "default theme"
+    KDexHost ||--o{ KDexPageBinding : "hosts"
+    KDexHost ||--o{ KDexRenderPage : "hosts"
+    KDexHost ||--o{ KDexTranslation : "hosts"
+    KDexHost ||--o{ MicroFrontendTheme : "default theme"
 
-    MicroFrontEndPageArchetype ||--o{ MicroFrontEndPageBinding : "archetype"
-    MicroFrontEndPageArchetype ||--o{ MicroFrontEndPageFooter : "default footer"
-    MicroFrontEndPageArchetype ||--o{ MicroFrontEndPageHeader : "default header"
-    MicroFrontEndPageArchetype ||--o{ MicroFrontEndPageNavigation : "default navigation"
-    MicroFrontEndPageArchetype ||--o{ MicroFrontendTheme : "override theme"
+    KDexPageArchetype ||--o{ KDexPageBinding : "archetype"
+    KDexPageArchetype ||--o{ KDexPageFooter : "default footer"
+    KDexPageArchetype ||--o{ KDexPageHeader : "default header"
+    KDexPageArchetype ||--o{ KDexPageNavigation : "default navigation"
+    KDexPageArchetype ||--o{ MicroFrontendTheme : "override theme"
 
-    MicroFrontEndPageBinding ||--o{ MicroFrontEndApp : "uses"
-    MicroFrontEndPageBinding ||--o{ MicroFrontEndPageFooter : "override footer"
-    MicroFrontEndPageBinding ||--o{ MicroFrontEndPageHeader : "override header"
-    MicroFrontEndPageBinding ||--o{ MicroFrontEndPageNavigation : "override navigation"
-    MicroFrontEndPageBinding ||--o{ MicroFrontEndPageBinding : "parent page"
+    KDexPageBinding ||--o{ KDexApp : "uses"
+    KDexPageBinding ||--o{ KDexPageFooter : "override footer"
+    KDexPageBinding ||--o{ KDexPageHeader : "override header"
+    KDexPageBinding ||--o{ KDexPageNavigation : "override navigation"
+    KDexPageBinding ||--o{ KDexPageBinding : "parent page"
 
-    MicroFrontEndRenderPage ||--o{ MicroFrontEndRenderPage : "parent page"
+    KDexRenderPage ||--o{ KDexRenderPage : "parent page"
 
-    MicroFrontEndApp {
+    KDexApp {
         string name
         string description
         string packageReference
     }
 
-    MicroFrontEndHost {
+    KDexHost {
         string appPolicy
         string baseMeta
         string defaultLang
@@ -37,28 +37,28 @@ erDiagram
         string organization
     }
 
-    MicroFrontEndPageArchetype {
+    KDexPageArchetype {
         string content
     }
 
-    MicroFrontEndPageBinding {
+    KDexPageBinding {
         string label
         string path
     }
 
-    MicroFrontEndPageFooter {
+    KDexPageFooter {
         string content
     }
 
-    MicroFrontEndPageHeader {
+    KDexPageHeader {
         string content
     }
 
-    MicroFrontEndPageNavigation {
+    KDexPageNavigation {
         string content
     }
 
-    MicroFrontEndRenderPage {
+    KDexRenderPage {
         string path
     }
 
@@ -66,7 +66,7 @@ erDiagram
         string styleItems
     }
 
-    MicroFrontEndTranslation {
+    KDexTranslation {
         string translations
     }
 ```

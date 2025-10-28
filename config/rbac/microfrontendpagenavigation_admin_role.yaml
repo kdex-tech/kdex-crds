@@ -11,17 +11,17 @@ metadata:
   labels:
     app.kubernetes.io/name: kdex-crds
     app.kubernetes.io/managed-by: kustomize
-  name: microfrontendpagenavigation-admin-role
+  name: kdexpagenavigation-admin-role
 rules:
 - apiGroups:
   - kdex.dev
   resources:
-  - microfrontendpagenavigations
+  - kdexpagenavigations
   verbs:
   - '*'
 - apiGroups:
   - kdex.dev
   resources:
-  - microfrontendpagenavigations/status
+  - kdexpagenavigations/status
   verbs:
   - get

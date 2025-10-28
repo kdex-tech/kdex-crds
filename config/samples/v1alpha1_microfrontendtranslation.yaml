@@ -1,10 +1,10 @@
 apiVersion: kdex.dev/v1alpha1
-kind: MicroFrontEndTranslation
+kind: KDexTranslation
 metadata:
   labels:
     app.kubernetes.io/name: kdex-crds
     app.kubernetes.io/managed-by: kustomize
-  name: microfrontendtranslation-sample
+  name: kdextranslation-sample
 spec:
   hostRef:
     name: sample-host

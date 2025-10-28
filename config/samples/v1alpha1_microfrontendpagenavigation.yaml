@@ -1,5 +1,5 @@
 apiVersion: kdex.dev/v1alpha1
-kind: MicroFrontEndPageNavigation
+kind: KDexPageNavigation
 metadata:
   labels:
     app.kubernetes.io/name: kdex-crds

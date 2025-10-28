@@ -4,16 +4,16 @@ kind: CustomResourceDefinition
 metadata:
   annotations:
     controller-gen.kubebuilder.io/version: v0.18.0
-  name: kdexhosts.kdex.dev
+  name: kdexrenderpages.kdex.dev
 spec:
   group: kdex.dev
   names:
-    kind: KDexHost
-    listKind: KDexHostList
-    plural: kdexhosts
+    kind: KDexRenderPage
+    listKind: KDexRenderPageList
+    plural: kdexrenderpages
     shortNames:
-    - mfe-h
-    singular: kdexhost
+    - mfe-rp
+    singular: kdexrenderpage
   scope: Namespaced
   versions:
   - additionalPrinterColumns:
@@ -24,7 +24,7 @@ spec:
     name: v1alpha1
     schema:
       openAPIV3Schema:
-        description: KDexHost is the Schema for the kdexhosts API
+        description: KDexRenderPage is the Schema for the kdexrenderpages API
         properties:
           apiVersion:
             description: |-
@@ -44,33 +44,19 @@ spec:
           metadata:
             type: object
           spec:
-            description: spec defines the desired state of KDexHost
+            description: spec defines the desired state of KDexRenderPage
             properties:
-              appPolicy:
-                description: |-
-                  AppPolicy defines the policy for apps.
-                  When the strict policy is enabled, an app may not embed JavaScript dependencies.
-                  Validation of the application source code will fail if dependencies are not fully externalized.
-                  A Host which defines the `script` app policy must not accept apps which do not comply.
-                  While a non-strict Host may accept both strict and non-strict apps.
-                enum:
-                - Strict
-                - NonStrict
+              basePath:
+                description: basePath is the shortest path by which the page may be
+                  accessed. It must not contain path parameters. This path will be
+                  used in site navigation. This path is subject to being prefixed
+                  for localization by `/{l10n}` and will be when the user selects
+                  a non-default language.
+                pattern: ^/
                 type: string
-              baseMeta:
-                description: baseMeta is a string containing a base set of meta tags
-                  to use on every page rendered for the host.
-                minLength: 5
-                type: string
-              defaultLang:
-                description: |-
-                  defaultLang is a string containing a BCP 47 language tag.
-                  See https://developer.mozilla.org/en-US/docs/Glossary/BCP_47_language_tag.
-                  When render page paths do not specify a 'lang' path parameter this will be the value used. When not set the default will be 'en'.
-                type: string
-              defaultThemeRef:
-                description: defaultThemeRef is a reference to the default theme that
-                  should apply to all pages bound to this host.
+              hostRef:
+                description: hostRef is a reference to the KDexHost that this render
+                  page is for.
                 properties:
                   name:
                     default: ""
@@ -83,29 +69,103 @@ spec:
                     type: string
                 type: object
                 x-kubernetes-map-type: atomic
-              domains:
-                description: domains are the names by which this host is addressed.
-                  The first domain listed is the preferred domain. The domains may
-                  contain wildcard prefix in the form '*.'. Longest match always wins.
-                items:
-                  type: string
-                minItems: 1
-                type: array
-              organization:
-                description: organization is the name of the Organization.
-                minLength: 5
+              navigationHints:
+                description: navigationHints are optional navigation properties that
+                  if omitted result in the page being hidden from the navigation.
+                properties:
+                  icon:
+                    description: icon is the name of the icon to display next to the
+                      menu entry for this page.
+                    type: string
+                  weight:
+                    anyOf:
+                    - type: integer
+                    - type: string
+                    description: weight is a property that influences the position
+                      of the page menu entry. Items at each level are sorted first
+                      by ascending weight and then ascending lexicographically.
+                    pattern: ^(\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))(([KMGTPE]i)|[numkMGTPE]|([eE](\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))))?$
+                    x-kubernetes-int-or-string: true
+                type: object
+              pageComponents:
+                description: pageComponents make up the elements of an HTML page that
+                  will be rendered by a web server.
+                properties:
+                  contents:
+                    additionalProperties:
+                      type: string
+                    type: object
+                  footer:
+                    type: string
+                  header:
+                    type: string
+                  navigations:
+                    additionalProperties:
+                      type: string
+                    type: object
+                  primaryTemplate:
+                    type: string
+                  title:
+                    type: string
+                required:
+                - contents
+                - footer
+                - header
+                - navigations
+                - primaryTemplate
+                - title
+                type: object
+              parentPageRef:
+                description: parentPageRef is a reference to the KDexRenderPage bellow
+                  which this page will appear in the main navigation. If not set,
+                  the page will be placed in the top level of the navigation.
+                properties:
+                  name:
+                    default: ""
+                    description: |-
+                      Name of the referent.
+                      This field is effectively required, but due to backwards compatibility is
+                      allowed to be empty. Instances of this type with an empty value here are
+                      almost certainly wrong.
+                      More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#names
+                    type: string
+                type: object
+                x-kubernetes-map-type: atomic
+              patternPath:
+                description: patternPath, which must be prefixed by BasePath, is an
+                  extension of basePath that adds pattern matching as defined by https://pkg.go.dev/net/http#hdr-Patterns-ServeMux.
+                  This path is subject to being prefixed for localization by `/{l10n}`
+                  such as when the user selects a non-default language.
                 type: string
+              themeRef:
+                description: themeRef is a reference to the theme that will apply
+                  to this render page.
+                properties:
+                  name:
+                    default: ""
+                    description: |-
+                      Name of the referent.
+                      This field is effectively required, but due to backwards compatibility is
+                      allowed to be empty. Instances of this type with an empty value here are
+                      almost certainly wrong.
+                      More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#names
+                    type: string
+                type: object
+                x-kubernetes-map-type: atomic
             required:
-            - appPolicy
-            - domains
-            - organization
+            - basePath
+            - hostRef
+            - pageComponents
             type: object
+            x-kubernetes-validations:
+            - message: if patternPath is specified, basePath must be a prefix of patternPath
+              rule: '!has(self.patternPath) || self.patternPath.startsWith(self.basePath)'
           status:
-            description: status defines the observed state of KDexHost
+            description: status defines the observed state of KDexRenderPage
             properties:
               conditions:
                 description: |-
-                  conditions represent the current state of the KDexHost resource.
+                  conditions represent the current state of the KDexRenderPage resource.
                   Each condition has a unique type and reflects the status of a specific aspect of the resource.
 
                   Standard condition types include:

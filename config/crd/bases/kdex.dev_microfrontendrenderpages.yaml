@@ -4,16 +4,16 @@ kind: CustomResourceDefinition
 metadata:
   annotations:
     controller-gen.kubebuilder.io/version: v0.18.0
-  name: microfrontendrenderpages.kdex.dev
+  name: kdexrenderpages.kdex.dev
 spec:
   group: kdex.dev
   names:
-    kind: MicroFrontEndRenderPage
-    listKind: MicroFrontEndRenderPageList
-    plural: microfrontendrenderpages
+    kind: KDexRenderPage
+    listKind: KDexRenderPageList
+    plural: kdexrenderpages
     shortNames:
     - mfe-rp
-    singular: microfrontendrenderpage
+    singular: kdexrenderpage
   scope: Namespaced
   versions:
   - additionalPrinterColumns:
@@ -24,7 +24,7 @@ spec:
     name: v1alpha1
     schema:
       openAPIV3Schema:
-        description: MicroFrontEndRenderPage is the Schema for the microfrontendrenderpages
+        description: KDexRenderPage is the Schema for the kdexrenderpages
           API
         properties:
           apiVersion:
@@ -45,7 +45,7 @@ spec:
           metadata:
             type: object
           spec:
-            description: spec defines the desired state of MicroFrontEndRenderPage
+            description: spec defines the desired state of KDexRenderPage
             properties:
               basePath:
                 description: basePath is the shortest path by which the page may be
@@ -56,7 +56,7 @@ spec:
                 pattern: ^/
                 type: string
               hostRef:
-                description: hostRef is a reference to the MicroFrontEndHost that
+                description: hostRef is a reference to the KDexHost that
                   this render page is for.
                 properties:
                   name:
@@ -117,7 +117,7 @@ spec:
                 - title
                 type: object
               parentPageRef:
-                description: parentPageRef is a reference to the MicroFrontEndRenderPage
+                description: parentPageRef is a reference to the KDexRenderPage
                   bellow which this page will appear in the main navigation. If not
                   set, the page will be placed in the top level of the navigation.
                 properties:
@@ -162,11 +162,11 @@ spec:
             - message: if patternPath is specified, basePath must be a prefix of patternPath
               rule: '!has(self.patternPath) || self.patternPath.startsWith(self.basePath)'
           status:
-            description: status defines the observed state of MicroFrontEndRenderPage
+            description: status defines the observed state of KDexRenderPage
             properties:
               conditions:
                 description: |-
-                  conditions represent the current state of the MicroFrontEndRenderPage resource.
+                  conditions represent the current state of the KDexRenderPage resource.
                   Each condition has a unique type and reflects the status of a specific aspect of the resource.
 
                   Standard condition types include:

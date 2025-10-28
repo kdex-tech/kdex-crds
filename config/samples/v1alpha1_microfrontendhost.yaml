@@ -1,5 +1,5 @@
 apiVersion: kdex.dev/v1alpha1
-kind: MicroFrontEndHost
+kind: KDexHost
 metadata:
   labels:
     app.kubernetes.io/name: kdex-crds

@@ -20,17 +20,17 @@ ignoreWords:
   - LOCALBIN
   - manifestskustomizesamples
   - metav
-  - microfrontendapp
-  - microfrontendapps
-  - microfrontendpagearchetype
-  - microfrontendpagearchetypes
-  - microfrontendpagebinding
-  - microfrontendpagebindings
-  - microfrontendpagefooter
-  - microfrontendpageheader
-  - microfrontendpageheaders
-  - microfrontendpagenavigation
-  - microfrontendpagenavigations
+  - kdexapp
+  - kdexapps
+  - kdexpagearchetype
+  - kdexpagearchetypes
+  - kdexpagebinding
+  - kdexpagebindings
+  - kdexpagefooter
+  - kdexpageheader
+  - kdexpageheaders
+  - kdexpagenavigation
+  - kdexpagenavigations
   - Navigations
   - numkMGTPE
   - pipefail

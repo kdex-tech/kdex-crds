@@ -11,12 +11,12 @@ metadata:
   labels:
     app.kubernetes.io/name: kdex-crds
     app.kubernetes.io/managed-by: kustomize
-  name: microfrontendtheme-editor-role
+  name: kdextheme-editor-role
 rules:
 - apiGroups:
   - kdex.dev
   resources:
-  - microfrontendthemes
+  - kdexthemes
   verbs:
   - create
   - delete
@@ -28,6 +28,6 @@ rules:
 - apiGroups:
   - kdex.dev
   resources:
-  - microfrontendthemes/status
+  - kdexthemes/status
   verbs:
   - get

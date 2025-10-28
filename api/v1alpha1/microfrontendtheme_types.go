@@ -68,7 +68,7 @@ type MicroFrontendThemeStatus struct {
 // +kubebuilder:resource:scope=Namespaced,shortName=mfe-th
 // +kubebuilder:subresource:status
 
-// MicroFrontendTheme is the Schema for the microfrontendthemes API
+// MicroFrontendTheme is the Schema for the kdexthemes API
 // +kubebuilder:printcolumn:name="Ready",type=string,JSONPath=`.status.conditions[?(@.type=="Ready")].status`,description="The state of the Ready condition"
 type MicroFrontendTheme struct {
 	metav1.TypeMeta `json:",inline"`

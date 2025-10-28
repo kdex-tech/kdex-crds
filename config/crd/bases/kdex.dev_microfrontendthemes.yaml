@@ -24,8 +24,7 @@ spec:
     name: v1alpha1
     schema:
       openAPIV3Schema:
-        description: MicroFrontendTheme is the Schema for the microfrontendthemes
-          API
+        description: MicroFrontendTheme is the Schema for the kdexthemes API
         properties:
           apiVersion:
             description: |-
