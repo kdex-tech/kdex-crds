@@ -51,7 +51,7 @@ spec:
                 description: content is a go string template that defines the structure
                   of an HTML page.
                 example: <!DOCTYPE html>\n<html lang="{{ .Language }}">\n  <head>\n    {{
-                  .Meta }}\n    {{ .Title }}\n    {{ .Stylesheet }}\n    {{ .HeadScript
+                  .Meta }}\n    {{ .Title }}\n    {{ .Theme }}\n    {{ .HeadScript
                   }}\n  </head>\n  <body>\n    <header>\n      {{ .Header }}\n    </header>\n    <nav>\n      {{
                   .Navigation["main"] }}\n    </nav>\n    <main>\n      {{ .Content["main"]
                   }}\n    </main>\n    <footer>\n      {{ .Footer }}\n    </footer>\n    {{
@@ -131,10 +131,10 @@ spec:
                 x-kubernetes-validations:
                 - message: '''main'' is a reserved name for an extra navigation'
                   rule: '!has(self.main)'
-              overrideStylesheetRef:
-                description: overrideStylesheetRef is a reference to the stylesheet
-                  that should apply to all pages that use this archetype. It overrides
-                  the default stylesheet defined on the host.
+              overrideThemeRef:
+                description: overrideThemeRef is a reference to the theme that should
+                  apply to all pages that use this archetype. It overrides the default
+                  theme defined on the host.
                 properties:
                   name:
                     default: ""

@@ -68,8 +68,8 @@ func init() {
 				Weight: resource.MustParse("3"),
 			},
 		},
-		Stylesheet: `<style>body {color: red;}</style>`,
-		Title:      "name",
+		Theme: `<style>body {color: red;}</style>`,
+		Title: "name",
 	}
 
 	contents := map[string]htmltemplate.HTML{}

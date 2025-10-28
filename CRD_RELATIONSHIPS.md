@@ -7,13 +7,13 @@ erDiagram
     MicroFrontEndHost ||--o{ MicroFrontEndPageBinding : "hosts"
     MicroFrontEndHost ||--o{ MicroFrontEndRenderPage : "hosts"
     MicroFrontEndHost ||--o{ MicroFrontEndTranslation : "hosts"
-    MicroFrontEndHost ||--o{ MicroFrontEndStylesheet : "default stylesheet"
+    MicroFrontEndHost ||--o{ MicroFrontendTheme : "default stylesheet"
 
     MicroFrontEndPageArchetype ||--o{ MicroFrontEndPageBinding : "archetype"
     MicroFrontEndPageArchetype ||--o{ MicroFrontEndPageFooter : "default footer"
     MicroFrontEndPageArchetype ||--o{ MicroFrontEndPageHeader : "default header"
     MicroFrontEndPageArchetype ||--o{ MicroFrontEndPageNavigation : "default navigation"
-    MicroFrontEndPageArchetype ||--o{ MicroFrontEndStylesheet : "override stylesheet"
+    MicroFrontEndPageArchetype ||--o{ MicroFrontendTheme : "override stylesheet"
 
     MicroFrontEndPageBinding ||--o{ MicroFrontEndApp : "uses"
     MicroFrontEndPageBinding ||--o{ MicroFrontEndPageFooter : "override footer"
@@ -62,7 +62,7 @@ erDiagram
         string path
     }
 
-    MicroFrontEndStylesheet {
+    MicroFrontendTheme {
         string styleItems
     }
 

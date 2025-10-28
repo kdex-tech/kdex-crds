@@ -52,11 +52,11 @@ func (r *Renderer) RenderPage(page Page) (string, error) {
 	}
 	templateData.Meta = template.HTML(metaOutput)
 
-	stylesheetOutput, err := r.RenderOne(fmt.Sprintf("%s-stylesheet", page.TemplateName), r.StyleItemsToString(), templateData)
+	themeOutput, err := r.RenderOne(fmt.Sprintf("%s-theme", page.TemplateName), r.ThemeItemsToString(), templateData)
 	if err != nil {
 		return "", err
 	}
-	templateData.Stylesheet = template.HTML(stylesheetOutput)
+	templateData.Theme = template.HTML(themeOutput)
 
 	//
 	// Content and Navigation
@@ -136,10 +136,10 @@ func (r *Renderer) RenderOne(
 	return buf.String(), nil
 }
 
-func (h *Renderer) StyleItemsToString() string {
+func (h *Renderer) ThemeItemsToString() string {
 	var styleBuffer bytes.Buffer
 
-	for _, item := range h.StyleItems {
+	for _, item := range h.ThemeItems {
 		if item.LinkHref != "" {
 			styleBuffer.WriteString(`<link`)
 			for key, value := range item.Attributes {

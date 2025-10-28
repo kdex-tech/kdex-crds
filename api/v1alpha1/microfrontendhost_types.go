@@ -53,9 +53,9 @@ type MicroFrontEndHostSpec struct {
 	// +optional
 	DefaultLang string `json:"defaultLang,omitempty"`
 
-	// defaultStylesheetRef is a reference to the default stylesheet that should apply to all pages bound to this host.
+	// defaultThemeRef is a reference to the default theme that should apply to all pages bound to this host.
 	// +optional
-	DefaultStylesheetRef *corev1.LocalObjectReference `json:"defaultStylesheetRef,omitempty"`
+	DefaultThemeRef *corev1.LocalObjectReference `json:"defaultThemeRef,omitempty"`
 
 	// domains are the names by which this host is addressed. The first domain listed is the preferred domain. The domains may contain wildcard prefix in the form '*.'. Longest match always wins.
 	// +kubebuilder:validation:Required

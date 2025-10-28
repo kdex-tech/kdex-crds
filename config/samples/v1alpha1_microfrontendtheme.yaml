@@ -1,10 +1,10 @@
 apiVersion: kdex.dev/v1alpha1
-kind: MicroFrontEndStylesheet
+kind: MicroFrontendTheme
 metadata:
   labels:
     app.kubernetes.io/name: kdex-crds
     app.kubernetes.io/managed-by: kustomize
-  name: microfrontendstylesheet-sample
+  name: microfrontendtheme-sample
 spec:
   styleItems:
     - attributes:

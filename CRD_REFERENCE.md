@@ -25,10 +25,10 @@ Package v1alpha1 contains API Schema definitions for the  v1alpha1 API group.
 - [MicroFrontEndPageNavigationList](#microfrontendpagenavigationlist)
 - [MicroFrontEndRenderPage](#microfrontendrenderpage)
 - [MicroFrontEndRenderPageList](#microfrontendrenderpagelist)
-- [MicroFrontEndStylesheet](#microfrontendstylesheet)
-- [MicroFrontEndStylesheetList](#microfrontendstylesheetlist)
 - [MicroFrontEndTranslation](#microfrontendtranslation)
 - [MicroFrontEndTranslationList](#microfrontendtranslationlist)
+- [MicroFrontendTheme](#microfrontendtheme)
+- [MicroFrontendThemeList](#microfrontendthemelist)
 
 
 
@@ -67,8 +67,8 @@ _Appears in:_
 
 | Field | Description | Default | Validation |
 | --- | --- | --- | --- |
-| `customElementName` _string_ | customElementName is the name of the MicroFrontEndApp custom element to render in the specified slot (if present in the template). |  |  |
 | `appRef` _[LocalObjectReference](https://kubernetes.io/docs/reference/generated/kubernetes-api/v/#localobjectreference-v1-core)_ | appRef is a reference to the MicroFrontEndApp to include in this binding. |  |  |
+| `customElementName` _string_ | customElementName is the name of the MicroFrontEndApp custom element to render in the specified slot (if present in the template). |  |  |
 | `rawHTML` _string_ | rawHTML is a raw HTML string to be rendered in the specified slot (if present in the template). |  |  |
 | `slot` _string_ | slot is the name of the App slot to which this entry will be bound. If omitted, the slot used will be `main`. No more than one entry can be bound to a slot. |  |  |
 
@@ -199,7 +199,7 @@ _Appears in:_
 | `appPolicy` _[AppPolicy](#apppolicy)_ | AppPolicy defines the policy for apps.<br />When the strict policy is enabled, an app may not embed JavaScript dependencies.<br />Validation of the application source code will fail if dependencies are not fully externalized.<br />A Host which defines the `script` app policy must not accept apps which do not comply.<br />While a non-strict Host may accept both strict and non-strict apps. |  | Enum: [Strict NonStrict] <br />Required: \{\} <br /> |
 | `baseMeta` _string_ | baseMeta is a string containing a base set of meta tags to use on every page rendered for the host. |  | MinLength: 5 <br /> |
 | `defaultLang` _string_ | defaultLang is a string containing a BCP 47 language tag.<br />See https://developer.mozilla.org/en-US/docs/Glossary/BCP_47_language_tag.<br />When render page paths do not specify a 'lang' path parameter this will be the value used. When not set the default will be 'en'. |  |  |
-| `defaultStylesheetRef` _[LocalObjectReference](https://kubernetes.io/docs/reference/generated/kubernetes-api/v/#localobjectreference-v1-core)_ | defaultStylesheetRef is a reference to the default stylesheet that should apply to all pages bound to this host. |  |  |
+| `defaultThemeRef` _[LocalObjectReference](https://kubernetes.io/docs/reference/generated/kubernetes-api/v/#localobjectreference-v1-core)_ | defaultThemeRef is a reference to the default theme that should apply to all pages bound to this host. |  |  |
 | `domains` _string array_ | domains are the names by which this host is addressed. The first domain listed is the preferred domain. The domains may contain wildcard prefix in the form '*.'. Longest match always wins. |  | MinItems: 1 <br />Required: \{\} <br /> |
 | `organization` _string_ | organization is the name of the Organization. |  | MinLength: 5 <br />Required: \{\} <br /> |
 
@@ -260,8 +260,8 @@ _Appears in:_
 | `defaultFooterRef` _[LocalObjectReference](https://kubernetes.io/docs/reference/generated/kubernetes-api/v/#localobjectreference-v1-core)_ | defaultFooterRef is an optional reference to a MicroFrontEndPageFooter resource. If not specified, no footer will be displayed. Use the `.Footer` property to position its content in the template. |  |  |
 | `defaultHeaderRef` _[LocalObjectReference](https://kubernetes.io/docs/reference/generated/kubernetes-api/v/#localobjectreference-v1-core)_ | defaultHeaderRef is an optional reference to a MicroFrontEndPageHeader resource. If not specified, no header will be displayed. Use the `.Header` property to position its content in the template. |  |  |
 | `defaultMainNavigationRef` _[LocalObjectReference](https://kubernetes.io/docs/reference/generated/kubernetes-api/v/#localobjectreference-v1-core)_ | defaultMainNavigationRef is an optional reference to a MicroFrontEndPageNavigation resource. If not specified, no navigation will be displayed. Use the `.Navigation["main"]` property to position its content in the template. |  |  |
-| `extraNavigations` _[LocalObjectReference](https://kubernetes.io/docs/reference/generated/kubernetes-api/v/#localobjectreference-v1-core)_ | extraNavigations is an optional map of named navigation object references. Use `.Navigation["<name>"]` to position the named navigation's content in the template. |  |  |
-| `overrideStylesheetRef` _[LocalObjectReference](https://kubernetes.io/docs/reference/generated/kubernetes-api/v/#localobjectreference-v1-core)_ | overrideStylesheetRef is a reference to the stylesheet that should apply to all pages that use this archetype. It overrides the default stylesheet defined on the host. |  |  |
+| `extraNavigations` _object (keys:string, values:[LocalObjectReference](https://kubernetes.io/docs/reference/generated/kubernetes-api/v/#localobjectreference-v1-core))_ | extraNavigations is an optional map of named navigation object references. Use `.Navigation["<name>"]` to position the named navigation's content in the template. |  |  |
+| `overrideThemeRef` _[LocalObjectReference](https://kubernetes.io/docs/reference/generated/kubernetes-api/v/#localobjectreference-v1-core)_ | overrideThemeRef is a reference to the theme that should apply to all pages that use this archetype. It overrides the default theme defined on the host. |  |  |
 
 
 
@@ -319,13 +319,14 @@ _Appears in:_
 | `contentEntries` _[ContentEntry](#contententry) array_ | contentEntries is a set of content entries to bind to this page. They may be either raw HTML fragments or MicroFrontEndApp references. |  | MaxItems: 8 <br />MinItems: 1 <br />Required: \{\} <br /> |
 | `hostRef` _[LocalObjectReference](https://kubernetes.io/docs/reference/generated/kubernetes-api/v/#localobjectreference-v1-core)_ | hostRef is a reference to the MicroFrontEndHost that this binding is for. |  | Required: \{\} <br /> |
 | `label` _string_ | label is the value used in menus and page titles before localization occurs (or when no translation exists for the current language). |  | Required: \{\} <br /> |
+| `navigationHints` _[NavigationHints](#navigationhints)_ | navigationHints are optional navigation properties that if omitted result in the page being hidden from the navigation. |  |  |
 | `overrideFooterRef` _[LocalObjectReference](https://kubernetes.io/docs/reference/generated/kubernetes-api/v/#localobjectreference-v1-core)_ | overrideFooterRef is an optional reference to a MicroFrontEndPageFooter resource. If not specified, the footer from the archetype will be used. |  |  |
 | `overrideHeaderRef` _[LocalObjectReference](https://kubernetes.io/docs/reference/generated/kubernetes-api/v/#localobjectreference-v1-core)_ | overrideHeaderRef is an optional reference to a MicroFrontEndPageHeader resource. If not specified, the header from the archetype will be used. |  |  |
 | `overrideMainNavigationRef` _[LocalObjectReference](https://kubernetes.io/docs/reference/generated/kubernetes-api/v/#localobjectreference-v1-core)_ | overrideMainNavigationRef is an optional reference to a MicroFrontEndPageNavigation resource. If not specified, the main navigation from the archetype will be used. |  |  |
-| `navigationHints` _[NavigationHints](#navigationhints)_ | navigationHints are optional navigation properties that if omitted result in the page being hidden from the navigation. |  |  |
 | `pageArchetypeRef` _[LocalObjectReference](https://kubernetes.io/docs/reference/generated/kubernetes-api/v/#localobjectreference-v1-core)_ | pageArchetypeRef is a reference to the MicroFrontEndPageArchetype that this binding is for. |  | Required: \{\} <br /> |
 | `parentPageRef` _[LocalObjectReference](https://kubernetes.io/docs/reference/generated/kubernetes-api/v/#localobjectreference-v1-core)_ | parentPageRef is a reference to the MicroFrontEndPageBinding bellow which this page will appear in the main navigation. If not set, the page will be placed in the top level of the navigation. |  |  |
-| `path` _string_ | path is the URI path at which the page will be accessible in the application server context. The final absolute path will contain this path and may be prefixed by additional context like a language identifier. |  | Required: \{\} <br /> |
+| `basePath` _string_ | basePath is the shortest path by which the page may be accessed. It must not contain path parameters. This path will be used in site navigation. This path is subject to being prefixed for localization by `/\{l10n\}` and will be when the user selects a non-default language. |  | Pattern: `^/` <br />Required: \{\} <br /> |
+| `patternPath` _string_ | patternPath, which must be prefixed by BasePath, is an extension of basePath that adds pattern matching as defined by https://pkg.go.dev/net/http#hdr-Patterns-ServeMux. This path is subject to being prefixed for localization by `/\{l10n\}` such as when the user selects a non-default language. |  |  |
 
 
 
@@ -456,7 +457,7 @@ _Appears in:_
 | `apiVersion` _string_ | `kdex.dev/v1alpha1` | | |
 | `kind` _string_ | `MicroFrontEndPageNavigation` | | |
 | `metadata` _[ObjectMeta](https://kubernetes.io/docs/reference/generated/kubernetes-api/v/#objectmeta-v1-meta)_ | Refer to Kubernetes API documentation for fields of `metadata`. |  |  |
-| `spec` _[MicroFrontEndPageNavigationSpec](#microfrontendpagenavigationspec)_ | spec defines the desired state of MicroFrontEndPageNavigation |  |  |
+| `spec` _[MicroFrontEndPageNavigationSpec](#microfrontendpagenavigationspec)_ | spec defines the desired state of MicroFrontEndPageNavigation |  | Required: \{\} <br /> |
 
 
 #### MicroFrontEndPageNavigationList
@@ -549,62 +550,9 @@ _Appears in:_
 | `navigationHints` _[NavigationHints](#navigationhints)_ | navigationHints are optional navigation properties that if omitted result in the page being hidden from the navigation. |  |  |
 | `pageComponents` _[PageComponents](#pagecomponents)_ | pageComponents make up the elements of an HTML page that will be rendered by a web server. |  | Required: \{\} <br /> |
 | `parentPageRef` _[LocalObjectReference](https://kubernetes.io/docs/reference/generated/kubernetes-api/v/#localobjectreference-v1-core)_ | parentPageRef is a reference to the MicroFrontEndRenderPage bellow which this page will appear in the main navigation. If not set, the page will be placed in the top level of the navigation. |  |  |
-| `path` _string_ | path is the URI path at which the page will be accessible in the application server context. The final absolute path will contain this path and may be prefixed by additional context like a language identifier. |  | Required: \{\} <br /> |
-
-
-
-
-#### MicroFrontEndStylesheet
-
-
-
-MicroFrontEndStylesheet is the Schema for the microfrontendstylesheets API
-
-
-
-_Appears in:_
-- [MicroFrontEndStylesheetList](#microfrontendstylesheetlist)
-
-| Field | Description | Default | Validation |
-| --- | --- | --- | --- |
-| `apiVersion` _string_ | `kdex.dev/v1alpha1` | | |
-| `kind` _string_ | `MicroFrontEndStylesheet` | | |
-| `metadata` _[ObjectMeta](https://kubernetes.io/docs/reference/generated/kubernetes-api/v/#objectmeta-v1-meta)_ | Refer to Kubernetes API documentation for fields of `metadata`. |  |  |
-| `spec` _[MicroFrontEndStylesheetSpec](#microfrontendstylesheetspec)_ | spec defines the desired state of MicroFrontEndStylesheet |  |  |
-
-
-#### MicroFrontEndStylesheetList
-
-
-
-MicroFrontEndStylesheetList contains a list of MicroFrontEndStylesheet
-
-
-
-
-
-| Field | Description | Default | Validation |
-| --- | --- | --- | --- |
-| `apiVersion` _string_ | `kdex.dev/v1alpha1` | | |
-| `kind` _string_ | `MicroFrontEndStylesheetList` | | |
-| `metadata` _[ListMeta](https://kubernetes.io/docs/reference/generated/kubernetes-api/v/#listmeta-v1-meta)_ | Refer to Kubernetes API documentation for fields of `metadata`. |  |  |
-| `items` _[MicroFrontEndStylesheet](#microfrontendstylesheet) array_ |  |  |  |
-
-
-#### MicroFrontEndStylesheetSpec
-
-
-
-MicroFrontEndStylesheetSpec defines the desired state of MicroFrontEndStylesheet
-
-
-
-_Appears in:_
-- [MicroFrontEndStylesheet](#microfrontendstylesheet)
-
-| Field | Description | Default | Validation |
-| --- | --- | --- | --- |
-| `styleItems` _[StyleItem](#styleitem) array_ | styleItems is a set of elements that define a portable set of design rules. They may contain URLs that point to resources hosted at some public address and/or they may contain the literal CSS. |  | MaxItems: 16 <br />MinItems: 1 <br />Required: \{\} <br /> |
+| `basePath` _string_ | basePath is the shortest path by which the page may be accessed. It must not contain path parameters. This path will be used in site navigation. This path is subject to being prefixed for localization by `/\{l10n\}` and will be when the user selects a non-default language. |  | Pattern: `^/` <br />Required: \{\} <br /> |
+| `patternPath` _string_ | patternPath, which must be prefixed by BasePath, is an extension of basePath that adds pattern matching as defined by https://pkg.go.dev/net/http#hdr-Patterns-ServeMux. This path is subject to being prefixed for localization by `/\{l10n\}` such as when the user selects a non-default language. |  |  |
+| `stylesheetRef` _[LocalObjectReference](https://kubernetes.io/docs/reference/generated/kubernetes-api/v/#localobjectreference-v1-core)_ | stylesheetRef is a reference to the stylesheet that will apply to this render page. |  |  |
 
 
 
@@ -661,6 +609,61 @@ _Appears in:_
 | --- | --- | --- | --- |
 | `hostRef` _[LocalObjectReference](https://kubernetes.io/docs/reference/generated/kubernetes-api/v/#localobjectreference-v1-core)_ | hostRef is a reference to the MicroFrontEndHost that this render page is for. |  | Required: \{\} <br /> |
 | `translations` _[Translation](#translation) array_ | translations is an array of objects where each one specifies a language (lang) and a map (keysAndValues) consisting of key/value pairs. If the lang property is not unique in the array and its keysAndValues map contains the same keys, the last one takes precedence. |  | MinItems: 1 <br />Required: \{\} <br /> |
+
+
+
+
+#### MicroFrontendTheme
+
+
+
+MicroFrontendTheme is the Schema for the microfrontendthemes API
+
+
+
+_Appears in:_
+- [MicroFrontendThemeList](#microfrontendthemelist)
+
+| Field | Description | Default | Validation |
+| --- | --- | --- | --- |
+| `apiVersion` _string_ | `kdex.dev/v1alpha1` | | |
+| `kind` _string_ | `MicroFrontendTheme` | | |
+| `metadata` _[ObjectMeta](https://kubernetes.io/docs/reference/generated/kubernetes-api/v/#objectmeta-v1-meta)_ | Refer to Kubernetes API documentation for fields of `metadata`. |  |  |
+| `spec` _[MicroFrontendThemeSpec](#microfrontendthemespec)_ | spec defines the desired state of MicroFrontendTheme |  |  |
+
+
+#### MicroFrontendThemeList
+
+
+
+MicroFrontendThemeList contains a list of MicroFrontendTheme
+
+
+
+
+
+| Field | Description | Default | Validation |
+| --- | --- | --- | --- |
+| `apiVersion` _string_ | `kdex.dev/v1alpha1` | | |
+| `kind` _string_ | `MicroFrontendThemeList` | | |
+| `metadata` _[ListMeta](https://kubernetes.io/docs/reference/generated/kubernetes-api/v/#listmeta-v1-meta)_ | Refer to Kubernetes API documentation for fields of `metadata`. |  |  |
+| `items` _[MicroFrontendTheme](#microfrontendtheme) array_ |  |  |  |
+
+
+#### MicroFrontendThemeSpec
+
+
+
+MicroFrontendThemeSpec defines the desired state of MicroFrontendTheme
+
+
+
+_Appears in:_
+- [MicroFrontendTheme](#microfrontendtheme)
+
+| Field | Description | Default | Validation |
+| --- | --- | --- | --- |
+| `styleItems` _[StyleItem](#styleitem) array_ | styleItems is a set of elements that define a portable set of design rules. They may contain URLs that point to resources hosted at some public address and/or they may contain the literal CSS. |  | MaxItems: 32 <br />MinItems: 1 <br />Required: \{\} <br /> |
 
 
 
@@ -722,6 +725,24 @@ _Appears in:_
 | `title` _string_ |  |  |  |
 
 
+#### Paths
+
+
+
+
+
+
+
+_Appears in:_
+- [MicroFrontEndPageBindingSpec](#microfrontendpagebindingspec)
+- [MicroFrontEndRenderPageSpec](#microfrontendrenderpagespec)
+
+| Field | Description | Default | Validation |
+| --- | --- | --- | --- |
+| `basePath` _string_ | basePath is the shortest path by which the page may be accessed. It must not contain path parameters. This path will be used in site navigation. This path is subject to being prefixed for localization by `/\{l10n\}` and will be when the user selects a non-default language. |  | Pattern: `^/` <br />Required: \{\} <br /> |
+| `patternPath` _string_ | patternPath, which must be prefixed by BasePath, is an extension of basePath that adds pattern matching as defined by https://pkg.go.dev/net/http#hdr-Patterns-ServeMux. This path is subject to being prefixed for localization by `/\{l10n\}` such as when the user selects a non-default language. |  |  |
+
+
 #### StyleItem
 
 
@@ -731,7 +752,7 @@ _Appears in:_
 
 
 _Appears in:_
-- [MicroFrontEndStylesheetSpec](#microfrontendstylesheetspec)
+- [MicroFrontendThemeSpec](#microfrontendthemespec)
 
 | Field | Description | Default | Validation |
 | --- | --- | --- | --- |

@@ -9,5 +9,5 @@ resources:
 - v1alpha1_microfrontendrenderpage.yaml
 - v1alpha1_microfrontendhost.yaml
 - v1alpha1_microfrontendtranslation.yaml
-- v1alpha1_microfrontendstylesheet.yaml
+- v1alpha1_microfrontendtheme.yaml
 # +kubebuilder:scaffold:manifestskustomizesamples

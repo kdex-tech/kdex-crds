@@ -35,8 +35,8 @@ type StyleItem struct {
 	Style string `json:"style,omitempty"`
 }
 
-// MicroFrontEndStylesheetSpec defines the desired state of MicroFrontEndStylesheet
-type MicroFrontEndStylesheetSpec struct {
+// MicroFrontendThemeSpec defines the desired state of MicroFrontendTheme
+type MicroFrontendThemeSpec struct {
 	// styleItems is a set of elements that define a portable set of design rules. They may contain URLs that point to resources hosted at some public address and/or they may contain the literal CSS.
 	// +kubebuilder:validation:MaxItems=32
 	// +kubebuilder:validation:MinItems=1
@@ -44,12 +44,12 @@ type MicroFrontEndStylesheetSpec struct {
 	StyleItems []StyleItem `json:"styleItems,omitempty"`
 }
 
-// MicroFrontEndStylesheetStatus defines the observed state of MicroFrontEndStylesheet.
-type MicroFrontEndStylesheetStatus struct {
+// MicroFrontendThemeStatus defines the observed state of MicroFrontendTheme.
+type MicroFrontendThemeStatus struct {
 	// For Kubernetes API conventions, see:
 	// https://github.com/kubernetes/community/blob/master/contributors/devel/sig-architecture/api-conventions.md#typical-status-properties
 
-	// conditions represent the current state of the MicroFrontEndStylesheet resource.
+	// conditions represent the current state of the MicroFrontendTheme resource.
 	// Each condition has a unique type and reflects the status of a specific aspect of the resource.
 	//
 	// Standard condition types include:
@@ -65,36 +65,36 @@ type MicroFrontEndStylesheetStatus struct {
 }
 
 // +kubebuilder:object:root=true
-// +kubebuilder:resource:scope=Namespaced,shortName=mfe-s
+// +kubebuilder:resource:scope=Namespaced,shortName=mfe-th
 // +kubebuilder:subresource:status
 
-// MicroFrontEndStylesheet is the Schema for the microfrontendstylesheets API
+// MicroFrontendTheme is the Schema for the microfrontendthemes API
 // +kubebuilder:printcolumn:name="Ready",type=string,JSONPath=`.status.conditions[?(@.type=="Ready")].status`,description="The state of the Ready condition"
-type MicroFrontEndStylesheet struct {
+type MicroFrontendTheme struct {
 	metav1.TypeMeta `json:",inline"`
 
 	// metadata is a standard object metadata
 	// +optional
 	metav1.ObjectMeta `json:"metadata,omitempty,omitzero"`
 
-	// spec defines the desired state of MicroFrontEndStylesheet
+	// spec defines the desired state of MicroFrontendTheme
 	// +required
-	Spec MicroFrontEndStylesheetSpec `json:"spec"`
+	Spec MicroFrontendThemeSpec `json:"spec"`
 
-	// status defines the observed state of MicroFrontEndStylesheet
+	// status defines the observed state of MicroFrontendTheme
 	// +optional
-	Status MicroFrontEndStylesheetStatus `json:"status,omitempty,omitzero"`
+	Status MicroFrontendThemeStatus `json:"status,omitempty,omitzero"`
 }
 
 // +kubebuilder:object:root=true
 
-// MicroFrontEndStylesheetList contains a list of MicroFrontEndStylesheet
-type MicroFrontEndStylesheetList struct {
+// MicroFrontendThemeList contains a list of MicroFrontendTheme
+type MicroFrontendThemeList struct {
 	metav1.TypeMeta `json:",inline"`
 	metav1.ListMeta `json:"metadata,omitempty"`
-	Items           []MicroFrontEndStylesheet `json:"items"`
+	Items           []MicroFrontendTheme `json:"items"`
 }
 
 func init() {
-	SchemeBuilder.Register(&MicroFrontEndStylesheet{}, &MicroFrontEndStylesheetList{})
+	SchemeBuilder.Register(&MicroFrontendTheme{}, &MicroFrontendThemeList{})
 }

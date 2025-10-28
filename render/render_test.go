@@ -51,7 +51,7 @@ func TestRenderAll(t *testing.T) {
 	<title>{{.Title}}</title>
 		{{.Meta}}
 		{{.HeadScript}}
-		{{.Stylesheet}}
+		{{.Theme}}
 	</head>
 	<body>
 		<header>{{.Header}}</header>

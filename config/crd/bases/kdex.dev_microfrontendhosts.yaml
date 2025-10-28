@@ -68,9 +68,9 @@ spec:
                   See https://developer.mozilla.org/en-US/docs/Glossary/BCP_47_language_tag.
                   When render page paths do not specify a 'lang' path parameter this will be the value used. When not set the default will be 'en'.
                 type: string
-              defaultStylesheetRef:
-                description: defaultStylesheetRef is a reference to the default stylesheet
-                  that should apply to all pages bound to this host.
+              defaultThemeRef:
+                description: defaultThemeRef is a reference to the default theme that
+                  should apply to all pages bound to this host.
                 properties:
                   name:
                     default: ""

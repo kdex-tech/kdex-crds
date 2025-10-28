@@ -40,7 +40,7 @@ type Renderer struct {
 	Meta            string
 	Organization    string
 	PageMap         *map[string]*PageEntry
-	StyleItems      []v1alpha1.StyleItem
+	ThemeItems      []v1alpha1.StyleItem
 }
 
 // Fields available when rendering templates.
@@ -60,7 +60,7 @@ type TemplateData struct {
 	Meta            template.HTML            `json:"meta,omitempty" yaml:"meta,omitempty"`
 	Navigation      map[string]template.HTML `json:"navigation" yaml:"navigation"`
 	Organization    string                   `json:"organization" yaml:"organization"`
-	Stylesheet      template.HTML            `json:"stylesheet,omitempty" yaml:"stylesheet,omitempty"`
+	Theme           template.HTML            `json:"theme,omitempty" yaml:"theme,omitempty"`
 	Title           string                   `json:"title" yaml:"title"`
 }
 
