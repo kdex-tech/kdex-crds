@@ -38,7 +38,7 @@ type StyleItem struct {
 // MicroFrontEndStylesheetSpec defines the desired state of MicroFrontEndStylesheet
 type MicroFrontEndStylesheetSpec struct {
 	// styleItems is a set of elements that define a portable set of design rules. They may contain URLs that point to resources hosted at some public address and/or they may contain the literal CSS.
-	// +kubebuilder:validation:MaxItems=16
+	// +kubebuilder:validation:MaxItems=32
 	// +kubebuilder:validation:MinItems=1
 	// +kubebuilder:validation:Required
 	StyleItems []StyleItem `json:"styleItems,omitempty"`
