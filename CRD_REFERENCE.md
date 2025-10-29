@@ -9,8 +9,6 @@
 Package v1alpha1 contains API Schema definitions for the  v1alpha1 API group.
 
 ### Resource Types
-- [KDexTheme](#kdextheme)
-- [KDexThemeList](#kdexthemelist)
 - [KDexApp](#kdexapp)
 - [KDexAppList](#kdexapplist)
 - [KDexHost](#kdexhost)
@@ -27,6 +25,8 @@ Package v1alpha1 contains API Schema definitions for the  v1alpha1 API group.
 - [KDexPageNavigationList](#kdexpagenavigationlist)
 - [KDexRenderPage](#kdexrenderpage)
 - [KDexRenderPageList](#kdexrenderpagelist)
+- [KDexTheme](#kdextheme)
+- [KDexThemeList](#kdexthemelist)
 - [KDexTranslation](#kdextranslation)
 - [KDexTranslationList](#kdextranslationlist)
 
@@ -88,61 +88,6 @@ _Appears in:_
 | --- | --- | --- | --- |
 | `description` _string_ | description of the custom element. |  |  |
 | `name` _string_ | name of the custom element. |  | Required: \{\} <br /> |
-
-
-#### KDexTheme
-
-
-
-KDexTheme is the Schema for the kdexthemes API
-
-
-
-_Appears in:_
-- [KDexThemeList](#kdexthemelist)
-
-| Field | Description | Default | Validation |
-| --- | --- | --- | --- |
-| `apiVersion` _string_ | `kdex.dev/v1alpha1` | | |
-| `kind` _string_ | `KDexTheme` | | |
-| `metadata` _[ObjectMeta](https://kubernetes.io/docs/reference/generated/kubernetes-api/v/#objectmeta-v1-meta)_ | Refer to Kubernetes API documentation for fields of `metadata`. |  |  |
-| `spec` _[KDexThemeSpec](#kdexthemespec)_ | spec defines the desired state of KDexTheme |  |  |
-
-
-#### KDexThemeList
-
-
-
-KDexThemeList contains a list of KDexTheme
-
-
-
-
-
-| Field | Description | Default | Validation |
-| --- | --- | --- | --- |
-| `apiVersion` _string_ | `kdex.dev/v1alpha1` | | |
-| `kind` _string_ | `KDexThemeList` | | |
-| `metadata` _[ListMeta](https://kubernetes.io/docs/reference/generated/kubernetes-api/v/#listmeta-v1-meta)_ | Refer to Kubernetes API documentation for fields of `metadata`. |  |  |
-| `items` _[KDexTheme](#kdextheme) array_ |  |  |  |
-
-
-#### KDexThemeSpec
-
-
-
-KDexThemeSpec defines the desired state of KDexTheme
-
-
-
-_Appears in:_
-- [KDexTheme](#kdextheme)
-
-| Field | Description | Default | Validation |
-| --- | --- | --- | --- |
-| `assets` _[ThemeAsset](#themeasset) array_ | assets is a set of elements that define a portable set of design rules. They may contain URLs that point to resources hosted at some public address and/or they may contain tag contents. |  | MaxItems: 32 <br />MinItems: 1 <br />Required: \{\} <br /> |
-
-
 
 
 #### KDexApp
@@ -608,6 +553,61 @@ _Appears in:_
 | `basePath` _string_ | basePath is the shortest path by which the page may be accessed. It must not contain path parameters. This path will be used in site navigation. This path is subject to being prefixed for localization by `/\{l10n\}` and will be when the user selects a non-default language. |  | Pattern: `^/` <br />Required: \{\} <br /> |
 | `patternPath` _string_ | patternPath, which must be prefixed by BasePath, is an extension of basePath that adds pattern matching as defined by https://pkg.go.dev/net/http#hdr-Patterns-ServeMux. This path is subject to being prefixed for localization by `/\{l10n\}` such as when the user selects a non-default language. |  |  |
 | `themeRef` _[LocalObjectReference](https://kubernetes.io/docs/reference/generated/kubernetes-api/v/#localobjectreference-v1-core)_ | themeRef is a reference to the theme that will apply to this render page. |  |  |
+
+
+
+
+#### KDexTheme
+
+
+
+KDexTheme is the Schema for the kdexthemes API
+
+
+
+_Appears in:_
+- [KDexThemeList](#kdexthemelist)
+
+| Field | Description | Default | Validation |
+| --- | --- | --- | --- |
+| `apiVersion` _string_ | `kdex.dev/v1alpha1` | | |
+| `kind` _string_ | `KDexTheme` | | |
+| `metadata` _[ObjectMeta](https://kubernetes.io/docs/reference/generated/kubernetes-api/v/#objectmeta-v1-meta)_ | Refer to Kubernetes API documentation for fields of `metadata`. |  |  |
+| `spec` _[KDexThemeSpec](#kdexthemespec)_ | spec defines the desired state of KDexTheme |  |  |
+
+
+#### KDexThemeList
+
+
+
+KDexThemeList contains a list of KDexTheme
+
+
+
+
+
+| Field | Description | Default | Validation |
+| --- | --- | --- | --- |
+| `apiVersion` _string_ | `kdex.dev/v1alpha1` | | |
+| `kind` _string_ | `KDexThemeList` | | |
+| `metadata` _[ListMeta](https://kubernetes.io/docs/reference/generated/kubernetes-api/v/#listmeta-v1-meta)_ | Refer to Kubernetes API documentation for fields of `metadata`. |  |  |
+| `items` _[KDexTheme](#kdextheme) array_ |  |  |  |
+
+
+#### KDexThemeSpec
+
+
+
+KDexThemeSpec defines the desired state of KDexTheme
+
+
+
+_Appears in:_
+- [KDexTheme](#kdextheme)
+
+| Field | Description | Default | Validation |
+| --- | --- | --- | --- |
+| `assets` _[ThemeAsset](#themeasset) array_ | assets is a set of elements that define a portable set of design rules. They may contain URLs that point to resources hosted at some public address and/or they may contain tag contents. |  | MaxItems: 32 <br />MinItems: 1 <br />Required: \{\} <br /> |
 
 
 
