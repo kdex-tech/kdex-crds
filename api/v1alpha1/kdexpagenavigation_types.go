@@ -59,6 +59,8 @@ type KDexPageNavigationStatus struct {
 // KDexPageNavigation is the Schema for the kdexpagenavigations API
 // +kubebuilder:printcolumn:name="Ready",type=string,JSONPath=`.status.conditions[?(@.type=="Ready")].status`,description="The state of the Ready condition"
 type KDexPageNavigation struct {
+	metav1.TypeMeta `json:",inline"`
+
 	// metadata is a standard object metadata
 	// +optional
 	metav1.ObjectMeta `json:"metadata,omitempty,omitzero"`
@@ -70,8 +72,6 @@ type KDexPageNavigation struct {
 	// status defines the observed state of KDexPageNavigation
 	// +optional
 	Status KDexPageNavigationStatus `json:"status,omitempty,omitzero"`
-
-	metav1.TypeMeta `json:",inline"`
 }
 
 // +kubebuilder:object:root=true

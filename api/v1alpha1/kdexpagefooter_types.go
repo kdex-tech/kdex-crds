@@ -63,7 +63,7 @@ type KDexPageFooter struct {
 	metav1.ObjectMeta `json:"metadata,omitempty,omitzero"`
 
 	// spec defines the desired state of KDexPageFooter
-	// +required
+	// +kubebuilder:validation:Required
 	Spec KDexPageFooterSpec `json:"spec"`
 
 	// status defines the observed state of KDexPageFooter

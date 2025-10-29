@@ -28,10 +28,10 @@ import (
 type AppPolicy string
 
 const (
-	// StrictAppPolicy means that apps may not embed JavaScript dependencies.
-	StrictAppPolicy AppPolicy = "Strict"
 	// NonStrictAppPolicy means that apps may embed JavaScript dependencies.
 	NonStrictAppPolicy AppPolicy = "NonStrict"
+	// StrictAppPolicy means that apps may not embed JavaScript dependencies.
+	StrictAppPolicy AppPolicy = "Strict"
 )
 
 // KDexHostSpec defines the desired state of KDexHost
@@ -111,7 +111,7 @@ type KDexHost struct {
 	metav1.ObjectMeta `json:"metadata,omitempty,omitzero"`
 
 	// spec defines the desired state of KDexHost
-	// +required
+	// +kubebuilder:validation:Required
 	Spec KDexHostSpec `json:"spec"`
 
 	// status defines the observed state of KDexHost

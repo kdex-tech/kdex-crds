@@ -45,7 +45,7 @@ type ThemeAsset struct {
 }
 
 // KDexThemeSpec defines the desired state of KDexTheme
-// +kubebuilder:validation:X-kubernetes-validations:rule="self.image == ” || self.routePath != ”",message="routePath must be specified when image is specified"
+// +kubebuilder:validation:X-kubernetes-validations:rule="self.image == \"\" || self.routePath != \"\"",message="routePath must be specified when image is specified"
 type KDexThemeSpec struct {
 	// assets is a set of elements that define a portable set of design rules. They may contain URLs that point to resources hosted at some public address and/or they may contain tag contents.
 	// +kubebuilder:validation:MaxItems=32
@@ -108,7 +108,7 @@ type KDexTheme struct {
 	metav1.ObjectMeta `json:"metadata,omitempty,omitzero"`
 
 	// spec defines the desired state of KDexTheme
-	// +required
+	// +kubebuilder:validation:Required
 	Spec KDexThemeSpec `json:"spec"`
 
 	// status defines the observed state of KDexTheme

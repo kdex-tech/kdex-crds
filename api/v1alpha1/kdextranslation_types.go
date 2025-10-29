@@ -35,7 +35,7 @@ type KDexTranslation struct {
 	metav1.ObjectMeta `json:"metadata,omitempty,omitzero"`
 
 	// spec defines the desired state of KDexTranslation
-	// +required
+	// +kubebuilder:validation:Required
 	Spec KDexTranslationSpec `json:"spec"`
 
 	// status defines the observed state of KDexTranslation

@@ -21,7 +21,9 @@ import (
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
 
-// KDexRenderPageSpec defines the desired state of KDexRenderPage
+// KDexRenderPageSpec defines the desired state of KDexRenderPage.
+// KDexRenderPage is an internal resource created and managed by a controller that processes KDexPageBinding resources.
+// It is not intended for users to create or manage directly.
 type KDexRenderPageSpec struct {
 	// hostRef is a reference to the KDexHost that this render page is for.
 	// +kubebuilder:validation:Required
@@ -39,11 +41,11 @@ type KDexRenderPageSpec struct {
 	// +optional
 	ParentPageRef *corev1.LocalObjectReference `json:"parentPageRef"`
 
-	Paths `json:",inline"`
-
 	// themeRef is a reference to the theme that will apply to this render page.
 	// +optional
-	StylesheetRef *corev1.LocalObjectReference `json:"themeRef,omitempty"`
+	ThemeRef *corev1.LocalObjectReference `json:"themeRef,omitempty"`
+
+	Paths `json:",inline"`
 }
 
 // KDexRenderPageStatus defines the observed state of KDexRenderPage.
@@ -73,7 +75,9 @@ type KDexRenderPageStatus struct {
 // +kubebuilder:resource:scope=Namespaced,shortName=mfe-rp
 // +kubebuilder:subresource:status
 
-// KDexRenderPage is the Schema for the kdexrenderpages API
+// KDexRenderPage is the Schema for the kdexrenderpages API.
+// It is an internal resource created and managed by a controller that processes KDexPageBinding resources.
+// It is not intended for users to create or manage directly.
 // +kubebuilder:printcolumn:name="Ready",type=string,JSONPath=`.status.conditions[?(@.type=="Ready")].status`,description="The state of the Ready condition"
 type KDexRenderPage struct {
 	metav1.TypeMeta `json:",inline"`
@@ -83,7 +87,7 @@ type KDexRenderPage struct {
 	metav1.ObjectMeta `json:"metadata,omitempty,omitzero"`
 
 	// spec defines the desired state of KDexRenderPage
-	// +required
+	// +kubebuilder:validation:Required
 	Spec KDexRenderPageSpec `json:"spec"`
 
 	// status defines the observed state of KDexRenderPage
@@ -100,6 +104,9 @@ type KDexRenderPageList struct {
 	Items           []KDexRenderPage `json:"items"`
 }
 
+// PageComponents make up the elements of an HTML page that will be rendered by a web server.
+// It is an internal resource created and managed by a controller that processes KDexPageBinding resources.
+// It is not intended for users to create or manage directly.
 type PageComponents struct {
 	Contents        map[string]string `json:"contents"`
 	Footer          string            `json:"footer"`
