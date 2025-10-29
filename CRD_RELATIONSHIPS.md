@@ -13,6 +13,7 @@ erDiagram
     KDexPageArchetype ||--o{ KDexPageFooter : "default footer"
     KDexPageArchetype ||--o{ KDexPageHeader : "default header"
     KDexPageArchetype ||--o{ KDexPageNavigation : "default navigation"
+    KDexPageArchetype ||--o{ KDexPageNavigation : "extra navigations"
     KDexPageArchetype ||--o{ KDexTheme : "override theme"
 
     KDexPageBinding ||--o{ KDexApp : "uses"
@@ -22,6 +23,7 @@ erDiagram
     KDexPageBinding ||--o{ KDexPageBinding : "parent page"
 
     KDexRenderPage ||--o{ KDexRenderPage : "parent page"
+    KDexRenderPage ||--o{ KDexTheme : "stylesheet"
 
     KDexApp {
         string name
