@@ -17,6 +17,7 @@ limitations under the License.
 package v1alpha1
 
 import (
+	v1 "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
 
@@ -44,12 +45,33 @@ type ThemeAsset struct {
 }
 
 // KDexThemeSpec defines the desired state of KDexTheme
+// +kubebuilder:validation:X-kubernetes-validations:rule="self.image == ” || self.routePath != ”",message="routePath must be specified when image is specified"
 type KDexThemeSpec struct {
 	// assets is a set of elements that define a portable set of design rules. They may contain URLs that point to resources hosted at some public address and/or they may contain tag contents.
 	// +kubebuilder:validation:MaxItems=32
 	// +kubebuilder:validation:MinItems=1
 	// +kubebuilder:validation:Required
 	Assets []ThemeAsset `json:"assets"`
+
+	// image is the name of an OCI image that contains Theme resources. If not specified all Asset URLs must include protocol and host. When specified, URLs must be prefixed by the routePath.
+	// More info: https://kubernetes.io/docs/concepts/containers/images
+	// +optional
+	Image string `json:"image,omitempty"`
+
+	// imagePullSecrets is an optional list of references to secrets in the same namespace to use for pulling any of the images used by this Spec.
+	// If specified, these secrets will be passed to individual puller implementations for them to use.
+	// More info: https://kubernetes.io/docs/concepts/containers/images#specifying-imagepullsecrets-on-a-pod
+	// +optional
+	// +patchMergeKey=name
+	// +patchStrategy=merge
+	// +listType=map
+	// +listMapKey=name
+	ImagePullSecrets []v1.LocalObjectReference `json:"imagePullSecrets,omitempty" patchStrategy:"merge" patchMergeKey:"name" protobuf:"bytes,15,rep,name=imagePullSecrets"`
+
+	// routePath is a prefix beginning with a forward slash (/) plus at least 1 additional character. KDexPageBindings associated with the KDexHost that have conflicting urls will be rejected and marked as conflicting.
+	// +optional
+	// +kubebuilder:validation:Pattern=`^/.+`
+	RoutePath string `json:"routePath,omitempty"`
 }
 
 // KDexThemeStatus defines the observed state of KDexTheme.

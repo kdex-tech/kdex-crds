@@ -18,7 +18,9 @@ package v1alpha1
 
 import (
 	corev1 "k8s.io/api/core/v1"
+	networkingv1 "k8s.io/api/networking/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
+	gatewayv1 "sigs.k8s.io/gateway-api/apis/v1"
 )
 
 // AppPolicy defines the policy for apps.
@@ -33,6 +35,7 @@ const (
 )
 
 // KDexHostSpec defines the desired state of KDexHost
+// +kubebuilder:validation:XValidation:rule="[has(self.ingress), has(self.httpRoute)].filter(x, x).size() == 1",message="exactly one of ingress or httpRoute must be specified"
 type KDexHostSpec struct {
 	// AppPolicy defines the policy for apps.
 	// When the strict policy is enabled, an app may not embed JavaScript dependencies.
@@ -67,6 +70,8 @@ type KDexHostSpec struct {
 	// +kubebuilder:validation:Required
 	// +kubebuilder:validation:MinLength=5
 	Organization string `json:"organization"`
+
+	*Routing `json:",inline"`
 }
 
 // KDexHostStatus defines the observed state of KDexHost.
@@ -121,6 +126,16 @@ type KDexHostList struct {
 	metav1.TypeMeta `json:",inline"`
 	metav1.ListMeta `json:"metadata,omitempty"`
 	Items           []KDexHost `json:"items"`
+}
+
+// Routing defines the desired routing configuration for the host.
+type Routing struct {
+	// HTTPRouteSpec defines the desired state of an HTTPRoute.
+	// +optional
+	HTTPRoute *gatewayv1.HTTPRouteSpec `json:"httpRoute,omitempty"`
+	// IngressSpec defines the desired state of an Ingress.
+	// +optional
+	Ingress *networkingv1.IngressSpec `json:"ingress,omitempty"`
 }
 
 func init() {

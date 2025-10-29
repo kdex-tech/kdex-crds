@@ -608,6 +608,9 @@ _Appears in:_
 | Field | Description | Default | Validation |
 | --- | --- | --- | --- |
 | `assets` _[ThemeAsset](#themeasset) array_ | assets is a set of elements that define a portable set of design rules. They may contain URLs that point to resources hosted at some public address and/or they may contain tag contents. |  | MaxItems: 32 <br />MinItems: 1 <br />Required: \{\} <br /> |
+| `image` _string_ | image is the name of an OCI image that contains Theme resources. If not specified all Asset URLs must include protocol and host. When specified, URLs must be prefixed by the routePath.<br />More info: https://kubernetes.io/docs/concepts/containers/images |  |  |
+| `imagePullSecrets` _[LocalObjectReference](https://kubernetes.io/docs/reference/generated/kubernetes-api/v/#localobjectreference-v1-core) array_ | imagePullSecrets is an optional list of references to secrets in the same namespace to use for pulling any of the images used by this Spec.<br />If specified, these secrets will be passed to individual puller implementations for them to use.<br />More info: https://kubernetes.io/docs/concepts/containers/images#specifying-imagepullsecrets-on-a-pod |  |  |
+| `routePath` _string_ | routePath is a prefix beginning with a forward slash (/) plus at least 1 additional character. KDexPageBindings associated with the KDexHost that have conflicting urls will be rejected and marked as conflicting. |  | Pattern: `^/.+` <br /> |
 
 
 
@@ -741,6 +744,23 @@ _Appears in:_
 | --- | --- | --- | --- |
 | `basePath` _string_ | basePath is the shortest path by which the page may be accessed. It must not contain path parameters. This path will be used in site navigation. This path is subject to being prefixed for localization by `/\{l10n\}` and will be when the user selects a non-default language. |  | Pattern: `^/` <br />Required: \{\} <br /> |
 | `patternPath` _string_ | patternPath, which must be prefixed by BasePath, is an extension of basePath that adds pattern matching as defined by https://pkg.go.dev/net/http#hdr-Patterns-ServeMux. This path is subject to being prefixed for localization by `/\{l10n\}` such as when the user selects a non-default language. |  |  |
+
+
+#### Routing
+
+
+
+Routing defines the desired routing configuration for the host.
+
+
+
+_Appears in:_
+- [KDexHostSpec](#kdexhostspec)
+
+| Field | Description | Default | Validation |
+| --- | --- | --- | --- |
+| `httpRoute` _[HTTPRouteSpec](#httproutespec)_ | HTTPRouteSpec defines the desired state of an HTTPRoute. |  |  |
+| `ingress` _[IngressSpec](https://kubernetes.io/docs/reference/generated/kubernetes-api/v/#ingressspec-v1-networking)_ | IngressSpec defines the desired state of an Ingress. |  |  |
 
 
 #### ThemeAsset
