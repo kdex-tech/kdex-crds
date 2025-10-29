@@ -20,9 +20,9 @@ import (
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
 
-// +kubebuilder:validation:XValidation:rule="has(self.linkHref) != has(self.style)",message="exactly one of linkHref or style must be set"
-type StyleItem struct {
-	// attributes are key/value pairs that will be added to the element [link|style] when rendered.
+// +kubebuilder:validation:XValidation:rule="[has(self.linkHref), has(self.script), has(self.scriptSrc), has(self.style)].count(true) == 1",message="exactly one of linkHref, script, scriptSrc, or style must be set"
+type ThemeAsset struct {
+	// attributes are key/value pairs that will be added to the element [link|style|script] when rendered.
 	// +optional
 	Attributes map[string]string `json:"attributes,omitempty"`
 
@@ -30,26 +30,34 @@ type StyleItem struct {
 	// +optional
 	LinkHref string `json:"linkHref,omitempty"`
 
-	// style is the text content to be added into a <script> element when rendered.
+	// script is the text content to be added into a <script> element when rendered.
+	// +optional
+	Script string `json:"script,omitempty"`
+
+	// scriptSrc is the content of a <script> src attribute.
+	// +optional
+	ScriptSrc string `json:"scriptSrc,omitempty"`
+
+	// style is the text content to be added into a <style> element when rendered.
 	// +optional
 	Style string `json:"style,omitempty"`
 }
 
-// KDExThemeSpec defines the desired state of KDExTheme
-type KDExThemeSpec struct {
-	// styleItems is a set of elements that define a portable set of design rules. They may contain URLs that point to resources hosted at some public address and/or they may contain the literal CSS.
+// KDexThemeSpec defines the desired state of KDexTheme
+type KDexThemeSpec struct {
+	// assets is a set of elements that define a portable set of design rules. They may contain URLs that point to resources hosted at some public address and/or they may contain tag contents.
 	// +kubebuilder:validation:MaxItems=32
 	// +kubebuilder:validation:MinItems=1
 	// +kubebuilder:validation:Required
-	StyleItems []StyleItem `json:"styleItems,omitempty"`
+	Assets []ThemeAsset `json:"assets"`
 }
 
-// KDExThemeStatus defines the observed state of KDExTheme.
-type KDExThemeStatus struct {
+// KDexThemeStatus defines the observed state of KDexTheme.
+type KDexThemeStatus struct {
 	// For Kubernetes API conventions, see:
 	// https://github.com/kubernetes/community/blob/master/contributors/devel/sig-architecture/api-conventions.md#typical-status-properties
 
-	// conditions represent the current state of the KDExTheme resource.
+	// conditions represent the current state of the KDexTheme resource.
 	// Each condition has a unique type and reflects the status of a specific aspect of the resource.
 	//
 	// Standard condition types include:
@@ -68,33 +76,33 @@ type KDExThemeStatus struct {
 // +kubebuilder:resource:scope=Namespaced,shortName=mfe-th
 // +kubebuilder:subresource:status
 
-// KDExTheme is the Schema for the kdexthemes API
+// KDexTheme is the Schema for the kdexthemes API
 // +kubebuilder:printcolumn:name="Ready",type=string,JSONPath=`.status.conditions[?(@.type=="Ready")].status`,description="The state of the Ready condition"
-type KDExTheme struct {
+type KDexTheme struct {
 	metav1.TypeMeta `json:",inline"`
 
 	// metadata is a standard object metadata
 	// +optional
 	metav1.ObjectMeta `json:"metadata,omitempty,omitzero"`
 
-	// spec defines the desired state of KDExTheme
+	// spec defines the desired state of KDexTheme
 	// +required
-	Spec KDExThemeSpec `json:"spec"`
+	Spec KDexThemeSpec `json:"spec"`
 
-	// status defines the observed state of KDExTheme
+	// status defines the observed state of KDexTheme
 	// +optional
-	Status KDExThemeStatus `json:"status,omitempty,omitzero"`
+	Status KDexThemeStatus `json:"status,omitempty,omitzero"`
 }
 
 // +kubebuilder:object:root=true
 
-// KDExThemeList contains a list of KDExTheme
-type KDExThemeList struct {
+// KDexThemeList contains a list of KDexTheme
+type KDexThemeList struct {
 	metav1.TypeMeta `json:",inline"`
 	metav1.ListMeta `json:"metadata,omitempty"`
-	Items           []KDExTheme `json:"items"`
+	Items           []KDexTheme `json:"items"`
 }
 
 func init() {
-	SchemeBuilder.Register(&KDExTheme{}, &KDExThemeList{})
+	SchemeBuilder.Register(&KDexTheme{}, &KDexThemeList{})
 }

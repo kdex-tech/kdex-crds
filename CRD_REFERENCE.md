@@ -9,6 +9,8 @@
 Package v1alpha1 contains API Schema definitions for the  v1alpha1 API group.
 
 ### Resource Types
+- [KDexTheme](#kdextheme)
+- [KDexThemeList](#kdexthemelist)
 - [KDexApp](#kdexapp)
 - [KDexAppList](#kdexapplist)
 - [KDexHost](#kdexhost)
@@ -27,8 +29,6 @@ Package v1alpha1 contains API Schema definitions for the  v1alpha1 API group.
 - [KDexRenderPageList](#kdexrenderpagelist)
 - [KDexTranslation](#kdextranslation)
 - [KDexTranslationList](#kdextranslationlist)
-- [KDExTheme](#kdextheme)
-- [KDExThemeList](#kdexthemelist)
 
 
 
@@ -88,6 +88,61 @@ _Appears in:_
 | --- | --- | --- | --- |
 | `description` _string_ | description of the custom element. |  |  |
 | `name` _string_ | name of the custom element. |  | Required: \{\} <br /> |
+
+
+#### KDexTheme
+
+
+
+KDexTheme is the Schema for the kdexthemes API
+
+
+
+_Appears in:_
+- [KDexThemeList](#kdexthemelist)
+
+| Field | Description | Default | Validation |
+| --- | --- | --- | --- |
+| `apiVersion` _string_ | `kdex.dev/v1alpha1` | | |
+| `kind` _string_ | `KDexTheme` | | |
+| `metadata` _[ObjectMeta](https://kubernetes.io/docs/reference/generated/kubernetes-api/v/#objectmeta-v1-meta)_ | Refer to Kubernetes API documentation for fields of `metadata`. |  |  |
+| `spec` _[KDexThemeSpec](#kdexthemespec)_ | spec defines the desired state of KDexTheme |  |  |
+
+
+#### KDexThemeList
+
+
+
+KDexThemeList contains a list of KDexTheme
+
+
+
+
+
+| Field | Description | Default | Validation |
+| --- | --- | --- | --- |
+| `apiVersion` _string_ | `kdex.dev/v1alpha1` | | |
+| `kind` _string_ | `KDexThemeList` | | |
+| `metadata` _[ListMeta](https://kubernetes.io/docs/reference/generated/kubernetes-api/v/#listmeta-v1-meta)_ | Refer to Kubernetes API documentation for fields of `metadata`. |  |  |
+| `items` _[KDexTheme](#kdextheme) array_ |  |  |  |
+
+
+#### KDexThemeSpec
+
+
+
+KDexThemeSpec defines the desired state of KDexTheme
+
+
+
+_Appears in:_
+- [KDexTheme](#kdextheme)
+
+| Field | Description | Default | Validation |
+| --- | --- | --- | --- |
+| `assets` _[ThemeAsset](#themeasset) array_ | assets is a set of elements that define a portable set of design rules. They may contain URLs that point to resources hosted at some public address and/or they may contain tag contents. |  | MaxItems: 32 <br />MinItems: 1 <br />Required: \{\} <br /> |
+
+
 
 
 #### KDexApp
@@ -613,61 +668,6 @@ _Appears in:_
 
 
 
-#### KDExTheme
-
-
-
-KDExTheme is the Schema for the kdexthemes API
-
-
-
-_Appears in:_
-- [KDExThemeList](#kdexthemelist)
-
-| Field | Description | Default | Validation |
-| --- | --- | --- | --- |
-| `apiVersion` _string_ | `kdex.dev/v1alpha1` | | |
-| `kind` _string_ | `KDExTheme` | | |
-| `metadata` _[ObjectMeta](https://kubernetes.io/docs/reference/generated/kubernetes-api/v/#objectmeta-v1-meta)_ | Refer to Kubernetes API documentation for fields of `metadata`. |  |  |
-| `spec` _[KDExThemeSpec](#kdexthemespec)_ | spec defines the desired state of KDExTheme |  |  |
-
-
-#### KDExThemeList
-
-
-
-KDExThemeList contains a list of KDExTheme
-
-
-
-
-
-| Field | Description | Default | Validation |
-| --- | --- | --- | --- |
-| `apiVersion` _string_ | `kdex.dev/v1alpha1` | | |
-| `kind` _string_ | `KDExThemeList` | | |
-| `metadata` _[ListMeta](https://kubernetes.io/docs/reference/generated/kubernetes-api/v/#listmeta-v1-meta)_ | Refer to Kubernetes API documentation for fields of `metadata`. |  |  |
-| `items` _[KDExTheme](#kdextheme) array_ |  |  |  |
-
-
-#### KDExThemeSpec
-
-
-
-KDExThemeSpec defines the desired state of KDExTheme
-
-
-
-_Appears in:_
-- [KDExTheme](#kdextheme)
-
-| Field | Description | Default | Validation |
-| --- | --- | --- | --- |
-| `styleItems` _[StyleItem](#styleitem) array_ | styleItems is a set of elements that define a portable set of design rules. They may contain URLs that point to resources hosted at some public address and/or they may contain the literal CSS. |  | MaxItems: 32 <br />MinItems: 1 <br />Required: \{\} <br /> |
-
-
-
-
 #### NavigationHints
 
 
@@ -743,7 +743,7 @@ _Appears in:_
 | `patternPath` _string_ | patternPath, which must be prefixed by BasePath, is an extension of basePath that adds pattern matching as defined by https://pkg.go.dev/net/http#hdr-Patterns-ServeMux. This path is subject to being prefixed for localization by `/\{l10n\}` such as when the user selects a non-default language. |  |  |
 
 
-#### StyleItem
+#### ThemeAsset
 
 
 
@@ -752,13 +752,15 @@ _Appears in:_
 
 
 _Appears in:_
-- [KDExThemeSpec](#kdexthemespec)
+- [KDexThemeSpec](#kdexthemespec)
 
 | Field | Description | Default | Validation |
 | --- | --- | --- | --- |
-| `attributes` _object (keys:string, values:string)_ | attributes are key/value pairs that will be added to the element [link\|style] when rendered. |  |  |
+| `attributes` _object (keys:string, values:string)_ | attributes are key/value pairs that will be added to the element [link\|style\|script] when rendered. |  |  |
 | `linkHref` _string_ | linkHref is the content of a <link> href attribute. |  |  |
-| `style` _string_ | style is the text content to be added into a <script> element when rendered. |  |  |
+| `script` _string_ | script is the text content to be added into a <script> element when rendered. |  |  |
+| `scriptSrc` _string_ | scriptSrc is the content of a <script> src attribute. |  |  |
+| `style` _string_ | style is the text content to be added into a <style> element when rendered. |  |  |
 
 
 #### Translation
