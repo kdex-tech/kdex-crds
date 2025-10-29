@@ -15,8 +15,8 @@ var templateData TemplateData
 
 func init() {
 	translations := catalog.NewBuilder()
-	translations.SetString(language.English, "name", "Name")
-	translations.SetString(language.French, "name", "Nom")
+	_ = translations.SetString(language.English, "name", "Name")
+	_ = translations.SetString(language.French, "name", "Nom")
 
 	messagePrinter := message.NewPrinter(
 		language.English,

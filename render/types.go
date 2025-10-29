@@ -40,7 +40,7 @@ type Renderer struct {
 	Meta            string
 	Organization    string
 	PageMap         *map[string]*PageEntry
-	ThemeItems      []v1alpha1.StyleItem
+	ThemeItems      []v1alpha1.ThemeAsset
 }
 
 // Fields available when rendering templates.
