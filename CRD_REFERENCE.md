@@ -46,8 +46,8 @@ _Appears in:_
 
 | Field | Description |
 | --- | --- |
-| `Strict` | StrictAppPolicy means that apps may not embed JavaScript dependencies.<br /> |
 | `NonStrict` | NonStrictAppPolicy means that apps may embed JavaScript dependencies.<br /> |
+| `Strict` | StrictAppPolicy means that apps may not embed JavaScript dependencies.<br /> |
 
 
 
@@ -162,7 +162,7 @@ _Appears in:_
 | `apiVersion` _string_ | `kdex.dev/v1alpha1` | | |
 | `kind` _string_ | `KDexHost` | | |
 | `metadata` _[ObjectMeta](https://kubernetes.io/docs/reference/generated/kubernetes-api/v/#objectmeta-v1-meta)_ | Refer to Kubernetes API documentation for fields of `metadata`. |  |  |
-| `spec` _[KDexHostSpec](#kdexhostspec)_ | spec defines the desired state of KDexHost |  |  |
+| `spec` _[KDexHostSpec](#kdexhostspec)_ | spec defines the desired state of KDexHost |  | Required: \{\} <br /> |
 
 
 #### KDexHostList
@@ -187,7 +187,7 @@ KDexHostList contains a list of KDexHost
 
 
 
-KDexHostSpec defines the desired state of KDexHost
+
 
 
 
@@ -200,8 +200,8 @@ _Appears in:_
 | `baseMeta` _string_ | baseMeta is a string containing a base set of meta tags to use on every page rendered for the host. |  | MinLength: 5 <br /> |
 | `defaultLang` _string_ | defaultLang is a string containing a BCP 47 language tag.<br />See https://developer.mozilla.org/en-US/docs/Glossary/BCP_47_language_tag.<br />When render page paths do not specify a 'lang' path parameter this will be the value used. When not set the default will be 'en'. |  |  |
 | `defaultThemeRef` _[LocalObjectReference](https://kubernetes.io/docs/reference/generated/kubernetes-api/v/#localobjectreference-v1-core)_ | defaultThemeRef is a reference to the default theme that should apply to all pages bound to this host. |  |  |
-| `domains` _string array_ | domains are the names by which this host is addressed. The first domain listed is the preferred domain. The domains may contain wildcard prefix in the form '*.'. Longest match always wins. |  | MinItems: 1 <br />Required: \{\} <br /> |
 | `organization` _string_ | organization is the name of the Organization. |  | MinLength: 5 <br />Required: \{\} <br /> |
+| `routing` _[Routing](#routing)_ | routing defines the desired routing configuration for the host. |  | Required: \{\} <br /> |
 
 
 
@@ -347,7 +347,7 @@ _Appears in:_
 | `apiVersion` _string_ | `kdex.dev/v1alpha1` | | |
 | `kind` _string_ | `KDexPageFooter` | | |
 | `metadata` _[ObjectMeta](https://kubernetes.io/docs/reference/generated/kubernetes-api/v/#objectmeta-v1-meta)_ | Refer to Kubernetes API documentation for fields of `metadata`. |  |  |
-| `spec` _[KDexPageFooterSpec](#kdexpagefooterspec)_ | spec defines the desired state of KDexPageFooter |  |  |
+| `spec` _[KDexPageFooterSpec](#kdexpagefooterspec)_ | spec defines the desired state of KDexPageFooter |  | Required: \{\} <br /> |
 
 
 #### KDexPageFooterList
@@ -500,7 +500,9 @@ _Appears in:_
 
 
 
-KDexRenderPage is the Schema for the kdexrenderpages API
+KDexRenderPage is the Schema for the kdexrenderpages API.
+It is an internal resource created and managed by a controller that processes KDexPageBinding resources.
+It is not intended for users to create or manage directly.
 
 
 
@@ -512,7 +514,7 @@ _Appears in:_
 | `apiVersion` _string_ | `kdex.dev/v1alpha1` | | |
 | `kind` _string_ | `KDexRenderPage` | | |
 | `metadata` _[ObjectMeta](https://kubernetes.io/docs/reference/generated/kubernetes-api/v/#objectmeta-v1-meta)_ | Refer to Kubernetes API documentation for fields of `metadata`. |  |  |
-| `spec` _[KDexRenderPageSpec](#kdexrenderpagespec)_ | spec defines the desired state of KDexRenderPage |  |  |
+| `spec` _[KDexRenderPageSpec](#kdexrenderpagespec)_ | spec defines the desired state of KDexRenderPage |  | Required: \{\} <br /> |
 
 
 #### KDexRenderPageList
@@ -537,7 +539,9 @@ KDexRenderPageList contains a list of KDexRenderPage
 
 
 
-KDexRenderPageSpec defines the desired state of KDexRenderPage
+KDexRenderPageSpec defines the desired state of KDexRenderPage.
+KDexRenderPage is an internal resource created and managed by a controller that processes KDexPageBinding resources.
+It is not intended for users to create or manage directly.
 
 
 
@@ -550,9 +554,9 @@ _Appears in:_
 | `navigationHints` _[NavigationHints](#navigationhints)_ | navigationHints are optional navigation properties that if omitted result in the page being hidden from the navigation. |  |  |
 | `pageComponents` _[PageComponents](#pagecomponents)_ | pageComponents make up the elements of an HTML page that will be rendered by a web server. |  | Required: \{\} <br /> |
 | `parentPageRef` _[LocalObjectReference](https://kubernetes.io/docs/reference/generated/kubernetes-api/v/#localobjectreference-v1-core)_ | parentPageRef is a reference to the KDexRenderPage bellow which this page will appear in the main navigation. If not set, the page will be placed in the top level of the navigation. |  |  |
+| `themeRef` _[LocalObjectReference](https://kubernetes.io/docs/reference/generated/kubernetes-api/v/#localobjectreference-v1-core)_ | themeRef is a reference to the theme that will apply to this render page. |  |  |
 | `basePath` _string_ | basePath is the shortest path by which the page may be accessed. It must not contain path parameters. This path will be used in site navigation. This path is subject to being prefixed for localization by `/\{l10n\}` and will be when the user selects a non-default language. |  | Pattern: `^/` <br />Required: \{\} <br /> |
 | `patternPath` _string_ | patternPath, which must be prefixed by BasePath, is an extension of basePath that adds pattern matching as defined by https://pkg.go.dev/net/http#hdr-Patterns-ServeMux. This path is subject to being prefixed for localization by `/\{l10n\}` such as when the user selects a non-default language. |  |  |
-| `themeRef` _[LocalObjectReference](https://kubernetes.io/docs/reference/generated/kubernetes-api/v/#localobjectreference-v1-core)_ | themeRef is a reference to the theme that will apply to this render page. |  |  |
 
 
 
@@ -573,7 +577,7 @@ _Appears in:_
 | `apiVersion` _string_ | `kdex.dev/v1alpha1` | | |
 | `kind` _string_ | `KDexTheme` | | |
 | `metadata` _[ObjectMeta](https://kubernetes.io/docs/reference/generated/kubernetes-api/v/#objectmeta-v1-meta)_ | Refer to Kubernetes API documentation for fields of `metadata`. |  |  |
-| `spec` _[KDexThemeSpec](#kdexthemespec)_ | spec defines the desired state of KDexTheme |  |  |
+| `spec` _[KDexThemeSpec](#kdexthemespec)_ | spec defines the desired state of KDexTheme |  | Required: \{\} <br /> |
 
 
 #### KDexThemeList
@@ -631,7 +635,7 @@ _Appears in:_
 | `apiVersion` _string_ | `kdex.dev/v1alpha1` | | |
 | `kind` _string_ | `KDexTranslation` | | |
 | `metadata` _[ObjectMeta](https://kubernetes.io/docs/reference/generated/kubernetes-api/v/#objectmeta-v1-meta)_ | Refer to Kubernetes API documentation for fields of `metadata`. |  |  |
-| `spec` _[KDexTranslationSpec](#kdextranslationspec)_ | spec defines the desired state of KDexTranslation |  |  |
+| `spec` _[KDexTranslationSpec](#kdextranslationspec)_ | spec defines the desired state of KDexTranslation |  | Required: \{\} <br /> |
 
 
 #### KDexTranslationList
@@ -711,7 +715,9 @@ _Appears in:_
 
 
 
-
+PageComponents make up the elements of an HTML page that will be rendered by a web server.
+It is an internal resource created and managed by a controller that processes KDexPageBinding resources.
+It is not intended for users to create or manage directly.
 
 
 
@@ -759,8 +765,43 @@ _Appears in:_
 
 | Field | Description | Default | Validation |
 | --- | --- | --- | --- |
-| `httpRoute` _[HTTPRouteSpec](#httproutespec)_ | HTTPRouteSpec defines the desired state of an HTTPRoute. |  |  |
-| `ingress` _[IngressSpec](https://kubernetes.io/docs/reference/generated/kubernetes-api/v/#ingressspec-v1-networking)_ | IngressSpec defines the desired state of an Ingress. |  |  |
+| `domains` _string array_ | domains are the names by which this host is addressed. The first domain listed is the preferred domain. The domains may contain wildcard prefix in the form '*.'. Longest match always wins. |  | MinItems: 1 <br />Required: \{\} <br /> |
+| `strategy` _[RoutingStrategy](#routingstrategy)_ | strategy is the routing strategy to use. |  | Enum: [Ingress HTTPRoute] <br />Required: \{\} <br /> |
+| `tls` _[TLSSpec](#tlsspec)_ | tls is the TLS configuration for the host. |  |  |
+
+
+#### RoutingStrategy
+
+_Underlying type:_ _string_
+
+RoutingStrategy defines the routing strategy to use.
+
+_Validation:_
+- Enum: [Ingress HTTPRoute]
+
+_Appears in:_
+- [Routing](#routing)
+
+| Field | Description |
+| --- | --- |
+| `HTTPRoute` | HTTPRouteRoutingStrategy uses HTTPRoute to expose the host.<br /> |
+| `Ingress` | IngressRoutingStrategy uses Ingress to expose the host.<br /> |
+
+
+#### TLSSpec
+
+
+
+TLSSpec defines the desired state of TLS for a host.
+
+
+
+_Appears in:_
+- [Routing](#routing)
+
+| Field | Description | Default | Validation |
+| --- | --- | --- | --- |
+| `secretName` _string_ | SecretName is the name of a secret that contains a TLS certificate and key. |  | MinLength: 5 <br />Required: \{\} <br /> |
 
 
 #### ThemeAsset

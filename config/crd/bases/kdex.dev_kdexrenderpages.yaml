@@ -24,7 +24,10 @@ spec:
     name: v1alpha1
     schema:
       openAPIV3Schema:
-        description: KDexRenderPage is the Schema for the kdexrenderpages API
+        description: |-
+          KDexRenderPage is the Schema for the kdexrenderpages API.
+          It is an internal resource created and managed by a controller that processes KDexPageBinding resources.
+          It is not intended for users to create or manage directly.
         properties:
           apiVersion:
             description: |-

@@ -18,9 +18,7 @@ package v1alpha1
 
 import (
 	corev1 "k8s.io/api/core/v1"
-	networkingv1 "k8s.io/api/networking/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
-	gatewayv1 "sigs.k8s.io/gateway-api/apis/v1"
 )
 
 // AppPolicy defines the policy for apps.
@@ -35,7 +33,7 @@ const (
 )
 
 // KDexHostSpec defines the desired state of KDexHost
-// +kubebuilder:validation:XValidation:rule="[has(self.ingress), has(self.httpRoute)].filter(x, x).size() == 1",message="exactly one of ingress or httpRoute must be specified"
+
 type KDexHostSpec struct {
 	// AppPolicy defines the policy for apps.
 	// When the strict policy is enabled, an app may not embed JavaScript dependencies.
@@ -60,18 +58,14 @@ type KDexHostSpec struct {
 	// +optional
 	DefaultThemeRef *corev1.LocalObjectReference `json:"defaultThemeRef,omitempty"`
 
-	// domains are the names by which this host is addressed. The first domain listed is the preferred domain. The domains may contain wildcard prefix in the form '*.'. Longest match always wins.
-	// +kubebuilder:validation:Required
-	// +kubebuilder:validation:MinItems=1
-	// +kubebuilder:validation:Items:Format=hostname
-	Domains []string `json:"domains"`
-
 	// organization is the name of the Organization.
 	// +kubebuilder:validation:Required
 	// +kubebuilder:validation:MinLength=5
 	Organization string `json:"organization"`
 
-	*Routing `json:",inline"`
+	// routing defines the desired routing configuration for the host.
+	// +kubebuilder:validation:Required
+	Routing Routing `json:"routing"`
 }
 
 // KDexHostStatus defines the observed state of KDexHost.
@@ -130,12 +124,38 @@ type KDexHostList struct {
 
 // Routing defines the desired routing configuration for the host.
 type Routing struct {
-	// HTTPRouteSpec defines the desired state of an HTTPRoute.
+	// domains are the names by which this host is addressed. The first domain listed is the preferred domain. The domains may contain wildcard prefix in the form '*.'. Longest match always wins.
+	// +kubebuilder:validation:Required
+	// +kubebuilder:validation:MinItems=1
+	// +kubebuilder:validation:Items:Format=hostname
+	Domains []string `json:"domains"`
+
+	// strategy is the routing strategy to use.
+	// +kubebuilder:validation:Required
+	Strategy RoutingStrategy `json:"strategy"`
+
+	// tls is the TLS configuration for the host.
 	// +optional
-	HTTPRoute *gatewayv1.HTTPRouteSpec `json:"httpRoute,omitempty"`
-	// IngressSpec defines the desired state of an Ingress.
-	// +optional
-	Ingress *networkingv1.IngressSpec `json:"ingress,omitempty"`
+	TLS *TLSSpec `json:"tls,omitempty"`
+}
+
+// RoutingStrategy defines the routing strategy to use.
+// +kubebuilder:validation:Enum=Ingress;HTTPRoute
+type RoutingStrategy string
+
+const (
+	// HTTPRouteRoutingStrategy uses HTTPRoute to expose the host.
+	HTTPRouteRoutingStrategy RoutingStrategy = "HTTPRoute"
+	// IngressRoutingStrategy uses Ingress to expose the host.
+	IngressRoutingStrategy RoutingStrategy = "Ingress"
+)
+
+// TLSSpec defines the desired state of TLS for a host.
+type TLSSpec struct {
+	// SecretName is the name of a secret that contains a TLS certificate and key.
+	// +kubebuilder:validation:Required
+	// +kubebuilder:validation:MinLength=5
+	SecretName string `json:"secretName"`
 }
 
 func init() {
