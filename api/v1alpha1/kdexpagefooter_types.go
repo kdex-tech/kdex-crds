@@ -50,7 +50,7 @@ type KDexPageFooterStatus struct {
 }
 
 // +kubebuilder:object:root=true
-// +kubebuilder:resource:scope=Namespaced,shortName=mfe-pf
+// +kubebuilder:resource:scope=Namespaced,shortName=kdex-pf
 // +kubebuilder:subresource:status
 
 // KDexPageFooter is the Schema for the kdexpagefooters API

@@ -53,7 +53,7 @@ type KDexPageNavigationStatus struct {
 }
 
 // +kubebuilder:object:root=true
-// +kubebuilder:resource:scope=Namespaced,shortName=mfe-pn
+// +kubebuilder:resource:scope=Namespaced,shortName=kdex-pn
 // +kubebuilder:subresource:status
 
 // KDexPageNavigation is the Schema for the kdexpagenavigations API

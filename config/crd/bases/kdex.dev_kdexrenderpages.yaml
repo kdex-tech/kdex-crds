@@ -12,7 +12,7 @@ spec:
     listKind: KDexRenderPageList
     plural: kdexrenderpages
     shortNames:
-    - mfe-rp
+    - kdex-rp
     singular: kdexrenderpage
   scope: Namespaced
   versions:

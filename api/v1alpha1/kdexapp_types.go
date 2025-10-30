@@ -33,7 +33,7 @@ type CustomElement struct {
 }
 
 // +kubebuilder:object:root=true
-// +kubebuilder:resource:scope=Namespaced,shortName=mfe-a
+// +kubebuilder:resource:scope=Namespaced,shortName=kdex-a
 // +kubebuilder:subresource:status
 
 // KDexApp is the Schema for the kdexapps API

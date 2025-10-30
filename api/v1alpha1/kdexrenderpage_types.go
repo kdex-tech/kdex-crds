@@ -72,7 +72,7 @@ type KDexRenderPageStatus struct {
 }
 
 // +kubebuilder:object:root=true
-// +kubebuilder:resource:scope=Namespaced,shortName=mfe-rp
+// +kubebuilder:resource:scope=Namespaced,shortName=kdex-rp
 // +kubebuilder:subresource:status
 
 // KDexRenderPage is the Schema for the kdexrenderpages API.

@@ -12,7 +12,7 @@ spec:
     listKind: KDexPageFooterList
     plural: kdexpagefooters
     shortNames:
-    - mfe-pf
+    - kdex-pf
     singular: kdexpagefooter
   scope: Namespaced
   versions:

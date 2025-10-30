@@ -12,7 +12,7 @@ spec:
     listKind: KDexPageArchetypeList
     plural: kdexpagearchetypes
     shortNames:
-    - mfe-pa
+    - kdex-pa
     singular: kdexpagearchetype
   scope: Namespaced
   versions:

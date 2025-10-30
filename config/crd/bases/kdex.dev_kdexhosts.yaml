@@ -12,7 +12,7 @@ spec:
     listKind: KDexHostList
     plural: kdexhosts
     shortNames:
-    - mfe-h
+    - kdex-h
     singular: kdexhost
   scope: Namespaced
   versions:

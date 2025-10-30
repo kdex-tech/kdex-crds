@@ -53,7 +53,7 @@ type KDexPageHeaderStatus struct {
 }
 
 // +kubebuilder:object:root=true
-// +kubebuilder:resource:scope=Namespaced,shortName=mfe-ph
+// +kubebuilder:resource:scope=Namespaced,shortName=kdex-ph
 // +kubebuilder:subresource:status
 
 // KDexPageHeader is the Schema for the kdexpageheaders API

@@ -72,7 +72,7 @@ type KDexPageArchetypeStatus struct {
 }
 
 // +kubebuilder:object:root=true
-// +kubebuilder:resource:scope=Namespaced,shortName=mfe-pa
+// +kubebuilder:resource:scope=Namespaced,shortName=kdex-pa
 // +kubebuilder:subresource:status
 
 // KDexPageArchetype is the Schema for the kdexpagearchetypes API

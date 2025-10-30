@@ -115,7 +115,7 @@ type KDexPageBindingStatus struct {
 }
 
 // +kubebuilder:object:root=true
-// +kubebuilder:resource:scope=Namespaced,shortName=mfe-pb
+// +kubebuilder:resource:scope=Namespaced,shortName=kdex-pb
 // +kubebuilder:subresource:status
 
 // KDexPageBinding is the Schema for the kdexpagebindings API

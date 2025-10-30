@@ -12,7 +12,7 @@ spec:
     listKind: KDexAppList
     plural: kdexapps
     shortNames:
-    - mfe-a
+    - kdex-a
     singular: kdexapp
   scope: Namespaced
   versions:

@@ -12,7 +12,7 @@ spec:
     listKind: KDexThemeList
     plural: kdexthemes
     shortNames:
-    - mfe-th
+    - kdex-th
     singular: kdextheme
   scope: Namespaced
   versions:
@@ -77,19 +77,18 @@ spec:
                   - message: exactly one of linkHref, script, scriptSrc, or style
                       must be set
                     rule: '[has(self.linkHref), has(self.script), has(self.scriptSrc),
-                      has(self.style)].count(true) == 1'
+                      has(self.style)].filter(x, x).size() == 1'
                 maxItems: 32
                 minItems: 1
                 type: array
               image:
                 description: |-
-                  image is the name of an OCI image that contains Theme resources. If not specified all Asset URLs must include protocol and host. When specified, URLs must be prefixed by the routePath.
+                  image is the name of an OCI image that contains Theme resources.
                   More info: https://kubernetes.io/docs/concepts/containers/images
                 type: string
-              imagePullSecrets:
+              pullSecrets:
                 description: |-
-                  imagePullSecrets is an optional list of references to secrets in the same namespace to use for pulling any of the images used by this Spec.
-                  If specified, these secrets will be passed to individual puller implementations for them to use.
+                  pullSecrets is an optional list of references to secrets in the same namespace to use for pulling the image. Also used for the webserver image if specified.
                   More info: https://kubernetes.io/docs/concepts/containers/images#specifying-imagepullsecrets-on-a-pod
                 items:
                   description: |-
@@ -118,6 +117,85 @@ spec:
                   marked as conflicting.
                 pattern: ^/.+
                 type: string
+              webserver:
+                description: webserver defines the configuration for the theme webserver.
+                properties:
+                  image:
+                    description: |-
+                      image is the name of webserver image.
+                      More info: https://kubernetes.io/docs/concepts/containers/images
+                    minLength: 5
+                    type: string
+                  replicas:
+                    description: |-
+                      replicas is the number of desired pods. This is a pointer to distinguish between explicit
+                      zero and not specified. Defaults to 1.
+                    format: int32
+                    type: integer
+                  resources:
+                    description: |-
+                      resources defines the compute resources required by the container.
+                      More info: https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/
+                    properties:
+                      claims:
+                        description: |-
+                          Claims lists the names of resources, defined in spec.resourceClaims,
+                          that are used by this container.
+
+                          This field depends on the
+                          DynamicResourceAllocation feature gate.
+
+                          This field is immutable. It can only be set for containers.
+                        items:
+                          description: ResourceClaim references one entry in PodSpec.ResourceClaims.
+                          properties:
+                            name:
+                              description: |-
+                                Name must match the name of one entry in pod.spec.resourceClaims of
+                                the Pod where this field is used. It makes that resource available
+                                inside a container.
+                              type: string
+                            request:
+                              description: |-
+                                Request is the name chosen for a request in the referenced claim.
+                                If empty, everything from the claim is made available, otherwise
+                                only the result of this request.
+                              type: string
+                          required:
+                          - name
+                          type: object
+                        type: array
+                        x-kubernetes-list-map-keys:
+                        - name
+                        x-kubernetes-list-type: map
+                      limits:
+                        additionalProperties:
+                          anyOf:
+                          - type: integer
+                          - type: string
+                          pattern: ^(\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))(([KMGTPE]i)|[numkMGTPE]|([eE](\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))))?$
+                          x-kubernetes-int-or-string: true
+                        description: |-
+                          Limits describes the maximum amount of compute resources allowed.
+                          More info: https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/
+                        type: object
+                      requests:
+                        additionalProperties:
+                          anyOf:
+                          - type: integer
+                          - type: string
+                          pattern: ^(\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))(([KMGTPE]i)|[numkMGTPE]|([eE](\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))))?$
+                          x-kubernetes-int-or-string: true
+                        description: |-
+                          Requests describes the minimum amount of compute resources required.
+                          If Requests is omitted for a container, it defaults to Limits if that is explicitly specified,
+                          otherwise to an implementation-defined value. Requests cannot exceed Limits.
+                          More info: https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/
+                        type: object
+                    type: object
+                required:
+                - image
+                type: object
             required:
             - assets
             type: object

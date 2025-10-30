@@ -12,7 +12,7 @@ spec:
     listKind: KDexPageHeaderList
     plural: kdexpageheaders
     shortNames:
-    - mfe-ph
+    - kdex-ph
     singular: kdexpageheader
   scope: Namespaced
   versions:

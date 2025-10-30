@@ -12,7 +12,7 @@ spec:
     listKind: KDexPageBindingList
     plural: kdexpagebindings
     shortNames:
-    - mfe-pb
+    - kdex-pb
     singular: kdexpagebinding
   scope: Namespaced
   versions:

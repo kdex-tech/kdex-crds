@@ -12,7 +12,7 @@ spec:
     listKind: KDexPageNavigationList
     plural: kdexpagenavigations
     shortNames:
-    - mfe-pn
+    - kdex-pn
     singular: kdexpagenavigation
   scope: Namespaced
   versions:

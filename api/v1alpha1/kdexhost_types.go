@@ -92,7 +92,7 @@ type KDexHostStatus struct {
 }
 
 // +kubebuilder:object:root=true
-// +kubebuilder:resource:scope=Namespaced,shortName=mfe-h
+// +kubebuilder:resource:scope=Namespaced,shortName=kdex-h
 // +kubebuilder:subresource:status
 
 // KDexHost is the Schema for the kdexhosts API

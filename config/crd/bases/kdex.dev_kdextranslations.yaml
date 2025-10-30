@@ -12,7 +12,7 @@ spec:
     listKind: KDexTranslationList
     plural: kdextranslations
     shortNames:
-    - mfe-t
+    - kdex-tr
     singular: kdextranslation
   scope: Namespaced
   versions:
