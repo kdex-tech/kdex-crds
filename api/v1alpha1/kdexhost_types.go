@@ -131,6 +131,7 @@ type Routing struct {
 	Domains []string `json:"domains"`
 
 	// strategy is the routing strategy to use. If not specified Ingress is assumed.
+	// +kubebuilder:default:="Ingress"
 	// +optional
 	Strategy RoutingStrategy `json:"strategy"`
 
