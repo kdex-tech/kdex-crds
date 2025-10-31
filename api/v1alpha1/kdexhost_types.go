@@ -130,8 +130,8 @@ type Routing struct {
 	// +kubebuilder:validation:Items:Format=hostname
 	Domains []string `json:"domains"`
 
-	// strategy is the routing strategy to use.
-	// +kubebuilder:validation:Required
+	// strategy is the routing strategy to use. If not specified Ingress is assumed.
+	// +optional
 	Strategy RoutingStrategy `json:"strategy"`
 
 	// tls is the TLS configuration for the host.
