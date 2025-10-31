@@ -52,7 +52,7 @@ func (r *Renderer) RenderPage(page Page) (string, error) {
 	}
 	templateData.Meta = template.HTML(metaOutput)
 
-	themeOutput, err := r.RenderOne(fmt.Sprintf("%s-theme", page.TemplateName), r.ThemeItemsToString(), templateData)
+	themeOutput, err := r.RenderOne(fmt.Sprintf("%s-theme", page.TemplateName), r.ThemeAssetsToString(), templateData)
 	if err != nil {
 		return "", err
 	}
@@ -136,10 +136,10 @@ func (r *Renderer) RenderOne(
 	return buf.String(), nil
 }
 
-func (h *Renderer) ThemeItemsToString() string {
+func (h *Renderer) ThemeAssetsToString() string {
 	var styleBuffer bytes.Buffer
 
-	for _, item := range h.ThemeItems {
+	for _, item := range h.ThemeAssets {
 		if item.LinkHref != "" {
 			styleBuffer.WriteString(`<link`)
 			for key, value := range item.Attributes {
