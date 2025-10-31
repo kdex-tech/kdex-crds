@@ -12,7 +12,7 @@ spec:
       <head>
         {{ .Meta }}
         <title>{{ .Title }}<title>
-        {{ .Stylesheet }}
+        {{ .Theme }}
         {{ .HeadScript }}
       </head>
       <body>
