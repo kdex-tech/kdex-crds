@@ -101,7 +101,9 @@ spec:
                     minItems: 1
                     type: array
                   strategy:
-                    description: strategy is the routing strategy to use.
+                    default: Ingress
+                    description: strategy is the routing strategy to use. If not specified
+                      Ingress is assumed.
                     enum:
                     - Ingress
                     - HTTPRoute
@@ -119,7 +121,6 @@ spec:
                     type: object
                 required:
                 - domains
-                - strategy
                 type: object
             required:
             - appPolicy
