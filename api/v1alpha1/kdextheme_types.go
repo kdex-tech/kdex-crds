@@ -52,6 +52,14 @@ type KDexThemeWebServer struct {
 	// +kubebuilder:validation:MinLength=5
 	Image string `json:"image"`
 
+	// Policy for pulling OCI objects. Possible values are:
+	// Always: the kubelet always attempts to pull the reference. Container creation will fail If the pull fails.
+	// Never: the kubelet never pulls the reference and only uses a local image or artifact. Container creation will fail if the reference isn't present.
+	// IfNotPresent: the kubelet pulls if the reference isn't already present on disk. Container creation will fail if the reference isn't present and the pull fails.
+	// Defaults to Always if :latest tag is specified, or IfNotPresent otherwise.
+	// +optional
+	PullPolicy v1.PullPolicy `json:"pullPolicy,omitempty" protobuf:"bytes,2,opt,name=pullPolicy,casttype=PullPolicy"`
+
 	// replicas is the number of desired pods. This is a pointer to distinguish between explicit
 	// zero and not specified. Defaults to 1.
 	// +optional
