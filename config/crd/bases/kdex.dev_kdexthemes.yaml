@@ -86,6 +86,14 @@ spec:
                   image is the name of an OCI image that contains Theme resources.
                   More info: https://kubernetes.io/docs/concepts/containers/images
                 type: string
+              pullPolicy:
+                description: |-
+                  Policy for pulling the OCI theme image. Possible values are:
+                  Always: the kubelet always attempts to pull the reference. Container creation will fail If the pull fails.
+                  Never: the kubelet never pulls the reference and only uses a local image or artifact. Container creation will fail if the reference isn't present.
+                  IfNotPresent: the kubelet pulls if the reference isn't already present on disk. Container creation will fail if the reference isn't present and the pull fails.
+                  Defaults to Always if :latest tag is specified, or IfNotPresent otherwise.
+                type: string
               pullSecrets:
                 description: |-
                   pullSecrets is an optional list of references to secrets in the same namespace to use for pulling the image. Also used for the webserver image if specified.
@@ -128,7 +136,7 @@ spec:
                     type: string
                   pullPolicy:
                     description: |-
-                      Policy for pulling OCI objects. Possible values are:
+                      Policy for pulling the webserver image. Possible values are:
                       Always: the kubelet always attempts to pull the reference. Container creation will fail If the pull fails.
                       Never: the kubelet never pulls the reference and only uses a local image or artifact. Container creation will fail if the reference isn't present.
                       IfNotPresent: the kubelet pulls if the reference isn't already present on disk. Container creation will fail if the reference isn't present and the pull fails.

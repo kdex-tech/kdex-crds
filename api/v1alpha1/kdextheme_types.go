@@ -52,7 +52,7 @@ type KDexThemeWebServer struct {
 	// +kubebuilder:validation:MinLength=5
 	Image string `json:"image"`
 
-	// Policy for pulling OCI objects. Possible values are:
+	// Policy for pulling the webserver image. Possible values are:
 	// Always: the kubelet always attempts to pull the reference. Container creation will fail If the pull fails.
 	// Never: the kubelet never pulls the reference and only uses a local image or artifact. Container creation will fail if the reference isn't present.
 	// IfNotPresent: the kubelet pulls if the reference isn't already present on disk. Container creation will fail if the reference isn't present and the pull fails.
@@ -84,6 +84,14 @@ type KDexThemeSpec struct {
 	// More info: https://kubernetes.io/docs/concepts/containers/images
 	// +optional
 	Image string `json:"image,omitempty"`
+
+	// Policy for pulling the OCI theme image. Possible values are:
+	// Always: the kubelet always attempts to pull the reference. Container creation will fail If the pull fails.
+	// Never: the kubelet never pulls the reference and only uses a local image or artifact. Container creation will fail if the reference isn't present.
+	// IfNotPresent: the kubelet pulls if the reference isn't already present on disk. Container creation will fail if the reference isn't present and the pull fails.
+	// Defaults to Always if :latest tag is specified, or IfNotPresent otherwise.
+	// +optional
+	PullPolicy v1.PullPolicy `json:"pullPolicy,omitempty" protobuf:"bytes,2,opt,name=pullPolicy,casttype=PullPolicy"`
 
 	// pullSecrets is an optional list of references to secrets in the same namespace to use for pulling the image. Also used for the webserver image if specified.
 	// More info: https://kubernetes.io/docs/concepts/containers/images#specifying-imagepullsecrets-on-a-pod
