@@ -23,7 +23,7 @@ erDiagram
     KDexPageBinding ||--o{ KDexPageBinding : "parent page"
 
     KDexRenderPage ||--o{ KDexRenderPage : "parent page"
-    KDexRenderPage ||--o{ KDexTheme : "stylesheet"
+    KDexRenderPage ||--o{ KDexTheme : "theme"
 
     KDexApp {
         string name
