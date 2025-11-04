@@ -58,6 +58,13 @@ spec:
                       description: attributes are key/value pairs that will be added
                         to the element [link|style|script] when rendered.
                       type: object
+                    footScript:
+                      default: false
+                      description: footScript is a flag for script or scriptSrc that
+                        indicates if the tag should be added in the head of the page
+                        or at the foot. The default is false (add to head). To add
+                        the script to the foot of the page set footScript to true.
+                      type: boolean
                     linkHref:
                       description: linkHref is the content of a <link> href attribute.
                       type: string
@@ -78,6 +85,9 @@ spec:
                       must be set
                     rule: '[has(self.linkHref), has(self.script), has(self.scriptSrc),
                       has(self.style)].filter(x, x).size() == 1'
+                  - message: footScript can only be set if script or scriptSrc is
+                      set
+                    rule: '!self.footScript || has(self.script) || has(self.scriptSrc)'
                 maxItems: 32
                 minItems: 1
                 type: array

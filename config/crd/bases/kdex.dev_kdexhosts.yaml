@@ -46,21 +46,15 @@ spec:
           spec:
             description: spec defines the desired state of KDexHost
             properties:
-              appPolicy:
-                description: |-
-                  AppPolicy defines the policy for apps.
-                  When the strict policy is enabled, an app may not embed JavaScript dependencies.
-                  Validation of the application source code will fail if dependencies are not fully externalized.
-                  A Host which defines the `script` app policy must not accept apps which do not comply.
-                  While a non-strict Host may accept both strict and non-strict apps.
-                enum:
-                - Strict
-                - NonStrict
-                type: string
               baseMeta:
                 description: baseMeta is a string containing a base set of meta tags
                   to use on every page rendered for the host.
                 minLength: 5
+                type: string
+              brandName:
+                description: brandName is the name used when rendering pages belonging
+                  to the host. For example, it may be used as alt text for the logo
+                  displayed in the page header.
                 type: string
               defaultLang:
                 description: |-
@@ -69,8 +63,8 @@ spec:
                   When render page paths do not specify a 'lang' path parameter this will be the value used. When not set the default will be 'en'.
                 type: string
               defaultThemeRef:
-                description: defaultThemeRef is a reference to the default theme that
-                  should apply to all pages bound to this host.
+                description: defaultThemeRef is a reference to the theme that should
+                  apply to all pages bound to this host unless overridden.
                 properties:
                   name:
                     default: ""
@@ -83,8 +77,17 @@ spec:
                     type: string
                 type: object
                 x-kubernetes-map-type: atomic
+              modulePolicy:
+                description: |-
+                  modulePolicy defines the policy for JavaScript references in KDexApp, KDexTheme and KDexScript resources.
+                  A Host must not accept JavaScript references which do not comply with the specified policy.
+                enum:
+                - Strict
+                - NonStrict
+                type: string
               organization:
-                description: organization is the name of the Organization.
+                description: organization is the name of the Organization to which
+                  the host belongs.
                 minLength: 5
                 type: string
               routing:
@@ -136,7 +139,8 @@ spec:
                 - domains
                 type: object
             required:
-            - appPolicy
+            - brandName
+            - modulePolicy
             - organization
             - routing
             type: object

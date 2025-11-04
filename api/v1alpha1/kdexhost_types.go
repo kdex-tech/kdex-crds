@@ -21,32 +21,32 @@ import (
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
 
-// AppPolicy defines the policy for apps.
+// ModulePolicy defines the policy for the use of JavaScript Modules.
 // +kubebuilder:validation:Enum=Strict;NonStrict
-type AppPolicy string
+type ModulePolicy string
 
 const (
-	// NonStrictAppPolicy means that apps may embed JavaScript dependencies.
-	NonStrictAppPolicy AppPolicy = "NonStrict"
-	// StrictAppPolicy means that apps may not embed JavaScript dependencies.
-	StrictAppPolicy AppPolicy = "Strict"
+	// LooseModulePolicy means that a) JavaScript references are not required to be JavaScript modules and b) JavaScript references may contain embed dependencies.
+	LooseModulePolicy ModulePolicy = "Loose"
+	// ExternalDependenciesModulePolicy means that a) JavaScript references are not required to be JavaScript modules and b) JavaScript references may not contain embed dependencies.
+	ExternalDependenciesModulePolicy ModulePolicy = "ExternalDependencies"
+	// ModulesRequiredModulePolicy means that a) JavaScript references are required to be JavaScript modules and b) JavaScript references may contain embed dependencies.
+	ModulesRequiredModulePolicy ModulePolicy = "ModulesRequired"
+	// StrictModulePolicy means that a) JavaScript references are required to be JavaScript modules and b) JavaScript references may not contain embed dependencies.
+	StrictModulePolicy ModulePolicy = "Strict"
 )
 
 // KDexHostSpec defines the desired state of KDexHost
 
 type KDexHostSpec struct {
-	// AppPolicy defines the policy for apps.
-	// When the strict policy is enabled, an app may not embed JavaScript dependencies.
-	// Validation of the application source code will fail if dependencies are not fully externalized.
-	// A Host which defines the `script` app policy must not accept apps which do not comply.
-	// While a non-strict Host may accept both strict and non-strict apps.
-	// +kubebuilder:validation:Required
-	AppPolicy AppPolicy `json:"appPolicy"`
-
 	// baseMeta is a string containing a base set of meta tags to use on every page rendered for the host.
 	// +optional
 	// +kubebuilder:validation:MinLength=5
 	BaseMeta string `json:"baseMeta,omitempty"`
+
+	// brandName is the name used when rendering pages belonging to the host. For example, it may be used as alt text for the logo displayed in the page header.
+	// +kubebuilder:validation:Required
+	BrandName string `json:"brandName"`
 
 	// defaultLang is a string containing a BCP 47 language tag.
 	// See https://developer.mozilla.org/en-US/docs/Glossary/BCP_47_language_tag.
@@ -54,11 +54,16 @@ type KDexHostSpec struct {
 	// +optional
 	DefaultLang string `json:"defaultLang,omitempty"`
 
-	// defaultThemeRef is a reference to the default theme that should apply to all pages bound to this host.
+	// defaultThemeRef is a reference to the theme that should apply to all pages bound to this host unless overridden.
 	// +optional
 	DefaultThemeRef *corev1.LocalObjectReference `json:"defaultThemeRef,omitempty"`
 
-	// organization is the name of the Organization.
+	// modulePolicy defines the policy for JavaScript references in KDexApp, KDexTheme and KDexScript resources.
+	// A Host must not accept JavaScript references which do not comply with the specified policy.
+	// +kubebuilder:validation:Required
+	ModulePolicy ModulePolicy `json:"modulePolicy"`
+
+	// organization is the name of the Organization to which the host belongs.
 	// +kubebuilder:validation:Required
 	// +kubebuilder:validation:MinLength=5
 	Organization string `json:"organization"`

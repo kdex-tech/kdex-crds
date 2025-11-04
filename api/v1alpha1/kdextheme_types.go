@@ -22,10 +22,16 @@ import (
 )
 
 // +kubebuilder:validation:XValidation:rule="[has(self.linkHref), has(self.script), has(self.scriptSrc), has(self.style)].filter(x, x).size() == 1",message="exactly one of linkHref, script, scriptSrc, or style must be set"
+// +kubebuilder:validation:XValidation:rule="!self.footScript || has(self.script) || has(self.scriptSrc)",message="footScript can only be set if script or scriptSrc is set"
 type ThemeAsset struct {
 	// attributes are key/value pairs that will be added to the element [link|style|script] when rendered.
 	// +optional
 	Attributes map[string]string `json:"attributes,omitempty"`
+
+	// footScript is a flag for script or scriptSrc that indicates if the tag should be added in the head of the page or at the foot. The default is false (add to head). To add the script to the foot of the page set footScript to true.
+	// +optional
+	// +kubebuilder:default:=false
+	FootScript bool `json:"footScript,omitempty"`
 
 	// linkHref is the content of a <link> href attribute.
 	// +optional
