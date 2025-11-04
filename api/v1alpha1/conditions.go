@@ -56,24 +56,12 @@ func GetCondition(conditions []metav1.Condition, condType ConditionType) *metav1
 }
 
 type ConditionArgs struct {
-	Ready       *ConditionArgsReady
-	Degraded    *ConditionArgsDegraded
-	Progressing *ConditionArgsProgressing
+	Ready       *ConditionFields
+	Degraded    *ConditionFields
+	Progressing *ConditionFields
 }
 
-type ConditionArgsReady struct {
-	Status  metav1.ConditionStatus
-	Reason  ConditionReason
-	Message string
-}
-
-type ConditionArgsDegraded struct {
-	Status  metav1.ConditionStatus
-	Reason  ConditionReason
-	Message string
-}
-
-type ConditionArgsProgressing struct {
+type ConditionFields struct {
 	Status  metav1.ConditionStatus
 	Reason  ConditionReason
 	Message string
