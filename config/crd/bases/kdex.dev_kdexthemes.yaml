@@ -74,6 +74,8 @@ spec:
                       type: string
                     scriptSrc:
                       description: scriptSrc is the content of a <script> src attribute.
+                        It must be absolute containing protocol and host or must be
+                        prefixed by the routePath of the theme.
                       type: string
                     style:
                       description: style is the text content to be added into a <style>

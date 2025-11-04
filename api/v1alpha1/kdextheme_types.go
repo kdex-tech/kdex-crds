@@ -41,7 +41,7 @@ type ThemeAsset struct {
 	// +optional
 	Script string `json:"script,omitempty"`
 
-	// scriptSrc is the content of a <script> src attribute.
+	// scriptSrc is the content of a <script> src attribute. It must be absolute containing protocol and host or must be prefixed by the routePath of the theme.
 	// +optional
 	ScriptSrc string `json:"scriptSrc,omitempty"`
 
@@ -79,6 +79,7 @@ type KDexThemeWebServer struct {
 
 // KDexThemeSpec defines the desired state of KDexTheme
 // +kubebuilder:validation:X-kubernetes-validations:rule="self.image == \"\" || self.routePath != \"\"",message="routePath must be specified when an image is specified"
+// +kubebuilder:validation:X-kubernetes-validations:rule="self.assets.all(asset, !has(asset.scriptSrc) || asset.scriptSrc.contains('://') || (has(self.routePath) && asset.scriptSrc.startsWith(self.routePath)))",message="scriptSrc must be absolute or be prefixed by routePath"
 type KDexThemeSpec struct {
 	// assets is a set of elements that define a portable set of design rules. They may contain URLs that point to resources hosted at some public address and/or they may contain tag contents.
 	// +kubebuilder:validation:MaxItems=32

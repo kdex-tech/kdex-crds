@@ -10,4 +10,5 @@ resources:
 - v1alpha1_kdexhost.yaml
 - v1alpha1_kdextranslation.yaml
 - v1alpha1_kdextheme.yaml
+- v1alpha1_kdexscript.yaml
 # +kubebuilder:scaffold:manifestskustomizesamples

@@ -69,7 +69,7 @@ type KDexAppSpec struct {
 	// +optional
 	CustomElements []CustomElement `json:"customElements,omitempty"`
 
-	// packageReference specifies the name and version of an NPM package that contains the micro-frontend application. The package must have a package.json that contains ES modules.
+	// packageReference specifies the name and version of an NPM package that contains the micro-frontend application. The package.json must describe an ES module.
 	// +kubebuilder:validation:Required
 	PackageReference PackageReference `json:"packageReference"`
 }
