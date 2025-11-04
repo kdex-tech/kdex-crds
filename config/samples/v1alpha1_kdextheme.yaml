@@ -6,21 +6,21 @@ metadata:
     app.kubernetes.io/managed-by: kustomize
   name: kdextheme-sample
 spec:
-  styleItems:
-    - attributes:
-        media: (width < 500px)
-      style: |
-        p {
-          color: blue;
-          background-color: yellow;
-        }
-    - style: |
-        p {
-          color: white;
-          background-color: blue;
-          padding: 5px;
-          border: 1px solid black;
-        }
-    - linkHref: https://cdn.tailwindcss.com
-      attributes:
-        rel: theme
+  assets:
+  - attributes:
+      media: (width < 500px)
+    style: |
+      p {
+        color: blue;
+        background-color: yellow;
+      }
+  - style: |
+      p {
+        color: white;
+        background-color: blue;
+        padding: 5px;
+        border: 1px solid black;
+      }
+  - attributes:
+      rel: theme
+    linkHref: https://cdn.tailwindcss.com

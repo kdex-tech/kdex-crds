@@ -1,10 +1,10 @@
 apiVersion: kdex.dev/v1alpha1
-kind: KDexScript
+kind: KDexScriptLibrary
 metadata:
   labels:
     app.kubernetes.io/name: kdex-crds
     app.kubernetes.io/managed-by: kustomize
-  name: kdexscript-sample
+  name: kdexscriptlibrary-sample
 spec:
   scripts:
   - attributes:

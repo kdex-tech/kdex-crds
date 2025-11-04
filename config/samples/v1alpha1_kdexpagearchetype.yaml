@@ -4,7 +4,7 @@ metadata:
   labels:
     app.kubernetes.io/name: kdex-crds
     app.kubernetes.io/managed-by: kustomize
-  name: generic-page
+  name: kdexpagearchetype-sample
 spec:
   content: |
     <!DOCTYPE html>
@@ -32,8 +32,10 @@ spec:
       </body>
     </html>
   defaultFooterRef:
-    name: generic-footer
+    name: kdexpagefooter-sample
   defaultHeaderRef:
-    name: generic-header
+    name: kdexpageheader-sample
   defaultMainNavigationRef:
-    name: generic-navigation
+    name: kdexpagenavigation-sample
+  defaultThemeRef:
+    name: kdextheme-sample

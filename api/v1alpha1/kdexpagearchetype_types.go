@@ -49,6 +49,10 @@ type KDexPageArchetypeSpec struct {
 	// overrideThemeRef is a reference to the theme that should apply to all pages that use this archetype. It overrides the default theme defined on the host.
 	// +optional
 	OverrideThemeRef *corev1.LocalObjectReference `json:"overrideThemeRef,omitempty"`
+
+	// scriptLibraryRef is an optional reference to a KDexScriptLibrary resource.
+	// +optional
+	ScriptLibraryRef *corev1.LocalObjectReference `json:"scriptLibraryRef,omitempty"`
 }
 
 // KDexPageArchetypeStatus defines the observed state of KDexPageArchetype.

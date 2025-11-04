@@ -17,33 +17,19 @@ limitations under the License.
 package v1alpha1
 
 import (
-	v1 "k8s.io/api/core/v1"
+	corev1 "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
 
-// +kubebuilder:validation:XValidation:rule="[has(self.linkHref), has(self.script), has(self.scriptSrc), has(self.style)].filter(x, x).size() == 1",message="exactly one of linkHref, script, scriptSrc, or style must be set"
-// +kubebuilder:validation:XValidation:rule="!self.footScript || has(self.script) || has(self.scriptSrc)",message="footScript can only be set if script or scriptSrc is set"
+// +kubebuilder:validation:XValidation:rule="[has(self.linkHref), has(self.style)].filter(x, x).size() == 1",message="exactly one of linkHref or style must be set"
 type ThemeAsset struct {
-	// attributes are key/value pairs that will be added to the element [link|style|script] when rendered.
+	// attributes are key/value pairs that will be added to the element [link|style] as attributes when rendered.
 	// +optional
 	Attributes map[string]string `json:"attributes,omitempty"`
 
-	// footScript is a flag for script or scriptSrc that indicates if the tag should be added in the head of the page or at the foot. The default is false (add to head). To add the script to the foot of the page set footScript to true.
-	// +optional
-	// +kubebuilder:default:=false
-	FootScript bool `json:"footScript,omitempty"`
-
-	// linkHref is the content of a <link> href attribute.
+	// linkHref is the content of a <link> href attribute. The URL may be absolute with protocol and host or it must be prefixed by the RoutePath of the theme.
 	// +optional
 	LinkHref string `json:"linkHref,omitempty"`
-
-	// script is the text content to be added into a <script> element when rendered.
-	// +optional
-	Script string `json:"script,omitempty"`
-
-	// scriptSrc is the content of a <script> src attribute. It must be absolute containing protocol and host or must be prefixed by the routePath of the theme.
-	// +optional
-	ScriptSrc string `json:"scriptSrc,omitempty"`
 
 	// style is the text content to be added into a <style> element when rendered.
 	// +optional
@@ -64,7 +50,7 @@ type KDexThemeWebServer struct {
 	// IfNotPresent: the kubelet pulls if the reference isn't already present on disk. Container creation will fail if the reference isn't present and the pull fails.
 	// Defaults to Always if :latest tag is specified, or IfNotPresent otherwise.
 	// +optional
-	PullPolicy v1.PullPolicy `json:"pullPolicy,omitempty" protobuf:"bytes,2,opt,name=pullPolicy,casttype=PullPolicy"`
+	PullPolicy corev1.PullPolicy `json:"pullPolicy,omitempty" protobuf:"bytes,2,opt,name=pullPolicy,casttype=PullPolicy"`
 
 	// replicas is the number of desired pods. This is a pointer to distinguish between explicit
 	// zero and not specified. Defaults to 1.
@@ -74,14 +60,13 @@ type KDexThemeWebServer struct {
 	// resources defines the compute resources required by the container.
 	// More info: https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/
 	// +optional
-	Resources v1.ResourceRequirements `json:"resources,omitempty"`
+	Resources corev1.ResourceRequirements `json:"resources,omitempty"`
 }
 
 // KDexThemeSpec defines the desired state of KDexTheme
 // +kubebuilder:validation:X-kubernetes-validations:rule="self.image == \"\" || self.routePath != \"\"",message="routePath must be specified when an image is specified"
-// +kubebuilder:validation:X-kubernetes-validations:rule="self.assets.all(asset, !has(asset.scriptSrc) || asset.scriptSrc.contains('://') || (has(self.routePath) && asset.scriptSrc.startsWith(self.routePath)))",message="scriptSrc must be absolute or be prefixed by routePath"
 type KDexThemeSpec struct {
-	// assets is a set of elements that define a portable set of design rules. They may contain URLs that point to resources hosted at some public address and/or they may contain tag contents.
+	// assets is a set of elements that define a portable set of design rules.
 	// +kubebuilder:validation:MaxItems=32
 	// +kubebuilder:validation:MinItems=1
 	// +kubebuilder:validation:Required
@@ -98,7 +83,7 @@ type KDexThemeSpec struct {
 	// IfNotPresent: the kubelet pulls if the reference isn't already present on disk. Container creation will fail if the reference isn't present and the pull fails.
 	// Defaults to Always if :latest tag is specified, or IfNotPresent otherwise.
 	// +optional
-	PullPolicy v1.PullPolicy `json:"pullPolicy,omitempty" protobuf:"bytes,2,opt,name=pullPolicy,casttype=PullPolicy"`
+	PullPolicy corev1.PullPolicy `json:"pullPolicy,omitempty" protobuf:"bytes,2,opt,name=pullPolicy,casttype=PullPolicy"`
 
 	// pullSecrets is an optional list of references to secrets in the same namespace to use for pulling the image. Also used for the webserver image if specified.
 	// More info: https://kubernetes.io/docs/concepts/containers/images#specifying-imagepullsecrets-on-a-pod
@@ -107,7 +92,7 @@ type KDexThemeSpec struct {
 	// +patchStrategy=merge
 	// +listType=map
 	// +listMapKey=name
-	PullSecrets []v1.LocalObjectReference `json:"pullSecrets,omitempty" patchStrategy:"merge" patchMergeKey:"name" protobuf:"bytes,15,rep,name=imagePullSecrets"`
+	PullSecrets []corev1.LocalObjectReference `json:"pullSecrets,omitempty" patchStrategy:"merge" patchMergeKey:"name" protobuf:"bytes,15,rep,name=imagePullSecrets"`
 
 	// routePath is a prefix beginning with a forward slash (/) plus at least 1 additional character. KDexPageBindings associated with the KDexHost that have conflicting urls will be rejected and marked as conflicting.
 	// +optional

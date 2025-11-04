@@ -17,6 +17,7 @@ limitations under the License.
 package v1alpha1
 
 import (
+	corev1 "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
 
@@ -27,6 +28,10 @@ type KDexPageHeaderSpec struct {
 	// +kubebuilder:validation:MinLength=5
 	// +kubebuilder:example:=`<a class="logo" href="#">{{ .Title }}</a>`
 	Content string `json:"content"`
+
+	// scriptLibraryRef is an optional reference to a KDexScriptLibrary resource.
+	// +optional
+	ScriptLibraryRef *corev1.LocalObjectReference `json:"scriptLibraryRef,omitempty"`
 }
 
 // KDexPageHeaderStatus defines the observed state of KDexPageHeader.

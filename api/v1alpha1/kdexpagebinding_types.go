@@ -89,9 +89,13 @@ type KDexPageBindingSpec struct {
 
 	// parentPageRef is a reference to the KDexPageBinding bellow which this page will appear in the main navigation. If not set, the page will be placed in the top level of the navigation.
 	// +optional
-	ParentPageRef *corev1.LocalObjectReference `json:"parentPageRef"`
+	ParentPageRef *corev1.LocalObjectReference `json:"parentPageRef,omitempty"`
 
 	Paths `json:",inline"`
+
+	// scriptLibraryRef is an optional reference to a KDexScriptLibrary resource.
+	// +optional
+	ScriptLibraryRef *corev1.LocalObjectReference `json:"scriptLibraryRef,omitempty"`
 }
 
 // KDexPageBindingStatus defines the observed state of KDexPageBinding.

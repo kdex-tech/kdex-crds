@@ -4,22 +4,22 @@ kind: CustomResourceDefinition
 metadata:
   annotations:
     controller-gen.kubebuilder.io/version: v0.18.0
-  name: kdexscripts.kdex.dev
+  name: kdexscriptlibraries.kdex.dev
 spec:
   group: kdex.dev
   names:
-    kind: KDexScript
-    listKind: KDexScriptList
-    plural: kdexscripts
+    kind: KDexScriptLibrary
+    listKind: KDexScriptLibraryList
+    plural: kdexscriptlibraries
     shortNames:
-    - kdex-sc
-    singular: kdexscript
+    - kdex-sl
+    singular: kdexscriptlibrary
   scope: Namespaced
   versions:
   - name: v1alpha1
     schema:
       openAPIV3Schema:
-        description: KDexScript is the Schema for the kdexscripts API
+        description: KDexScriptLibrary is the Schema for the kdexscriptlibraries API
         properties:
           apiVersion:
             description: |-
@@ -39,7 +39,7 @@ spec:
           metadata:
             type: object
           spec:
-            description: spec defines the desired state of KDexScript
+            description: spec defines the desired state of KDexScriptLibrary
             properties:
               scripts:
                 description: scripts is a set of script references. They may contain
@@ -99,8 +99,6 @@ spec:
                       description: scriptSrc must be an absolute URL with a protocol
                         and host which can be used in a src attribute.
                       type: string
-                  required:
-                  - packageReference
                   type: object
                   x-kubernetes-validations:
                   - message: packageReference, script and scriptSrc are mutually exclusive
@@ -112,11 +110,11 @@ spec:
             - scripts
             type: object
           status:
-            description: status defines the observed state of KDexScript
+            description: status defines the observed state of KDexScriptLibrary
             properties:
               conditions:
                 description: |-
-                  conditions represent the current state of the KDexScript resource.
+                  conditions represent the current state of the KDexScriptLibrary resource.
                   Each condition has a unique type and reflects the status of a specific aspect of the resource.
 
                   Standard condition types include:

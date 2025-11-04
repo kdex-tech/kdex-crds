@@ -41,6 +41,10 @@ type KDexRenderPageSpec struct {
 	// +optional
 	ParentPageRef *corev1.LocalObjectReference `json:"parentPageRef"`
 
+	// scriptLibraryRefs is an optional array of KDexScriptLibrary references.
+	// +optional
+	ScriptLibraryRefs []corev1.LocalObjectReference `json:"scriptLibraryRefs,omitempty"`
+
 	// themeRef is a reference to the theme that will apply to this render page.
 	// +optional
 	ThemeRef *corev1.LocalObjectReference `json:"themeRef,omitempty"`

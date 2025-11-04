@@ -4,7 +4,7 @@ metadata:
   labels:
     app.kubernetes.io/name: kdex-crds
     app.kubernetes.io/managed-by: kustomize
-  name: generic-navigation
+  name: kdexpagenavigation-sample
 spec:
   content: |
     {{- define "menu" -}}
