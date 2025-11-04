@@ -12,6 +12,10 @@ func (c ConditionType) String() string {
 }
 
 const (
+	// ConditionTypeDegraded is the type of the Degraded condition.
+	ConditionTypeDegraded ConditionType = "Degraded"
+	// ConditionTypeProgressing is the type of the Progressing condition.
+	ConditionTypeProgressing ConditionType = "Progressing"
 	// ConditionTypeReady is the type of the Ready condition.
 	ConditionTypeReady ConditionType = "Ready"
 )
@@ -20,10 +24,12 @@ const (
 type ConditionReason string
 
 const (
-	// ConditionReasonReconcileSuccess is the reason for a successful reconciliation.
-	ConditionReasonReconcileSuccess ConditionReason = "ReconcileSuccess"
 	// ConditionReasonReconcileError is the reason for a failed reconciliation.
 	ConditionReasonReconcileError ConditionReason = "ReconcileError"
+	// ConditionReasonReconciling is the reason for a reconciling reconciliation.
+	ConditionReasonReconciling ConditionReason = "Reconciling"
+	// ConditionReasonReconcileSuccess is the reason for a successful reconciliation.
+	ConditionReasonReconcileSuccess ConditionReason = "ReconcileSuccess"
 )
 
 // NewCondition creates a new condition.
