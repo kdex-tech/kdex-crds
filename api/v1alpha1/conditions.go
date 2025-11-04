@@ -33,13 +33,20 @@ const (
 )
 
 // NewCondition creates a new condition.
-func NewCondition(condType ConditionType, status metav1.ConditionStatus, reason ConditionReason, message string) *metav1.Condition {
+func NewCondition(
+	condType ConditionType,
+	status metav1.ConditionStatus,
+	observedGeneration int64,
+	reason ConditionReason,
+	message string,
+) *metav1.Condition {
 	return &metav1.Condition{
-		Type:               string(condType),
-		Status:             status,
 		LastTransitionTime: metav1.Now(),
-		Reason:             string(reason),
 		Message:            message,
+		ObservedGeneration: observedGeneration,
+		Reason:             string(reason),
+		Status:             status,
+		Type:               string(condType),
 	}
 }
 
