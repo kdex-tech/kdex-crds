@@ -1,15 +1,12 @@
 package v1alpha1
 
 import (
+	meta "k8s.io/apimachinery/pkg/api/meta"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
 
 // ConditionType is the type of the condition.
 type ConditionType string
-
-func (c ConditionType) String() string {
-	return string(c)
-}
 
 const (
 	// ConditionTypeDegraded is the type of the Degraded condition.
@@ -36,14 +33,12 @@ const (
 func NewCondition(
 	condType ConditionType,
 	status metav1.ConditionStatus,
-	observedGeneration int64,
 	reason ConditionReason,
 	message string,
 ) *metav1.Condition {
 	return &metav1.Condition{
 		LastTransitionTime: metav1.Now(),
 		Message:            message,
-		ObservedGeneration: observedGeneration,
 		Reason:             string(reason),
 		Status:             status,
 		Type:               string(condType),
@@ -58,4 +53,55 @@ func GetCondition(conditions []metav1.Condition, condType ConditionType) *metav1
 		}
 	}
 	return nil
+}
+
+type ConditionArgs struct {
+	Ready       *ConditionArgsReady
+	Degraded    *ConditionArgsDegraded
+	Progressing *ConditionArgsProgressing
+}
+
+type ConditionArgsReady struct {
+	Status  metav1.ConditionStatus
+	Reason  ConditionReason
+	Message string
+}
+
+type ConditionArgsDegraded struct {
+	Status  metav1.ConditionStatus
+	Reason  ConditionReason
+	Message string
+}
+
+type ConditionArgsProgressing struct {
+	Status  metav1.ConditionStatus
+	Reason  ConditionReason
+	Message string
+}
+
+func SetConditions(conditions *[]metav1.Condition, args ConditionArgs) {
+	if args.Degraded != nil {
+		meta.SetStatusCondition(conditions, *NewCondition(
+			ConditionTypeProgressing,
+			args.Degraded.Status,
+			args.Degraded.Reason,
+			args.Degraded.Message,
+		))
+	}
+	if args.Progressing != nil {
+		meta.SetStatusCondition(conditions, *NewCondition(
+			ConditionTypeProgressing,
+			args.Progressing.Status,
+			args.Progressing.Reason,
+			args.Progressing.Message,
+		))
+	}
+	if args.Ready != nil {
+		meta.SetStatusCondition(conditions, *NewCondition(
+			ConditionTypeReady,
+			args.Ready.Status,
+			args.Ready.Reason,
+			args.Ready.Message,
+		))
+	}
 }
