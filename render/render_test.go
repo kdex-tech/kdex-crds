@@ -33,50 +33,48 @@ func TestRenderOne_InvalidTemplate(t *testing.T) {
 func TestRenderAll(t *testing.T) {
 	lastModified, _ := time.Parse("2006-01-02", "2025-09-20")
 
-	page := Page{
+	r := &Renderer{
 		Contents: map[string]string{
 			"main":    "<h1>Welcome</h1>",
 			"sidebar": `<my-app-element id="sidebar" data-date="{{.LastModified.Format "2006-01-02"}}"></my-app-element>`,
 		},
-		Footer: "Page Footer",
-		Header: "Page Header",
+		Footer:       "Page Footer",
+		FootScript:   "<script>foot</script>",
+		Header:       "Page Header",
+		HeadScript:   "<script>head</script>",
+		Language:     "en",
+		LastModified: lastModified,
+		Meta:         `<meta name="description" content="test">`,
 		Navigations: map[string]string{
 			"main": "main-nav",
 		},
+		Organization: "Test Inc.",
+		PageMap:      &map[string]*PageEntry{"home": {Href: "/"}},
 		Title:        "Test Page",
 		TemplateName: "main",
 		TemplateContent: `<!DOCTYPE html>
 <html lang="{{ .Language }}">
-	<head>
-	<title>{{.Title}}</title>
-		{{.Meta}}
-		{{.HeadScript}}
-		{{.Theme}}
-	</head>
-	<body>
-		<header>{{.Header}}</header>
-		<nav>{{range $key, $value := .Navigation}}
-		{{$key}}: {{$value}}
-		{{end}}</nav>
-		<main>{{range $key, $value := .Content}}
-		<div id="slot-{{$key}}">{{$value}}</div>
-		{{end}}</main>
-		<footer>{{.Footer}}</footer>
-		{{.FootScript}}
-	</body>
+<head>
+<title>{{.Title}}</title>
+	{{.Meta}}
+	{{.HeadScript}}
+	{{.Theme}}
+</head>
+<body>
+	<header>{{.Header}}</header>
+	<nav>{{range $key, $value := .Navigation}}
+	{{$key}}: {{$value}}
+	{{end}}</nav>
+	<main>{{range $key, $value := .Content}}
+	<div id="slot-{{$key}}">{{$value}}</div>
+	{{end}}</main>
+	<footer>{{.Footer}}</footer>
+	{{.FootScript}}
+</body>
 </html>`,
 	}
 
-	r := &Renderer{
-		FootScript:   "<script>foot</script>",
-		HeadScript:   "<script>head</script>",
-		Language:     "en",
-		LastModified: lastModified,
-		PageMap:      &map[string]*PageEntry{"home": {Href: "/"}},
-		Meta:         `<meta name="description" content="test">`,
-		Organization: "Test Inc.",
-	}
-	actual, err := r.RenderPage(page)
+	actual, err := r.RenderPage()
 	assert.NoError(t, err)
 
 	assert.Contains(t, actual, "<title>Test Page</title>")
@@ -92,32 +90,29 @@ func TestRenderAll(t *testing.T) {
 }
 
 func TestRenderAll_InvalidHeaderTemplate(t *testing.T) {
-	r := &Renderer{}
-	page := Page{
+	r := &Renderer{
 		TemplateName: "main",
 		Navigations:  nil,
 		Header:       "{{.Invalid}}",
 		Footer:       "",
 	}
-	_, err := r.RenderPage(page)
+	_, err := r.RenderPage()
 	assert.Error(t, err)
 }
 
 func TestRenderAll_InvalidFooterTemplate(t *testing.T) {
-	r := &Renderer{}
-	page := Page{
+	r := &Renderer{
 		TemplateName: "main",
 		Navigations:  nil,
 		Header:       "",
 		Footer:       "{{.Invalid}}",
 	}
-	_, err := r.RenderPage(page)
+	_, err := r.RenderPage()
 	assert.Error(t, err)
 }
 
 func TestRenderAll_InvalidNavigationTemplate(t *testing.T) {
-	r := &Renderer{}
-	page := Page{
+	r := &Renderer{
 		TemplateName: "main",
 		Navigations: map[string]string{
 			"main": "{{.Invalid}}",
@@ -125,13 +120,12 @@ func TestRenderAll_InvalidNavigationTemplate(t *testing.T) {
 		Header: "",
 		Footer: "",
 	}
-	_, err := r.RenderPage(page)
+	_, err := r.RenderPage()
 	assert.Error(t, err)
 }
 
 func TestRenderAll_InvalidContentTemplate(t *testing.T) {
-	r := &Renderer{}
-	page := Page{
+	r := &Renderer{
 		TemplateName: "main",
 		Contents: map[string]string{
 			"main": "{{.Invalid}}",
@@ -140,19 +134,18 @@ func TestRenderAll_InvalidContentTemplate(t *testing.T) {
 		Header:      "",
 		Footer:      "",
 	}
-	_, err := r.RenderPage(page)
+	_, err := r.RenderPage()
 	assert.Error(t, err)
 }
 
 func TestRenderAll_InvalidMainTemplate(t *testing.T) {
-	r := &Renderer{}
-	page := Page{
+	r := &Renderer{
 		TemplateName:    "main",
 		TemplateContent: "{{.Invalid}}",
 		Navigations:     nil,
 		Header:          "",
 		Footer:          "",
 	}
-	_, err := r.RenderPage(page)
+	_, err := r.RenderPage()
 	assert.Error(t, err)
 }

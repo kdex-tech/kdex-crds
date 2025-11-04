@@ -35,7 +35,7 @@ func init() {
 		LeftToRight:     true,
 		Meta:            `<meta charset="UTF-8">`,
 		Organization:    "KDex Tech Inc.",
-		PageBasePath:    "/one",
+		BasePath:        "/one",
 		PageMap: map[string]*PageEntry{
 			"One": {
 				Href:   "/one",

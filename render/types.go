@@ -9,17 +9,6 @@ import (
 	"kdex.dev/crds/api/v1alpha1"
 )
 
-type Page struct {
-	BasePath        string
-	Contents        map[string]string
-	Footer          string
-	Header          string
-	Title           string
-	Navigations     map[string]string
-	TemplateContent string
-	TemplateName    string
-}
-
 type PageEntry struct {
 	Children *map[string]*PageEntry `json:"children,omitempty" yaml:"children,omitempty"`
 	Icon     string                 `json:"icon,omitempty" yaml:"icon,omitempty"`
@@ -30,21 +19,33 @@ type PageEntry struct {
 }
 
 type Renderer struct {
+	BasePath        string
+	BrandName       string
+	Contents        map[string]string
 	DefaultLanguage string
+	Footer          string
 	FootScript      string
+	Header          string
 	HeadScript      string
 	Language        string
 	Languages       []string
 	LastModified    time.Time
 	MessagePrinter  *message.Printer
+	Navigations     map[string]string
 	Meta            string
 	Organization    string
 	PageMap         *map[string]*PageEntry
+	PatternPath     string
+	TemplateContent string
+	TemplateName    string
+	Title           string
 	ThemeAssets     []v1alpha1.ThemeAsset
 }
 
 // Fields available when rendering templates.
 type TemplateData struct {
+	BasePath        string                   `json:"basePath" yaml:"basePath"`
+	BrandName       string                   `json:"brandName" yaml:"brandName"`
 	Content         map[string]template.HTML `json:"content" yaml:"content"`
 	DefaultLanguage string                   `json:"defaultLanguage" yaml:"defaultLanguage"`
 	Footer          template.HTML            `json:"footer,omitempty" yaml:"footer,omitempty"`
@@ -55,11 +56,11 @@ type TemplateData struct {
 	Languages       []string                 `json:"languages" yaml:"languages"`
 	LastModified    time.Time                `json:"lastModified" yaml:"lastModified"`
 	LeftToRight     bool                     `json:"leftToRight" yaml:"leftToRight"`
-	PageBasePath    string                   `json:"pageBasePath" yaml:"pageBasePath"`
-	PageMap         map[string]*PageEntry    `json:"pageMap" yaml:"pageMap"`
-	Meta            template.HTML            `json:"meta,omitempty" yaml:"meta,omitempty"`
 	Navigation      map[string]template.HTML `json:"navigation" yaml:"navigation"`
+	Meta            template.HTML            `json:"meta,omitempty" yaml:"meta,omitempty"`
 	Organization    string                   `json:"organization" yaml:"organization"`
+	PageMap         map[string]*PageEntry    `json:"pageMap" yaml:"pageMap"`
+	PatternPath     string                   `json:"patternPath" yaml:"patternPath"`
 	Theme           template.HTML            `json:"theme,omitempty" yaml:"theme,omitempty"`
 	Title           string                   `json:"title" yaml:"title"`
 }
