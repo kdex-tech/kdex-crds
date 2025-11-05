@@ -176,11 +176,11 @@ func (s *Scripts) String(footScript bool) string {
 
 // +kubebuilder:validation:XValidation:rule="[has(self.scripts), has(self.packageReference)].filter(x, x).size() == 1",message="scripts and packageReference are mutually exclusive"
 type ScriptReference struct {
-	Scripts Scripts `json:",inline"`
+	Scripts *Scripts `json:",inline"`
 
 	// packageReference specifies the name and version of an NPM package that contains the script. The package.json must describe an ES module.
 	// +optional
-	PackageReference PackageReference `json:"packageReference,omitempty"`
+	PackageReference *PackageReference `json:"packageReference,omitempty"`
 }
 
 func init() {
