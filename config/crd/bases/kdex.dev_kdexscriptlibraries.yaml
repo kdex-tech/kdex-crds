@@ -113,9 +113,9 @@ spec:
                 type: array
             type: object
             x-kubernetes-validations:
-            - message: one of scripts or packageReference must be specified
+            - message: at least one of scripts or packageReference must be specified
               rule: '[has(self.scripts), has(self.packageReference)].filter(x, x).size()
-                == 1'
+                > 0'
           status:
             description: status defines the observed state of KDexScriptLibrary
             properties:

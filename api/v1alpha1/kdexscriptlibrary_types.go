@@ -23,7 +23,7 @@ import (
 )
 
 // KDexScriptLibrarySpec defines the desired state of KDexScriptLibrary
-// +kubebuilder:validation:XValidation:rule="[has(self.scripts), has(self.packageReference)].filter(x, x).size() == 1",message="one of scripts or packageReference must be specified"
+// +kubebuilder:validation:XValidation:rule="[has(self.scripts), has(self.packageReference)].filter(x, x).size() > 0",message="at least one of scripts or packageReference must be specified"
 type KDexScriptLibrarySpec struct {
 	// scripts is a set of script references. They may contain URLs that point to resources hosted at some public address, npm module references or they may contain tag contents.
 	// +kubebuilder:validation:MaxItems=32
@@ -159,15 +159,15 @@ func (s *Script) String(footScript bool) string {
 }
 
 func (s *KDexScriptLibrarySpec) String(footScript bool) string {
-	if s.PackageReference != nil {
-		if footScript {
-			return ""
-		}
-		return s.PackageReference.String()
-	}
-
 	var buffer bytes.Buffer
 	separator := ""
+
+	if s.PackageReference != nil && !footScript {
+		if !footScript {
+			buffer.WriteString(s.PackageReference.String())
+			separator = "\n"
+		}
+	}
 
 	for _, script := range s.Scripts {
 		output := script.String(footScript)
