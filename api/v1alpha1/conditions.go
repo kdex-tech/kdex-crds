@@ -70,7 +70,7 @@ type ConditionFields struct {
 func SetConditions(conditions *[]metav1.Condition, args ConditionArgs) {
 	if args.Degraded != nil {
 		meta.SetStatusCondition(conditions, *NewCondition(
-			ConditionTypeProgressing,
+			ConditionTypeDegraded,
 			args.Degraded.Status,
 			args.Degraded.Reason,
 			args.Degraded.Message,
