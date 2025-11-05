@@ -76,26 +76,6 @@ func (a *Asset) String() string {
 	return buffer.String()
 }
 
-type Assets struct {
-	// assets is a set of elements that define a portable set of design rules.
-	// +kubebuilder:validation:MaxItems=32
-	// +kubebuilder:validation:MinItems=1
-	Assets []Asset `json:"assets"`
-}
-
-func (a *Assets) String() string {
-	var buffer bytes.Buffer
-	separator := ""
-
-	for _, asset := range a.Assets {
-		buffer.WriteString(separator)
-		separator = "\n"
-		buffer.WriteString(asset.String())
-	}
-
-	return buffer.String()
-}
-
 // KDexThemeWebServer defines the desired state of the KDexTheme web server
 type KDexThemeWebServer struct {
 	// image is the name of webserver image.
@@ -126,7 +106,10 @@ type KDexThemeWebServer struct {
 // KDexThemeSpec defines the desired state of KDexTheme
 // +kubebuilder:validation:X-kubernetes-validations:rule="self.image == \"\" || self.routePath != \"\"",message="routePath must be specified when an image is specified"
 type KDexThemeSpec struct {
-	Assets Assets `json:",inline"`
+	// assets is a set of elements that define a portable set of design rules.
+	// +kubebuilder:validation:MaxItems=32
+	// +kubebuilder:validation:MinItems=1
+	Assets []Asset `json:"assets"`
 
 	// image is the name of an OCI image that contains Theme resources.
 	// More info: https://kubernetes.io/docs/concepts/containers/images
@@ -158,6 +141,19 @@ type KDexThemeSpec struct {
 	// webserver defines the configuration for the theme webserver.
 	// +optional
 	WebServer *KDexThemeWebServer `json:"webserver,omitempty"`
+}
+
+func (s *KDexThemeSpec) String() string {
+	var buffer bytes.Buffer
+	separator := ""
+
+	for _, asset := range s.Assets {
+		buffer.WriteString(separator)
+		separator = "\n"
+		buffer.WriteString(asset.String())
+	}
+
+	return buffer.String()
 }
 
 // KDexThemeStatus defines the observed state of KDexTheme.
