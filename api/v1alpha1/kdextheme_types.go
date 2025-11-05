@@ -39,41 +39,41 @@ type Asset struct {
 }
 
 func (a *Asset) String() string {
-	var styleBuffer bytes.Buffer
+	var buffer bytes.Buffer
 
 	if a.LinkHref != "" {
-		styleBuffer.WriteString(`<link`)
+		buffer.WriteString(`<link`)
 		for key, value := range a.Attributes {
 			if key == "href" || key == "src" {
 				continue
 			}
-			styleBuffer.WriteRune(' ')
-			styleBuffer.WriteString(key)
-			styleBuffer.WriteString(`="`)
-			styleBuffer.WriteString(value)
-			styleBuffer.WriteRune('"')
+			buffer.WriteRune(' ')
+			buffer.WriteString(key)
+			buffer.WriteString(`="`)
+			buffer.WriteString(value)
+			buffer.WriteRune('"')
 		}
-		styleBuffer.WriteString(` href="`)
-		styleBuffer.WriteString(a.LinkHref)
-		styleBuffer.WriteString(`"/>`)
+		buffer.WriteString(` href="`)
+		buffer.WriteString(a.LinkHref)
+		buffer.WriteString(`"/>`)
 	} else if a.Style != "" {
-		styleBuffer.WriteString(`<style`)
+		buffer.WriteString(`<style`)
 		for key, value := range a.Attributes {
 			if key == "href" || key == "src" {
 				continue
 			}
-			styleBuffer.WriteRune(' ')
-			styleBuffer.WriteString(key)
-			styleBuffer.WriteString(`="`)
-			styleBuffer.WriteString(value)
-			styleBuffer.WriteRune('"')
+			buffer.WriteRune(' ')
+			buffer.WriteString(key)
+			buffer.WriteString(`="`)
+			buffer.WriteString(value)
+			buffer.WriteRune('"')
 		}
-		styleBuffer.WriteString(`>\n`)
-		styleBuffer.WriteString(a.Style)
-		styleBuffer.WriteString("</style>")
+		buffer.WriteString(`>\n`)
+		buffer.WriteString(a.Style)
+		buffer.WriteString("</style>")
 	}
 
-	return styleBuffer.String()
+	return buffer.String()
 }
 
 type Assets struct {
@@ -84,16 +84,16 @@ type Assets struct {
 }
 
 func (a *Assets) String() string {
-	var styleBuffer bytes.Buffer
+	var buffer bytes.Buffer
 	separator := ""
 
 	for _, asset := range a.Assets {
-		styleBuffer.WriteString(separator)
+		buffer.WriteString(separator)
 		separator = "\n"
-		styleBuffer.WriteString(asset.String())
+		buffer.WriteString(asset.String())
 	}
 
-	return styleBuffer.String()
+	return buffer.String()
 }
 
 // KDexThemeWebServer defines the desired state of the KDexTheme web server

@@ -17,6 +17,8 @@ limitations under the License.
 package v1alpha1
 
 import (
+	"bytes"
+
 	corev1 "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
@@ -116,6 +118,25 @@ type PackageReference struct {
 	// version contains a specific npm package version.
 	// +kubebuilder:validation:Required
 	Version string `json:"version"`
+}
+
+func (p *PackageReference) String() string {
+	var buffer bytes.Buffer
+
+	buffer.WriteString(`<script type="module">\n`)
+	buffer.WriteString(`import `)
+	if p.ExportMapping != "" {
+		buffer.WriteString(p.ExportMapping)
+		buffer.WriteString(` from `)
+	}
+	buffer.WriteString(`"`)
+	buffer.WriteString(p.Name)
+	buffer.WriteString(`@`)
+	buffer.WriteString(p.Version)
+	buffer.WriteString(`";\n`)
+	buffer.WriteString(`</script>`)
+
+	return buffer.String()
 }
 
 func init() {

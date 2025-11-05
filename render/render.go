@@ -130,10 +130,10 @@ func (r *Renderer) RenderOne(
 		return "", err
 	}
 
-	var buf bytes.Buffer
-	if err := instance.Execute(&buf, data); err != nil {
+	var buffer bytes.Buffer
+	if err := instance.Execute(&buffer, data); err != nil {
 		return "", err
 	}
 
-	return buf.String(), nil
+	return buffer.String(), nil
 }
