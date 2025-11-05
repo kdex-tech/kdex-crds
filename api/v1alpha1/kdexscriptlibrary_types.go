@@ -163,7 +163,7 @@ type ScriptReference struct {
 	PackageReference *PackageReference `json:"packageReference,omitempty"`
 }
 
-func (s *ScriptReference) Strxing(footScript bool) string {
+func (s *ScriptReference) String(footScript bool) string {
 	if s.PackageReference != nil {
 		if footScript {
 			return ""
