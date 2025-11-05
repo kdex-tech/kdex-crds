@@ -68,6 +68,12 @@ spec:
                   NPM package that contains the micro-frontend application. The package.json
                   must describe an ES module.
                 properties:
+                  exportMapping:
+                    description: exportMapping is a mapping of the module's exports
+                      that will be used when the module import is written. e.g. `import
+                      [exportMapping] from [module_name];`. If exportMapping is not
+                      provided the module will be written as `import [module_name];`
+                    type: string
                   name:
                     description: name contains a scoped npm package name.
                     type: string

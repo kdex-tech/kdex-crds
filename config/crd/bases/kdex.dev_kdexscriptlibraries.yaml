@@ -51,7 +51,7 @@ spec:
                       additionalProperties:
                         type: string
                       description: attributes are key/value pairs that will be added
-                        to the element [link|style|script] when rendered.
+                        to the element when rendered.
                       type: object
                     footScript:
                       default: false
@@ -65,6 +65,13 @@ spec:
                         of an NPM package that contains the script. The package.json
                         must describe an ES module.
                       properties:
+                        exportMapping:
+                          description: exportMapping is a mapping of the module's
+                            exports that will be used when the module import is written.
+                            e.g. `import [exportMapping] from [module_name];`. If
+                            exportMapping is not provided the module will be written
+                            as `import [module_name];`
+                          type: string
                         name:
                           description: name contains a scoped npm package name.
                           type: string
@@ -102,7 +109,8 @@ spec:
                   type: object
                   x-kubernetes-validations:
                   - message: packageReference, script and scriptSrc are mutually exclusive
-                    rule: '!has(self.packageReference) || !has(self.script) || !has(self.scriptSrc)'
+                    rule: '[has(self.packageReference), has(self.script), has(self.scriptSrc)].filter(x,
+                      x).size() == 1'
                 maxItems: 32
                 minItems: 1
                 type: array

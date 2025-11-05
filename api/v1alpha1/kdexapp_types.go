@@ -101,13 +101,17 @@ type KDexAppStatus struct {
 
 // PackageReference specifies the name and version of an NPM package that contains the micro-frontend application.
 type PackageReference struct {
-	// secretRef is a reference to a secret containing authentication credentials for the NPM registry that holds the package.
+	// exportMapping is a mapping of the module's exports that will be used when the module import is written. e.g. `import [exportMapping] from [module_name];`. If exportMapping is not provided the module will be written as `import [module_name];`
 	// +optional
-	SecretRef *corev1.LocalObjectReference `json:"secretRef,omitempty"`
+	ExportMapping string `json:"exportMapping,omitempty"`
 
 	// name contains a scoped npm package name.
 	// +kubebuilder:validation:Required
 	Name string `json:"name"`
+
+	// secretRef is a reference to a secret containing authentication credentials for the NPM registry that holds the package.
+	// +optional
+	SecretRef *corev1.LocalObjectReference `json:"secretRef,omitempty"`
 
 	// version contains a specific npm package version.
 	// +kubebuilder:validation:Required

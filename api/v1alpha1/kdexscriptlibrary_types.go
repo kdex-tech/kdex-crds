@@ -82,9 +82,9 @@ type KDexScriptLibraryList struct {
 	Items           []KDexScriptLibrary `json:"items"`
 }
 
-// +kubebuilder:validation:XValidation:rule="!has(self.packageReference) || !has(self.script) || !has(self.scriptSrc)",message="packageReference, script and scriptSrc are mutually exclusive"
+// +kubebuilder:validation:XValidation:rule="[has(self.packageReference), has(self.script), has(self.scriptSrc)].filter(x, x).size() == 1",message="packageReference, script and scriptSrc are mutually exclusive"
 type Script struct {
-	// attributes are key/value pairs that will be added to the element [link|style|script] when rendered.
+	// attributes are key/value pairs that will be added to the element when rendered.
 	// +optional
 	Attributes map[string]string `json:"attributes,omitempty"`
 
