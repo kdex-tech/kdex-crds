@@ -23,8 +23,16 @@ import (
 )
 
 // KDexScriptLibrarySpec defines the desired state of KDexScriptLibrary
+// +kubebuilder:validation:XValidation:rule="[has(self.scripts), has(self.packageReference)].filter(x, x).size() == 1",message="one of scripts or packageReference must be specified"
 type KDexScriptLibrarySpec struct {
-	ScriptReference ScriptReference `json:",inline"`
+	// scripts is a set of script references. They may contain URLs that point to resources hosted at some public address, npm module references or they may contain tag contents.
+	// +kubebuilder:validation:MaxItems=32
+	// +optional
+	Scripts []Script `json:"scripts,omitempty"`
+
+	// packageReference specifies the name and version of an NPM package that contains the script. The package.json must describe an ES module.
+	// +optional
+	PackageReference *PackageReference `json:"packageReference,omitempty"`
 }
 
 // KDexScriptLibraryStatus defines the observed state of KDexScriptLibrary.
@@ -150,19 +158,7 @@ func (s *Script) String(footScript bool) string {
 	return buffer.String()
 }
 
-// +kubebuilder:validation:XValidation:rule="[has(self.scripts), has(self.packageReference)].filter(x, x).size() == 1",message="one of scripts or packageReference must be specified"
-type ScriptReference struct {
-	// scripts is a set of script references. They may contain URLs that point to resources hosted at some public address, npm module references or they may contain tag contents.
-	// +kubebuilder:validation:MaxItems=32
-	// +optional
-	Scripts []Script `json:"scripts,omitempty"`
-
-	// packageReference specifies the name and version of an NPM package that contains the script. The package.json must describe an ES module.
-	// +optional
-	PackageReference *PackageReference `json:"packageReference,omitempty"`
-}
-
-func (s *ScriptReference) String(footScript bool) string {
+func (s *KDexScriptLibrarySpec) String(footScript bool) string {
 	if s.PackageReference != nil {
 		if footScript {
 			return ""
