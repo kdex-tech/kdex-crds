@@ -22,11 +22,7 @@ import (
 
 // KDexScriptLibrarySpec defines the desired state of KDexScriptLibrary
 type KDexScriptLibrarySpec struct {
-	// scripts is a set of script references. They may contain URLs that point to resources hosted at some public address, npm module references or they may contain tag contents.
-	// +kubebuilder:validation:MaxItems=32
-	// +kubebuilder:validation:MinItems=1
-	// +kubebuilder:validation:Required
-	Scripts []Script `json:"scripts"`
+	ScriptReference ScriptReference `json:",inline"`
 }
 
 // KDexScriptLibraryStatus defines the observed state of KDexScriptLibrary.
@@ -90,7 +86,7 @@ type KDexScriptLibraryList struct {
 	Items           []KDexScriptLibrary `json:"items"`
 }
 
-// +kubebuilder:validation:XValidation:rule="[has(self.packageReference), has(self.script), has(self.scriptSrc)].filter(x, x).size() == 1",message="packageReference, script and scriptSrc are mutually exclusive"
+// +kubebuilder:validation:XValidation:rule="[has(self.script), has(self.scriptSrc)].filter(x, x).size() == 1",message="script and scriptSrc are mutually exclusive"
 type Script struct {
 	// attributes are key/value pairs that will be added to the element when rendered.
 	// +optional
@@ -101,10 +97,6 @@ type Script struct {
 	// +kubebuilder:default:=false
 	FootScript bool `json:"footScript,omitempty"`
 
-	// packageReference specifies the name and version of an NPM package that contains the script. The package.json must describe an ES module.
-	// +optional
-	PackageReference PackageReference `json:"packageReference"`
-
 	// script is the text content to be added into a <script> element when rendered.
 	// +optional
 	Script string `json:"script,omitempty"`
@@ -112,6 +104,19 @@ type Script struct {
 	// scriptSrc must be an absolute URL with a protocol and host which can be used in a src attribute.
 	// +optional
 	ScriptSrc string `json:"scriptSrc,omitempty"`
+}
+
+// +kubebuilder:validation:XValidation:rule="[has(self.scripts), has(self.packageReference)].filter(x, x).size() == 1",message="scripts and packageReference are mutually exclusive"
+type ScriptReference struct {
+	// scripts is a set of script references. They may contain URLs that point to resources hosted at some public address, npm module references or they may contain tag contents.
+	// +kubebuilder:validation:MaxItems=32
+	// +kubebuilder:validation:MinItems=1
+	// +optional
+	Scripts []Script `json:"scripts,omitempty"`
+
+	// packageReference specifies the name and version of an NPM package that contains the script. The package.json must describe an ES module.
+	// +optional
+	PackageReference PackageReference `json:"packageReference,omitempty"`
 }
 
 func init() {
