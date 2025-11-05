@@ -76,14 +76,6 @@ type KDexAppSpec struct {
 
 // KDexAppStatus defines the observed state of KDexApp.
 type KDexAppStatus struct {
-	// For Kubernetes API conventions, see:
-	// https://github.com/kubernetes/community/blob/master/contributors/devel/sig-architecture/api-conventions.md#typical-status-properties
-
-	// observedGeneration is the most recent generation observed for this KDexApp. It corresponds to the
-	// KDexApp's generation, which is updated on mutation by the API Server.
-	// +optional
-	ObservedGeneration int64 `json:"observedGeneration,omitempty"`
-
 	// conditions represent the current state of the KDexApp resource.
 	// Each condition has a unique type and reflects the status of a specific aspect of the resource.
 	//
@@ -97,6 +89,14 @@ type KDexAppStatus struct {
 	// +listMapKey=type
 	// +optional
 	Conditions []metav1.Condition `json:"conditions,omitempty"`
+
+	// For Kubernetes API conventions, see:
+	// https://github.com/kubernetes/community/blob/master/contributors/devel/sig-architecture/api-conventions.md#typical-status-properties
+
+	// observedGeneration is the most recent generation observed for this KDexApp. It corresponds to the
+	// KDexApp's generation, which is updated on mutation by the API Server.
+	// +optional
+	ObservedGeneration int64 `json:"observedGeneration,omitempty"`
 }
 
 // PackageReference specifies the name and version of an NPM package that contains the micro-frontend application.
