@@ -17,12 +17,14 @@ limitations under the License.
 package v1alpha1
 
 import (
+	"bytes"
+
 	corev1 "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
 
 // +kubebuilder:validation:XValidation:rule="[has(self.linkHref), has(self.style)].filter(x, x).size() == 1",message="exactly one of linkHref or style must be set"
-type ThemeAsset struct {
+type Asset struct {
 	// attributes are key/value pairs that will be added to the element [link|style] as attributes when rendered.
 	// +optional
 	Attributes map[string]string `json:"attributes,omitempty"`
@@ -34,6 +36,64 @@ type ThemeAsset struct {
 	// style is the text content to be added into a <style> element when rendered.
 	// +optional
 	Style string `json:"style,omitempty"`
+}
+
+func (a *Asset) String() string {
+	var styleBuffer bytes.Buffer
+
+	if a.LinkHref != "" {
+		styleBuffer.WriteString(`<link`)
+		for key, value := range a.Attributes {
+			if key == "href" || key == "src" {
+				continue
+			}
+			styleBuffer.WriteRune(' ')
+			styleBuffer.WriteString(key)
+			styleBuffer.WriteString(`="`)
+			styleBuffer.WriteString(value)
+			styleBuffer.WriteRune('"')
+		}
+		styleBuffer.WriteString(` href="`)
+		styleBuffer.WriteString(a.LinkHref)
+		styleBuffer.WriteString(`"/>`)
+	} else if a.Style != "" {
+		styleBuffer.WriteString(`<style`)
+		for key, value := range a.Attributes {
+			if key == "href" || key == "src" {
+				continue
+			}
+			styleBuffer.WriteRune(' ')
+			styleBuffer.WriteString(key)
+			styleBuffer.WriteString(`="`)
+			styleBuffer.WriteString(value)
+			styleBuffer.WriteRune('"')
+		}
+		styleBuffer.WriteString(`>\n`)
+		styleBuffer.WriteString(a.Style)
+		styleBuffer.WriteString("</style>")
+	}
+
+	return styleBuffer.String()
+}
+
+type Assets struct {
+	// assets is a set of elements that define a portable set of design rules.
+	// +kubebuilder:validation:MaxItems=32
+	// +kubebuilder:validation:MinItems=1
+	Assets []Asset `json:"assets"`
+}
+
+func (a *Assets) String() string {
+	var styleBuffer bytes.Buffer
+	separator := ""
+
+	for _, asset := range a.Assets {
+		styleBuffer.WriteString(separator)
+		separator = "\n"
+		styleBuffer.WriteString(asset.String())
+	}
+
+	return styleBuffer.String()
 }
 
 // KDexThemeWebServer defines the desired state of the KDexTheme web server
@@ -66,11 +126,7 @@ type KDexThemeWebServer struct {
 // KDexThemeSpec defines the desired state of KDexTheme
 // +kubebuilder:validation:X-kubernetes-validations:rule="self.image == \"\" || self.routePath != \"\"",message="routePath must be specified when an image is specified"
 type KDexThemeSpec struct {
-	// assets is a set of elements that define a portable set of design rules.
-	// +kubebuilder:validation:MaxItems=32
-	// +kubebuilder:validation:MinItems=1
-	// +kubebuilder:validation:Required
-	Assets []ThemeAsset `json:"assets"`
+	Assets Assets `json:",inline"`
 
 	// image is the name of an OCI image that contains Theme resources.
 	// More info: https://kubernetes.io/docs/concepts/containers/images

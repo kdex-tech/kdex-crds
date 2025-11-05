@@ -6,7 +6,6 @@ import (
 
 	"golang.org/x/text/message"
 	"k8s.io/apimachinery/pkg/api/resource"
-	"kdex.dev/crds/api/v1alpha1"
 )
 
 type PageEntry struct {
@@ -39,7 +38,7 @@ type Renderer struct {
 	TemplateContent string
 	TemplateName    string
 	Title           string
-	ThemeAssets     []v1alpha1.ThemeAsset
+	Theme           string
 }
 
 // Fields available when rendering templates.

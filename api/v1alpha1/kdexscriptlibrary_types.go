@@ -17,6 +17,8 @@ limitations under the License.
 package v1alpha1
 
 import (
+	"bytes"
+
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
 
@@ -106,13 +108,75 @@ type Script struct {
 	ScriptSrc string `json:"scriptSrc,omitempty"`
 }
 
-// +kubebuilder:validation:XValidation:rule="[has(self.scripts), has(self.packageReference)].filter(x, x).size() == 1",message="scripts and packageReference are mutually exclusive"
-type ScriptReference struct {
+func (s *Script) String(footScript bool) string {
+	if !s.FootScript && footScript {
+		return ""
+	}
+
+	var styleBuffer bytes.Buffer
+
+	if s.Script != "" {
+		styleBuffer.WriteString(`<script`)
+		for key, value := range s.Attributes {
+			if key == "href" || key == "src" {
+				continue
+			}
+			styleBuffer.WriteRune(' ')
+			styleBuffer.WriteString(key)
+			styleBuffer.WriteString(`="`)
+			styleBuffer.WriteString(value)
+			styleBuffer.WriteRune('"')
+		}
+		styleBuffer.WriteString(`>\n`)
+		styleBuffer.WriteString(s.Script)
+		styleBuffer.WriteString("</script>")
+	} else if s.ScriptSrc != "" {
+		styleBuffer.WriteString(`<script`)
+		for key, value := range s.Attributes {
+			if key == "href" || key == "src" {
+				continue
+			}
+			styleBuffer.WriteRune(' ')
+			styleBuffer.WriteString(key)
+			styleBuffer.WriteString(`="`)
+			styleBuffer.WriteString(value)
+			styleBuffer.WriteRune('"')
+		}
+		styleBuffer.WriteString(` src="`)
+		styleBuffer.WriteString(s.ScriptSrc)
+		styleBuffer.WriteString(`"></script>`)
+	}
+
+	return styleBuffer.String()
+}
+
+type Scripts struct {
 	// scripts is a set of script references. They may contain URLs that point to resources hosted at some public address, npm module references or they may contain tag contents.
 	// +kubebuilder:validation:MaxItems=32
 	// +kubebuilder:validation:MinItems=1
 	// +optional
 	Scripts []Script `json:"scripts,omitempty"`
+}
+
+func (s *Scripts) String(footScript bool) string {
+	var styleBuffer bytes.Buffer
+	separator := ""
+
+	for _, script := range s.Scripts {
+		output := script.String(footScript)
+		if output != "" {
+			styleBuffer.WriteString(separator)
+			separator = "\n"
+			styleBuffer.WriteString(output)
+		}
+	}
+
+	return styleBuffer.String()
+}
+
+// +kubebuilder:validation:XValidation:rule="[has(self.scripts), has(self.packageReference)].filter(x, x).size() == 1",message="scripts and packageReference are mutually exclusive"
+type ScriptReference struct {
+	Scripts Scripts `json:",inline"`
 
 	// packageReference specifies the name and version of an NPM package that contains the script. The package.json must describe an ES module.
 	// +optional
