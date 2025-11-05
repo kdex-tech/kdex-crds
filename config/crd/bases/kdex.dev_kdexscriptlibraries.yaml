@@ -114,7 +114,7 @@ spec:
                 type: array
             type: object
             x-kubernetes-validations:
-            - message: scripts and packageReference are mutually exclusive
+            - message: one of scripts or packageReference must be specified
               rule: '[has(self.scripts), has(self.packageReference)].filter(x, x).size()
                 == 1'
           status:

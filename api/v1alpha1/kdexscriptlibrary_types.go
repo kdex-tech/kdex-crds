@@ -174,7 +174,7 @@ func (s *Scripts) String(footScript bool) string {
 	return styleBuffer.String()
 }
 
-// +kubebuilder:validation:XValidation:rule="[has(self.scripts), has(self.packageReference)].filter(x, x).size() == 1",message="scripts and packageReference are mutually exclusive"
+// +kubebuilder:validation:XValidation:rule="[has(self.scripts), has(self.packageReference)].filter(x, x).size() == 1",message="one of scripts or packageReference must be specified"
 type ScriptReference struct {
 	Scripts *Scripts `json:",inline"`
 
