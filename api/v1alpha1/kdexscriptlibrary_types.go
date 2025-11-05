@@ -154,7 +154,6 @@ func (s *Script) String(footScript bool) string {
 type ScriptReference struct {
 	// scripts is a set of script references. They may contain URLs that point to resources hosted at some public address, npm module references or they may contain tag contents.
 	// +kubebuilder:validation:MaxItems=32
-	// +kubebuilder:validation:MinItems=1
 	// +optional
 	Scripts []Script `json:"scripts,omitempty"`
 
