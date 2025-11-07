@@ -23,6 +23,11 @@ import (
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
 
+const (
+	href = "href"
+	src  = "src"
+)
+
 // +kubebuilder:validation:XValidation:rule="[has(self.linkHref), has(self.style)].filter(x, x).size() == 1",message="exactly one of linkHref or style must be set"
 type Asset struct {
 	// attributes are key/value pairs that will be added to the element [link|style] as attributes when rendered.
@@ -44,7 +49,7 @@ func (a *Asset) String() string {
 	if a.LinkHref != "" {
 		buffer.WriteString(`<link`)
 		for key, value := range a.Attributes {
-			if key == "href" || key == "src" {
+			if key == href {
 				continue
 			}
 			buffer.WriteRune(' ')
@@ -59,9 +64,6 @@ func (a *Asset) String() string {
 	} else if a.Style != "" {
 		buffer.WriteString(`<style`)
 		for key, value := range a.Attributes {
-			if key == "href" || key == "src" {
-				continue
-			}
 			buffer.WriteRune(' ')
 			buffer.WriteString(key)
 			buffer.WriteString(`="`)

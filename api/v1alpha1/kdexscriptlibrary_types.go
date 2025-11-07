@@ -176,25 +176,10 @@ func (s *Script) ToScriptTag(footScript bool) string {
 
 	var buffer bytes.Buffer
 
-	if s.Script != "" {
+	if s.ScriptSrc != "" {
 		buffer.WriteString(`<script`)
 		for key, value := range s.Attributes {
-			if key == "href" || key == "src" {
-				continue
-			}
-			buffer.WriteRune(' ')
-			buffer.WriteString(key)
-			buffer.WriteString(`="`)
-			buffer.WriteString(value)
-			buffer.WriteRune('"')
-		}
-		buffer.WriteString(`>\n`)
-		buffer.WriteString(s.Script)
-		buffer.WriteString("</script>")
-	} else if s.ScriptSrc != "" {
-		buffer.WriteString(`<script`)
-		for key, value := range s.Attributes {
-			if key == "href" || key == "src" {
+			if key == src {
 				continue
 			}
 			buffer.WriteRune(' ')
@@ -206,6 +191,21 @@ func (s *Script) ToScriptTag(footScript bool) string {
 		buffer.WriteString(` src="`)
 		buffer.WriteString(s.ScriptSrc)
 		buffer.WriteString(`"></script>`)
+	} else if s.Script != "" {
+		buffer.WriteString(`<script`)
+		for key, value := range s.Attributes {
+			if key == src {
+				continue
+			}
+			buffer.WriteRune(' ')
+			buffer.WriteString(key)
+			buffer.WriteString(`="`)
+			buffer.WriteString(value)
+			buffer.WriteRune('"')
+		}
+		buffer.WriteString(`>\n`)
+		buffer.WriteString(s.Script)
+		buffer.WriteString("</script>")
 	}
 
 	return buffer.String()
