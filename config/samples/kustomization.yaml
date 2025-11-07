@@ -7,7 +7,6 @@ resources:
 - v1alpha1_kdexpagefooter.yaml
 - v1alpha1_kdexpageheader.yaml
 - v1alpha1_kdexpagenavigation.yaml
-- v1alpha1_kdexrenderpage.yaml
 - v1alpha1_kdexscriptlibrary.yaml
 - v1alpha1_kdextheme.yaml
 - v1alpha1_kdextranslation.yaml

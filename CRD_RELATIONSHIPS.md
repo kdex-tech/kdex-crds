@@ -5,7 +5,6 @@ See [CRD_REFERENCE.md](CRD_REFERENCE.md) for reference documentation.
 ```mermaid
 erDiagram
     KDexHost ||--o{ KDexPageBinding : "hosts"
-    KDexHost ||--o{ KDexRenderPage : "hosts"
     KDexHost ||--o{ KDexTranslation : "hosts"
     KDexHost ||--o{ KDexTheme : "default theme"
 
@@ -21,9 +20,6 @@ erDiagram
     KDexPageBinding ||--o{ KDexPageHeader : "override header"
     KDexPageBinding ||--o{ KDexPageNavigation : "override navigation"
     KDexPageBinding ||--o{ KDexPageBinding : "parent page"
-
-    KDexRenderPage ||--o{ KDexRenderPage : "parent page"
-    KDexRenderPage ||--o{ KDexTheme : "theme"
 
     KDexApp {
         string name
@@ -58,10 +54,6 @@ erDiagram
 
     KDexPageNavigation {
         string content
-    }
-
-    KDexRenderPage {
-        string path
     }
 
     KDexTheme {

@@ -1,9 +1,0 @@
-apiVersion: kdex.dev/v1alpha1
-kind: KDexRenderPage
-metadata:
-  labels:
-    app.kubernetes.io/name: kdex-crds
-    app.kubernetes.io/managed-by: kustomize
-  name: kdexrenderpage-sample
-spec:
-  # This type is typically machine generated.

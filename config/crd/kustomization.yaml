@@ -8,7 +8,6 @@ resources:
 - bases/kdex.dev_kdexpageheaders.yaml
 - bases/kdex.dev_kdexpagefooters.yaml
 - bases/kdex.dev_kdexpagenavigations.yaml
-- bases/kdex.dev_kdexrenderpages.yaml
 - bases/kdex.dev_kdexhosts.yaml
 - bases/kdex.dev_kdextranslations.yaml
 - bases/kdex.dev_kdexthemes.yaml

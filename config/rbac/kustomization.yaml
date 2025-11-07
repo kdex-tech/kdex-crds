@@ -43,9 +43,6 @@ resources:
 - kdexpagenavigation_admin_role.yaml
 - kdexpagenavigation_editor_role.yaml
 - kdexpagenavigation_viewer_role.yaml
-- kdexrenderpage_admin_role.yaml
-- kdexrenderpage_editor_role.yaml
-- kdexrenderpage_viewer_role.yaml
 - kdexscriptlibrary_admin_role.yaml
 - kdexscriptlibrary_editor_role.yaml
 - kdexscriptlibrary_viewer_role.yaml

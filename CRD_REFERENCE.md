@@ -23,8 +23,6 @@ Package v1alpha1 contains API Schema definitions for the  v1alpha1 API group.
 - [KDexPageHeaderList](#kdexpageheaderlist)
 - [KDexPageNavigation](#kdexpagenavigation)
 - [KDexPageNavigationList](#kdexpagenavigationlist)
-- [KDexRenderPage](#kdexrenderpage)
-- [KDexRenderPageList](#kdexrenderpagelist)
 - [KDexScriptLibrary](#kdexscriptlibrary)
 - [KDexScriptLibraryList](#kdexscriptlibrarylist)
 - [KDexTheme](#kdextheme)
@@ -572,72 +570,6 @@ _Appears in:_
 
 
 
-#### KDexRenderPage
-
-
-
-KDexRenderPage is the Schema for the kdexrenderpages API.
-It is an internal resource created and managed by a controller that processes KDexPageBinding resources.
-It is not intended for users to create or manage directly.
-
-
-
-_Appears in:_
-- [KDexRenderPageList](#kdexrenderpagelist)
-
-| Field | Description | Default | Validation |
-| --- | --- | --- | --- |
-| `apiVersion` _string_ | `kdex.dev/v1alpha1` | | |
-| `kind` _string_ | `KDexRenderPage` | | |
-| `metadata` _[ObjectMeta](https://kubernetes.io/docs/reference/generated/kubernetes-api/v/#objectmeta-v1-meta)_ | Refer to Kubernetes API documentation for fields of `metadata`. |  |  |
-| `spec` _[KDexRenderPageSpec](#kdexrenderpagespec)_ | spec defines the desired state of KDexRenderPage |  | Required: \{\} <br /> |
-
-
-#### KDexRenderPageList
-
-
-
-KDexRenderPageList contains a list of KDexRenderPage
-
-
-
-
-
-| Field | Description | Default | Validation |
-| --- | --- | --- | --- |
-| `apiVersion` _string_ | `kdex.dev/v1alpha1` | | |
-| `kind` _string_ | `KDexRenderPageList` | | |
-| `metadata` _[ListMeta](https://kubernetes.io/docs/reference/generated/kubernetes-api/v/#listmeta-v1-meta)_ | Refer to Kubernetes API documentation for fields of `metadata`. |  |  |
-| `items` _[KDexRenderPage](#kdexrenderpage) array_ |  |  |  |
-
-
-#### KDexRenderPageSpec
-
-
-
-KDexRenderPageSpec defines the desired state of KDexRenderPage.
-KDexRenderPage is an internal resource created and managed by a controller that processes KDexPageBinding resources.
-It is not intended for users to create or manage directly.
-
-
-
-_Appears in:_
-- [KDexRenderPage](#kdexrenderpage)
-
-| Field | Description | Default | Validation |
-| --- | --- | --- | --- |
-| `hostRef` _[LocalObjectReference](https://kubernetes.io/docs/reference/generated/kubernetes-api/v/#localobjectreference-v1-core)_ | hostRef is a reference to the KDexHost that this render page is for. |  | Required: \{\} <br /> |
-| `navigationHints` _[NavigationHints](#navigationhints)_ | navigationHints are optional navigation properties that if omitted result in the page being hidden from the navigation. |  |  |
-| `pageComponents` _[PageComponents](#pagecomponents)_ | pageComponents make up the elements of an HTML page that will be rendered by a web server. |  | Required: \{\} <br /> |
-| `parentPageRef` _[LocalObjectReference](https://kubernetes.io/docs/reference/generated/kubernetes-api/v/#localobjectreference-v1-core)_ | parentPageRef is a reference to the KDexRenderPage bellow which this page will appear in the main navigation. If not set, the page will be placed in the top level of the navigation. |  |  |
-| `scriptLibraryRefs` _[LocalObjectReference](https://kubernetes.io/docs/reference/generated/kubernetes-api/v/#localobjectreference-v1-core) array_ | scriptLibraryRefs is an optional array of KDexScriptLibrary references. |  |  |
-| `themeRef` _[LocalObjectReference](https://kubernetes.io/docs/reference/generated/kubernetes-api/v/#localobjectreference-v1-core)_ | themeRef is a reference to the theme that will apply to this render page. |  |  |
-| `basePath` _string_ | basePath is the shortest path by which the page may be accessed. It must not contain path parameters. This path will be used in site navigation. This path is subject to being prefixed for localization by `/\{l10n\}` and will be when the user selects a non-default language. |  | Pattern: `^/` <br />Required: \{\} <br /> |
-| `patternPath` _string_ | patternPath, which must be prefixed by BasePath, is an extension of basePath that adds pattern matching as defined by https://pkg.go.dev/net/http#hdr-Patterns-ServeMux. This path is subject to being prefixed for localization by `/\{l10n\}` such as when the user selects a non-default language. |  |  |
-
-
-
-
 #### KDexScriptLibrary
 
 
@@ -870,7 +802,6 @@ _Appears in:_
 
 _Appears in:_
 - [KDexPageBindingSpec](#kdexpagebindingspec)
-- [KDexRenderPageSpec](#kdexrenderpagespec)
 
 | Field | Description | Default | Validation |
 | --- | --- | --- | --- |
@@ -898,29 +829,6 @@ _Appears in:_
 | `version` _string_ | version contains a specific npm package version. |  | Required: \{\} <br /> |
 
 
-#### PageComponents
-
-
-
-PageComponents make up the elements of an HTML page that will be rendered by a web server.
-It is an internal resource created and managed by a controller that processes KDexPageBinding resources.
-It is not intended for users to create or manage directly.
-
-
-
-_Appears in:_
-- [KDexRenderPageSpec](#kdexrenderpagespec)
-
-| Field | Description | Default | Validation |
-| --- | --- | --- | --- |
-| `contents` _object (keys:string, values:string)_ |  |  |  |
-| `footer` _string_ |  |  |  |
-| `header` _string_ |  |  |  |
-| `navigations` _object (keys:string, values:string)_ |  |  |  |
-| `primaryTemplate` _string_ |  |  |  |
-| `title` _string_ |  |  |  |
-
-
 #### Paths
 
 
@@ -931,7 +839,6 @@ _Appears in:_
 
 _Appears in:_
 - [KDexPageBindingSpec](#kdexpagebindingspec)
-- [KDexRenderPageSpec](#kdexrenderpagespec)
 
 | Field | Description | Default | Validation |
 | --- | --- | --- | --- |
