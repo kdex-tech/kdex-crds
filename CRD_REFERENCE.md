@@ -25,6 +25,8 @@ Package v1alpha1 contains API Schema definitions for the  v1alpha1 API group.
 - [KDexPageNavigationList](#kdexpagenavigationlist)
 - [KDexRenderPage](#kdexrenderpage)
 - [KDexRenderPageList](#kdexrenderpagelist)
+- [KDexScriptLibrary](#kdexscriptlibrary)
+- [KDexScriptLibraryList](#kdexscriptlibrarylist)
 - [KDexTheme](#kdextheme)
 - [KDexThemeList](#kdexthemelist)
 - [KDexTranslation](#kdextranslation)
@@ -32,24 +34,60 @@ Package v1alpha1 contains API Schema definitions for the  v1alpha1 API group.
 
 
 
-#### AppPolicy
+#### Asset
+
+
+
+
+
+
+
+_Appears in:_
+- [KDexThemeSpec](#kdexthemespec)
+
+| Field | Description | Default | Validation |
+| --- | --- | --- | --- |
+| `attributes` _object (keys:string, values:string)_ | attributes are key/value pairs that will be added to the element [link\|style] as attributes when rendered. |  |  |
+| `linkHref` _string_ | linkHref is the content of a <link> href attribute. The URL may be absolute with protocol and host or it must be prefixed by the RoutePath of the theme. |  |  |
+| `style` _string_ | style is the text content to be added into a <style> element when rendered. |  |  |
+
+
+
+
+#### ConditionFields
+
+
+
+
+
+
+
+_Appears in:_
+- [ConditionArgs](#conditionargs)
+
+| Field | Description | Default | Validation |
+| --- | --- | --- | --- |
+| `Status` _[ConditionStatus](https://kubernetes.io/docs/reference/generated/kubernetes-api/v/#conditionstatus-v1-meta)_ |  |  |  |
+| `Reason` _[ConditionReason](#conditionreason)_ |  |  |  |
+| `Message` _string_ |  |  |  |
+
+
+#### ConditionReason
 
 _Underlying type:_ _string_
 
-AppPolicy defines the policy for apps.
+ConditionReason is the reason for the condition's last transition.
 
-_Validation:_
-- Enum: [Strict NonStrict]
+
 
 _Appears in:_
-- [KDexHostSpec](#kdexhostspec)
+- [ConditionFields](#conditionfields)
 
 | Field | Description |
 | --- | --- |
-| `NonStrict` | NonStrictAppPolicy means that apps may embed JavaScript dependencies.<br /> |
-| `Strict` | StrictAppPolicy means that apps may not embed JavaScript dependencies.<br /> |
-
-
+| `ReconcileError` | ConditionReasonReconcileError is the reason for a failed reconciliation.<br /> |
+| `Reconciling` | ConditionReasonReconciling is the reason for a reconciling reconciliation.<br /> |
+| `ReconcileSuccess` | ConditionReasonReconcileSuccess is the reason for a successful reconciliation.<br /> |
 
 
 
@@ -94,7 +132,14 @@ _Appears in:_
 
 
 
-KDexApp is the Schema for the kdexapps API
+KDexApp is the Schema for the kdexapps API.
+
+A KDexApp is the embodiment of an "Application" within the "KDex Cloud Native Application Server" model. KDexApp is
+the resource developers implement to extend to user interface with a new feature. The implementations are Web
+Component based and the packaging follows the NPM packaging model the contents of which are ES modules. There are no
+container images to build. Merely package the application code and publish it to an NPM compatible repository,
+configure the KDexApp with the necessary metadata and deploy to Kubernetes. The app can then be consumed and composed
+by KDexPageBindings to produce actual user experiences.
 
 
 
@@ -140,8 +185,9 @@ _Appears in:_
 
 | Field | Description | Default | Validation |
 | --- | --- | --- | --- |
-| `customElements` _[CustomElement](#customelement) array_ | customElements is a list of custom elements implemented by the micro-frontend application. |  |  |
-| `packageReference` _[PackageReference](#packagereference)_ | packageReference specifies the name and version of an NPM package that contains the micro-frontend application. The package must have a package.json that contains ES modules. |  | Required: \{\} <br /> |
+| `customElements` _[CustomElement](#customelement) array_ | customElements is a list of custom elements implemented by the micro-frontend application. |  | MaxItems: 32 <br />MinItems: 1 <br /> |
+| `packageReference` _[PackageReference](#packagereference)_ | packageReference specifies the name and version of an NPM package that contains the micro-frontend application. The package.json must describe an ES module. |  | Required: \{\} <br /> |
+| `scripts` _[Script](#script) array_ | scripts is a set of script references. They may contain URLs that point to resources hosted at some public address, npm module references or they may contain tag contents. |  | MaxItems: 32 <br /> |
 
 
 
@@ -151,6 +197,11 @@ _Appears in:_
 
 
 KDexHost is the Schema for the kdexhosts API
+
+A KDexHost is the central actor in the "KDex Cloud Native Application Server" model. It specifies the basic metadata
+that defines a web property; a set of domain names, TLS certificates, routing strategy and so on. From this central
+point a distinct web property is establish to which are bound KDexPageBindings (i.e. web pages) that provide the web
+properties content in the form of either raw HTML content or applications from KDexApps.s
 
 
 
@@ -196,12 +247,14 @@ _Appears in:_
 
 | Field | Description | Default | Validation |
 | --- | --- | --- | --- |
-| `appPolicy` _[AppPolicy](#apppolicy)_ | AppPolicy defines the policy for apps.<br />When the strict policy is enabled, an app may not embed JavaScript dependencies.<br />Validation of the application source code will fail if dependencies are not fully externalized.<br />A Host which defines the `script` app policy must not accept apps which do not comply.<br />While a non-strict Host may accept both strict and non-strict apps. |  | Enum: [Strict NonStrict] <br />Required: \{\} <br /> |
 | `baseMeta` _string_ | baseMeta is a string containing a base set of meta tags to use on every page rendered for the host. |  | MinLength: 5 <br /> |
+| `brandName` _string_ | brandName is the name used when rendering pages belonging to the host. For example, it may be used as alt text for the logo displayed in the page header. |  | Required: \{\} <br /> |
 | `defaultLang` _string_ | defaultLang is a string containing a BCP 47 language tag.<br />See https://developer.mozilla.org/en-US/docs/Glossary/BCP_47_language_tag.<br />When render page paths do not specify a 'lang' path parameter this will be the value used. When not set the default will be 'en'. |  |  |
-| `defaultThemeRef` _[LocalObjectReference](https://kubernetes.io/docs/reference/generated/kubernetes-api/v/#localobjectreference-v1-core)_ | defaultThemeRef is a reference to the default theme that should apply to all pages bound to this host. |  |  |
-| `organization` _string_ | organization is the name of the Organization. |  | MinLength: 5 <br />Required: \{\} <br /> |
+| `defaultThemeRef` _[LocalObjectReference](https://kubernetes.io/docs/reference/generated/kubernetes-api/v/#localobjectreference-v1-core)_ | defaultThemeRef is a reference to the theme that should apply to all pages bound to this host unless overridden. |  |  |
+| `modulePolicy` _[ModulePolicy](#modulepolicy)_ | modulePolicy defines the policy for JavaScript references in KDexApp, KDexTheme and KDexScriptLibrary resources. When not specified the policy is Strict<br />A Host must not accept JavaScript references which do not comply with the specified policy. | Strict | Enum: [ExternalDependencies Loose ModulesRequired Strict] <br /> |
+| `organization` _string_ | organization is the name of the Organization to which the host belongs. |  | MinLength: 5 <br />Required: \{\} <br /> |
 | `routing` _[Routing](#routing)_ | routing defines the desired routing configuration for the host. |  | Required: \{\} <br /> |
+| `scriptLibraryRef` _[LocalObjectReference](https://kubernetes.io/docs/reference/generated/kubernetes-api/v/#localobjectreference-v1-core)_ | scriptLibraryRef is an optional reference to a KDexScriptLibrary resource. |  |  |
 
 
 
@@ -211,6 +264,10 @@ _Appears in:_
 
 
 KDexPageArchetype is the Schema for the kdexpagearchetypes API
+
+A KDexPageArchetype defines a reusable archetype from which web pages can be derived. When creating a KDexPageBinding
+(i.e. a web page) a developer states which archetype is to be used. This allows the structure to be decoupled from
+the content.
 
 
 
@@ -262,6 +319,7 @@ _Appears in:_
 | `defaultMainNavigationRef` _[LocalObjectReference](https://kubernetes.io/docs/reference/generated/kubernetes-api/v/#localobjectreference-v1-core)_ | defaultMainNavigationRef is an optional reference to a KDexPageNavigation resource. If not specified, no navigation will be displayed. Use the `.Navigation["main"]` property to position its content in the template. |  |  |
 | `extraNavigations` _object (keys:string, values:[LocalObjectReference](https://kubernetes.io/docs/reference/generated/kubernetes-api/v/#localobjectreference-v1-core))_ | extraNavigations is an optional map of named navigation object references. Use `.Navigation["<name>"]` to position the named navigation's content in the template. |  |  |
 | `overrideThemeRef` _[LocalObjectReference](https://kubernetes.io/docs/reference/generated/kubernetes-api/v/#localobjectreference-v1-core)_ | overrideThemeRef is a reference to the theme that should apply to all pages that use this archetype. It overrides the default theme defined on the host. |  |  |
+| `scriptLibraryRef` _[LocalObjectReference](https://kubernetes.io/docs/reference/generated/kubernetes-api/v/#localobjectreference-v1-core)_ | scriptLibraryRef is an optional reference to a KDexScriptLibrary resource. |  |  |
 
 
 
@@ -271,6 +329,10 @@ _Appears in:_
 
 
 KDexPageBinding is the Schema for the kdexpagebindings API
+
+A KDexPageBinding defines a web page under a KDexHost. It brings together various reusable components like
+KDexPageArchetype, KDexPageFooter, KDexPageHeader, KDexPageNavigation, KDexScriptLibrary, KDexTheme and content
+components like raw HTML or KDexApps and KDexTranslations to produce internationalized, rendered HTML pages.
 
 
 
@@ -327,6 +389,7 @@ _Appears in:_
 | `parentPageRef` _[LocalObjectReference](https://kubernetes.io/docs/reference/generated/kubernetes-api/v/#localobjectreference-v1-core)_ | parentPageRef is a reference to the KDexPageBinding bellow which this page will appear in the main navigation. If not set, the page will be placed in the top level of the navigation. |  |  |
 | `basePath` _string_ | basePath is the shortest path by which the page may be accessed. It must not contain path parameters. This path will be used in site navigation. This path is subject to being prefixed for localization by `/\{l10n\}` and will be when the user selects a non-default language. |  | Pattern: `^/` <br />Required: \{\} <br /> |
 | `patternPath` _string_ | patternPath, which must be prefixed by BasePath, is an extension of basePath that adds pattern matching as defined by https://pkg.go.dev/net/http#hdr-Patterns-ServeMux. This path is subject to being prefixed for localization by `/\{l10n\}` such as when the user selects a non-default language. |  |  |
+| `scriptLibraryRef` _[LocalObjectReference](https://kubernetes.io/docs/reference/generated/kubernetes-api/v/#localobjectreference-v1-core)_ | scriptLibraryRef is an optional reference to a KDexScriptLibrary resource. |  |  |
 
 
 
@@ -336,6 +399,9 @@ _Appears in:_
 
 
 KDexPageFooter is the Schema for the kdexpagefooters API
+
+A KDexPageFooter is a reusable footer component for composing KDexPageBindings. It can specify a content template and
+an associated KDexScriptLibrary for driving imperative logic that might be necessary to implement the footer.
 
 
 
@@ -382,6 +448,7 @@ _Appears in:_
 | Field | Description | Default | Validation |
 | --- | --- | --- | --- |
 | `content` _string_ | content is a go string template that defines the content of an App Server page footer section. Use the `.Footer` property to position its content in the template. |  | MinLength: 5 <br />Required: \{\} <br /> |
+| `scriptLibraryRef` _[LocalObjectReference](https://kubernetes.io/docs/reference/generated/kubernetes-api/v/#localobjectreference-v1-core)_ | scriptLibraryRef is an optional reference to a KDexScriptLibrary resource. |  |  |
 
 
 
@@ -391,6 +458,9 @@ _Appears in:_
 
 
 KDexPageHeader is the Schema for the kdexpageheaders API
+
+A KDexPageHeader is a reusable header component for composing KDexPageBindings. It can specify a content template and
+an associated KDexScriptLibrary for driving imperative logic that might be necessary to implement the header.
 
 
 
@@ -437,6 +507,7 @@ _Appears in:_
 | Field | Description | Default | Validation |
 | --- | --- | --- | --- |
 | `content` _string_ | content is a go string template that defines the content of an App Server page header section. Use the `.Header` property to position its content in the template. |  | MinLength: 5 <br />Required: \{\} <br /> |
+| `scriptLibraryRef` _[LocalObjectReference](https://kubernetes.io/docs/reference/generated/kubernetes-api/v/#localobjectreference-v1-core)_ | scriptLibraryRef is an optional reference to a KDexScriptLibrary resource. |  |  |
 
 
 
@@ -446,6 +517,10 @@ _Appears in:_
 
 
 KDexPageNavigation is the Schema for the kdexpagenavigations API
+
+A KDexPageNavigation is a reusable navigation component for composing KDexPageBindings. It can specify a content
+template and an associated KDexScriptLibrary for driving imperative logic that might be necessary to implement the
+navigation.
 
 
 
@@ -492,6 +567,7 @@ _Appears in:_
 | Field | Description | Default | Validation |
 | --- | --- | --- | --- |
 | `content` _string_ | content is a go string template that defines the content of an App Server page navigation. Use the `.Navigation["<name>"]` property to position its content in the template. |  | MinLength: 5 <br />Required: \{\} <br /> |
+| `scriptLibraryRef` _[LocalObjectReference](https://kubernetes.io/docs/reference/generated/kubernetes-api/v/#localobjectreference-v1-core)_ | scriptLibraryRef is an optional reference to a KDexScriptLibrary resource. |  |  |
 
 
 
@@ -554,9 +630,70 @@ _Appears in:_
 | `navigationHints` _[NavigationHints](#navigationhints)_ | navigationHints are optional navigation properties that if omitted result in the page being hidden from the navigation. |  |  |
 | `pageComponents` _[PageComponents](#pagecomponents)_ | pageComponents make up the elements of an HTML page that will be rendered by a web server. |  | Required: \{\} <br /> |
 | `parentPageRef` _[LocalObjectReference](https://kubernetes.io/docs/reference/generated/kubernetes-api/v/#localobjectreference-v1-core)_ | parentPageRef is a reference to the KDexRenderPage bellow which this page will appear in the main navigation. If not set, the page will be placed in the top level of the navigation. |  |  |
+| `scriptLibraryRefs` _[LocalObjectReference](https://kubernetes.io/docs/reference/generated/kubernetes-api/v/#localobjectreference-v1-core) array_ | scriptLibraryRefs is an optional array of KDexScriptLibrary references. |  |  |
 | `themeRef` _[LocalObjectReference](https://kubernetes.io/docs/reference/generated/kubernetes-api/v/#localobjectreference-v1-core)_ | themeRef is a reference to the theme that will apply to this render page. |  |  |
 | `basePath` _string_ | basePath is the shortest path by which the page may be accessed. It must not contain path parameters. This path will be used in site navigation. This path is subject to being prefixed for localization by `/\{l10n\}` and will be when the user selects a non-default language. |  | Pattern: `^/` <br />Required: \{\} <br /> |
 | `patternPath` _string_ | patternPath, which must be prefixed by BasePath, is an extension of basePath that adds pattern matching as defined by https://pkg.go.dev/net/http#hdr-Patterns-ServeMux. This path is subject to being prefixed for localization by `/\{l10n\}` such as when the user selects a non-default language. |  |  |
+
+
+
+
+#### KDexScriptLibrary
+
+
+
+KDexScriptLibrary is the Schema for the kdexscriptlibraries API
+
+A KDexScriptLibrary is a reusable collection of JavaScript for powering the imperative aspects of KDexPageBindings.
+Most other components of the model are able to reference KDexScriptLibrary as well in order to encapsulate component
+specific logic.
+
+
+
+_Appears in:_
+- [KDexScriptLibraryList](#kdexscriptlibrarylist)
+
+| Field | Description | Default | Validation |
+| --- | --- | --- | --- |
+| `apiVersion` _string_ | `kdex.dev/v1alpha1` | | |
+| `kind` _string_ | `KDexScriptLibrary` | | |
+| `metadata` _[ObjectMeta](https://kubernetes.io/docs/reference/generated/kubernetes-api/v/#objectmeta-v1-meta)_ | Refer to Kubernetes API documentation for fields of `metadata`. |  |  |
+| `spec` _[KDexScriptLibrarySpec](#kdexscriptlibraryspec)_ | spec defines the desired state of KDexScriptLibrary |  |  |
+
+
+#### KDexScriptLibraryList
+
+
+
+KDexScriptLibraryList contains a list of KDexScriptLibrary
+
+
+
+
+
+| Field | Description | Default | Validation |
+| --- | --- | --- | --- |
+| `apiVersion` _string_ | `kdex.dev/v1alpha1` | | |
+| `kind` _string_ | `KDexScriptLibraryList` | | |
+| `metadata` _[ListMeta](https://kubernetes.io/docs/reference/generated/kubernetes-api/v/#listmeta-v1-meta)_ | Refer to Kubernetes API documentation for fields of `metadata`. |  |  |
+| `items` _[KDexScriptLibrary](#kdexscriptlibrary) array_ |  |  |  |
+
+
+#### KDexScriptLibrarySpec
+
+
+
+KDexScriptLibrarySpec defines the desired state of KDexScriptLibrary
+
+
+
+_Appears in:_
+- [KDexScriptLibrary](#kdexscriptlibrary)
+
+| Field | Description | Default | Validation |
+| --- | --- | --- | --- |
+| `packageReference` _[PackageReference](#packagereference)_ | packageReference specifies the name and version of an NPM package that contains the script. The package.json must describe an ES module. |  |  |
+| `scripts` _[Script](#script) array_ | scripts is a set of script references. They may contain URLs that point to resources hosted at some public address, npm module references or they may contain tag contents. |  | MaxItems: 32 <br /> |
 
 
 
@@ -566,6 +703,9 @@ _Appears in:_
 
 
 KDexTheme is the Schema for the kdexthemes API
+
+A KDexTheme is a reusable collection of design styles and associated digital assets necessary for providing the
+visual aspects of KDexPageBindings decoupling appearance from structure and content.
 
 
 
@@ -611,12 +751,34 @@ _Appears in:_
 
 | Field | Description | Default | Validation |
 | --- | --- | --- | --- |
-| `assets` _[ThemeAsset](#themeasset) array_ | assets is a set of elements that define a portable set of design rules. They may contain URLs that point to resources hosted at some public address and/or they may contain tag contents. |  | MaxItems: 32 <br />MinItems: 1 <br />Required: \{\} <br /> |
-| `image` _string_ | image is the name of an OCI image that contains Theme resources. If not specified all Asset URLs must include protocol and host. When specified, URLs must be prefixed by the routePath.<br />More info: https://kubernetes.io/docs/concepts/containers/images |  |  |
-| `imagePullSecrets` _[LocalObjectReference](https://kubernetes.io/docs/reference/generated/kubernetes-api/v/#localobjectreference-v1-core) array_ | imagePullSecrets is an optional list of references to secrets in the same namespace to use for pulling any of the images used by this Spec.<br />If specified, these secrets will be passed to individual puller implementations for them to use.<br />More info: https://kubernetes.io/docs/concepts/containers/images#specifying-imagepullsecrets-on-a-pod |  |  |
+| `assets` _[Asset](#asset) array_ | assets is a set of elements that define a portable set of design rules. |  | MaxItems: 32 <br />MinItems: 1 <br /> |
+| `image` _string_ | image is the name of an OCI image that contains Theme resources.<br />More info: https://kubernetes.io/docs/concepts/containers/images |  |  |
+| `pullPolicy` _[PullPolicy](https://kubernetes.io/docs/reference/generated/kubernetes-api/v/#pullpolicy-v1-core)_ | Policy for pulling the OCI theme image. Possible values are:<br />Always: the kubelet always attempts to pull the reference. Container creation will fail If the pull fails.<br />Never: the kubelet never pulls the reference and only uses a local image or artifact. Container creation will fail if the reference isn't present.<br />IfNotPresent: the kubelet pulls if the reference isn't already present on disk. Container creation will fail if the reference isn't present and the pull fails.<br />Defaults to Always if :latest tag is specified, or IfNotPresent otherwise. |  |  |
+| `pullSecrets` _[LocalObjectReference](https://kubernetes.io/docs/reference/generated/kubernetes-api/v/#localobjectreference-v1-core) array_ | pullSecrets is an optional list of references to secrets in the same namespace to use for pulling the image. Also used for the webserver image if specified.<br />More info: https://kubernetes.io/docs/concepts/containers/images#specifying-imagepullsecrets-on-a-pod |  |  |
 | `routePath` _string_ | routePath is a prefix beginning with a forward slash (/) plus at least 1 additional character. KDexPageBindings associated with the KDexHost that have conflicting urls will be rejected and marked as conflicting. |  | Pattern: `^/.+` <br /> |
+| `scriptLibraryRef` _[LocalObjectReference](https://kubernetes.io/docs/reference/generated/kubernetes-api/v/#localobjectreference-v1-core)_ | scriptLibraryRef is an optional reference to a KDexScriptLibrary resource. |  |  |
+| `webserver` _[KDexThemeWebServer](#kdexthemewebserver)_ | webserver defines the configuration for the theme webserver. |  |  |
 
 
+
+
+#### KDexThemeWebServer
+
+
+
+KDexThemeWebServer defines the desired state of the KDexTheme web server
+
+
+
+_Appears in:_
+- [KDexThemeSpec](#kdexthemespec)
+
+| Field | Description | Default | Validation |
+| --- | --- | --- | --- |
+| `image` _string_ | image is the name of webserver image.<br />More info: https://kubernetes.io/docs/concepts/containers/images |  | MinLength: 5 <br />Required: \{\} <br /> |
+| `pullPolicy` _[PullPolicy](https://kubernetes.io/docs/reference/generated/kubernetes-api/v/#pullpolicy-v1-core)_ | Policy for pulling the webserver image. Possible values are:<br />Always: the kubelet always attempts to pull the reference. Container creation will fail If the pull fails.<br />Never: the kubelet never pulls the reference and only uses a local image or artifact. Container creation will fail if the reference isn't present.<br />IfNotPresent: the kubelet pulls if the reference isn't already present on disk. Container creation will fail if the reference isn't present and the pull fails.<br />Defaults to Always if :latest tag is specified, or IfNotPresent otherwise. |  |  |
+| `replicas` _integer_ | replicas is the number of desired pods. This is a pointer to distinguish between explicit<br />zero and not specified. Defaults to 1. |  |  |
+| `resources` _[ResourceRequirements](https://kubernetes.io/docs/reference/generated/kubernetes-api/v/#resourcerequirements-v1-core)_ | resources defines the compute resources required by the container.<br />More info: https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/ |  |  |
 
 
 #### KDexTranslation
@@ -624,6 +786,9 @@ _Appears in:_
 
 
 KDexTranslation is the Schema for the kdextranslations API
+
+KDexTranslations allow KDexPageBindings to be internationalized by making translations available in as many languages
+as necessary.
 
 
 
@@ -675,6 +840,26 @@ _Appears in:_
 
 
 
+#### ModulePolicy
+
+_Underlying type:_ _string_
+
+ModulePolicy defines the policy for the use of JavaScript Modules.
+
+_Validation:_
+- Enum: [ExternalDependencies Loose ModulesRequired Strict]
+
+_Appears in:_
+- [KDexHostSpec](#kdexhostspec)
+
+| Field | Description |
+| --- | --- |
+| `Loose` | LooseModulePolicy means that a) JavaScript references are not required to be JavaScript modules and b) JavaScript references may contain embed dependencies.<br /> |
+| `ExternalDependencies` | ExternalDependenciesModulePolicy means that a) JavaScript references are not required to be JavaScript modules and b) JavaScript references may not contain embed dependencies.<br /> |
+| `ModulesRequired` | ModulesRequiredModulePolicy means that a) JavaScript references are required to be JavaScript modules and b) JavaScript references may contain embed dependencies.<br /> |
+| `Strict` | StrictModulePolicy means that a) JavaScript references are required to be JavaScript modules and b) JavaScript references may not contain embed dependencies.<br /> |
+
+
 #### NavigationHints
 
 
@@ -703,11 +888,13 @@ PackageReference specifies the name and version of an NPM package that contains 
 
 _Appears in:_
 - [KDexAppSpec](#kdexappspec)
+- [KDexScriptLibrarySpec](#kdexscriptlibraryspec)
 
 | Field | Description | Default | Validation |
 | --- | --- | --- | --- |
-| `secretRef` _[LocalObjectReference](https://kubernetes.io/docs/reference/generated/kubernetes-api/v/#localobjectreference-v1-core)_ | secretRef is a reference to a secret containing authentication credentials for the NPM registry that holds the package. |  |  |
+| `exportMapping` _string_ | exportMapping is a mapping of the module's exports that will be used when the module import is written. e.g. `import [exportMapping] from [module_name];`. If exportMapping is not provided the module will be written as `import [module_name];` |  |  |
 | `name` _string_ | name contains a scoped npm package name. |  | Required: \{\} <br /> |
+| `secretRef` _[LocalObjectReference](https://kubernetes.io/docs/reference/generated/kubernetes-api/v/#localobjectreference-v1-core)_ | secretRef is a reference to a secret containing authentication credentials for the NPM registry that holds the package. |  |  |
 | `version` _string_ | version contains a specific npm package version. |  | Required: \{\} <br /> |
 
 
@@ -766,7 +953,8 @@ _Appears in:_
 | Field | Description | Default | Validation |
 | --- | --- | --- | --- |
 | `domains` _string array_ | domains are the names by which this host is addressed. The first domain listed is the preferred domain. The domains may contain wildcard prefix in the form '*.'. Longest match always wins. |  | MinItems: 1 <br />Required: \{\} <br /> |
-| `strategy` _[RoutingStrategy](#routingstrategy)_ | strategy is the routing strategy to use. |  | Enum: [Ingress HTTPRoute] <br />Required: \{\} <br /> |
+| `ingressClassName` _string_ | ingressClassName is the name of an IngressClass cluster resource. Ingress<br />controller implementations use this field to know whether they should be<br />serving this Ingress resource, by a transitive connection<br />(controller -> IngressClass -> Ingress resource). Although the<br />`kubernetes.io/ingress.class` annotation (simple constant name) was never<br />formally defined, it was widely supported by Ingress controllers to create<br />a direct binding between Ingress controller and Ingress resources. Newly<br />created Ingress resources should prefer using the field. However, even<br />though the annotation is officially deprecated, for backwards compatibility<br />reasons, ingress controllers should still honor that annotation if present. |  |  |
+| `strategy` _[RoutingStrategy](#routingstrategy)_ | strategy is the routing strategy to use. If not specified Ingress is assumed. | Ingress | Enum: [Ingress HTTPRoute] <br /> |
 | `tls` _[TLSSpec](#tlsspec)_ | tls is the TLS configuration for the host. |  |  |
 
 
@@ -788,6 +976,26 @@ _Appears in:_
 | `Ingress` | IngressRoutingStrategy uses Ingress to expose the host.<br /> |
 
 
+#### Script
+
+
+
+
+
+
+
+_Appears in:_
+- [KDexAppSpec](#kdexappspec)
+- [KDexScriptLibrarySpec](#kdexscriptlibraryspec)
+
+| Field | Description | Default | Validation |
+| --- | --- | --- | --- |
+| `attributes` _object (keys:string, values:string)_ | attributes are key/value pairs that will be added to the element when rendered. |  |  |
+| `footScript` _boolean_ | footScript is a flag for script or scriptSrc that indicates if the tag should be added in the head of the page or at the foot. The default is false (add to head). To add the script to the foot of the page set footScript to true. | false |  |
+| `script` _string_ | script is the text content to be added into a <script> element when rendered. |  |  |
+| `scriptSrc` _string_ | scriptSrc must be an absolute URL with a protocol and host which can be used in a src attribute. |  |  |
+
+
 #### TLSSpec
 
 
@@ -802,26 +1010,6 @@ _Appears in:_
 | Field | Description | Default | Validation |
 | --- | --- | --- | --- |
 | `secretName` _string_ | SecretName is the name of a secret that contains a TLS certificate and key. |  | MinLength: 5 <br />Required: \{\} <br /> |
-
-
-#### ThemeAsset
-
-
-
-
-
-
-
-_Appears in:_
-- [KDexThemeSpec](#kdexthemespec)
-
-| Field | Description | Default | Validation |
-| --- | --- | --- | --- |
-| `attributes` _object (keys:string, values:string)_ | attributes are key/value pairs that will be added to the element [link\|style\|script] when rendered. |  |  |
-| `linkHref` _string_ | linkHref is the content of a <link> href attribute. |  |  |
-| `script` _string_ | script is the text content to be added into a <script> element when rendered. |  |  |
-| `scriptSrc` _string_ | scriptSrc is the content of a <script> src attribute. |  |  |
-| `style` _string_ | style is the text content to be added into a <style> element when rendered. |  |  |
 
 
 #### Translation

@@ -26,6 +26,10 @@ import (
 // +kubebuilder:subresource:status
 
 // KDexTranslation is the Schema for the kdextranslations API
+//
+// KDexTranslations allow KDexPageBindings to be internationalized by making translations available in as many languages
+// as necessary.
+//
 // +kubebuilder:printcolumn:name="Ready",type=string,JSONPath=`.status.conditions[?(@.type=="Ready")].status`,description="The state of the Ready condition"
 type KDexTranslation struct {
 	metav1.TypeMeta `json:",inline"`

@@ -16,10 +16,20 @@ spec:
     singular: kdexscriptlibrary
   scope: Namespaced
   versions:
-  - name: v1alpha1
+  - additionalPrinterColumns:
+    - description: The state of the Ready condition
+      jsonPath: .status.conditions[?(@.type=="Ready")].status
+      name: Ready
+      type: string
+    name: v1alpha1
     schema:
       openAPIV3Schema:
-        description: KDexScriptLibrary is the Schema for the kdexscriptlibraries API
+        description: |-
+          KDexScriptLibrary is the Schema for the kdexscriptlibraries API
+
+          A KDexScriptLibrary is a reusable collection of JavaScript for powering the imperative aspects of KDexPageBindings.
+          Most other components of the model are able to reference KDexScriptLibrary as well in order to encapsulate component
+          specific logic.
         properties:
           apiVersion:
             description: |-

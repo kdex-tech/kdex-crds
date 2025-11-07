@@ -24,7 +24,11 @@ spec:
     name: v1alpha1
     schema:
       openAPIV3Schema:
-        description: KDexPageHeader is the Schema for the kdexpageheaders API
+        description: |-
+          KDexPageHeader is the Schema for the kdexpageheaders API
+
+          A KDexPageHeader is a reusable header component for composing KDexPageBindings. It can specify a content template and
+          an associated KDexScriptLibrary for driving imperative logic that might be necessary to implement the header.
         properties:
           apiVersion:
             description: |-

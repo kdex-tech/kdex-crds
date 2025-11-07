@@ -24,7 +24,12 @@ spec:
     name: v1alpha1
     schema:
       openAPIV3Schema:
-        description: KDexPageBinding is the Schema for the kdexpagebindings API
+        description: |-
+          KDexPageBinding is the Schema for the kdexpagebindings API
+
+          A KDexPageBinding defines a web page under a KDexHost. It brings together various reusable components like
+          KDexPageArchetype, KDexPageFooter, KDexPageHeader, KDexPageNavigation, KDexScriptLibrary, KDexTheme and content
+          components like raw HTML or KDexApps and KDexTranslations to produce internationalized, rendered HTML pages.
         properties:
           apiVersion:
             description: |-

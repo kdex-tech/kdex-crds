@@ -131,6 +131,11 @@ type KDexPageBindingStatus struct {
 // +kubebuilder:subresource:status
 
 // KDexPageBinding is the Schema for the kdexpagebindings API
+//
+// A KDexPageBinding defines a web page under a KDexHost. It brings together various reusable components like
+// KDexPageArchetype, KDexPageFooter, KDexPageHeader, KDexPageNavigation, KDexScriptLibrary, KDexTheme and content
+// components like raw HTML or KDexApps and KDexTranslations to produce internationalized, rendered HTML pages.
+//
 // +kubebuilder:printcolumn:name="Ready",type=string,JSONPath=`.status.conditions[?(@.type=="Ready")].status`,description="The state of the Ready condition"
 type KDexPageBinding struct {
 	metav1.TypeMeta `json:",inline"`

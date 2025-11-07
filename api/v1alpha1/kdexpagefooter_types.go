@@ -67,6 +67,10 @@ type KDexPageFooterStatus struct {
 // +kubebuilder:subresource:status
 
 // KDexPageFooter is the Schema for the kdexpagefooters API
+//
+// A KDexPageFooter is a reusable footer component for composing KDexPageBindings. It can specify a content template and
+// an associated KDexScriptLibrary for driving imperative logic that might be necessary to implement the footer.
+//
 // +kubebuilder:printcolumn:name="Ready",type=string,JSONPath=`.status.conditions[?(@.type=="Ready")].status`,description="The state of the Ready condition"
 type KDexPageFooter struct {
 	metav1.TypeMeta `json:",inline"`

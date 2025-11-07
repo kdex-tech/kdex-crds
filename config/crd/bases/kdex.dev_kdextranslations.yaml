@@ -24,7 +24,11 @@ spec:
     name: v1alpha1
     schema:
       openAPIV3Schema:
-        description: KDexTranslation is the Schema for the kdextranslations API
+        description: |-
+          KDexTranslation is the Schema for the kdextranslations API
+
+          KDexTranslations allow KDexPageBindings to be internationalized by making translations available in as many languages
+          as necessary.
         properties:
           apiVersion:
             description: |-

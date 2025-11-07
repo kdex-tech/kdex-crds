@@ -70,6 +70,10 @@ type KDexPageHeaderStatus struct {
 // +kubebuilder:subresource:status
 
 // KDexPageHeader is the Schema for the kdexpageheaders API
+//
+// A KDexPageHeader is a reusable header component for composing KDexPageBindings. It can specify a content template and
+// an associated KDexScriptLibrary for driving imperative logic that might be necessary to implement the header.
+//
 // +kubebuilder:printcolumn:name="Ready",type=string,JSONPath=`.status.conditions[?(@.type=="Ready")].status`,description="The state of the Ready condition"
 type KDexPageHeader struct {
 	metav1.TypeMeta `json:",inline"`

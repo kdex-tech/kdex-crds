@@ -138,6 +138,10 @@ type KDexThemeSpec struct {
 	// +kubebuilder:validation:Pattern=`^/.+`
 	RoutePath string `json:"routePath,omitempty"`
 
+	// scriptLibraryRef is an optional reference to a KDexScriptLibrary resource.
+	// +optional
+	ScriptLibraryRef *corev1.LocalObjectReference `json:"scriptLibraryRef,omitempty"`
+
 	// webserver defines the configuration for the theme webserver.
 	// +optional
 	WebServer *KDexThemeWebServer `json:"webserver,omitempty"`
@@ -189,6 +193,10 @@ type KDexThemeStatus struct {
 // +kubebuilder:subresource:status
 
 // KDexTheme is the Schema for the kdexthemes API
+//
+// A KDexTheme is a reusable collection of design styles and associated digital assets necessary for providing the
+// visual aspects of KDexPageBindings decoupling appearance from structure and content.
+//
 // +kubebuilder:printcolumn:name="Ready",type=string,JSONPath=`.status.conditions[?(@.type=="Ready")].status`,description="The state of the Ready condition"
 type KDexTheme struct {
 	metav1.TypeMeta `json:",inline"`

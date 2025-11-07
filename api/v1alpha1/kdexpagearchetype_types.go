@@ -88,6 +88,11 @@ type KDexPageArchetypeStatus struct {
 // +kubebuilder:subresource:status
 
 // KDexPageArchetype is the Schema for the kdexpagearchetypes API
+//
+// A KDexPageArchetype defines a reusable archetype from which web pages can be derived. When creating a KDexPageBinding
+// (i.e. a web page) a developer states which archetype is to be used. This allows the structure to be decoupled from
+// the content.
+//
 // +kubebuilder:printcolumn:name="Ready",type=string,JSONPath=`.status.conditions[?(@.type=="Ready")].status`,description="The state of the Ready condition"
 type KDexPageArchetype struct {
 	metav1.TypeMeta `json:",inline"`

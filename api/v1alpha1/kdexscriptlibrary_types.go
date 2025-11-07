@@ -19,20 +19,21 @@ package v1alpha1
 import (
 	"bytes"
 
+	corev1 "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
 
 // KDexScriptLibrarySpec defines the desired state of KDexScriptLibrary
 // +kubebuilder:validation:XValidation:rule="[has(self.scripts), has(self.packageReference)].filter(x, x).size() > 0",message="at least one of scripts or packageReference must be specified"
 type KDexScriptLibrarySpec struct {
+	// packageReference specifies the name and version of an NPM package that contains the script. The package.json must describe an ES module.
+	// +optional
+	PackageReference *PackageReference `json:"packageReference,omitempty"`
+
 	// scripts is a set of script references. They may contain URLs that point to resources hosted at some public address, npm module references or they may contain tag contents.
 	// +kubebuilder:validation:MaxItems=32
 	// +optional
 	Scripts []Script `json:"scripts,omitempty"`
-
-	// packageReference specifies the name and version of an NPM package that contains the script. The package.json must describe an ES module.
-	// +optional
-	PackageReference *PackageReference `json:"packageReference,omitempty"`
 }
 
 // KDexScriptLibraryStatus defines the observed state of KDexScriptLibrary.
@@ -71,6 +72,12 @@ type KDexScriptLibraryStatus struct {
 // +kubebuilder:subresource:status
 
 // KDexScriptLibrary is the Schema for the kdexscriptlibraries API
+//
+// A KDexScriptLibrary is a reusable collection of JavaScript for powering the imperative aspects of KDexPageBindings.
+// Most other components of the model are able to reference KDexScriptLibrary as well in order to encapsulate component
+// specific logic.
+//
+// +kubebuilder:printcolumn:name="Ready",type=string,JSONPath=`.status.conditions[?(@.type=="Ready")].status`,description="The state of the Ready condition"
 type KDexScriptLibrary struct {
 	metav1.TypeMeta `json:",inline"`
 
@@ -96,6 +103,52 @@ type KDexScriptLibraryList struct {
 	Items           []KDexScriptLibrary `json:"items"`
 }
 
+// PackageReference specifies the name and version of an NPM package that contains the micro-frontend application.
+type PackageReference struct {
+	// exportMapping is a mapping of the module's exports that will be used when the module import is written. e.g. `import [exportMapping] from [module_name];`. If exportMapping is not provided the module will be written as `import [module_name];`
+	// +optional
+	ExportMapping string `json:"exportMapping,omitempty"`
+
+	// name contains a scoped npm package name.
+	// +kubebuilder:validation:Required
+	Name string `json:"name"`
+
+	// secretRef is a reference to a secret containing authentication credentials for the NPM registry that holds the package.
+	// +optional
+	SecretRef *corev1.LocalObjectReference `json:"secretRef,omitempty"`
+
+	// version contains a specific npm package version.
+	// +kubebuilder:validation:Required
+	Version string `json:"version"`
+}
+
+func (p *PackageReference) ToImportStatement() string {
+	var buffer bytes.Buffer
+
+	buffer.WriteString(`import `)
+	if p.ExportMapping != "" {
+		buffer.WriteString(p.ExportMapping)
+		buffer.WriteString(` from `)
+	}
+	buffer.WriteString(`"`)
+	buffer.WriteString(p.Name)
+	buffer.WriteString(`@`)
+	buffer.WriteString(p.Version)
+	buffer.WriteString(`";`)
+
+	return buffer.String()
+}
+
+func (p *PackageReference) ToScriptTag() string {
+	var buffer bytes.Buffer
+
+	buffer.WriteString(`<script type="module">\n`)
+	buffer.WriteString(p.ToImportStatement())
+	buffer.WriteString(`\n</script>`)
+
+	return buffer.String()
+}
+
 // +kubebuilder:validation:XValidation:rule="[has(self.script), has(self.scriptSrc)].filter(x, x).size() == 1",message="script and scriptSrc are mutually exclusive"
 type Script struct {
 	// attributes are key/value pairs that will be added to the element when rendered.
@@ -116,7 +169,7 @@ type Script struct {
 	ScriptSrc string `json:"scriptSrc,omitempty"`
 }
 
-func (s *Script) String(footScript bool) string {
+func (s *Script) ToScriptTag(footScript bool) string {
 	if !s.FootScript && footScript {
 		return ""
 	}
@@ -158,28 +211,21 @@ func (s *Script) String(footScript bool) string {
 	return buffer.String()
 }
 
-func (s *KDexScriptLibrarySpec) String(footScript bool) string {
-	var buffer bytes.Buffer
-	separator := ""
+// func (s *KDexScriptLibrarySpec) ToScriptTags(footScript bool) string {
+// 	var buffer bytes.Buffer
+// 	separator := ""
 
-	if s.PackageReference != nil && !footScript {
-		if !footScript {
-			buffer.WriteString(s.PackageReference.String())
-			separator = "\n"
-		}
-	}
+// 	for _, script := range s.Scripts {
+// 		output := script.ToScriptTag(footScript)
+// 		if output != "" {
+// 			buffer.WriteString(separator)
+// 			separator = "\n"
+// 			buffer.WriteString(output)
+// 		}
+// 	}
 
-	for _, script := range s.Scripts {
-		output := script.String(footScript)
-		if output != "" {
-			buffer.WriteString(separator)
-			separator = "\n"
-			buffer.WriteString(output)
-		}
-	}
-
-	return buffer.String()
-}
+// 	return buffer.String()
+// }
 
 func init() {
 	SchemeBuilder.Register(&KDexScriptLibrary{}, &KDexScriptLibraryList{})

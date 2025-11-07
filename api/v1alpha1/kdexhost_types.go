@@ -72,6 +72,10 @@ type KDexHostSpec struct {
 	// routing defines the desired routing configuration for the host.
 	// +kubebuilder:validation:Required
 	Routing Routing `json:"routing"`
+
+	// scriptLibraryRef is an optional reference to a KDexScriptLibrary resource.
+	// +optional
+	ScriptLibraryRef *corev1.LocalObjectReference `json:"scriptLibraryRef,omitempty"`
 }
 
 // KDexHostStatus defines the observed state of KDexHost.
@@ -110,6 +114,12 @@ type KDexHostStatus struct {
 // +kubebuilder:subresource:status
 
 // KDexHost is the Schema for the kdexhosts API
+//
+// A KDexHost is the central actor in the "KDex Cloud Native Application Server" model. It specifies the basic metadata
+// that defines a web property; a set of domain names, TLS certificates, routing strategy and so on. From this central
+// point a distinct web property is establish to which are bound KDexPageBindings (i.e. web pages) that provide the web
+// properties content in the form of either raw HTML content or applications from KDexApps.s
+//
 // +kubebuilder:printcolumn:name="Ready",type=string,JSONPath=`.status.conditions[?(@.type=="Ready")].status`,description="The state of the Ready condition"
 type KDexHost struct {
 	metav1.TypeMeta `json:",inline"`

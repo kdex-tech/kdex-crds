@@ -17,9 +17,6 @@ limitations under the License.
 package v1alpha1
 
 import (
-	"bytes"
-
-	corev1 "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
 
@@ -38,7 +35,15 @@ type CustomElement struct {
 // +kubebuilder:resource:scope=Namespaced,shortName=kdex-a
 // +kubebuilder:subresource:status
 
-// KDexApp is the Schema for the kdexapps API
+// KDexApp is the Schema for the kdexapps API.
+//
+// A KDexApp is the embodiment of an "Application" within the "KDex Cloud Native Application Server" model. KDexApp is
+// the resource developers implement to extend to user interface with a new feature. The implementations are Web
+// Component based and the packaging follows the NPM packaging model the contents of which are ES modules. There are no
+// container images to build. Merely package the application code and publish it to an NPM compatible repository,
+// configure the KDexApp with the necessary metadata and deploy to Kubernetes. The app can then be consumed and composed
+// by KDexPageBindings to produce actual user experiences.
+//
 // +kubebuilder:printcolumn:name="Ready",type=string,JSONPath=`.status.conditions[?(@.type=="Ready")].status`,description="The state of the Ready condition"
 type KDexApp struct {
 	metav1.TypeMeta `json:",inline"`
@@ -68,12 +73,18 @@ type KDexAppList struct {
 // KDexAppSpec defines the desired state of KDexApp
 type KDexAppSpec struct {
 	// customElements is a list of custom elements implemented by the micro-frontend application.
-	// +optional
+	// +kubebuilder:validation:MaxItems=32
+	// +kubebuilder:validation:MinItems=1
 	CustomElements []CustomElement `json:"customElements,omitempty"`
 
 	// packageReference specifies the name and version of an NPM package that contains the micro-frontend application. The package.json must describe an ES module.
 	// +kubebuilder:validation:Required
 	PackageReference PackageReference `json:"packageReference"`
+
+	// scripts is a set of script references. They may contain URLs that point to resources hosted at some public address, npm module references or they may contain tag contents.
+	// +kubebuilder:validation:MaxItems=32
+	// +optional
+	Scripts []Script `json:"scripts,omitempty"`
 }
 
 // KDexAppStatus defines the observed state of KDexApp.
@@ -99,44 +110,6 @@ type KDexAppStatus struct {
 	// KDexApp's generation, which is updated on mutation by the API Server.
 	// +optional
 	ObservedGeneration int64 `json:"observedGeneration,omitempty"`
-}
-
-// PackageReference specifies the name and version of an NPM package that contains the micro-frontend application.
-type PackageReference struct {
-	// exportMapping is a mapping of the module's exports that will be used when the module import is written. e.g. `import [exportMapping] from [module_name];`. If exportMapping is not provided the module will be written as `import [module_name];`
-	// +optional
-	ExportMapping string `json:"exportMapping,omitempty"`
-
-	// name contains a scoped npm package name.
-	// +kubebuilder:validation:Required
-	Name string `json:"name"`
-
-	// secretRef is a reference to a secret containing authentication credentials for the NPM registry that holds the package.
-	// +optional
-	SecretRef *corev1.LocalObjectReference `json:"secretRef,omitempty"`
-
-	// version contains a specific npm package version.
-	// +kubebuilder:validation:Required
-	Version string `json:"version"`
-}
-
-func (p *PackageReference) String() string {
-	var buffer bytes.Buffer
-
-	buffer.WriteString(`<script type="module">\n`)
-	buffer.WriteString(`import `)
-	if p.ExportMapping != "" {
-		buffer.WriteString(p.ExportMapping)
-		buffer.WriteString(` from `)
-	}
-	buffer.WriteString(`"`)
-	buffer.WriteString(p.Name)
-	buffer.WriteString(`@`)
-	buffer.WriteString(p.Version)
-	buffer.WriteString(`";\n`)
-	buffer.WriteString(`</script>`)
-
-	return buffer.String()
 }
 
 func init() {

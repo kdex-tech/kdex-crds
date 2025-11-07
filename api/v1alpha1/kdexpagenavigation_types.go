@@ -70,6 +70,11 @@ type KDexPageNavigationStatus struct {
 // +kubebuilder:subresource:status
 
 // KDexPageNavigation is the Schema for the kdexpagenavigations API
+//
+// A KDexPageNavigation is a reusable navigation component for composing KDexPageBindings. It can specify a content
+// template and an associated KDexScriptLibrary for driving imperative logic that might be necessary to implement the
+// navigation.
+//
 // +kubebuilder:printcolumn:name="Ready",type=string,JSONPath=`.status.conditions[?(@.type=="Ready")].status`,description="The state of the Ready condition"
 type KDexPageNavigation struct {
 	metav1.TypeMeta `json:",inline"`
