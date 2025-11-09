@@ -132,8 +132,6 @@ func (p *PackageReference) ToImportStatement() string {
 	}
 	buffer.WriteString(`"`)
 	buffer.WriteString(p.Name)
-	buffer.WriteString(`@`)
-	buffer.WriteString(p.Version)
 	buffer.WriteString(`";`)
 
 	return buffer.String()
