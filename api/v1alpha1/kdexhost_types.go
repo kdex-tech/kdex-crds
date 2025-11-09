@@ -21,21 +21,6 @@ import (
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
 
-// ModulePolicy defines the policy for the use of JavaScript Modules.
-// +kubebuilder:validation:Enum=ExternalDependencies;Loose;ModulesRequired;Strict
-type ModulePolicy string
-
-const (
-	// LooseModulePolicy means that a) JavaScript references are not required to be JavaScript modules and b) JavaScript references may contain embed dependencies.
-	LooseModulePolicy ModulePolicy = "Loose"
-	// ExternalDependenciesModulePolicy means that a) JavaScript references are not required to be JavaScript modules and b) JavaScript references may not contain embed dependencies.
-	ExternalDependenciesModulePolicy ModulePolicy = "ExternalDependencies"
-	// ModulesRequiredModulePolicy means that a) JavaScript references are required to be JavaScript modules and b) JavaScript references may contain embed dependencies.
-	ModulesRequiredModulePolicy ModulePolicy = "ModulesRequired"
-	// StrictModulePolicy means that a) JavaScript references are required to be JavaScript modules and b) JavaScript references may not contain embed dependencies.
-	StrictModulePolicy ModulePolicy = "Strict"
-)
-
 // KDexHostSpec defines the desired state of KDexHost
 
 type KDexHostSpec struct {
@@ -146,6 +131,21 @@ type KDexHostList struct {
 	Items           []KDexHost `json:"items"`
 }
 
+// ModulePolicy defines the policy for the use of JavaScript Modules.
+// +kubebuilder:validation:Enum=ExternalDependencies;Loose;ModulesRequired;Strict
+type ModulePolicy string
+
+const (
+	// LooseModulePolicy means that a) JavaScript references are not required to be JavaScript modules and b) JavaScript references may contain embed dependencies.
+	LooseModulePolicy ModulePolicy = "Loose"
+	// ExternalDependenciesModulePolicy means that a) JavaScript references are not required to be JavaScript modules and b) JavaScript references may not contain embed dependencies.
+	ExternalDependenciesModulePolicy ModulePolicy = "ExternalDependencies"
+	// ModulesRequiredModulePolicy means that a) JavaScript references are required to be JavaScript modules and b) JavaScript references may contain embed dependencies.
+	ModulesRequiredModulePolicy ModulePolicy = "ModulesRequired"
+	// StrictModulePolicy means that a) JavaScript references are required to be JavaScript modules and b) JavaScript references may not contain embed dependencies.
+	StrictModulePolicy ModulePolicy = "Strict"
+)
+
 // Routing defines the desired routing configuration for the host.
 type Routing struct {
 	// domains are the names by which this host is addressed. The first domain listed is the preferred domain. The domains may contain wildcard prefix in the form '*.'. Longest match always wins.
@@ -168,8 +168,8 @@ type Routing struct {
 	IngressClassName *string `json:"ingressClassName,omitempty" protobuf:"bytes,4,opt,name=ingressClassName"`
 
 	// strategy is the routing strategy to use. If not specified Ingress is assumed.
-	// +kubebuilder:default:="Ingress"
 	// +optional
+	// +kubebuilder:default:="Ingress"
 	Strategy RoutingStrategy `json:"strategy"`
 
 	// tls is the TLS configuration for the host.
