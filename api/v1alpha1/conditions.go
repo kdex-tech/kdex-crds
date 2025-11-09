@@ -55,41 +55,35 @@ func GetCondition(conditions []metav1.Condition, condType ConditionType) *metav1
 	return nil
 }
 
-type ConditionArgs struct {
-	Ready       *ConditionFields
-	Degraded    *ConditionFields
-	Progressing *ConditionFields
+type ConditionStatuses struct {
+	Ready       *metav1.ConditionStatus
+	Degraded    *metav1.ConditionStatus
+	Progressing *metav1.ConditionStatus
 }
 
-type ConditionFields struct {
-	Status  metav1.ConditionStatus
-	Reason  ConditionReason
-	Message string
-}
-
-func SetConditions(conditions *[]metav1.Condition, args ConditionArgs) {
+func SetConditions(conditions *[]metav1.Condition, args ConditionStatuses, reason ConditionReason, message string) {
 	if args.Degraded != nil {
 		meta.SetStatusCondition(conditions, *NewCondition(
 			ConditionTypeDegraded,
-			args.Degraded.Status,
-			args.Degraded.Reason,
-			args.Degraded.Message,
+			*args.Degraded,
+			reason,
+			message,
 		))
 	}
 	if args.Progressing != nil {
 		meta.SetStatusCondition(conditions, *NewCondition(
 			ConditionTypeProgressing,
-			args.Progressing.Status,
-			args.Progressing.Reason,
-			args.Progressing.Message,
+			*args.Progressing,
+			reason,
+			message,
 		))
 	}
 	if args.Ready != nil {
 		meta.SetStatusCondition(conditions, *NewCondition(
 			ConditionTypeReady,
-			args.Ready.Status,
-			args.Ready.Reason,
-			args.Ready.Message,
+			*args.Ready,
+			reason,
+			message,
 		))
 	}
 }
