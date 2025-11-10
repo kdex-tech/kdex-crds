@@ -17,15 +17,14 @@ limitations under the License.
 package v1alpha1
 
 import (
+	corev1 "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
 
 // KDexHostControllerSpec defines the desired state of KDexHostController
 type KDexHostControllerSpec struct {
-	// source is the original source configuration of a KDexHost. This resource makes a copy in order to setup the
-	// focused controller.
 	// +kubebuilder:validation:Required
-	Source KDexHostSpec `json:"source"`
+	HostRef corev1.LocalObjectReference `json:"hostRef,omitempty"`
 }
 
 // KDexHostControllerStatus defines the observed state of KDexHostController.
@@ -49,6 +48,14 @@ type KDexHostControllerStatus struct {
 	// +listMapKey=type
 	// +optional
 	Conditions []metav1.Condition `json:"conditions,omitempty"`
+
+	// For Kubernetes API conventions, see:
+	// https://github.com/kubernetes/community/blob/master/contributors/devel/sig-architecture/api-conventions.md#typical-status-properties
+
+	// observedGeneration is the most recent generation observed for this KDexApp. It corresponds to the
+	// KDexApp's generation, which is updated on mutation by the API Server.
+	// +optional
+	ObservedGeneration int64 `json:"observedGeneration,omitempty"`
 }
 
 // +kubebuilder:object:root=true
