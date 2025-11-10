@@ -28,6 +28,9 @@ resources:
 - kdexhost_admin_role.yaml
 - kdexhost_editor_role.yaml
 - kdexhost_viewer_role.yaml
+- kdexhostcontroller_admin_role.yaml
+- kdexhostcontroller_editor_role.yaml
+- kdexhostcontroller_viewer_role.yaml
 - kdexpagearchetype_admin_role.yaml
 - kdexpagearchetype_editor_role.yaml
 - kdexpagearchetype_viewer_role.yaml

@@ -2,6 +2,7 @@
 resources:
 - v1alpha1_kdexapp.yaml
 - v1alpha1_kdexhost.yaml
+- v1alpha1_kdexhostcontroller.yaml
 - v1alpha1_kdexpagearchetype.yaml
 - v1alpha1_kdexpagebinding.yaml
 - v1alpha1_kdexpagefooter.yaml

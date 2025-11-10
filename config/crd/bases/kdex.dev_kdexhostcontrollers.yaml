@@ -1,0 +1,256 @@
+---
+apiVersion: apiextensions.k8s.io/v1
+kind: CustomResourceDefinition
+metadata:
+  annotations:
+    controller-gen.kubebuilder.io/version: v0.18.0
+  name: kdexhostcontrollers.kdex.dev
+spec:
+  group: kdex.dev
+  names:
+    kind: KDexHostController
+    listKind: KDexHostControllerList
+    plural: kdexhostcontrollers
+    singular: kdexhostcontroller
+  scope: Namespaced
+  versions:
+  - additionalPrinterColumns:
+    - description: The state of the Ready condition
+      jsonPath: .status.conditions[?(@.type=="Ready")].status
+      name: Ready
+      type: string
+    name: v1alpha1
+    schema:
+      openAPIV3Schema:
+        description: |-
+          KDexHostController is the Schema for the kdexhostcontrollers API
+
+          A KDexHostController is the resource used to instantiate and manage a unique controller focused on a single KDexHost
+          resource. This focused controller serves to aggregate the host specific resources, primarily KDexPageBindings but
+          also as the main web server handling page rendering and page serving. In order to isolate the resources consumed by
+          those operations from other hosts a unique controller is necessary. This resource is internally generated and managed
+          and not meant for end users.
+        properties:
+          apiVersion:
+            description: |-
+              APIVersion defines the versioned schema of this representation of an object.
+              Servers should convert recognized schemas to the latest internal value, and
+              may reject unrecognized values.
+              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources
+            type: string
+          kind:
+            description: |-
+              Kind is a string value representing the REST resource this object represents.
+              Servers may infer this from the endpoint the client submits requests to.
+              Cannot be updated.
+              In CamelCase.
+              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds
+            type: string
+          metadata:
+            type: object
+          spec:
+            description: spec defines the desired state of KDexHostController
+            properties:
+              source:
+                description: |-
+                  source is the original source configuration of a KDexHost. This resource makes a copy in order to setup the
+                  focused controller.
+                properties:
+                  baseMeta:
+                    description: baseMeta is a string containing a base set of meta
+                      tags to use on every page rendered for the host.
+                    minLength: 5
+                    type: string
+                  brandName:
+                    description: brandName is the name used when rendering pages belonging
+                      to the host. For example, it may be used as alt text for the
+                      logo displayed in the page header.
+                    type: string
+                  defaultLang:
+                    description: |-
+                      defaultLang is a string containing a BCP 47 language tag.
+                      See https://developer.mozilla.org/en-US/docs/Glossary/BCP_47_language_tag.
+                      When render page paths do not specify a 'lang' path parameter this will be the value used. When not set the default will be 'en'.
+                    type: string
+                  defaultThemeRef:
+                    description: defaultThemeRef is a reference to the theme that
+                      should apply to all pages bound to this host unless overridden.
+                    properties:
+                      name:
+                        default: ""
+                        description: |-
+                          Name of the referent.
+                          This field is effectively required, but due to backwards compatibility is
+                          allowed to be empty. Instances of this type with an empty value here are
+                          almost certainly wrong.
+                          More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#names
+                        type: string
+                    type: object
+                    x-kubernetes-map-type: atomic
+                  modulePolicy:
+                    default: Strict
+                    description: |-
+                      modulePolicy defines the policy for JavaScript references in KDexApp, KDexTheme and KDexScriptLibrary resources. When not specified the policy is Strict
+                      A Host must not accept JavaScript references which do not comply with the specified policy.
+                    enum:
+                    - ExternalDependencies
+                    - Loose
+                    - ModulesRequired
+                    - Strict
+                    type: string
+                  organization:
+                    description: organization is the name of the Organization to which
+                      the host belongs.
+                    minLength: 5
+                    type: string
+                  routing:
+                    description: routing defines the desired routing configuration
+                      for the host.
+                    properties:
+                      domains:
+                        description: domains are the names by which this host is addressed.
+                          The first domain listed is the preferred domain. The domains
+                          may contain wildcard prefix in the form '*.'. Longest match
+                          always wins.
+                        items:
+                          type: string
+                        minItems: 1
+                        type: array
+                      ingressClassName:
+                        description: |-
+                          ingressClassName is the name of an IngressClass cluster resource. Ingress
+                          controller implementations use this field to know whether they should be
+                          serving this Ingress resource, by a transitive connection
+                          (controller -> IngressClass -> Ingress resource). Although the
+                          `kubernetes.io/ingress.class` annotation (simple constant name) was never
+                          formally defined, it was widely supported by Ingress controllers to create
+                          a direct binding between Ingress controller and Ingress resources. Newly
+                          created Ingress resources should prefer using the field. However, even
+                          though the annotation is officially deprecated, for backwards compatibility
+                          reasons, ingress controllers should still honor that annotation if present.
+                        type: string
+                      strategy:
+                        default: Ingress
+                        description: strategy is the routing strategy to use. If not
+                          specified Ingress is assumed.
+                        enum:
+                        - Ingress
+                        - HTTPRoute
+                        type: string
+                      tls:
+                        description: tls is the TLS configuration for the host.
+                        properties:
+                          secretName:
+                            description: SecretName is the name of a secret that contains
+                              a TLS certificate and key.
+                            minLength: 5
+                            type: string
+                        required:
+                        - secretName
+                        type: object
+                    required:
+                    - domains
+                    type: object
+                  scriptLibraryRef:
+                    description: scriptLibraryRef is an optional reference to a KDexScriptLibrary
+                      resource.
+                    properties:
+                      name:
+                        default: ""
+                        description: |-
+                          Name of the referent.
+                          This field is effectively required, but due to backwards compatibility is
+                          allowed to be empty. Instances of this type with an empty value here are
+                          almost certainly wrong.
+                          More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#names
+                        type: string
+                    type: object
+                    x-kubernetes-map-type: atomic
+                required:
+                - brandName
+                - organization
+                - routing
+                type: object
+            required:
+            - source
+            type: object
+          status:
+            description: status defines the observed state of KDexHostController
+            properties:
+              conditions:
+                description: |-
+                  conditions represent the current state of the KDexHostController resource.
+                  Each condition has a unique type and reflects the status of a specific aspect of the resource.
+
+                  Standard condition types include:
+                  - "Available": the resource is fully functional
+                  - "Progressing": the resource is being created or updated
+                  - "Degraded": the resource failed to reach or maintain its desired state
+
+                  The status of each condition is one of True, False, or Unknown.
+                items:
+                  description: Condition contains details for one aspect of the current
+                    state of this API Resource.
+                  properties:
+                    lastTransitionTime:
+                      description: |-
+                        lastTransitionTime is the last time the condition transitioned from one status to another.
+                        This should be when the underlying condition changed.  If that is not known, then using the time when the API field changed is acceptable.
+                      format: date-time
+                      type: string
+                    message:
+                      description: |-
+                        message is a human readable message indicating details about the transition.
+                        This may be an empty string.
+                      maxLength: 32768
+                      type: string
+                    observedGeneration:
+                      description: |-
+                        observedGeneration represents the .metadata.generation that the condition was set based upon.
+                        For instance, if .metadata.generation is currently 12, but the .status.conditions[x].observedGeneration is 9, the condition is out of date
+                        with respect to the current state of the instance.
+                      format: int64
+                      minimum: 0
+                      type: integer
+                    reason:
+                      description: |-
+                        reason contains a programmatic identifier indicating the reason for the condition's last transition.
+                        Producers of specific condition types may define expected values and meanings for this field,
+                        and whether the values are considered a guaranteed API.
+                        The value should be a CamelCase string.
+                        This field may not be empty.
+                      maxLength: 1024
+                      minLength: 1
+                      pattern: ^[A-Za-z]([A-Za-z0-9_,:]*[A-Za-z0-9_])?$
+                      type: string
+                    status:
+                      description: status of the condition, one of True, False, Unknown.
+                      enum:
+                      - "True"
+                      - "False"
+                      - Unknown
+                      type: string
+                    type:
+                      description: type of condition in CamelCase or in foo.example.com/CamelCase.
+                      maxLength: 316
+                      pattern: ^([a-z0-9]([-a-z0-9]*[a-z0-9])?(\.[a-z0-9]([-a-z0-9]*[a-z0-9])?)*/)?(([A-Za-z0-9][-A-Za-z0-9_.]*)?[A-Za-z0-9])$
+                      type: string
+                  required:
+                  - lastTransitionTime
+                  - message
+                  - reason
+                  - status
+                  - type
+                  type: object
+                type: array
+                x-kubernetes-list-map-keys:
+                - type
+                x-kubernetes-list-type: map
+            type: object
+        required:
+        - spec
+        type: object
+    served: true
+    storage: true
+    subresources:
+      status: {}
