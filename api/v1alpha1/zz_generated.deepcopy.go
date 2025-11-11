@@ -504,11 +504,6 @@ func (in *KDexPageArchetypeSpec) DeepCopyInto(out *KDexPageArchetypeSpec) {
 			(*out)[key] = outVal
 		}
 	}
-	if in.OverrideThemeRef != nil {
-		in, out := &in.OverrideThemeRef, &out.OverrideThemeRef
-		*out = new(corev1.LocalObjectReference)
-		**out = **in
-	}
 	if in.ScriptLibraryRef != nil {
 		in, out := &in.ScriptLibraryRef, &out.ScriptLibraryRef
 		*out = new(corev1.LocalObjectReference)

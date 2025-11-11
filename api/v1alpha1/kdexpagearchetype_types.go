@@ -46,10 +46,6 @@ type KDexPageArchetypeSpec struct {
 	// +kubebuilder:validation:XValidation:rule="!has(self.main)",message="'main' is a reserved name for an extra navigation"
 	ExtraNavigations map[string]*corev1.LocalObjectReference `json:"extraNavigations,omitempty"`
 
-	// overrideThemeRef is a reference to the theme that should apply to all pages that use this archetype. It overrides the default theme defined on the host.
-	// +optional
-	OverrideThemeRef *corev1.LocalObjectReference `json:"overrideThemeRef,omitempty"`
-
 	// scriptLibraryRef is an optional reference to a KDexScriptLibrary resource.
 	// +optional
 	ScriptLibraryRef *corev1.LocalObjectReference `json:"scriptLibraryRef,omitempty"`
