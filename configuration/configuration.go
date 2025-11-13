@@ -299,6 +299,8 @@ theme:
 		panic("decoded object is not a Configuration")
 	}
 
+	config.SetGroupVersionKind(gvk)
+
 	return *config
 }
 
