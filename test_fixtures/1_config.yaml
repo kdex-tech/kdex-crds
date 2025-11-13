@@ -1,0 +1,6 @@
+controller:
+  deployment:
+    selector:
+      matchLabels:
+        control-plane: controller-manager
+    replicas: 4

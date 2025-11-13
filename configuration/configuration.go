@@ -1,19 +1,31 @@
 package configuration
 
 import (
+	"os"
+
 	appsv1 "k8s.io/api/apps/v1"
 	corev1 "k8s.io/api/core/v1"
 	networkingv1 "k8s.io/api/networking/v1"
+	rbacv1 "k8s.io/api/rbac/v1"
+	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
+	runtime "k8s.io/apimachinery/pkg/runtime"
+	"k8s.io/apimachinery/pkg/runtime/serializer"
 	gatewayv1 "sigs.k8s.io/gateway-api/apis/v1"
 )
 
 type FocusControllerConfiguration struct {
 	Deployment      appsv1.DeploymentSpec `json:"deployment" yaml:"deployment"`
 	Service         corev1.ServiceSpec    `json:"service" yaml:"service"`
-	RolePolicyRules []PolicyRule          `json:"rolePolicyRules" yaml:"rolePolicyRules"`
+	RolePolicyRules []rbacv1.PolicyRule   `json:"rolePolicyRules" yaml:"rolePolicyRules"`
 }
 
+// +kubebuilder:object:root=true
 type NexusConfiguration struct {
+	metav1.TypeMeta `json:",inline"`
+	// metadata is a standard object metadata
+	// +optional
+	metav1.ObjectMeta `json:"metadata,omitempty,omitzero"`
+
 	FocusController FocusControllerConfiguration `json:"controller" yaml:"controller"`
 	ThemeServer     ThemeServerConfiguration     `json:"theme" yaml:"theme"`
 }
@@ -25,29 +37,271 @@ type ThemeServerConfiguration struct {
 	Service    corev1.ServiceSpec       `json:"service" yaml:"service"`
 }
 
-type PolicyRule struct {
-	// Verbs is a list of Verbs that apply to ALL the ResourceKinds contained in this rule. '*' represents all verbs.
-	// +listType=atomic
-	Verbs []string `json:"verbs" yaml:"verbs" protobuf:"bytes,1,rep,name=verbs"`
+func LoadConfiguration(configFile string, scheme *runtime.Scheme) NexusConfiguration {
+	defaultContent := []byte(`
+controller:
+  deployment:
+    selector:
+      matchLabels: {}
+    replicas: 1
+    template:
+      metadata:
+      annotations: {}
+      labels: {}
+      spec:
+        containers:
+        - args:
+          - --health-probe-bind-address=:8081
+          - --webserver-bind-address=:8090
+          command:
+          - /manager
+          image: kdex-tech/kdex-web:latest
+          livenessProbe:
+            httpGet:
+              path: /healthz
+              port: 8081
+            initialDelaySeconds: 15
+            periodSeconds: 20
+          name: manager
+          ports:
+          - containerPort: 8090
+            name: webserver
+            protocol: TCP
+          readinessProbe:
+            httpGet:
+              path: /readyz
+              port: 8081
+            initialDelaySeconds: 5
+            periodSeconds: 10
+          securityContext:
+            allowPrivilegeEscalation: false
+            capabilities:
+              drop:
+              - "ALL"
+            readOnlyRootFilesystem: true
+          volumeMounts:
+          - mountPath: /config.yaml
+            name: config
+            subPath: config.yaml
+        securityContext:
+          runAsNonRoot: true
+          seccompProfile:
+            type: RuntimeDefault
+        serviceAccountName: controller-manager
+        terminationGracePeriodSeconds: 10
+        volumes:
+        - name: config
+          configMap:
+            name: controller-manager
+  rolePolicyRules:
+  - apiGroups:
+    - ""
+    resources:
+    - services
+    verbs:
+    - create
+    - delete
+    - get
+    - list
+    - patch
+    - update
+    - watch
+  - apiGroups:
+    - apps
+    resources:
+    - deployments
+    verbs:
+    - create
+    - delete
+    - get
+    - list
+    - patch
+    - update
+    - watch
+  - apiGroups:
+    - gateway.networking.k8s.io
+    resources:
+    - httproutes
+    verbs:
+    - create
+    - delete
+    - get
+    - list
+    - patch
+    - update
+    - watch
+  - apiGroups:
+    - kdex.dev
+    resources:
+    - kdexapps
+    - kdexhost
+    - kdexhosts
+    - kdexpagearchetypes
+    - kdexpagefooters
+    - kdexpageheaders
+    - kdexpagenavigations
+    - kdexscriptlibraries
+    verbs:
+    - get
+    - list
+    - watch
+  - apiGroups:
+    - kdex.dev
+    resources:
+    - kdexhostcontrollers
+    - kdexpagebindings
+    - kdextranslations
+    verbs:
+    - create
+    - delete
+    - get
+    - list
+    - patch
+    - update
+    - watch
+  - apiGroups:
+    - kdex.dev
+    resources:
+    - kdexhostcontrollers/finalizers
+    - kdexpagebindings/finalizers
+    - kdextranslations/finalizers
+    verbs:
+    - update
+  - apiGroups:
+    - kdex.dev
+    resources:
+    - kdexhostcontrollers/status
+    - kdexpagebindings/status
+    - kdextranslations/status
+    verbs:
+    - get
+    - patch
+    - update
+  - apiGroups:
+    - kdex.dev
+    resources:
+    - kdexthemes
+    verbs:
+    - get
+  - apiGroups:
+    - networking.k8s.io
+    resources:
+    - ingresses
+    verbs:
+    - create
+    - delete
+    - get
+    - list
+    - patch
+    - update
+    - watch
+  service:
+    selector: {}
+    ports:
+    - name: webserver
+      port: 8090
+      protocol: TCP
+      targetPort: webserver
+theme:
+  deployment:
+    replicas: 1
+    selector:
+      matchLabels: {}
+    template:
+      metadata:
+        annotations: {}
+        labels: {}
+      spec:
+        containers:
+        - env:
+          - name: POD_NAME
+            valueFrom:
+              fieldRef:
+                fieldPath: metadata.name
+          - name: POD_NAMESPACE
+            valueFrom:
+              fieldRef:
+                fieldPath: metadata.namespace
+          - name: POD_IP
+            valueFrom:
+              fieldRef:
+                fieldPath: status.podIP
+          image: kdex-tech/kdex-themeserver:latest
+          name: theme
+          ports:
+          - containerPort: 80
+            name: webserver
+            protocol: TCP
+          resources:
+            limits:
+              cpu: 1000m
+              memory: 1024Mi
+            requests:
+              cpu: 100m
+              memory: 128Mi
+          securityContext:
+            allowPrivilegeEscalation: false
+            capabilities:
+              add:
+              - "NET_BIND_SERVICE"
+              drop:
+              - "ALL"
+            readOnlyRootFilesystem: true
+          volumeMounts:
+          - mountPath: /etc/caddy.d
+            name: theme-scratch
+          - mountPath: /public
+            name: theme-oci-image
+        securityContext:
+          runAsNonRoot: true
+          seccompProfile:
+            type: RuntimeDefault
+        volumes:
+        - name: theme-scratch
+          emptyDir:
+            medium: Memory
+            sizeLimit: 16Ki
+        - name: theme-oci-image
+          image:
+            reference: theme-oci-image
+  httpRoute:
+  ingress:
+  service:
+`)
+	gvk := GroupVersion.WithKind("NexusConfiguration")
+	decoder := serializer.NewCodecFactory(scheme).UniversalDeserializer()
 
-	// APIGroups is the name of the APIGroup that contains the resources.  If multiple API groups are specified, any action requested against one of
-	// the enumerated resources in any API group will be allowed. "" represents the core API group and "*" represents all API groups.
-	// +optional
-	// +listType=atomic
-	APIGroups []string `json:"apiGroups,omitempty" yaml:"apiGroups,omitempty" protobuf:"bytes,2,rep,name=apiGroups"`
-	// Resources is a list of resources this rule applies to. '*' represents all resources.
-	// +optional
-	// +listType=atomic
-	Resources []string `json:"resources,omitempty" yaml:"resources,omitempty" protobuf:"bytes,3,rep,name=resources"`
-	// ResourceNames is an optional white list of names that the rule applies to.  An empty set means that everything is allowed.
-	// +optional
-	// +listType=atomic
-	ResourceNames []string `json:"resourceNames,omitempty" yaml:"resourceNames,omitempty" protobuf:"bytes,4,rep,name=resourceNames"`
+	obj, _, err := decoder.Decode(defaultContent, &gvk, nil)
+	if err != nil {
+		panic(err)
+	}
 
-	// NonResourceURLs is a set of partial urls that a user should have access to.  *s are allowed, but only as the full, final step in the path
-	// Since non-resource URLs are not namespaced, this field is only applicable for ClusterRoles referenced from a ClusterRoleBinding.
-	// Rules can either apply to API resources (such as "pods" or "secrets") or non-resource URL paths (such as "/api"),  but not both.
-	// +optional
-	// +listType=atomic
-	NonResourceURLs []string `json:"nonResourceURLs,omitempty" yaml:"nonResourceURLs,omitempty" protobuf:"bytes,5,rep,name=nonResourceURLs"`
+	config, ok := obj.(*NexusConfiguration)
+	if !ok {
+		panic("decoded object is not a Configuration")
+	}
+
+	in, err := os.ReadFile(configFile)
+	if err != nil {
+		if os.IsNotExist(err) {
+			return *config
+		}
+		panic(err)
+	}
+
+	obj, _, err = decoder.Decode(in, &gvk, config)
+	if err != nil {
+		panic(err)
+	}
+
+	config, ok = obj.(*NexusConfiguration)
+	if !ok {
+		panic("decoded object is not a Configuration")
+	}
+
+	return *config
+}
+
+func init() {
+	SchemeBuilder.Register(&NexusConfiguration{})
 }
