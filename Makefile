@@ -107,10 +107,10 @@ CRD_REF_DOCS ?= $(LOCALBIN)/crd-ref-docs
 GOLANGCI_LINT = $(LOCALBIN)/golangci-lint
 
 ## Tool Versions
-KUSTOMIZE_VERSION ?= v5.6.0
-CONTROLLER_TOOLS_VERSION ?= v0.18.0
+KUSTOMIZE_VERSION ?= v5.8.0
+CONTROLLER_TOOLS_VERSION ?= v0.19.0
 CRD_REF_DOCS_VERSION ?= v0.2.0
-GOLANGCI_LINT_VERSION ?= v2.3.0
+GOLANGCI_LINT_VERSION ?= v2.6.1
 
 .PHONY: kustomize
 kustomize: $(KUSTOMIZE) ## Download kustomize locally if necessary.
