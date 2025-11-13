@@ -28,7 +28,7 @@ type ThemeServerConfiguration struct {
 type PolicyRule struct {
 	// Verbs is a list of Verbs that apply to ALL the ResourceKinds contained in this rule. '*' represents all verbs.
 	// +listType=atomic
-	Verbs []string `json:"verbs" yaml":"verbs" protobuf:"bytes,1,rep,name=verbs"`
+	Verbs []string `json:"verbs" yaml:"verbs" protobuf:"bytes,1,rep,name=verbs"`
 
 	// APIGroups is the name of the APIGroup that contains the resources.  If multiple API groups are specified, any action requested against one of
 	// the enumerated resources in any API group will be allowed. "" represents the core API group and "*" represents all API groups.
