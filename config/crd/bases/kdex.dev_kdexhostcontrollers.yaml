@@ -51,24 +51,125 @@ spec:
           spec:
             description: spec defines the desired state of KDexHostController
             properties:
-              hostRef:
-                description: |-
-                  LocalObjectReference contains enough information to let you locate the
-                  referenced object inside the same namespace.
+              host:
                 properties:
-                  name:
-                    default: ""
-                    description: |-
-                      Name of the referent.
-                      This field is effectively required, but due to backwards compatibility is
-                      allowed to be empty. Instances of this type with an empty value here are
-                      almost certainly wrong.
-                      More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#names
+                  baseMeta:
+                    description: baseMeta is a string containing a base set of meta
+                      tags to use on every page rendered for the host.
+                    minLength: 5
                     type: string
+                  brandName:
+                    description: brandName is the name used when rendering pages belonging
+                      to the host. For example, it may be used as alt text for the
+                      logo displayed in the page header.
+                    type: string
+                  defaultLang:
+                    description: |-
+                      defaultLang is a string containing a BCP 47 language tag.
+                      See https://developer.mozilla.org/en-US/docs/Glossary/BCP_47_language_tag.
+                      When render page paths do not specify a 'lang' path parameter this will be the value used. When not set the default will be 'en'.
+                    type: string
+                  defaultThemeRef:
+                    description: defaultThemeRef is a reference to the theme that
+                      should apply to all pages bound to this host unless overridden.
+                    properties:
+                      name:
+                        default: ""
+                        description: |-
+                          Name of the referent.
+                          This field is effectively required, but due to backwards compatibility is
+                          allowed to be empty. Instances of this type with an empty value here are
+                          almost certainly wrong.
+                          More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#names
+                        type: string
+                    type: object
+                    x-kubernetes-map-type: atomic
+                  modulePolicy:
+                    default: Strict
+                    description: |-
+                      modulePolicy defines the policy for JavaScript references in KDexApp, KDexTheme and KDexScriptLibrary resources. When not specified the policy is Strict
+                      A Host must not accept JavaScript references which do not comply with the specified policy.
+                    enum:
+                    - ExternalDependencies
+                    - Loose
+                    - ModulesRequired
+                    - Strict
+                    type: string
+                  organization:
+                    description: organization is the name of the Organization to which
+                      the host belongs.
+                    minLength: 5
+                    type: string
+                  routing:
+                    description: routing defines the desired routing configuration
+                      for the host.
+                    properties:
+                      domains:
+                        description: domains are the names by which this host is addressed.
+                          The first domain listed is the preferred domain. The domains
+                          may contain wildcard prefix in the form '*.'. Longest match
+                          always wins.
+                        items:
+                          type: string
+                        minItems: 1
+                        type: array
+                      ingressClassName:
+                        description: |-
+                          ingressClassName is the name of an IngressClass cluster resource. Ingress
+                          controller implementations use this field to know whether they should be
+                          serving this Ingress resource, by a transitive connection
+                          (controller -> IngressClass -> Ingress resource). Although the
+                          `kubernetes.io/ingress.class` annotation (simple constant name) was never
+                          formally defined, it was widely supported by Ingress controllers to create
+                          a direct binding between Ingress controller and Ingress resources. Newly
+                          created Ingress resources should prefer using the field. However, even
+                          though the annotation is officially deprecated, for backwards compatibility
+                          reasons, ingress controllers should still honor that annotation if present.
+                        type: string
+                      strategy:
+                        default: Ingress
+                        description: strategy is the routing strategy to use. If not
+                          specified Ingress is assumed.
+                        enum:
+                        - Ingress
+                        - HTTPRoute
+                        type: string
+                      tls:
+                        description: tls is the TLS configuration for the host.
+                        properties:
+                          secretName:
+                            description: SecretName is the name of a secret that contains
+                              a TLS certificate and key.
+                            minLength: 5
+                            type: string
+                        required:
+                        - secretName
+                        type: object
+                    required:
+                    - domains
+                    type: object
+                  scriptLibraryRef:
+                    description: scriptLibraryRef is an optional reference to a KDexScriptLibrary
+                      resource.
+                    properties:
+                      name:
+                        default: ""
+                        description: |-
+                          Name of the referent.
+                          This field is effectively required, but due to backwards compatibility is
+                          allowed to be empty. Instances of this type with an empty value here are
+                          almost certainly wrong.
+                          More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#names
+                        type: string
+                    type: object
+                    x-kubernetes-map-type: atomic
+                required:
+                - brandName
+                - organization
+                - routing
                 type: object
-                x-kubernetes-map-type: atomic
             required:
-            - hostRef
+            - host
             type: object
           status:
             description: status defines the observed state of KDexHostController

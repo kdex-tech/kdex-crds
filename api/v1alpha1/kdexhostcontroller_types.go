@@ -17,14 +17,13 @@ limitations under the License.
 package v1alpha1
 
 import (
-	corev1 "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
 
 // KDexHostControllerSpec defines the desired state of KDexHostController
 type KDexHostControllerSpec struct {
 	// +kubebuilder:validation:Required
-	HostRef corev1.LocalObjectReference `json:"hostRef,omitempty"`
+	Host KDexHostSpec `json:"host"`
 }
 
 // KDexHostControllerStatus defines the observed state of KDexHostController.
