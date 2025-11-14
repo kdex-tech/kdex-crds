@@ -140,6 +140,7 @@ controller:
     - kdexpageheaders
     - kdexpagenavigations
     - kdexscriptlibraries
+    - kdexthemes
     verbs:
     - get
     - list
@@ -176,12 +177,6 @@ controller:
     - get
     - patch
     - update
-  - apiGroups:
-    - kdex.dev
-    resources:
-    - kdexthemes
-    verbs:
-    - get
   - apiGroups:
     - networking.k8s.io
     resources:
