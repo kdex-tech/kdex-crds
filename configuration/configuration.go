@@ -134,7 +134,6 @@ controller:
     - kdex.dev
     resources:
     - kdexapps
-    - kdexhost
     - kdexhosts
     - kdexpagearchetypes
     - kdexpagefooters
