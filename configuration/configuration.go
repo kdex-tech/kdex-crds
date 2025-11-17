@@ -1,6 +1,8 @@
 package configuration
 
 import (
+	"encoding/base64"
+	"fmt"
 	"os"
 
 	appsv1 "k8s.io/api/apps/v1"
@@ -12,6 +14,12 @@ import (
 	"k8s.io/apimachinery/pkg/runtime/serializer"
 	gatewayv1 "sigs.k8s.io/gateway-api/apis/v1"
 )
+
+type AuthData struct {
+	Password string `json:"password" yaml:"password"`
+	Token    string `json:"token" yaml:"token"`
+	Username string `json:"username" yaml:"username"`
+}
 
 type FocusControllerConfiguration struct {
 	Deployment      appsv1.DeploymentSpec `json:"deployment" yaml:"deployment"`
@@ -28,6 +36,36 @@ type NexusConfiguration struct {
 
 	FocusController FocusControllerConfiguration `json:"controller" yaml:"controller"`
 	ThemeServer     ThemeServerConfiguration     `json:"theme" yaml:"theme"`
+	DefaultRegistry RegistryConfiguration        `json:"defaultRegistry" yaml:"defaultRegistry"`
+}
+
+type RegistryConfiguration struct {
+	AuthData AuthData `json:"authData" yaml:"authData"`
+	Host     string   `json:"host" yaml:"host"`
+	InSecure bool     `json:"insecure" yaml:"insecure"`
+}
+
+func (c *RegistryConfiguration) EncodeAuthorization() string {
+	token := c.AuthData.Token
+	if token != "" {
+		return "Bearer " + token
+	}
+
+	if c.AuthData.Username != "" && c.AuthData.Password != "" {
+		return "Basic " + base64.StdEncoding.EncodeToString([]byte(
+			fmt.Sprintf("%s:%s", c.AuthData.Username, c.AuthData.Password)),
+		)
+	}
+
+	return ""
+}
+
+func (c *RegistryConfiguration) GetAddress() string {
+	if c.InSecure {
+		return "http://" + c.Host
+	} else {
+		return "https://" + c.Host
+	}
 }
 
 type ThemeServerConfiguration struct {
@@ -196,6 +234,9 @@ controller:
       port: 8090
       protocol: TCP
       targetPort: webserver
+defaultRegistry:
+  host: npm-registry-verdaccio.npm-registry:4873
+  insecure: true
 theme:
   deployment:
     replicas: 1
