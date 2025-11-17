@@ -16,9 +16,12 @@ import (
 )
 
 type AuthData struct {
-	Password string `json:"password" yaml:"password"`
-	Token    string `json:"token" yaml:"token"`
-	Username string `json:"username" yaml:"username"`
+	// +optional
+	Password string `json:"password,omitempty" yaml:"password,omitempty"`
+	// +optional
+	Token string `json:"token,omitempty" yaml:"token,omitempty"`
+	// +optional
+	Username string `json:"username,omitempty" yaml:"username,omitempty"`
 }
 
 type FocusControllerConfiguration struct {
@@ -40,9 +43,12 @@ type NexusConfiguration struct {
 }
 
 type RegistryConfiguration struct {
-	AuthData AuthData `json:"authData" yaml:"authData"`
-	Host     string   `json:"host" yaml:"host"`
-	InSecure bool     `json:"insecure" yaml:"insecure"`
+	// +optional
+	AuthData AuthData `json:"authData,omitempty" yaml:"authData,omitempty"`
+	// +required
+	Host string `json:"host" yaml:"host"`
+	// +optional
+	InSecure bool `json:"insecure,omitempty" yaml:"insecure,omitempty"`
 }
 
 func (c *RegistryConfiguration) EncodeAuthorization() string {
