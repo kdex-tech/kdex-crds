@@ -233,23 +233,11 @@ theme:
             requests:
               cpu: 100m
               memory: 128Mi
-          securityContext:
-            allowPrivilegeEscalation: false
-            capabilities:
-              add:
-              - "NET_BIND_SERVICE"
-              drop:
-              - "ALL"
-            readOnlyRootFilesystem: true
           volumeMounts:
           - mountPath: /etc/caddy.d
             name: theme-scratch
           - mountPath: /public
             name: theme-oci-image
-        securityContext:
-          runAsNonRoot: true
-          seccompProfile:
-            type: RuntimeDefault
         volumes:
         - name: theme-scratch
           emptyDir:
