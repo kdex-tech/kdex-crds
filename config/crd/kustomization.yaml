@@ -13,6 +13,7 @@ resources:
 - bases/kdex.dev_kdexthemes.yaml
 - bases/kdex.dev_kdexscriptlibraries.yaml
 - bases/kdex.dev_kdexhostcontrollers.yaml
+- bases/kdex.dev_kdexhostpackagereferences.yaml
 # +kubebuilder:scaffold:crdkustomizeresource
 
 patches: []
