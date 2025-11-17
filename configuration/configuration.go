@@ -249,6 +249,12 @@ theme:
   httpRoute:
   ingress:
   service:
+    selector: {}
+    ports:
+    - name: webserver
+      port: 80
+      protocol: TCP
+      targetPort: webserver
 `)
 	gvk := GroupVersion.WithKind("NexusConfiguration")
 	decoder := serializer.NewCodecFactory(scheme).UniversalDeserializer()
