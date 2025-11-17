@@ -47,32 +47,32 @@ func (a *Asset) String() string {
 	var buffer bytes.Buffer
 
 	if a.LinkHref != "" {
-		buffer.WriteString(`<link`)
+		buffer.WriteString("<link")
 		for key, value := range a.Attributes {
 			if key == href {
 				continue
 			}
 			buffer.WriteRune(' ')
 			buffer.WriteString(key)
-			buffer.WriteString(`="`)
+			buffer.WriteString("=\"")
 			buffer.WriteString(value)
 			buffer.WriteRune('"')
 		}
-		buffer.WriteString(` href="`)
+		buffer.WriteString(" href=\"")
 		buffer.WriteString(a.LinkHref)
-		buffer.WriteString(`"/>`)
+		buffer.WriteString("\"/>")
 	} else if a.Style != "" {
-		buffer.WriteString(`<style`)
+		buffer.WriteString("<style")
 		for key, value := range a.Attributes {
 			buffer.WriteRune(' ')
 			buffer.WriteString(key)
-			buffer.WriteString(`="`)
+			buffer.WriteString("=\"")
 			buffer.WriteString(value)
 			buffer.WriteRune('"')
 		}
-		buffer.WriteString(`>\n`)
+		buffer.WriteString(">\n")
 		buffer.WriteString(a.Style)
-		buffer.WriteString("</style>")
+		buffer.WriteString("\n</style>")
 	}
 
 	return buffer.String()

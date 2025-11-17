@@ -18,9 +18,16 @@ package v1alpha1
 
 import (
 	"bytes"
+	"fmt"
 
 	corev1 "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
+)
+
+const (
+	importStatementTemplate = `<script type="module">
+  %s
+</script>`
 )
 
 // KDexScriptLibrarySpec defines the desired state of KDexScriptLibrary
@@ -125,26 +132,20 @@ type PackageReference struct {
 func (p *PackageReference) ToImportStatement() string {
 	var buffer bytes.Buffer
 
-	buffer.WriteString(`import `)
+	buffer.WriteString("import ")
 	if p.ExportMapping != "" {
 		buffer.WriteString(p.ExportMapping)
-		buffer.WriteString(` from `)
+		buffer.WriteString(" from ")
 	}
-	buffer.WriteString(`"`)
+	buffer.WriteString("\"")
 	buffer.WriteString(p.Name)
-	buffer.WriteString(`";`)
+	buffer.WriteString("\";")
 
 	return buffer.String()
 }
 
 func (p *PackageReference) ToScriptTag() string {
-	var buffer bytes.Buffer
-
-	buffer.WriteString(`<script type="module">\n`)
-	buffer.WriteString(p.ToImportStatement())
-	buffer.WriteString(`\n</script>`)
-
-	return buffer.String()
+	return fmt.Sprintf(importStatementTemplate, p.ToImportStatement())
 }
 
 // +kubebuilder:validation:XValidation:rule="[has(self.script), has(self.scriptSrc)].filter(x, x).size() == 1",message="script and scriptSrc are mutually exclusive"
@@ -175,55 +176,39 @@ func (s *Script) ToScriptTag(footScript bool) string {
 	var buffer bytes.Buffer
 
 	if s.ScriptSrc != "" {
-		buffer.WriteString(`<script`)
+		buffer.WriteString("<script")
 		for key, value := range s.Attributes {
 			if key == src {
 				continue
 			}
 			buffer.WriteRune(' ')
 			buffer.WriteString(key)
-			buffer.WriteString(`="`)
+			buffer.WriteString("=\"")
 			buffer.WriteString(value)
 			buffer.WriteRune('"')
 		}
-		buffer.WriteString(` src="`)
+		buffer.WriteString(" src=\"")
 		buffer.WriteString(s.ScriptSrc)
-		buffer.WriteString(`"></script>`)
+		buffer.WriteString("\"></script>")
 	} else if s.Script != "" {
-		buffer.WriteString(`<script`)
+		buffer.WriteString("<script")
 		for key, value := range s.Attributes {
 			if key == src {
 				continue
 			}
 			buffer.WriteRune(' ')
 			buffer.WriteString(key)
-			buffer.WriteString(`="`)
+			buffer.WriteString("=\"")
 			buffer.WriteString(value)
 			buffer.WriteRune('"')
 		}
-		buffer.WriteString(`>\n`)
+		buffer.WriteString(">\n")
 		buffer.WriteString(s.Script)
-		buffer.WriteString("</script>")
+		buffer.WriteString("\n</script>")
 	}
 
 	return buffer.String()
 }
-
-// func (s *KDexScriptLibrarySpec) ToScriptTags(footScript bool) string {
-// 	var buffer bytes.Buffer
-// 	separator := ""
-
-// 	for _, script := range s.Scripts {
-// 		output := script.ToScriptTag(footScript)
-// 		if output != "" {
-// 			buffer.WriteString(separator)
-// 			separator = "\n"
-// 			buffer.WriteString(output)
-// 		}
-// 	}
-
-// 	return buffer.String()
-// }
 
 func init() {
 	SchemeBuilder.Register(&KDexScriptLibrary{}, &KDexScriptLibraryList{})
