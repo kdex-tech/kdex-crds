@@ -234,9 +234,6 @@ controller:
       port: 8090
       protocol: TCP
       targetPort: webserver
-defaultRegistry:
-  host: npm-registry-verdaccio.npm-registry:4873
-  insecure: true
 theme:
   deployment:
     replicas: 1
