@@ -23,7 +23,7 @@ import (
 // KDexHostPackageReferencesSpec defines the desired state of KDexHostPackageReferences
 type KDexHostPackageReferencesSpec struct {
 	// +kubebuilder:validation:MinItems=1
-	PackageReferences []PackageReference `json:"packageReference"`
+	PackageReferences []PackageReference `json:"packageReferences"`
 }
 
 // KDexHostPackageReferencesStatus defines the observed state of KDexHostPackageReferences.

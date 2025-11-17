@@ -49,7 +49,7 @@ spec:
           spec:
             description: spec defines the desired state of KDexHostPackageReferences
             properties:
-              packageReference:
+              packageReferences:
                 items:
                   description: PackageReference specifies the name and version of
                     an NPM package that contains the micro-frontend application.
@@ -89,7 +89,7 @@ spec:
                 minItems: 1
                 type: array
             required:
-            - packageReference
+            - packageReferences
             type: object
           status:
             description: status defines the observed state of KDexHostPackageReferences
