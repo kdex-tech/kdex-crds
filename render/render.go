@@ -9,6 +9,16 @@ import (
 )
 
 func (r *Renderer) RenderPage() (string, error) {
+	templateData, err := r.TemplateData()
+
+	if err != nil {
+		return "", err
+	}
+
+	return r.RenderOne(r.TemplateName, r.TemplateContent, templateData)
+}
+
+func (r *Renderer) TemplateData() (TemplateData, error) {
 	date := r.LastModified
 	if date.IsZero() {
 		date = time.Now()
@@ -38,25 +48,25 @@ func (r *Renderer) RenderPage() (string, error) {
 
 	footerScriptOutput, err := r.RenderOne(fmt.Sprintf("%s-footscript", r.TemplateName), r.FootScript, templateData)
 	if err != nil {
-		return "", err
+		return TemplateData{}, err
 	}
 	templateData.FootScript = template.HTML(footerScriptOutput)
 
 	headerScriptOutput, err := r.RenderOne(fmt.Sprintf("%s-headscript", r.TemplateName), r.HeadScript, templateData)
 	if err != nil {
-		return "", err
+		return TemplateData{}, err
 	}
 	templateData.HeadScript = template.HTML(headerScriptOutput)
 
 	metaOutput, err := r.RenderOne(fmt.Sprintf("%s-meta", r.TemplateName), r.Meta, templateData)
 	if err != nil {
-		return "", err
+		return TemplateData{}, err
 	}
 	templateData.Meta = template.HTML(metaOutput)
 
 	themeOutput, err := r.RenderOne(fmt.Sprintf("%s-theme", r.TemplateName), r.Theme, templateData)
 	if err != nil {
-		return "", err
+		return TemplateData{}, err
 	}
 	templateData.Theme = template.HTML(themeOutput)
 
@@ -68,7 +78,7 @@ func (r *Renderer) RenderPage() (string, error) {
 	for slot, content := range r.Contents {
 		output, err := r.RenderOne(fmt.Sprintf("%s-content-%s", r.TemplateName, slot), content, templateData)
 		if err != nil {
-			return "", err
+			return TemplateData{}, err
 		}
 
 		contentOutputs[slot] = template.HTML(output)
@@ -79,7 +89,7 @@ func (r *Renderer) RenderPage() (string, error) {
 	for name, content := range r.Navigations {
 		output, err := r.RenderOne(fmt.Sprintf("%s-navigation-%s", r.TemplateName, name), content, templateData)
 		if err != nil {
-			return "", err
+			return TemplateData{}, err
 		}
 		navigationOutputs[name] = template.HTML(output)
 	}
@@ -91,17 +101,17 @@ func (r *Renderer) RenderPage() (string, error) {
 
 	footerOutput, err := r.RenderOne(fmt.Sprintf("%s-footer", r.TemplateName), r.Footer, templateData)
 	if err != nil {
-		return "", err
+		return TemplateData{}, err
 	}
 	templateData.Footer = template.HTML(footerOutput)
 
 	headerOutput, err := r.RenderOne(fmt.Sprintf("%s-header", r.TemplateName), r.Header, templateData)
 	if err != nil {
-		return "", err
+		return TemplateData{}, err
 	}
 	templateData.Header = template.HTML(headerOutput)
 
-	return r.RenderOne(r.TemplateName, r.TemplateContent, templateData)
+	return templateData, nil
 }
 
 func (r *Renderer) RenderOne(
