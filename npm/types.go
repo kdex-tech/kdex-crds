@@ -13,19 +13,7 @@ func RegistryConfigurationNew(c *configuration.NexusConfiguration, secret *corev
 		secret.Annotations == nil ||
 		secret.Annotations["kdex.dev/npm-server-address"] == "" {
 
-		if c != nil && c.DefaultRegistry.Host != "" {
-			return &c.DefaultRegistry
-		}
-
-		return &configuration.RegistryConfiguration{
-			AuthData: configuration.AuthData{
-				Password: "",
-				Token:    "",
-				Username: "",
-			},
-			Host:     "registry.npmjs.org",
-			InSecure: false,
-		}
+		return &c.DefaultNpmRegistry
 	}
 
 	return &configuration.RegistryConfiguration{

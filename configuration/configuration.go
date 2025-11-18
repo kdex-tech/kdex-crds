@@ -37,9 +37,10 @@ type NexusConfiguration struct {
 	// +optional
 	metav1.ObjectMeta `json:"metadata,omitempty,omitzero"`
 
-	FocusController FocusControllerConfiguration `json:"controller" yaml:"controller"`
-	ThemeServer     ThemeServerConfiguration     `json:"theme" yaml:"theme"`
-	DefaultRegistry RegistryConfiguration        `json:"defaultRegistry" yaml:"defaultRegistry"`
+	DefaultImageRegistry RegistryConfiguration        `json:"defaultImageRegistry" yaml:"defaultImageRegistry"`
+	DefaultNpmRegistry   RegistryConfiguration        `json:"defaultNpmRegistry" yaml:"defaultNpmRegistry"`
+	FocusController      FocusControllerConfiguration `json:"controller" yaml:"controller"`
+	ThemeServer          ThemeServerConfiguration     `json:"theme" yaml:"theme"`
 }
 
 type RegistryConfiguration struct {
@@ -52,9 +53,8 @@ type RegistryConfiguration struct {
 }
 
 func (c *RegistryConfiguration) EncodeAuthorization() string {
-	token := c.AuthData.Token
-	if token != "" {
-		return "Bearer " + token
+	if c.AuthData.Token != "" {
+		return "Bearer " + c.AuthData.Token
 	}
 
 	if c.AuthData.Username != "" && c.AuthData.Password != "" {
@@ -241,6 +241,12 @@ controller:
       port: 8090
       protocol: TCP
       targetPort: webserver
+defaultNpmRegistry:
+  host: registry.npmjs.org
+  insecure: false
+defaultImageRegistry:
+  host: docker.io
+  insecure: false
 theme:
   deployment:
     replicas: 1
