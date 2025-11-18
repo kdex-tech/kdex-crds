@@ -193,6 +193,7 @@ controller:
     - kdex.dev
     resources:
     - kdexhostcontrollers
+    - kdexhostpackagereferences
     - kdexpagebindings
     - kdextranslations
     verbs:
