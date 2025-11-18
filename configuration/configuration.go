@@ -141,6 +141,7 @@ controller:
   - apiGroups:
     - ""
     resources:
+    - configmaps
     - services
     verbs:
     - create
@@ -151,9 +152,29 @@ controller:
     - update
     - watch
   - apiGroups:
+    - ""
+    resources:
+    - pods
+    verbs:
+    - get
+    - list
+    - watch
+  - apiGroups:
     - apps
     resources:
     - deployments
+    verbs:
+    - create
+    - delete
+    - get
+    - list
+    - patch
+    - update
+    - watch
+  - apiGroups:
+    - batch
+    resources:
+    - jobs
     verbs:
     - create
     - delete
@@ -208,6 +229,7 @@ controller:
     - kdex.dev
     resources:
     - kdexhostcontrollers/finalizers
+    - kdexhostpackagereferences/finalizers
     - kdexpagebindings/finalizers
     - kdextranslations/finalizers
     verbs:
@@ -216,6 +238,7 @@ controller:
     - kdex.dev
     resources:
     - kdexhostcontrollers/status
+    - kdexhostpackagereferences/status
     - kdexpagebindings/status
     - kdextranslations/status
     verbs:
