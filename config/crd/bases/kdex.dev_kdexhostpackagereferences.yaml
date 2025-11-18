@@ -165,6 +165,10 @@ spec:
                 x-kubernetes-list-map-keys:
                 - type
                 x-kubernetes-list-type: map
+              image:
+                description: Image is the URL of the built OCI image containing the
+                  aggregated npm packages.
+                type: string
               observedGeneration:
                 description: |-
                   observedGeneration is the most recent generation observed for this KDexApp. It corresponds to the
