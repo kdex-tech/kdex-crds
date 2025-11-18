@@ -11,6 +11,8 @@ spec:
     kind: KDexHostPackageReferences
     listKind: KDexHostPackageReferencesList
     plural: kdexhostpackagereferences
+    shortNames:
+    - kdex-pr
     singular: kdexhostpackagereferences
   scope: Namespaced
   versions:

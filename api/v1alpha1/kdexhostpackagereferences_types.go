@@ -58,6 +58,7 @@ type KDexHostPackageReferencesStatus struct {
 }
 
 // +kubebuilder:object:root=true
+// +kubebuilder:resource:scope=Namespaced,shortName=kdex-pr
 // +kubebuilder:subresource:status
 
 // KDexHostPackageReferences is the Schema for the kdexhostpackagereferences API
