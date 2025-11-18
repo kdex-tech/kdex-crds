@@ -142,6 +142,7 @@ controller:
     - ""
     resources:
     - configmaps
+    - secrets
     - services
     verbs:
     - create
