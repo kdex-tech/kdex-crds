@@ -109,7 +109,7 @@ controller:
           name: manager
           ports:
           - containerPort: 8090
-            name: webserver
+            name: server
             protocol: TCP
           readinessProbe:
             httpGet:
@@ -137,6 +137,15 @@ controller:
         - name: config
           configMap:
             name: controller-manager
+
+  service:
+    selector: {}
+    ports:
+    - name: server
+      port: 8090
+      protocol: TCP
+      targetPort: server
+
   rolePolicyRules:
   - apiGroups:
     - ""
@@ -258,19 +267,15 @@ controller:
     - patch
     - update
     - watch
-  service:
-    selector: {}
-    ports:
-    - name: webserver
-      port: 8090
-      protocol: TCP
-      targetPort: webserver
+
 defaultNpmRegistry:
   host: registry.npmjs.org
   insecure: false
+
 defaultImageRegistry:
   host: docker.io
   insecure: false
+
 staticServing:
   deployment:
     replicas: 1
@@ -321,6 +326,7 @@ staticServing:
           emptyDir:
             medium: Memory
             sizeLimit: 16Ki
+
   service:
     selector: {}
     ports:
