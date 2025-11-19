@@ -40,7 +40,7 @@ type NexusConfiguration struct {
 	DefaultImageRegistry RegistryConfiguration        `json:"defaultImageRegistry" yaml:"defaultImageRegistry"`
 	DefaultNpmRegistry   RegistryConfiguration        `json:"defaultNpmRegistry" yaml:"defaultNpmRegistry"`
 	FocusController      FocusControllerConfiguration `json:"controller" yaml:"controller"`
-	ThemeServer          ThemeServerConfiguration     `json:"theme" yaml:"theme"`
+	StaticServing        StaticServingConfiguration   `json:"staticServing" yaml:"staticServing"`
 }
 
 type RegistryConfiguration struct {
@@ -74,7 +74,7 @@ func (c *RegistryConfiguration) GetAddress() string {
 	}
 }
 
-type ThemeServerConfiguration struct {
+type StaticServingConfiguration struct {
 	Deployment appsv1.DeploymentSpec    `json:"deployment" yaml:"deployment"`
 	HttpRoute  gatewayv1.HTTPRouteSpec  `json:"httpRoute" yaml:"httpRoute"`
 	Ingress    networkingv1.IngressSpec `json:"ingress" yaml:"ingress"`
@@ -271,7 +271,7 @@ defaultNpmRegistry:
 defaultImageRegistry:
   host: docker.io
   insecure: false
-theme:
+staticServing:
   deployment:
     replicas: 1
     selector:
@@ -299,7 +299,7 @@ theme:
           name: theme
           ports:
           - containerPort: 80
-            name: webserver
+            name: server
             protocol: TCP
           resources:
             limits:
@@ -309,27 +309,25 @@ theme:
               cpu: 100m
               memory: 128Mi
           volumeMounts:
-          - mountPath: /etc/caddy.d
-            name: theme-scratch
           - mountPath: /public
-            name: theme-oci-image
+            name: oci-image
+          - mountPath: /etc/caddy.d
+            name: scratch
         volumes:
-        - name: theme-scratch
+        - name: oci-image
+          image:
+            reference: oci-image
+        - name: scratch
           emptyDir:
             medium: Memory
             sizeLimit: 16Ki
-        - name: theme-oci-image
-          image:
-            reference: theme-oci-image
-  httpRoute:
-  ingress:
   service:
     selector: {}
     ports:
-    - name: webserver
+    - name: server
       port: 80
       protocol: TCP
-      targetPort: webserver
+      targetPort: server
 `)
 	gvk := GroupVersion.WithKind("NexusConfiguration")
 	decoder := serializer.NewCodecFactory(scheme).UniversalDeserializer()
