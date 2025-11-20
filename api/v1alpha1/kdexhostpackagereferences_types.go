@@ -48,9 +48,13 @@ type KDexHostPackageReferencesStatus struct {
 	// +optional
 	Conditions []metav1.Condition `json:"conditions,omitempty"`
 
-	// Image is the URL of the built OCI image containing the aggregated npm packages.
+	// image is the URL of the built OCI image containing the aggregated npm packages specified in the packageReferences array.
 	// +optional
 	Image string `json:"image,omitempty"`
+
+	// importmap is generated for all the aggregated npm packages specified in the packageReferences array.
+	// +optional
+	ImportMap string `json:"importmap,omitempty"`
 
 	// For Kubernetes API conventions, see:
 	// https://github.com/kubernetes/community/blob/master/contributors/devel/sig-architecture/api-conventions.md#typical-status-properties

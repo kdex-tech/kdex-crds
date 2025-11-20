@@ -166,8 +166,12 @@ spec:
                 - type
                 x-kubernetes-list-type: map
               image:
-                description: Image is the URL of the built OCI image containing the
-                  aggregated npm packages.
+                description: image is the URL of the built OCI image containing the
+                  aggregated npm packages specified in the packageReferences array.
+                type: string
+              importmap:
+                description: importmap is generated for all the aggregated npm packages
+                  specified in the packageReferences array.
                 type: string
               observedGeneration:
                 description: |-
