@@ -8,7 +8,10 @@ import (
 	"kdex.dev/crds/configuration"
 )
 
-func RegistryConfigurationNew(c *configuration.NexusConfiguration, secret *corev1.Secret) *configuration.RegistryConfiguration {
+func RegistryConfigurationNew(
+	c *configuration.NexusConfiguration,
+	secret *corev1.Secret,
+) *configuration.RegistryConfiguration {
 	if secret == nil ||
 		secret.Annotations == nil ||
 		secret.Annotations["kdex.dev/npm-server-address"] == "" {

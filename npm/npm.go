@@ -19,7 +19,11 @@ type RegistryImpl struct {
 	Error  func(err error, msg string, keysAndValues ...any)
 }
 
-func NewRegistry(c *configuration.NexusConfiguration, secret *corev1.Secret, error func(err error, msg string, keysAndValues ...any)) Registry {
+func NewRegistry(
+	c *configuration.NexusConfiguration,
+	secret *corev1.Secret,
+	error func(err error, msg string, keysAndValues ...any),
+) Registry {
 	return &RegistryImpl{
 		Config: RegistryConfigurationNew(c, secret),
 		Error:  error,
