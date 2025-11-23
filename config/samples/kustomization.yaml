@@ -14,4 +14,5 @@ resources:
 - v1alpha1_kdexhostpackagereferences.yaml
 - v1alpha1_kdexclusterapp.yaml
 - v1alpha1_kdexclusterpagearchetype.yaml
+- v1alpha1_kdexclusterpagefooter.yaml
 # +kubebuilder:scaffold:manifestskustomizesamples
