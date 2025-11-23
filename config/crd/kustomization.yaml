@@ -18,6 +18,7 @@ resources:
 - bases/kdex.dev_kdexclusterpagearchetypes.yaml
 - bases/kdex.dev_kdexclusterpagefooters.yaml
 - bases/kdex.dev_kdexclusterpageheaders.yaml
+- bases/kdex.dev_kdexclusterpagenavigations.yaml
 # +kubebuilder:scaffold:crdkustomizeresource
 
 patches: []
