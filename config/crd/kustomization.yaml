@@ -15,6 +15,7 @@ resources:
 - bases/kdex.dev_kdexhostcontrollers.yaml
 - bases/kdex.dev_kdexhostpackagereferences.yaml
 - bases/kdex.dev_kdexclusterapps.yaml
+- bases/kdex.dev_kdexclusterpagearchetypes.yaml
 # +kubebuilder:scaffold:crdkustomizeresource
 
 patches: []
