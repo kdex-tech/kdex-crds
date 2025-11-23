@@ -11,8 +11,26 @@ Package v1alpha1 contains API Schema definitions for the  v1alpha1 API group.
 ### Resource Types
 - [KDexApp](#kdexapp)
 - [KDexAppList](#kdexapplist)
+- [KDexClusterApp](#kdexclusterapp)
+- [KDexClusterAppList](#kdexclusterapplist)
+- [KDexClusterPageArchetype](#kdexclusterpagearchetype)
+- [KDexClusterPageArchetypeList](#kdexclusterpagearchetypelist)
+- [KDexClusterPageFooter](#kdexclusterpagefooter)
+- [KDexClusterPageFooterList](#kdexclusterpagefooterlist)
+- [KDexClusterPageHeader](#kdexclusterpageheader)
+- [KDexClusterPageHeaderList](#kdexclusterpageheaderlist)
+- [KDexClusterPageNavigation](#kdexclusterpagenavigation)
+- [KDexClusterPageNavigationList](#kdexclusterpagenavigationlist)
+- [KDexClusterScriptLibrary](#kdexclusterscriptlibrary)
+- [KDexClusterScriptLibraryList](#kdexclusterscriptlibrarylist)
+- [KDexClusterTheme](#kdexclustertheme)
+- [KDexClusterThemeList](#kdexclusterthemelist)
 - [KDexHost](#kdexhost)
+- [KDexHostController](#kdexhostcontroller)
+- [KDexHostControllerList](#kdexhostcontrollerlist)
 - [KDexHostList](#kdexhostlist)
+- [KDexHostPackageReferences](#kdexhostpackagereferences)
+- [KDexHostPackageReferencesList](#kdexhostpackagereferenceslist)
 - [KDexPageArchetype](#kdexpagearchetype)
 - [KDexPageArchetypeList](#kdexpagearchetypelist)
 - [KDexPageBinding](#kdexpagebinding)
@@ -52,40 +70,6 @@ _Appears in:_
 
 
 
-#### ConditionFields
-
-
-
-
-
-
-
-_Appears in:_
-- [ConditionArgs](#conditionargs)
-
-| Field | Description | Default | Validation |
-| --- | --- | --- | --- |
-| `Status` _[ConditionStatus](https://kubernetes.io/docs/reference/generated/kubernetes-api/v/#conditionstatus-v1-meta)_ |  |  |  |
-| `Reason` _[ConditionReason](#conditionreason)_ |  |  |  |
-| `Message` _string_ |  |  |  |
-
-
-#### ConditionReason
-
-_Underlying type:_ _string_
-
-ConditionReason is the reason for the condition's last transition.
-
-
-
-_Appears in:_
-- [ConditionFields](#conditionfields)
-
-| Field | Description |
-| --- | --- |
-| `ReconcileError` | ConditionReasonReconcileError is the reason for a failed reconciliation.<br /> |
-| `Reconciling` | ConditionReasonReconciling is the reason for a reconciling reconciliation.<br /> |
-| `ReconcileSuccess` | ConditionReasonReconcileSuccess is the reason for a successful reconciliation.<br /> |
 
 
 
@@ -180,12 +164,286 @@ KDexAppSpec defines the desired state of KDexApp
 
 _Appears in:_
 - [KDexApp](#kdexapp)
+- [KDexClusterApp](#kdexclusterapp)
 
 | Field | Description | Default | Validation |
 | --- | --- | --- | --- |
 | `customElements` _[CustomElement](#customelement) array_ | customElements is a list of custom elements implemented by the micro-frontend application. |  | MaxItems: 32 <br />MinItems: 1 <br /> |
 | `packageReference` _[PackageReference](#packagereference)_ | packageReference specifies the name and version of an NPM package that contains the micro-frontend application. The package.json must describe an ES module. |  | Required: \{\} <br /> |
 | `scripts` _[Script](#script) array_ | scripts is a set of script references. They may contain URLs that point to resources hosted at some public address, npm module references or they may contain tag contents. |  | MaxItems: 32 <br /> |
+
+
+
+
+#### KDexClusterApp
+
+
+
+KDexClusterApp is the Schema for the kdexclusterapps API
+
+
+
+_Appears in:_
+- [KDexClusterAppList](#kdexclusterapplist)
+
+| Field | Description | Default | Validation |
+| --- | --- | --- | --- |
+| `apiVersion` _string_ | `kdex.dev/v1alpha1` | | |
+| `kind` _string_ | `KDexClusterApp` | | |
+| `metadata` _[ObjectMeta](https://kubernetes.io/docs/reference/generated/kubernetes-api/v/#objectmeta-v1-meta)_ | Refer to Kubernetes API documentation for fields of `metadata`. |  |  |
+| `spec` _[KDexAppSpec](#kdexappspec)_ | spec defines the desired state of KDexClusterApp |  |  |
+
+
+#### KDexClusterAppList
+
+
+
+KDexClusterAppList contains a list of KDexClusterApp
+
+
+
+
+
+| Field | Description | Default | Validation |
+| --- | --- | --- | --- |
+| `apiVersion` _string_ | `kdex.dev/v1alpha1` | | |
+| `kind` _string_ | `KDexClusterAppList` | | |
+| `metadata` _[ListMeta](https://kubernetes.io/docs/reference/generated/kubernetes-api/v/#listmeta-v1-meta)_ | Refer to Kubernetes API documentation for fields of `metadata`. |  |  |
+| `items` _[KDexClusterApp](#kdexclusterapp) array_ |  |  |  |
+
+
+
+
+#### KDexClusterPageArchetype
+
+
+
+KDexClusterPageArchetype is the Schema for the kdexclusterpagearchetypes API
+
+
+
+_Appears in:_
+- [KDexClusterPageArchetypeList](#kdexclusterpagearchetypelist)
+
+| Field | Description | Default | Validation |
+| --- | --- | --- | --- |
+| `apiVersion` _string_ | `kdex.dev/v1alpha1` | | |
+| `kind` _string_ | `KDexClusterPageArchetype` | | |
+| `metadata` _[ObjectMeta](https://kubernetes.io/docs/reference/generated/kubernetes-api/v/#objectmeta-v1-meta)_ | Refer to Kubernetes API documentation for fields of `metadata`. |  |  |
+| `spec` _[KDexPageArchetypeSpec](#kdexpagearchetypespec)_ | spec defines the desired state of KDexClusterPageArchetype |  |  |
+
+
+#### KDexClusterPageArchetypeList
+
+
+
+KDexClusterPageArchetypeList contains a list of KDexClusterPageArchetype
+
+
+
+
+
+| Field | Description | Default | Validation |
+| --- | --- | --- | --- |
+| `apiVersion` _string_ | `kdex.dev/v1alpha1` | | |
+| `kind` _string_ | `KDexClusterPageArchetypeList` | | |
+| `metadata` _[ListMeta](https://kubernetes.io/docs/reference/generated/kubernetes-api/v/#listmeta-v1-meta)_ | Refer to Kubernetes API documentation for fields of `metadata`. |  |  |
+| `items` _[KDexClusterPageArchetype](#kdexclusterpagearchetype) array_ |  |  |  |
+
+
+
+
+#### KDexClusterPageFooter
+
+
+
+KDexClusterPageFooter is the Schema for the kdexclusterpagefooters API
+
+
+
+_Appears in:_
+- [KDexClusterPageFooterList](#kdexclusterpagefooterlist)
+
+| Field | Description | Default | Validation |
+| --- | --- | --- | --- |
+| `apiVersion` _string_ | `kdex.dev/v1alpha1` | | |
+| `kind` _string_ | `KDexClusterPageFooter` | | |
+| `metadata` _[ObjectMeta](https://kubernetes.io/docs/reference/generated/kubernetes-api/v/#objectmeta-v1-meta)_ | Refer to Kubernetes API documentation for fields of `metadata`. |  |  |
+| `spec` _[KDexPageFooterSpec](#kdexpagefooterspec)_ | spec defines the desired state of KDexClusterPageFooter |  |  |
+
+
+#### KDexClusterPageFooterList
+
+
+
+KDexClusterPageFooterList contains a list of KDexClusterPageFooter
+
+
+
+
+
+| Field | Description | Default | Validation |
+| --- | --- | --- | --- |
+| `apiVersion` _string_ | `kdex.dev/v1alpha1` | | |
+| `kind` _string_ | `KDexClusterPageFooterList` | | |
+| `metadata` _[ListMeta](https://kubernetes.io/docs/reference/generated/kubernetes-api/v/#listmeta-v1-meta)_ | Refer to Kubernetes API documentation for fields of `metadata`. |  |  |
+| `items` _[KDexClusterPageFooter](#kdexclusterpagefooter) array_ |  |  |  |
+
+
+
+
+#### KDexClusterPageHeader
+
+
+
+KDexClusterPageHeader is the Schema for the kdexclusterpageheaders API
+
+
+
+_Appears in:_
+- [KDexClusterPageHeaderList](#kdexclusterpageheaderlist)
+
+| Field | Description | Default | Validation |
+| --- | --- | --- | --- |
+| `apiVersion` _string_ | `kdex.dev/v1alpha1` | | |
+| `kind` _string_ | `KDexClusterPageHeader` | | |
+| `metadata` _[ObjectMeta](https://kubernetes.io/docs/reference/generated/kubernetes-api/v/#objectmeta-v1-meta)_ | Refer to Kubernetes API documentation for fields of `metadata`. |  |  |
+| `spec` _[KDexPageHeaderSpec](#kdexpageheaderspec)_ | spec defines the desired state of KDexClusterPageHeader |  |  |
+
+
+#### KDexClusterPageHeaderList
+
+
+
+KDexClusterPageHeaderList contains a list of KDexClusterPageHeader
+
+
+
+
+
+| Field | Description | Default | Validation |
+| --- | --- | --- | --- |
+| `apiVersion` _string_ | `kdex.dev/v1alpha1` | | |
+| `kind` _string_ | `KDexClusterPageHeaderList` | | |
+| `metadata` _[ListMeta](https://kubernetes.io/docs/reference/generated/kubernetes-api/v/#listmeta-v1-meta)_ | Refer to Kubernetes API documentation for fields of `metadata`. |  |  |
+| `items` _[KDexClusterPageHeader](#kdexclusterpageheader) array_ |  |  |  |
+
+
+
+
+#### KDexClusterPageNavigation
+
+
+
+KDexClusterPageNavigation is the Schema for the kdexclusterpagenavigations API
+
+
+
+_Appears in:_
+- [KDexClusterPageNavigationList](#kdexclusterpagenavigationlist)
+
+| Field | Description | Default | Validation |
+| --- | --- | --- | --- |
+| `apiVersion` _string_ | `kdex.dev/v1alpha1` | | |
+| `kind` _string_ | `KDexClusterPageNavigation` | | |
+| `metadata` _[ObjectMeta](https://kubernetes.io/docs/reference/generated/kubernetes-api/v/#objectmeta-v1-meta)_ | Refer to Kubernetes API documentation for fields of `metadata`. |  |  |
+| `spec` _[KDexPageNavigationSpec](#kdexpagenavigationspec)_ | spec defines the desired state of KDexClusterPageNavigation |  |  |
+
+
+#### KDexClusterPageNavigationList
+
+
+
+KDexClusterPageNavigationList contains a list of KDexClusterPageNavigation
+
+
+
+
+
+| Field | Description | Default | Validation |
+| --- | --- | --- | --- |
+| `apiVersion` _string_ | `kdex.dev/v1alpha1` | | |
+| `kind` _string_ | `KDexClusterPageNavigationList` | | |
+| `metadata` _[ListMeta](https://kubernetes.io/docs/reference/generated/kubernetes-api/v/#listmeta-v1-meta)_ | Refer to Kubernetes API documentation for fields of `metadata`. |  |  |
+| `items` _[KDexClusterPageNavigation](#kdexclusterpagenavigation) array_ |  |  |  |
+
+
+
+
+#### KDexClusterScriptLibrary
+
+
+
+KDexClusterScriptLibrary is the Schema for the kdexclusterscriptlibraries API
+
+
+
+_Appears in:_
+- [KDexClusterScriptLibraryList](#kdexclusterscriptlibrarylist)
+
+| Field | Description | Default | Validation |
+| --- | --- | --- | --- |
+| `apiVersion` _string_ | `kdex.dev/v1alpha1` | | |
+| `kind` _string_ | `KDexClusterScriptLibrary` | | |
+| `metadata` _[ObjectMeta](https://kubernetes.io/docs/reference/generated/kubernetes-api/v/#objectmeta-v1-meta)_ | Refer to Kubernetes API documentation for fields of `metadata`. |  |  |
+| `spec` _[KDexScriptLibrarySpec](#kdexscriptlibraryspec)_ | spec defines the desired state of KDexClusterScriptLibrary |  |  |
+
+
+#### KDexClusterScriptLibraryList
+
+
+
+KDexClusterScriptLibraryList contains a list of KDexClusterScriptLibrary
+
+
+
+
+
+| Field | Description | Default | Validation |
+| --- | --- | --- | --- |
+| `apiVersion` _string_ | `kdex.dev/v1alpha1` | | |
+| `kind` _string_ | `KDexClusterScriptLibraryList` | | |
+| `metadata` _[ListMeta](https://kubernetes.io/docs/reference/generated/kubernetes-api/v/#listmeta-v1-meta)_ | Refer to Kubernetes API documentation for fields of `metadata`. |  |  |
+| `items` _[KDexClusterScriptLibrary](#kdexclusterscriptlibrary) array_ |  |  |  |
+
+
+
+
+#### KDexClusterTheme
+
+
+
+KDexClusterTheme is the Schema for the kdexclusterthemes API
+
+
+
+_Appears in:_
+- [KDexClusterThemeList](#kdexclusterthemelist)
+
+| Field | Description | Default | Validation |
+| --- | --- | --- | --- |
+| `apiVersion` _string_ | `kdex.dev/v1alpha1` | | |
+| `kind` _string_ | `KDexClusterTheme` | | |
+| `metadata` _[ObjectMeta](https://kubernetes.io/docs/reference/generated/kubernetes-api/v/#objectmeta-v1-meta)_ | Refer to Kubernetes API documentation for fields of `metadata`. |  |  |
+| `spec` _[KDexThemeSpec](#kdexthemespec)_ | spec defines the desired state of KDexClusterTheme |  |  |
+
+
+#### KDexClusterThemeList
+
+
+
+KDexClusterThemeList contains a list of KDexClusterTheme
+
+
+
+
+
+| Field | Description | Default | Validation |
+| --- | --- | --- | --- |
+| `apiVersion` _string_ | `kdex.dev/v1alpha1` | | |
+| `kind` _string_ | `KDexClusterThemeList` | | |
+| `metadata` _[ListMeta](https://kubernetes.io/docs/reference/generated/kubernetes-api/v/#listmeta-v1-meta)_ | Refer to Kubernetes API documentation for fields of `metadata`. |  |  |
+| `items` _[KDexClusterTheme](#kdexclustertheme) array_ |  |  |  |
 
 
 
@@ -214,6 +472,67 @@ _Appears in:_
 | `spec` _[KDexHostSpec](#kdexhostspec)_ | spec defines the desired state of KDexHost |  | Required: \{\} <br /> |
 
 
+#### KDexHostController
+
+
+
+KDexHostController is the Schema for the kdexhostcontrollers API
+
+A KDexHostController is the resource used to instantiate and manage a unique controller focused on a single KDexHost
+resource. This focused controller serves to aggregate the host specific resources, primarily KDexPageBindings but
+also as the main web server handling page rendering and page serving. In order to isolate the resources consumed by
+those operations from other hosts a unique controller is necessary. This resource is internally generated and managed
+and not meant for end users.
+
+
+
+_Appears in:_
+- [KDexHostControllerList](#kdexhostcontrollerlist)
+
+| Field | Description | Default | Validation |
+| --- | --- | --- | --- |
+| `apiVersion` _string_ | `kdex.dev/v1alpha1` | | |
+| `kind` _string_ | `KDexHostController` | | |
+| `metadata` _[ObjectMeta](https://kubernetes.io/docs/reference/generated/kubernetes-api/v/#objectmeta-v1-meta)_ | Refer to Kubernetes API documentation for fields of `metadata`. |  |  |
+| `spec` _[KDexHostControllerSpec](#kdexhostcontrollerspec)_ | spec defines the desired state of KDexHostController |  |  |
+
+
+#### KDexHostControllerList
+
+
+
+KDexHostControllerList contains a list of KDexHostController
+
+
+
+
+
+| Field | Description | Default | Validation |
+| --- | --- | --- | --- |
+| `apiVersion` _string_ | `kdex.dev/v1alpha1` | | |
+| `kind` _string_ | `KDexHostControllerList` | | |
+| `metadata` _[ListMeta](https://kubernetes.io/docs/reference/generated/kubernetes-api/v/#listmeta-v1-meta)_ | Refer to Kubernetes API documentation for fields of `metadata`. |  |  |
+| `items` _[KDexHostController](#kdexhostcontroller) array_ |  |  |  |
+
+
+#### KDexHostControllerSpec
+
+
+
+KDexHostControllerSpec defines the desired state of KDexHostController
+
+
+
+_Appears in:_
+- [KDexHostController](#kdexhostcontroller)
+
+| Field | Description | Default | Validation |
+| --- | --- | --- | --- |
+| `host` _[KDexHostSpec](#kdexhostspec)_ |  |  | Required: \{\} <br /> |
+
+
+
+
 #### KDexHostList
 
 
@@ -232,6 +551,65 @@ KDexHostList contains a list of KDexHost
 | `items` _[KDexHost](#kdexhost) array_ |  |  |  |
 
 
+#### KDexHostPackageReferences
+
+
+
+KDexHostPackageReferences is the Schema for the kdexhostpackagereferences API
+
+KDexHostPackageReferences is the resource used to collect and drive the build and packaging of the complete set of npm
+modules referenced by all the resources associated with a given KDexHost. This resource is internally generated and
+managed and not meant for end users.
+
+
+
+_Appears in:_
+- [KDexHostPackageReferencesList](#kdexhostpackagereferenceslist)
+
+| Field | Description | Default | Validation |
+| --- | --- | --- | --- |
+| `apiVersion` _string_ | `kdex.dev/v1alpha1` | | |
+| `kind` _string_ | `KDexHostPackageReferences` | | |
+| `metadata` _[ObjectMeta](https://kubernetes.io/docs/reference/generated/kubernetes-api/v/#objectmeta-v1-meta)_ | Refer to Kubernetes API documentation for fields of `metadata`. |  |  |
+| `spec` _[KDexHostPackageReferencesSpec](#kdexhostpackagereferencesspec)_ | spec defines the desired state of KDexHostPackageReferences |  |  |
+
+
+#### KDexHostPackageReferencesList
+
+
+
+KDexHostPackageReferencesList contains a list of KDexHostPackageReferences
+
+
+
+
+
+| Field | Description | Default | Validation |
+| --- | --- | --- | --- |
+| `apiVersion` _string_ | `kdex.dev/v1alpha1` | | |
+| `kind` _string_ | `KDexHostPackageReferencesList` | | |
+| `metadata` _[ListMeta](https://kubernetes.io/docs/reference/generated/kubernetes-api/v/#listmeta-v1-meta)_ | Refer to Kubernetes API documentation for fields of `metadata`. |  |  |
+| `items` _[KDexHostPackageReferences](#kdexhostpackagereferences) array_ |  |  |  |
+
+
+#### KDexHostPackageReferencesSpec
+
+
+
+KDexHostPackageReferencesSpec defines the desired state of KDexHostPackageReferences
+
+
+
+_Appears in:_
+- [KDexHostPackageReferences](#kdexhostpackagereferences)
+
+| Field | Description | Default | Validation |
+| --- | --- | --- | --- |
+| `packageReferences` _[PackageReference](#packagereference) array_ |  |  | MinItems: 1 <br /> |
+
+
+
+
 #### KDexHostSpec
 
 
@@ -242,6 +620,7 @@ KDexHostList contains a list of KDexHost
 
 _Appears in:_
 - [KDexHost](#kdexhost)
+- [KDexHostControllerSpec](#kdexhostcontrollerspec)
 
 | Field | Description | Default | Validation |
 | --- | --- | --- | --- |
@@ -307,6 +686,7 @@ KDexPageArchetypeSpec defines the desired state of KDexPageArchetype
 
 
 _Appears in:_
+- [KDexClusterPageArchetype](#kdexclusterpagearchetype)
 - [KDexPageArchetype](#kdexpagearchetype)
 
 | Field | Description | Default | Validation |
@@ -316,7 +696,6 @@ _Appears in:_
 | `defaultHeaderRef` _[LocalObjectReference](https://kubernetes.io/docs/reference/generated/kubernetes-api/v/#localobjectreference-v1-core)_ | defaultHeaderRef is an optional reference to a KDexPageHeader resource. If not specified, no header will be displayed. Use the `.Header` property to position its content in the template. |  |  |
 | `defaultMainNavigationRef` _[LocalObjectReference](https://kubernetes.io/docs/reference/generated/kubernetes-api/v/#localobjectreference-v1-core)_ | defaultMainNavigationRef is an optional reference to a KDexPageNavigation resource. If not specified, no navigation will be displayed. Use the `.Navigation["main"]` property to position its content in the template. |  |  |
 | `extraNavigations` _object (keys:string, values:[LocalObjectReference](https://kubernetes.io/docs/reference/generated/kubernetes-api/v/#localobjectreference-v1-core))_ | extraNavigations is an optional map of named navigation object references. Use `.Navigation["<name>"]` to position the named navigation's content in the template. |  |  |
-| `overrideThemeRef` _[LocalObjectReference](https://kubernetes.io/docs/reference/generated/kubernetes-api/v/#localobjectreference-v1-core)_ | overrideThemeRef is a reference to the theme that should apply to all pages that use this archetype. It overrides the default theme defined on the host. |  |  |
 | `scriptLibraryRef` _[LocalObjectReference](https://kubernetes.io/docs/reference/generated/kubernetes-api/v/#localobjectreference-v1-core)_ | scriptLibraryRef is an optional reference to a KDexScriptLibrary resource. |  |  |
 
 
@@ -441,6 +820,7 @@ KDexPageFooterSpec defines the desired state of KDexPageFooter
 
 
 _Appears in:_
+- [KDexClusterPageFooter](#kdexclusterpagefooter)
 - [KDexPageFooter](#kdexpagefooter)
 
 | Field | Description | Default | Validation |
@@ -500,6 +880,7 @@ KDexPageHeaderSpec defines the desired state of KDexPageHeader
 
 
 _Appears in:_
+- [KDexClusterPageHeader](#kdexclusterpageheader)
 - [KDexPageHeader](#kdexpageheader)
 
 | Field | Description | Default | Validation |
@@ -560,6 +941,7 @@ KDexPageNavigationSpec defines the desired state of KDexPageNavigation
 
 
 _Appears in:_
+- [KDexClusterPageNavigation](#kdexclusterpagenavigation)
 - [KDexPageNavigation](#kdexpagenavigation)
 
 | Field | Description | Default | Validation |
@@ -620,6 +1002,7 @@ KDexScriptLibrarySpec defines the desired state of KDexScriptLibrary
 
 
 _Appears in:_
+- [KDexClusterScriptLibrary](#kdexclusterscriptlibrary)
 - [KDexScriptLibrary](#kdexscriptlibrary)
 
 | Field | Description | Default | Validation |
@@ -679,6 +1062,7 @@ KDexThemeSpec defines the desired state of KDexTheme
 
 
 _Appears in:_
+- [KDexClusterTheme](#kdexclustertheme)
 - [KDexTheme](#kdextheme)
 
 | Field | Description | Default | Validation |
@@ -819,6 +1203,7 @@ PackageReference specifies the name and version of an NPM package that contains 
 
 _Appears in:_
 - [KDexAppSpec](#kdexappspec)
+- [KDexHostPackageReferencesSpec](#kdexhostpackagereferencesspec)
 - [KDexScriptLibrarySpec](#kdexscriptlibraryspec)
 
 | Field | Description | Default | Validation |
