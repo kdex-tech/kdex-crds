@@ -10,6 +10,7 @@ import (
 
 type PageEntry struct {
 	Children *map[string]*PageEntry `json:"children,omitempty" yaml:"children,omitempty"`
+	BasePath string                 `json:"basePath" yaml:"basePath"`
 	Icon     string                 `json:"icon,omitempty" yaml:"icon,omitempty"`
 	Label    string                 `json:"label" yaml:"label"`
 	Name     string                 `json:"name" yaml:"name"`

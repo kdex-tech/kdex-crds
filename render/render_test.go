@@ -49,7 +49,12 @@ func TestRenderAll(t *testing.T) {
 			"main": "main-nav",
 		},
 		Organization: "Test Inc.",
-		PageMap:      &map[string]*PageEntry{"home": {Href: "/"}},
+		PageMap: &map[string]*PageEntry{
+			"home": {
+				BasePath: "/",
+				Href:     "/",
+			},
+		},
 		Title:        "Test Page",
 		TemplateName: "main",
 		TemplateContent: `<!DOCTYPE html>
