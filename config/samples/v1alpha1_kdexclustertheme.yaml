@@ -1,0 +1,9 @@
+apiVersion: kdex.dev/v1alpha1
+kind: KDexClusterTheme
+metadata:
+  labels:
+    app.kubernetes.io/name: kdex-crds
+    app.kubernetes.io/managed-by: kustomize
+  name: kdexclustertheme-sample
+spec:
+  # TODO(user): Add fields here

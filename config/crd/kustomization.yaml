@@ -20,6 +20,7 @@ resources:
 - bases/kdex.dev_kdexclusterpageheaders.yaml
 - bases/kdex.dev_kdexclusterpagenavigations.yaml
 - bases/kdex.dev_kdexclusterscriptlibraries.yaml
+- bases/kdex.dev_kdexclusterthemes.yaml
 # +kubebuilder:scaffold:crdkustomizeresource
 
 patches: []

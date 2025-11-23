@@ -129,4 +129,10 @@ resources:
   kind: KDexClusterScriptLibrary
   path: kdex.dev/crds/api/v1alpha1
   version: v1alpha1
+- api:
+    crdVersion: v1
+  domain: kdex.dev
+  kind: KDexClusterTheme
+  path: kdex.dev/crds/api/v1alpha1
+  version: v1alpha1
 version: "3"
