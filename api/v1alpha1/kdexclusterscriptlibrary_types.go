@@ -20,21 +20,6 @@ import (
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
 
-// EDIT THIS FILE!  THIS IS SCAFFOLDING FOR YOU TO OWN!
-// NOTE: json tags are required.  Any new fields you add must have json tags for the fields to be serialized.
-
-// KDexClusterScriptLibrarySpec defines the desired state of KDexClusterScriptLibrary
-type KDexClusterScriptLibrarySpec struct {
-	// INSERT ADDITIONAL SPEC FIELDS - desired state of cluster
-	// Important: Run "make" to regenerate code after modifying this file
-	// The following markers will use OpenAPI v3 schema to validate the value
-	// More info: https://book.kubebuilder.io/reference/markers/crd-validation.html
-
-	// foo is an example field of KDexClusterScriptLibrary. Edit kdexclusterscriptlibrary_types.go to remove/update
-	// +optional
-	Foo *string `json:"foo,omitempty"`
-}
-
 // KDexClusterScriptLibraryStatus defines the observed state of KDexClusterScriptLibrary.
 type KDexClusterScriptLibraryStatus struct {
 	// INSERT ADDITIONAL STATUS FIELD - define observed state of cluster
@@ -56,11 +41,19 @@ type KDexClusterScriptLibraryStatus struct {
 	// +listMapKey=type
 	// +optional
 	Conditions []metav1.Condition `json:"conditions,omitempty"`
+
+	// For Kubernetes API conventions, see:
+	// https://github.com/kubernetes/community/blob/master/contributors/devel/sig-architecture/api-conventions.md#typical-status-properties
+
+	// observedGeneration is the most recent generation observed for this KDexApp. It corresponds to the
+	// KDexApp's generation, which is updated on mutation by the API Server.
+	// +optional
+	ObservedGeneration int64 `json:"observedGeneration,omitempty"`
 }
 
 // +kubebuilder:object:root=true
+// +kubebuilder:resource:scope=Cluster,shortName=kdex-c-sl
 // +kubebuilder:subresource:status
-// +kubebuilder:resource:scope=Cluster
 
 // KDexClusterScriptLibrary is the Schema for the kdexclusterscriptlibraries API
 type KDexClusterScriptLibrary struct {
@@ -72,7 +65,7 @@ type KDexClusterScriptLibrary struct {
 
 	// spec defines the desired state of KDexClusterScriptLibrary
 	// +required
-	Spec KDexClusterScriptLibrarySpec `json:"spec"`
+	Spec KDexScriptLibrarySpec `json:"spec"`
 
 	// status defines the observed state of KDexClusterScriptLibrary
 	// +optional

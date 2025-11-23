@@ -20,21 +20,6 @@ import (
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
 
-// EDIT THIS FILE!  THIS IS SCAFFOLDING FOR YOU TO OWN!
-// NOTE: json tags are required.  Any new fields you add must have json tags for the fields to be serialized.
-
-// KDexClusterAppSpec defines the desired state of KDexClusterApp
-type KDexClusterAppSpec struct {
-	// INSERT ADDITIONAL SPEC FIELDS - desired state of cluster
-	// Important: Run "make" to regenerate code after modifying this file
-	// The following markers will use OpenAPI v3 schema to validate the value
-	// More info: https://book.kubebuilder.io/reference/markers/crd-validation.html
-
-	// foo is an example field of KDexClusterApp. Edit kdexclusterapp_types.go to remove/update
-	// +optional
-	Foo *string `json:"foo,omitempty"`
-}
-
 // KDexClusterAppStatus defines the observed state of KDexClusterApp.
 type KDexClusterAppStatus struct {
 	// INSERT ADDITIONAL STATUS FIELD - define observed state of cluster
@@ -56,11 +41,19 @@ type KDexClusterAppStatus struct {
 	// +listMapKey=type
 	// +optional
 	Conditions []metav1.Condition `json:"conditions,omitempty"`
+
+	// For Kubernetes API conventions, see:
+	// https://github.com/kubernetes/community/blob/master/contributors/devel/sig-architecture/api-conventions.md#typical-status-properties
+
+	// observedGeneration is the most recent generation observed for this KDexApp. It corresponds to the
+	// KDexApp's generation, which is updated on mutation by the API Server.
+	// +optional
+	ObservedGeneration int64 `json:"observedGeneration,omitempty"`
 }
 
 // +kubebuilder:object:root=true
+// +kubebuilder:resource:scope=Cluster,shortName=kdex-c-a
 // +kubebuilder:subresource:status
-// +kubebuilder:resource:scope=Cluster
 
 // KDexClusterApp is the Schema for the kdexclusterapps API
 type KDexClusterApp struct {
@@ -72,7 +65,7 @@ type KDexClusterApp struct {
 
 	// spec defines the desired state of KDexClusterApp
 	// +required
-	Spec KDexClusterAppSpec `json:"spec"`
+	Spec KDexAppSpec `json:"spec"`
 
 	// status defines the observed state of KDexClusterApp
 	// +optional
