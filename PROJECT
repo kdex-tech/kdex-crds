@@ -93,4 +93,10 @@ resources:
   kind: KDexHostPackageReferences
   path: kdex.dev/crds/api/v1alpha1
   version: v1alpha1
+- api:
+    crdVersion: v1
+  domain: kdex.dev
+  kind: KDexClusterApp
+  path: kdex.dev/crds/api/v1alpha1
+  version: v1alpha1
 version: "3"
