@@ -58,12 +58,6 @@ spec:
                   resource. If not specified, no footer will be displayed. Use the
                   `.Footer` property to position its content in the template.
                 properties:
-                  clustered:
-                    description: |-
-                      Clustered, if set to true, ensures that the cluster scoped Kind of the referent will be lookup up. If the
-                      referring resource is cluster scoped, then Clustered is implicitly true.
-                      Defaulted to nil.
-                    type: boolean
                   name:
                     description: Name of the referent.
                     type: string
@@ -79,20 +73,11 @@ spec:
                 - name
                 type: object
                 x-kubernetes-map-type: atomic
-                x-kubernetes-validations:
-                - message: namespace must not be set when clustered is true
-                  rule: '!(self.clustered == true) || self.namespace == ""'
               defaultHeaderRef:
                 description: defaultHeaderRef is an optional reference to a KDexPageHeader
                   resource. If not specified, no header will be displayed. Use the
                   `.Header` property to position its content in the template.
                 properties:
-                  clustered:
-                    description: |-
-                      Clustered, if set to true, ensures that the cluster scoped Kind of the referent will be lookup up. If the
-                      referring resource is cluster scoped, then Clustered is implicitly true.
-                      Defaulted to nil.
-                    type: boolean
                   name:
                     description: Name of the referent.
                     type: string
@@ -108,21 +93,12 @@ spec:
                 - name
                 type: object
                 x-kubernetes-map-type: atomic
-                x-kubernetes-validations:
-                - message: namespace must not be set when clustered is true
-                  rule: '!(self.clustered == true) || self.namespace == ""'
               defaultMainNavigationRef:
                 description: defaultMainNavigationRef is an optional reference to
                   a KDexPageNavigation resource. If not specified, no navigation will
                   be displayed. Use the `.Navigation["main"]` property to position
                   its content in the template.
                 properties:
-                  clustered:
-                    description: |-
-                      Clustered, if set to true, ensures that the cluster scoped Kind of the referent will be lookup up. If the
-                      referring resource is cluster scoped, then Clustered is implicitly true.
-                      Defaulted to nil.
-                    type: boolean
                   name:
                     description: Name of the referent.
                     type: string
@@ -138,18 +114,9 @@ spec:
                 - name
                 type: object
                 x-kubernetes-map-type: atomic
-                x-kubernetes-validations:
-                - message: namespace must not be set when clustered is true
-                  rule: '!(self.clustered == true) || self.namespace == ""'
               extraNavigations:
                 additionalProperties:
                   properties:
-                    clustered:
-                      description: |-
-                        Clustered, if set to true, ensures that the cluster scoped Kind of the referent will be lookup up. If the
-                        referring resource is cluster scoped, then Clustered is implicitly true.
-                        Defaulted to nil.
-                      type: boolean
                     name:
                       description: Name of the referent.
                       type: string
@@ -165,9 +132,6 @@ spec:
                   - name
                   type: object
                   x-kubernetes-map-type: atomic
-                  x-kubernetes-validations:
-                  - message: namespace must not be set when clustered is true
-                    rule: '!(self.clustered == true) || self.namespace == ""'
                 description: extraNavigations is an optional map of named navigation
                   object references. Use `.Navigation["<name>"]` to position the named
                   navigation's content in the template.
@@ -179,12 +143,6 @@ spec:
                 description: scriptLibraryRef is an optional reference to a KDexScriptLibrary
                   resource.
                 properties:
-                  clustered:
-                    description: |-
-                      Clustered, if set to true, ensures that the cluster scoped Kind of the referent will be lookup up. If the
-                      referring resource is cluster scoped, then Clustered is implicitly true.
-                      Defaulted to nil.
-                    type: boolean
                   name:
                     description: Name of the referent.
                     type: string
@@ -200,9 +158,6 @@ spec:
                 - name
                 type: object
                 x-kubernetes-map-type: atomic
-                x-kubernetes-validations:
-                - message: namespace must not be set when clustered is true
-                  rule: '!(self.clustered == true) || self.namespace == ""'
             required:
             - content
             type: object

@@ -1,6 +1,8 @@
 package v1alpha1
 
-import metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
+import (
+	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
+)
 
 type KDexObject struct {
 	metav1.TypeMeta `json:",inline"`
@@ -43,17 +45,12 @@ type KDexObjectStatus struct {
 }
 
 // +structType=atomic
-// +kubebuilder:validation:XValidation:rule=`!(self.clustered == true) || self.namespace == ""`,message="namespace must not be set when clustered is true"
 type KDexObjectReference struct {
+	Kind string `json:"-"`
+
 	// Name of the referent.
 	// +kubebuilder:validation:Required
 	Name string `json:"name,omitempty" protobuf:"bytes,1,opt,name=name"`
-
-	// Clustered, if set to true, ensures that the cluster scoped Kind of the referent will be lookup up. If the
-	// referring resource is cluster scoped, then Clustered is implicitly true.
-	// Defaulted to nil.
-	// +optional
-	Clustered *bool `json:"clustered,omitempty" protobuf:"varint,2,opt,name=clustered"`
 
 	// Namespace, if set, causes the lookup for the namespace scoped Kind of the referent to use the specified
 	// namespace. If not set, the namespace of the resource will be used to lookup the namespace scoped Kind of the

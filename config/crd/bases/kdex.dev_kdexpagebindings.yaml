@@ -68,12 +68,6 @@ spec:
                       description: appRef is a reference to the KDexApp to include
                         in this binding.
                       properties:
-                        clustered:
-                          description: |-
-                            Clustered, if set to true, ensures that the cluster scoped Kind of the referent will be lookup up. If the
-                            referring resource is cluster scoped, then Clustered is implicitly true.
-                            Defaulted to nil.
-                          type: boolean
                         name:
                           description: Name of the referent.
                           type: string
@@ -89,9 +83,6 @@ spec:
                       - name
                       type: object
                       x-kubernetes-map-type: atomic
-                      x-kubernetes-validations:
-                      - message: namespace must not be set when clustered is true
-                        rule: '!(self.clustered == true) || self.namespace == ""'
                     customElementName:
                       description: customElementName is the name of the KDexApp custom
                         element to render in the specified slot (if present in the
@@ -160,12 +151,6 @@ spec:
                   resource. If not specified, the footer from the archetype will be
                   used.
                 properties:
-                  clustered:
-                    description: |-
-                      Clustered, if set to true, ensures that the cluster scoped Kind of the referent will be lookup up. If the
-                      referring resource is cluster scoped, then Clustered is implicitly true.
-                      Defaulted to nil.
-                    type: boolean
                   name:
                     description: Name of the referent.
                     type: string
@@ -181,20 +166,11 @@ spec:
                 - name
                 type: object
                 x-kubernetes-map-type: atomic
-                x-kubernetes-validations:
-                - message: namespace must not be set when clustered is true
-                  rule: '!(self.clustered == true) || self.namespace == ""'
               overrideHeaderRef:
                 description: overrideHeaderRef is an optional reference to a KDexPageHeader
                   resource. If not specified, the header from the archetype will be
                   used.
                 properties:
-                  clustered:
-                    description: |-
-                      Clustered, if set to true, ensures that the cluster scoped Kind of the referent will be lookup up. If the
-                      referring resource is cluster scoped, then Clustered is implicitly true.
-                      Defaulted to nil.
-                    type: boolean
                   name:
                     description: Name of the referent.
                     type: string
@@ -210,20 +186,11 @@ spec:
                 - name
                 type: object
                 x-kubernetes-map-type: atomic
-                x-kubernetes-validations:
-                - message: namespace must not be set when clustered is true
-                  rule: '!(self.clustered == true) || self.namespace == ""'
               overrideMainNavigationRef:
                 description: overrideMainNavigationRef is an optional reference to
                   a KDexPageNavigation resource. If not specified, the main navigation
                   from the archetype will be used.
                 properties:
-                  clustered:
-                    description: |-
-                      Clustered, if set to true, ensures that the cluster scoped Kind of the referent will be lookup up. If the
-                      referring resource is cluster scoped, then Clustered is implicitly true.
-                      Defaulted to nil.
-                    type: boolean
                   name:
                     description: Name of the referent.
                     type: string
@@ -239,19 +206,10 @@ spec:
                 - name
                 type: object
                 x-kubernetes-map-type: atomic
-                x-kubernetes-validations:
-                - message: namespace must not be set when clustered is true
-                  rule: '!(self.clustered == true) || self.namespace == ""'
               pageArchetypeRef:
                 description: pageArchetypeRef is a reference to the KDexPageArchetype
                   that this binding is for.
                 properties:
-                  clustered:
-                    description: |-
-                      Clustered, if set to true, ensures that the cluster scoped Kind of the referent will be lookup up. If the
-                      referring resource is cluster scoped, then Clustered is implicitly true.
-                      Defaulted to nil.
-                    type: boolean
                   name:
                     description: Name of the referent.
                     type: string
@@ -267,9 +225,6 @@ spec:
                 - name
                 type: object
                 x-kubernetes-map-type: atomic
-                x-kubernetes-validations:
-                - message: namespace must not be set when clustered is true
-                  rule: '!(self.clustered == true) || self.namespace == ""'
               parentPageRef:
                 description: parentPageRef is a reference to the KDexPageBinding bellow
                   which this page will appear in the main navigation. If not set,
@@ -296,12 +251,6 @@ spec:
                 description: scriptLibraryRef is an optional reference to a KDexScriptLibrary
                   resource.
                 properties:
-                  clustered:
-                    description: |-
-                      Clustered, if set to true, ensures that the cluster scoped Kind of the referent will be lookup up. If the
-                      referring resource is cluster scoped, then Clustered is implicitly true.
-                      Defaulted to nil.
-                    type: boolean
                   name:
                     description: Name of the referent.
                     type: string
@@ -317,9 +266,6 @@ spec:
                 - name
                 type: object
                 x-kubernetes-map-type: atomic
-                x-kubernetes-validations:
-                - message: namespace must not be set when clustered is true
-                  rule: '!(self.clustered == true) || self.namespace == ""'
             required:
             - basePath
             - contentEntries
