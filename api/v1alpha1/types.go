@@ -43,7 +43,7 @@ type KDexObjectStatus struct {
 }
 
 // +structType=atomic
-// +kubebuilder:validation:XValidation:rule="!(self.clustered == true) || self.namespace == ”",message="namespace must not be set when clustered is true"
+// +kubebuilder:validation:XValidation:rule=`!(self.clustered == true) || self.namespace == ""`,message="namespace must not be set when clustered is true"
 type KDexObjectReference struct {
 	// Name of the referent.
 	// +kubebuilder:validation:Required

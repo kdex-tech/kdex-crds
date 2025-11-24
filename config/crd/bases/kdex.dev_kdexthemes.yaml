@@ -149,7 +149,7 @@ spec:
                 x-kubernetes-map-type: atomic
                 x-kubernetes-validations:
                 - message: namespace must not be set when clustered is true
-                  rule: '!(self.clustered == true) || self.namespace == ”'
+                  rule: '!(self.clustered == true) || self.namespace == ""'
               webserver:
                 description: webserver defines the configuration for the theme webserver.
                 properties:

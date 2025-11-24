@@ -81,7 +81,7 @@ spec:
                 x-kubernetes-map-type: atomic
                 x-kubernetes-validations:
                 - message: namespace must not be set when clustered is true
-                  rule: '!(self.clustered == true) || self.namespace == ”'
+                  rule: '!(self.clustered == true) || self.namespace == ""'
               defaultHeaderRef:
                 description: defaultHeaderRef is an optional reference to a KDexPageHeader
                   resource. If not specified, no header will be displayed. Use the
@@ -110,7 +110,7 @@ spec:
                 x-kubernetes-map-type: atomic
                 x-kubernetes-validations:
                 - message: namespace must not be set when clustered is true
-                  rule: '!(self.clustered == true) || self.namespace == ”'
+                  rule: '!(self.clustered == true) || self.namespace == ""'
               defaultMainNavigationRef:
                 description: defaultMainNavigationRef is an optional reference to
                   a KDexPageNavigation resource. If not specified, no navigation will
@@ -140,7 +140,7 @@ spec:
                 x-kubernetes-map-type: atomic
                 x-kubernetes-validations:
                 - message: namespace must not be set when clustered is true
-                  rule: '!(self.clustered == true) || self.namespace == ”'
+                  rule: '!(self.clustered == true) || self.namespace == ""'
               extraNavigations:
                 additionalProperties:
                   properties:
@@ -167,7 +167,7 @@ spec:
                   x-kubernetes-map-type: atomic
                   x-kubernetes-validations:
                   - message: namespace must not be set when clustered is true
-                    rule: '!(self.clustered == true) || self.namespace == ”'
+                    rule: '!(self.clustered == true) || self.namespace == ""'
                 description: extraNavigations is an optional map of named navigation
                   object references. Use `.Navigation["<name>"]` to position the named
                   navigation's content in the template.
@@ -202,7 +202,7 @@ spec:
                 x-kubernetes-map-type: atomic
                 x-kubernetes-validations:
                 - message: namespace must not be set when clustered is true
-                  rule: '!(self.clustered == true) || self.namespace == ”'
+                  rule: '!(self.clustered == true) || self.namespace == ""'
             required:
             - content
             type: object
