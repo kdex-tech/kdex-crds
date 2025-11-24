@@ -21,12 +21,6 @@ import (
 	"kdex.dev/crds/base"
 )
 
-// KDexHostPackageReferencesSpec defines the desired state of KDexHostPackageReferences
-type KDexHostPackageReferencesSpec struct {
-	// +kubebuilder:validation:MinItems=1
-	PackageReferences []PackageReference `json:"packageReferences"`
-}
-
 // +kubebuilder:object:root=true
 // +kubebuilder:resource:scope=Namespaced,shortName=kdex-pr
 
@@ -52,6 +46,12 @@ type KDexHostPackageReferencesList struct {
 	metav1.TypeMeta `json:",inline"`
 	metav1.ListMeta `json:"metadata,omitzero"`
 	Items           []KDexHostPackageReferences `json:"items"`
+}
+
+// KDexHostPackageReferencesSpec defines the desired state of KDexHostPackageReferences
+type KDexHostPackageReferencesSpec struct {
+	// +kubebuilder:validation:MinItems=1
+	PackageReferences []PackageReference `json:"packageReferences"`
 }
 
 func init() {

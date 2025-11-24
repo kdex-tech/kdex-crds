@@ -22,19 +22,6 @@ import (
 	"kdex.dev/crds/base"
 )
 
-// KDexPageFooterSpec defines the desired state of KDexPageFooter
-type KDexPageFooterSpec struct {
-	// content is a go string template that defines the content of an App Server page footer section. Use the `.Footer` property to position its content in the template.
-	// +kubebuilder:validation:Required
-	// +kubebuilder:validation:MinLength=5
-	// +kubebuilder:example:=`<small>&copy; {{ .Date.Year() }} {{ .Organization }}. All Rights Reserved.</small>`
-	Content string `json:"content"`
-
-	// scriptLibraryRef is an optional reference to a KDexScriptLibrary resource.
-	// +optional
-	ScriptLibraryRef *corev1.LocalObjectReference `json:"scriptLibraryRef,omitempty"`
-}
-
 // +kubebuilder:object:root=true
 // +kubebuilder:resource:scope=Namespaced,shortName=kdex-pf
 
@@ -59,6 +46,19 @@ type KDexPageFooterList struct {
 	metav1.TypeMeta `json:",inline"`
 	metav1.ListMeta `json:"metadata,omitempty"`
 	Items           []KDexPageFooter `json:"items"`
+}
+
+// KDexPageFooterSpec defines the desired state of KDexPageFooter
+type KDexPageFooterSpec struct {
+	// content is a go string template that defines the content of an App Server page footer section. Use the `.Footer` property to position its content in the template.
+	// +kubebuilder:validation:Required
+	// +kubebuilder:validation:MinLength=5
+	// +kubebuilder:example:=`<small>&copy; {{ .Date.Year() }} {{ .Organization }}. All Rights Reserved.</small>`
+	Content string `json:"content"`
+
+	// scriptLibraryRef is an optional reference to a KDexScriptLibrary resource.
+	// +optional
+	ScriptLibraryRef *corev1.LocalObjectReference `json:"scriptLibraryRef,omitempty"`
 }
 
 func init() {

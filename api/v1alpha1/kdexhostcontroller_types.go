@@ -21,12 +21,6 @@ import (
 	"kdex.dev/crds/base"
 )
 
-// KDexHostControllerSpec defines the desired state of KDexHostController
-type KDexHostControllerSpec struct {
-	// +kubebuilder:validation:Required
-	Host KDexHostSpec `json:"host"`
-}
-
 // +kubebuilder:object:root=true
 
 // KDexHostController is the Schema for the kdexhostcontrollers API
@@ -53,6 +47,12 @@ type KDexHostControllerList struct {
 	metav1.TypeMeta `json:",inline"`
 	metav1.ListMeta `json:"metadata,omitempty"`
 	Items           []KDexHostController `json:"items"`
+}
+
+// KDexHostControllerSpec defines the desired state of KDexHostController
+type KDexHostControllerSpec struct {
+	// +kubebuilder:validation:Required
+	Host KDexHostSpec `json:"host"`
 }
 
 func init() {

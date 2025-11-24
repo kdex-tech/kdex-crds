@@ -31,19 +31,6 @@ const (
 </script>`
 )
 
-// KDexScriptLibrarySpec defines the desired state of KDexScriptLibrary
-// +kubebuilder:validation:XValidation:rule="[has(self.scripts), has(self.packageReference)].filter(x, x).size() > 0",message="at least one of scripts or packageReference must be specified"
-type KDexScriptLibrarySpec struct {
-	// packageReference specifies the name and version of an NPM package that contains the script. The package.json must describe an ES module.
-	// +optional
-	PackageReference *PackageReference `json:"packageReference,omitempty"`
-
-	// scripts is a set of script references. They may contain URLs that point to resources hosted at some public address, npm module references or they may contain tag contents.
-	// +kubebuilder:validation:MaxItems=32
-	// +optional
-	Scripts []Script `json:"scripts,omitempty"`
-}
-
 // +kubebuilder:object:root=true
 // +kubebuilder:resource:scope=Namespaced,shortName=kdex-sl
 
@@ -69,6 +56,19 @@ type KDexScriptLibraryList struct {
 	metav1.TypeMeta `json:",inline"`
 	metav1.ListMeta `json:"metadata,omitempty"`
 	Items           []KDexScriptLibrary `json:"items"`
+}
+
+// KDexScriptLibrarySpec defines the desired state of KDexScriptLibrary
+// +kubebuilder:validation:XValidation:rule="[has(self.scripts), has(self.packageReference)].filter(x, x).size() > 0",message="at least one of scripts or packageReference must be specified"
+type KDexScriptLibrarySpec struct {
+	// packageReference specifies the name and version of an NPM package that contains the script. The package.json must describe an ES module.
+	// +optional
+	PackageReference *PackageReference `json:"packageReference,omitempty"`
+
+	// scripts is a set of script references. They may contain URLs that point to resources hosted at some public address, npm module references or they may contain tag contents.
+	// +kubebuilder:validation:MaxItems=32
+	// +optional
+	Scripts []Script `json:"scripts,omitempty"`
 }
 
 // PackageReference specifies the name and version of an NPM package that contains the micro-frontend application.

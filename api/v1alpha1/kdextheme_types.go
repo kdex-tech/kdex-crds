@@ -79,31 +79,30 @@ func (a *Asset) String() string {
 	return buffer.String()
 }
 
-// KDexThemeWebServer defines the desired state of the KDexTheme web server
-type KDexThemeWebServer struct {
-	// image is the name of webserver image.
-	// More info: https://kubernetes.io/docs/concepts/containers/images
+// +kubebuilder:object:root=true
+// +kubebuilder:resource:scope=Namespaced,shortName=kdex-th
+
+// KDexTheme is the Schema for the kdexthemes API
+//
+// A KDexTheme is a reusable collection of design styles and associated digital assets necessary for providing the
+// visual aspects of KDexPageBindings decoupling appearance from structure and content.
+//
+// +kubebuilder:printcolumn:name="Ready",type=string,JSONPath=`.status.conditions[?(@.type=="Ready")].status`,description="The state of the Ready condition"
+type KDexTheme struct {
+	base.KDexObject `json:",inline"`
+
+	// spec defines the desired state of KDexTheme
 	// +kubebuilder:validation:Required
-	// +kubebuilder:validation:MinLength=5
-	Image string `json:"image"`
+	Spec KDexThemeSpec `json:"spec"`
+}
 
-	// Policy for pulling the webserver image. Possible values are:
-	// Always: the kubelet always attempts to pull the reference. Container creation will fail If the pull fails.
-	// Never: the kubelet never pulls the reference and only uses a local image or artifact. Container creation will fail if the reference isn't present.
-	// IfNotPresent: the kubelet pulls if the reference isn't already present on disk. Container creation will fail if the reference isn't present and the pull fails.
-	// Defaults to Always if :latest tag is specified, or IfNotPresent otherwise.
-	// +optional
-	PullPolicy corev1.PullPolicy `json:"pullPolicy,omitempty" protobuf:"bytes,2,opt,name=pullPolicy,casttype=PullPolicy"`
+// +kubebuilder:object:root=true
 
-	// replicas is the number of desired pods. This is a pointer to distinguish between explicit
-	// zero and not specified. Defaults to 1.
-	// +optional
-	Replicas *int32 `json:"replicas,omitempty"`
-
-	// resources defines the compute resources required by the container.
-	// More info: https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/
-	// +optional
-	Resources corev1.ResourceRequirements `json:"resources,omitempty"`
+// KDexThemeList contains a list of KDexTheme
+type KDexThemeList struct {
+	metav1.TypeMeta `json:",inline"`
+	metav1.ListMeta `json:"metadata,omitempty"`
+	Items           []KDexTheme `json:"items"`
 }
 
 // KDexThemeSpec defines the desired state of KDexTheme
@@ -147,7 +146,7 @@ type KDexThemeSpec struct {
 
 	// webserver defines the configuration for the theme webserver.
 	// +optional
-	WebServer *KDexThemeWebServer `json:"webserver,omitempty"`
+	WebServer *WebServer `json:"webserver,omitempty"`
 }
 
 func (s *KDexThemeSpec) String() string {
@@ -163,30 +162,31 @@ func (s *KDexThemeSpec) String() string {
 	return buffer.String()
 }
 
-// +kubebuilder:object:root=true
-// +kubebuilder:resource:scope=Namespaced,shortName=kdex-th
-
-// KDexTheme is the Schema for the kdexthemes API
-//
-// A KDexTheme is a reusable collection of design styles and associated digital assets necessary for providing the
-// visual aspects of KDexPageBindings decoupling appearance from structure and content.
-//
-// +kubebuilder:printcolumn:name="Ready",type=string,JSONPath=`.status.conditions[?(@.type=="Ready")].status`,description="The state of the Ready condition"
-type KDexTheme struct {
-	base.KDexObject `json:",inline"`
-
-	// spec defines the desired state of KDexTheme
+// WebServer defines the desired state of the KDexTheme web server
+type WebServer struct {
+	// image is the name of webserver image.
+	// More info: https://kubernetes.io/docs/concepts/containers/images
 	// +kubebuilder:validation:Required
-	Spec KDexThemeSpec `json:"spec"`
-}
+	// +kubebuilder:validation:MinLength=5
+	Image string `json:"image"`
 
-// +kubebuilder:object:root=true
+	// Policy for pulling the webserver image. Possible values are:
+	// Always: the kubelet always attempts to pull the reference. Container creation will fail If the pull fails.
+	// Never: the kubelet never pulls the reference and only uses a local image or artifact. Container creation will fail if the reference isn't present.
+	// IfNotPresent: the kubelet pulls if the reference isn't already present on disk. Container creation will fail if the reference isn't present and the pull fails.
+	// Defaults to Always if :latest tag is specified, or IfNotPresent otherwise.
+	// +optional
+	PullPolicy corev1.PullPolicy `json:"pullPolicy,omitempty" protobuf:"bytes,2,opt,name=pullPolicy,casttype=PullPolicy"`
 
-// KDexThemeList contains a list of KDexTheme
-type KDexThemeList struct {
-	metav1.TypeMeta `json:",inline"`
-	metav1.ListMeta `json:"metadata,omitempty"`
-	Items           []KDexTheme `json:"items"`
+	// replicas is the number of desired pods. This is a pointer to distinguish between explicit
+	// zero and not specified. Defaults to 1.
+	// +optional
+	Replicas *int32 `json:"replicas,omitempty"`
+
+	// resources defines the compute resources required by the container.
+	// More info: https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/
+	// +optional
+	Resources corev1.ResourceRequirements `json:"resources,omitempty"`
 }
 
 func init() {

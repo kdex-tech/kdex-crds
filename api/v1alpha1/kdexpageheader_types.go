@@ -22,19 +22,6 @@ import (
 	"kdex.dev/crds/base"
 )
 
-// KDexPageHeaderSpec defines the desired state of KDexPageHeader
-type KDexPageHeaderSpec struct {
-	// content is a go string template that defines the content of an App Server page header section. Use the `.Header` property to position its content in the template.
-	// +kubebuilder:validation:Required
-	// +kubebuilder:validation:MinLength=5
-	// +kubebuilder:example:=`<a class="logo" href="#">{{ .Title }}</a>`
-	Content string `json:"content"`
-
-	// scriptLibraryRef is an optional reference to a KDexScriptLibrary resource.
-	// +optional
-	ScriptLibraryRef *corev1.LocalObjectReference `json:"scriptLibraryRef,omitempty"`
-}
-
 // +kubebuilder:object:root=true
 // +kubebuilder:resource:scope=Namespaced,shortName=kdex-ph
 
@@ -59,6 +46,19 @@ type KDexPageHeaderList struct {
 	metav1.TypeMeta `json:",inline"`
 	metav1.ListMeta `json:"metadata,omitempty"`
 	Items           []KDexPageHeader `json:"items"`
+}
+
+// KDexPageHeaderSpec defines the desired state of KDexPageHeader
+type KDexPageHeaderSpec struct {
+	// content is a go string template that defines the content of an App Server page header section. Use the `.Header` property to position its content in the template.
+	// +kubebuilder:validation:Required
+	// +kubebuilder:validation:MinLength=5
+	// +kubebuilder:example:=`<a class="logo" href="#">{{ .Title }}</a>`
+	Content string `json:"content"`
+
+	// scriptLibraryRef is an optional reference to a KDexScriptLibrary resource.
+	// +optional
+	ScriptLibraryRef *corev1.LocalObjectReference `json:"scriptLibraryRef,omitempty"`
 }
 
 func init() {

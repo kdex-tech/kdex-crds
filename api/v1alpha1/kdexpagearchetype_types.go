@@ -22,6 +22,33 @@ import (
 	"kdex.dev/crds/base"
 )
 
+// +kubebuilder:object:root=true
+// +kubebuilder:resource:scope=Namespaced,shortName=kdex-pa
+
+// KDexPageArchetype is the Schema for the kdexpagearchetypes API
+//
+// A KDexPageArchetype defines a reusable archetype from which web pages can be derived. When creating a KDexPageBinding
+// (i.e. a web page) a developer states which archetype is to be used. This allows the structure to be decoupled from
+// the content.
+//
+// +kubebuilder:printcolumn:name="Ready",type=string,JSONPath=`.status.conditions[?(@.type=="Ready")].status`,description="The state of the Ready condition"
+type KDexPageArchetype struct {
+	base.KDexObject `json:",inline"`
+
+	// spec defines the desired state of KDexPageArchetype
+	// +kubebuilder:validation:Required
+	Spec KDexPageArchetypeSpec `json:"spec"`
+}
+
+// +kubebuilder:object:root=true
+
+// KDexPageArchetypeList contains a list of KDexPageArchetype
+type KDexPageArchetypeList struct {
+	metav1.TypeMeta `json:",inline"`
+	metav1.ListMeta `json:"metadata,omitempty"`
+	Items           []KDexPageArchetype `json:"items"`
+}
+
 // KDexPageArchetypeSpec defines the desired state of KDexPageArchetype
 type KDexPageArchetypeSpec struct {
 	// content is a go string template that defines the structure of an HTML page.
@@ -50,33 +77,6 @@ type KDexPageArchetypeSpec struct {
 	// scriptLibraryRef is an optional reference to a KDexScriptLibrary resource.
 	// +optional
 	ScriptLibraryRef *corev1.LocalObjectReference `json:"scriptLibraryRef,omitempty"`
-}
-
-// +kubebuilder:object:root=true
-// +kubebuilder:resource:scope=Namespaced,shortName=kdex-pa
-
-// KDexPageArchetype is the Schema for the kdexpagearchetypes API
-//
-// A KDexPageArchetype defines a reusable archetype from which web pages can be derived. When creating a KDexPageBinding
-// (i.e. a web page) a developer states which archetype is to be used. This allows the structure to be decoupled from
-// the content.
-//
-// +kubebuilder:printcolumn:name="Ready",type=string,JSONPath=`.status.conditions[?(@.type=="Ready")].status`,description="The state of the Ready condition"
-type KDexPageArchetype struct {
-	base.KDexObject `json:",inline"`
-
-	// spec defines the desired state of KDexPageArchetype
-	// +kubebuilder:validation:Required
-	Spec KDexPageArchetypeSpec `json:"spec"`
-}
-
-// +kubebuilder:object:root=true
-
-// KDexPageArchetypeList contains a list of KDexPageArchetype
-type KDexPageArchetypeList struct {
-	metav1.TypeMeta `json:",inline"`
-	metav1.ListMeta `json:"metadata,omitempty"`
-	Items           []KDexPageArchetype `json:"items"`
 }
 
 func init() {

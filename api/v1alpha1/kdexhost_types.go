@@ -22,8 +22,35 @@ import (
 	"kdex.dev/crds/base"
 )
 
-// KDexHostSpec defines the desired state of KDexHost
+// +kubebuilder:object:root=true
+// +kubebuilder:resource:scope=Namespaced,shortName=kdex-h
 
+// KDexHost is the Schema for the kdexhosts API
+//
+// A KDexHost is the central actor in the "KDex Cloud Native Application Server" model. It specifies the basic metadata
+// that defines a web property; a set of domain names, TLS certificates, routing strategy and so on. From this central
+// point a distinct web property is establish to which are bound KDexPageBindings (i.e. web pages) that provide the web
+// properties content in the form of either raw HTML content or applications from KDexApps.s
+//
+// +kubebuilder:printcolumn:name="Ready",type=string,JSONPath=`.status.conditions[?(@.type=="Ready")].status`,description="The state of the Ready condition"
+type KDexHost struct {
+	base.KDexObject `json:",inline"`
+
+	// spec defines the desired state of KDexHost
+	// +kubebuilder:validation:Required
+	Spec KDexHostSpec `json:"spec"`
+}
+
+// +kubebuilder:object:root=true
+
+// KDexHostList contains a list of KDexHost
+type KDexHostList struct {
+	metav1.TypeMeta `json:",inline"`
+	metav1.ListMeta `json:"metadata,omitempty"`
+	Items           []KDexHost `json:"items"`
+}
+
+// KDexHostSpec defines the desired state of KDexHost
 type KDexHostSpec struct {
 	// baseMeta is a string containing a base set of meta tags to use on every page rendered for the host.
 	// +optional
@@ -62,34 +89,6 @@ type KDexHostSpec struct {
 	// scriptLibraryRef is an optional reference to a KDexScriptLibrary resource.
 	// +optional
 	ScriptLibraryRef *corev1.LocalObjectReference `json:"scriptLibraryRef,omitempty"`
-}
-
-// +kubebuilder:object:root=true
-// +kubebuilder:resource:scope=Namespaced,shortName=kdex-h
-
-// KDexHost is the Schema for the kdexhosts API
-//
-// A KDexHost is the central actor in the "KDex Cloud Native Application Server" model. It specifies the basic metadata
-// that defines a web property; a set of domain names, TLS certificates, routing strategy and so on. From this central
-// point a distinct web property is establish to which are bound KDexPageBindings (i.e. web pages) that provide the web
-// properties content in the form of either raw HTML content or applications from KDexApps.s
-//
-// +kubebuilder:printcolumn:name="Ready",type=string,JSONPath=`.status.conditions[?(@.type=="Ready")].status`,description="The state of the Ready condition"
-type KDexHost struct {
-	base.KDexObject `json:",inline"`
-
-	// spec defines the desired state of KDexHost
-	// +kubebuilder:validation:Required
-	Spec KDexHostSpec `json:"spec"`
-}
-
-// +kubebuilder:object:root=true
-
-// KDexHostList contains a list of KDexHost
-type KDexHostList struct {
-	metav1.TypeMeta `json:",inline"`
-	metav1.ListMeta `json:"metadata,omitempty"`
-	Items           []KDexHost `json:"items"`
 }
 
 // ModulePolicy defines the policy for the use of JavaScript Modules.

@@ -41,14 +41,31 @@ type ContentEntry struct {
 	Slot string `json:"slot"`
 }
 
-type NavigationHints struct {
-	// icon is the name of the icon to display next to the menu entry for this page.
-	// +optional
-	Icon string `json:"icon,omitempty"`
+// +kubebuilder:object:root=true
+// +kubebuilder:resource:scope=Namespaced,shortName=kdex-pb
 
-	// weight is a property that influences the position of the page menu entry. Items at each level are sorted first by ascending weight and then ascending lexicographically.
-	// +optional
-	Weight resource.Quantity `json:"weight,omitempty"`
+// KDexPageBinding is the Schema for the kdexpagebindings API
+//
+// A KDexPageBinding defines a web page under a KDexHost. It brings together various reusable components like
+// KDexPageArchetype, KDexPageFooter, KDexPageHeader, KDexPageNavigation, KDexScriptLibrary, KDexTheme and content
+// components like raw HTML or KDexApps and KDexTranslations to produce internationalized, rendered HTML pages.
+//
+// +kubebuilder:printcolumn:name="Ready",type=string,JSONPath=`.status.conditions[?(@.type=="Ready")].status`,description="The state of the Ready condition"
+type KDexPageBinding struct {
+	base.KDexObject `json:",inline"`
+
+	// spec defines the desired state of KDexPageBinding
+	// +kubebuilder:validation:Required
+	Spec KDexPageBindingSpec `json:"spec"`
+}
+
+// +kubebuilder:object:root=true
+
+// KDexPageBindingList contains a list of KDexPageBinding
+type KDexPageBindingList struct {
+	metav1.TypeMeta `json:",inline"`
+	metav1.ListMeta `json:"metadata,omitempty"`
+	Items           []KDexPageBinding `json:"items"`
 }
 
 // KDexPageBindingSpec defines the desired state of KDexPageBinding
@@ -99,31 +116,14 @@ type KDexPageBindingSpec struct {
 	ScriptLibraryRef *corev1.LocalObjectReference `json:"scriptLibraryRef,omitempty"`
 }
 
-// +kubebuilder:object:root=true
-// +kubebuilder:resource:scope=Namespaced,shortName=kdex-pb
+type NavigationHints struct {
+	// icon is the name of the icon to display next to the menu entry for this page.
+	// +optional
+	Icon string `json:"icon,omitempty"`
 
-// KDexPageBinding is the Schema for the kdexpagebindings API
-//
-// A KDexPageBinding defines a web page under a KDexHost. It brings together various reusable components like
-// KDexPageArchetype, KDexPageFooter, KDexPageHeader, KDexPageNavigation, KDexScriptLibrary, KDexTheme and content
-// components like raw HTML or KDexApps and KDexTranslations to produce internationalized, rendered HTML pages.
-//
-// +kubebuilder:printcolumn:name="Ready",type=string,JSONPath=`.status.conditions[?(@.type=="Ready")].status`,description="The state of the Ready condition"
-type KDexPageBinding struct {
-	base.KDexObject `json:",inline"`
-
-	// spec defines the desired state of KDexPageBinding
-	// +kubebuilder:validation:Required
-	Spec KDexPageBindingSpec `json:"spec"`
-}
-
-// +kubebuilder:object:root=true
-
-// KDexPageBindingList contains a list of KDexPageBinding
-type KDexPageBindingList struct {
-	metav1.TypeMeta `json:",inline"`
-	metav1.ListMeta `json:"metadata,omitempty"`
-	Items           []KDexPageBinding `json:"items"`
+	// weight is a property that influences the position of the page menu entry. Items at each level are sorted first by ascending weight and then ascending lexicographically.
+	// +optional
+	Weight resource.Quantity `json:"weight,omitempty"`
 }
 
 // +kubebuilder:validation:XValidation:rule="!has(self.patternPath) || self.patternPath.startsWith(self.basePath)",message="if patternPath is specified, basePath must be a prefix of patternPath"
