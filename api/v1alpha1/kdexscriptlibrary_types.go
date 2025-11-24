@@ -22,6 +22,7 @@ import (
 
 	corev1 "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
+	"kdex.dev/crds/base"
 )
 
 const (
@@ -43,40 +44,8 @@ type KDexScriptLibrarySpec struct {
 	Scripts []Script `json:"scripts,omitempty"`
 }
 
-// KDexScriptLibraryStatus defines the observed state of KDexScriptLibrary.
-type KDexScriptLibraryStatus struct {
-	// INSERT ADDITIONAL STATUS FIELD - define observed state of cluster
-	// Important: Run "make" to regenerate code after modifying this file
-
-	// For Kubernetes API conventions, see:
-	// https://github.com/kubernetes/community/blob/master/contributors/devel/sig-architecture/api-conventions.md#typical-status-properties
-
-	// conditions represent the current state of the KDexScriptLibrary resource.
-	// Each condition has a unique type and reflects the status of a specific aspect of the resource.
-	//
-	// Standard condition types include:
-	// - "Available": the resource is fully functional
-	// - "Progressing": the resource is being created or updated
-	// - "Degraded": the resource failed to reach or maintain its desired state
-	//
-	// The status of each condition is one of True, False, or Unknown.
-	// +listType=map
-	// +listMapKey=type
-	// +optional
-	Conditions []metav1.Condition `json:"conditions,omitempty"`
-
-	// For Kubernetes API conventions, see:
-	// https://github.com/kubernetes/community/blob/master/contributors/devel/sig-architecture/api-conventions.md#typical-status-properties
-
-	// observedGeneration is the most recent generation observed for this KDexApp. It corresponds to the
-	// KDexApp's generation, which is updated on mutation by the API Server.
-	// +optional
-	ObservedGeneration int64 `json:"observedGeneration,omitempty"`
-}
-
 // +kubebuilder:object:root=true
 // +kubebuilder:resource:scope=Namespaced,shortName=kdex-sl
-// +kubebuilder:subresource:status
 
 // KDexScriptLibrary is the Schema for the kdexscriptlibraries API
 //
@@ -86,19 +55,11 @@ type KDexScriptLibraryStatus struct {
 //
 // +kubebuilder:printcolumn:name="Ready",type=string,JSONPath=`.status.conditions[?(@.type=="Ready")].status`,description="The state of the Ready condition"
 type KDexScriptLibrary struct {
-	metav1.TypeMeta `json:",inline"`
-
-	// metadata is a standard object metadata
-	// +optional
-	metav1.ObjectMeta `json:"metadata,omitempty,omitzero"`
+	base.KDexObject `json:",inline"`
 
 	// spec defines the desired state of KDexScriptLibrary
 	// +required
 	Spec KDexScriptLibrarySpec `json:"spec"`
-
-	// status defines the observed state of KDexScriptLibrary
-	// +optional
-	Status KDexScriptLibraryStatus `json:"status,omitempty,omitzero"`
 }
 
 // +kubebuilder:object:root=true

@@ -18,6 +18,7 @@ package v1alpha1
 
 import (
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
+	"kdex.dev/crds/base"
 )
 
 // CustomElement defines a custom element exposed by a micro-frontend application.
@@ -33,7 +34,6 @@ type CustomElement struct {
 
 // +kubebuilder:object:root=true
 // +kubebuilder:resource:scope=Namespaced,shortName=kdex-a
-// +kubebuilder:subresource:status
 
 // KDexApp is the Schema for the kdexapps API.
 //
@@ -46,19 +46,11 @@ type CustomElement struct {
 //
 // +kubebuilder:printcolumn:name="Ready",type=string,JSONPath=`.status.conditions[?(@.type=="Ready")].status`,description="The state of the Ready condition"
 type KDexApp struct {
-	metav1.TypeMeta `json:",inline"`
-
-	// metadata is a standard object metadata
-	// +optional
-	metav1.ObjectMeta `json:"metadata,omitempty,omitzero"`
+	base.KDexObject `json:",inline"`
 
 	// spec defines the desired state of KDexApp
 	// +kubebuilder:validation:Required
 	Spec KDexAppSpec `json:"spec"`
-
-	// status defines the observed state of KDexApp
-	// +optional
-	Status KDexAppStatus `json:"status,omitempty,omitzero"`
 }
 
 // +kubebuilder:object:root=true
@@ -85,31 +77,6 @@ type KDexAppSpec struct {
 	// +kubebuilder:validation:MaxItems=32
 	// +optional
 	Scripts []Script `json:"scripts,omitempty"`
-}
-
-// KDexAppStatus defines the observed state of KDexApp.
-type KDexAppStatus struct {
-	// conditions represent the current state of the KDexApp resource.
-	// Each condition has a unique type and reflects the status of a specific aspect of the resource.
-	//
-	// Standard condition types include:
-	// - "Progressing": the resource is being created or updated
-	// - "Ready": the resource is fully functional
-	// - "Degraded": the resource failed to reach or maintain its desired state
-	//
-	// The status of each condition is one of True, False, or Unknown.
-	// +listType=map
-	// +listMapKey=type
-	// +optional
-	Conditions []metav1.Condition `json:"conditions,omitempty"`
-
-	// For Kubernetes API conventions, see:
-	// https://github.com/kubernetes/community/blob/master/contributors/devel/sig-architecture/api-conventions.md#typical-status-properties
-
-	// observedGeneration is the most recent generation observed for this KDexApp. It corresponds to the
-	// KDexApp's generation, which is updated on mutation by the API Server.
-	// +optional
-	ObservedGeneration int64 `json:"observedGeneration,omitempty"`
 }
 
 func init() {
