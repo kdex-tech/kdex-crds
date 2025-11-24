@@ -4,32 +4,19 @@ kind: CustomResourceDefinition
 metadata:
   annotations:
     controller-gen.kubebuilder.io/version: v0.19.0
-  name: kdexpagenavigations.kdex.dev
+  name: kdexobjects.kdex.dev
 spec:
   group: kdex.dev
   names:
-    kind: KDexPageNavigation
-    listKind: KDexPageNavigationList
-    plural: kdexpagenavigations
-    shortNames:
-    - kdex-pn
-    singular: kdexpagenavigation
+    kind: KDexObject
+    listKind: KDexObjectList
+    plural: kdexobjects
+    singular: kdexobject
   scope: Namespaced
   versions:
-  - additionalPrinterColumns:
-    - description: The state of the Ready condition
-      jsonPath: .status.conditions[?(@.type=="Ready")].status
-      name: Ready
-      type: string
-    name: v1alpha1
+  - name: v1alpha1
     schema:
       openAPIV3Schema:
-        description: |-
-          KDexPageNavigation is the Schema for the kdexpagenavigations API
-
-          A KDexPageNavigation is a reusable navigation component for composing KDexPageBindings. It can specify a content
-          template and an associated KDexScriptLibrary for driving imperative logic that might be necessary to implement the
-          navigation.
         properties:
           apiVersion:
             description: |-
@@ -48,42 +35,8 @@ spec:
             type: string
           metadata:
             type: object
-          spec:
-            description: spec defines the desired state of KDexPageNavigation
-            properties:
-              content:
-                description: content is a go string template that defines the content
-                  of an App Server page navigation. Use the `.Navigation["<name>"]`
-                  property to position its content in the template.
-                example: '{{- define "menu" -}}\n  <ul>\n    {{- range $label, $value
-                  := . }}\n      <li>\n        {{- if ($value.Path != "") -}}\n          <a
-                  href="{{ $value.Path }}">{{ $label }}</a>\n        {{- else -}}\n          <span>{{
-                  $label }}</span>\n        {{- end -}}\n        {{- if ($value.Children
-                  != nil) -}}\n          {{- template "menu" $value.Children -}}\n        {{-
-                  end -}}\n      </li>\n    {{- end -}}\n  </ul>\n{{- end -}}\n{{-
-                  template "menu" .MenuEntries -}}'
-                minLength: 5
-                type: string
-              scriptLibraryRef:
-                description: scriptLibraryRef is an optional reference to a KDexScriptLibrary
-                  resource.
-                properties:
-                  name:
-                    default: ""
-                    description: |-
-                      Name of the referent.
-                      This field is effectively required, but due to backwards compatibility is
-                      allowed to be empty. Instances of this type with an empty value here are
-                      almost certainly wrong.
-                      More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#names
-                    type: string
-                type: object
-                x-kubernetes-map-type: atomic
-            required:
-            - content
-            type: object
           status:
-            description: status defines the observed state of KDexApp
+            description: status defines the observed state of the resource
             properties:
               attributes:
                 additionalProperties:
@@ -166,10 +119,6 @@ spec:
                 format: int64
                 type: integer
             type: object
-        required:
-        - spec
         type: object
     served: true
     storage: true
-    subresources:
-      status: {}

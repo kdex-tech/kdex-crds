@@ -18,10 +18,10 @@ package v1alpha1
 
 import (
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
-	"kdex.dev/crds/base"
 )
 
 // +kubebuilder:object:root=true
+// +kubebuilder:subresource:status
 
 // KDexHostController is the Schema for the kdexhostcontrollers API
 //
@@ -33,7 +33,15 @@ import (
 //
 // +kubebuilder:printcolumn:name="Ready",type=string,JSONPath=`.status.conditions[?(@.type=="Ready")].status`,description="The state of the Ready condition"
 type KDexHostController struct {
-	base.KDexObject `json:",inline"`
+	metav1.TypeMeta `json:",inline"`
+
+	// metadata is a standard object metadata
+	// +optional
+	metav1.ObjectMeta `json:"metadata,omitempty,omitzero"`
+
+	// status defines the observed state of KDexApp
+	// +optional
+	Status KDexObjectStatus `json:"status,omitempty,omitzero"`
 
 	// spec defines the desired state of KDexHostController
 	// +required

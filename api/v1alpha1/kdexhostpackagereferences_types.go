@@ -18,11 +18,11 @@ package v1alpha1
 
 import (
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
-	"kdex.dev/crds/base"
 )
 
 // +kubebuilder:object:root=true
 // +kubebuilder:resource:scope=Namespaced,shortName=kdex-pr
+// +kubebuilder:subresource:status
 
 // KDexHostPackageReferences is the Schema for the kdexhostpackagereferences API
 //
@@ -32,7 +32,15 @@ import (
 //
 // +kubebuilder:printcolumn:name="Ready",type=string,JSONPath=`.status.conditions[?(@.type=="Ready")].status`,description="The state of the Ready condition"
 type KDexHostPackageReferences struct {
-	base.KDexObject `json:",inline"`
+	metav1.TypeMeta `json:",inline"`
+
+	// metadata is a standard object metadata
+	// +optional
+	metav1.ObjectMeta `json:"metadata,omitempty,omitzero"`
+
+	// status defines the observed state of KDexApp
+	// +optional
+	Status KDexObjectStatus `json:"status,omitempty,omitzero"`
 
 	// spec defines the desired state of KDexHostPackageReferences
 	// +required

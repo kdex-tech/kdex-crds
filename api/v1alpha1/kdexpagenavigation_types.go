@@ -19,11 +19,11 @@ package v1alpha1
 import (
 	corev1 "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
-	"kdex.dev/crds/base"
 )
 
 // +kubebuilder:object:root=true
 // +kubebuilder:resource:scope=Namespaced,shortName=kdex-pn
+// +kubebuilder:subresource:status
 
 // KDexPageNavigation is the Schema for the kdexpagenavigations API
 //
@@ -33,7 +33,15 @@ import (
 //
 // +kubebuilder:printcolumn:name="Ready",type=string,JSONPath=`.status.conditions[?(@.type=="Ready")].status`,description="The state of the Ready condition"
 type KDexPageNavigation struct {
-	base.KDexObject `json:",inline"`
+	metav1.TypeMeta `json:",inline"`
+
+	// metadata is a standard object metadata
+	// +optional
+	metav1.ObjectMeta `json:"metadata,omitempty,omitzero"`
+
+	// status defines the observed state of KDexApp
+	// +optional
+	Status KDexObjectStatus `json:"status,omitempty,omitzero"`
 
 	// spec defines the desired state of KDexPageNavigation
 	// +kubebuilder:validation:Required

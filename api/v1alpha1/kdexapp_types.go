@@ -18,7 +18,6 @@ package v1alpha1
 
 import (
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
-	"kdex.dev/crds/base"
 )
 
 // CustomElement defines a custom element exposed by a micro-frontend application.
@@ -34,6 +33,7 @@ type CustomElement struct {
 
 // +kubebuilder:object:root=true
 // +kubebuilder:resource:scope=Namespaced,shortName=kdex-a
+// +kubebuilder:subresource:status
 
 // KDexApp is the Schema for the kdexapps API.
 //
@@ -46,7 +46,15 @@ type CustomElement struct {
 //
 // +kubebuilder:printcolumn:name="Ready",type=string,JSONPath=`.status.conditions[?(@.type=="Ready")].status`,description="The state of the Ready condition"
 type KDexApp struct {
-	base.KDexObject `json:",inline"`
+	metav1.TypeMeta `json:",inline"`
+
+	// metadata is a standard object metadata
+	// +optional
+	metav1.ObjectMeta `json:"metadata,omitempty,omitzero"`
+
+	// status defines the observed state of KDexApp
+	// +optional
+	Status KDexObjectStatus `json:"status,omitempty,omitzero"`
 
 	// spec defines the desired state of KDexApp
 	// +kubebuilder:validation:Required

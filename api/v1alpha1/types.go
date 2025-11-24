@@ -1,8 +1,6 @@
-package base
+package v1alpha1
 
 import metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
-
-// +kubebuilder:subresource:status
 
 type KDexObject struct {
 	metav1.TypeMeta `json:",inline"`
@@ -11,13 +9,17 @@ type KDexObject struct {
 	// +optional
 	metav1.ObjectMeta `json:"metadata,omitempty,omitzero"`
 
-	// status defines the observed state of KDexApp
+	// status defines the observed state of the resource
 	// +optional
 	Status KDexObjectStatus `json:"status,omitempty,omitzero"`
 }
 
 type KDexObjectStatus struct {
-	// conditions represent the current state of the KDexApp resource.
+	// attributes hold state of the resource as key/value pairs.
+	// +optional
+	Attributes map[string]string `json:"attributes,omitempty"`
+
+	// conditions represent the current state of the resource.
 	// Each condition has a unique type and reflects the status of a specific aspect of the resource.
 	//
 	// Standard condition types include:
@@ -34,8 +36,8 @@ type KDexObjectStatus struct {
 	// For Kubernetes API conventions, see:
 	// https://github.com/kubernetes/community/blob/master/contributors/devel/sig-architecture/api-conventions.md#typical-status-properties
 
-	// observedGeneration is the most recent generation observed for this KDexApp. It corresponds to the
-	// KDexApp's generation, which is updated on mutation by the API Server.
+	// observedGeneration is the most recent generation observed for this resource. It corresponds to the
+	// resource's generation, which is updated on mutation by the API Server.
 	// +optional
 	ObservedGeneration int64 `json:"observedGeneration,omitempty"`
 }

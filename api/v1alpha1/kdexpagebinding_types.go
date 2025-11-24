@@ -20,7 +20,6 @@ import (
 	corev1 "k8s.io/api/core/v1"
 	"k8s.io/apimachinery/pkg/api/resource"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
-	"kdex.dev/crds/base"
 )
 
 // +kubebuilder:validation:XValidation:rule="has(self.rawHTML) != (has(self.customElementName) && has(self.appRef))",message="exactly one of rawHTML or both customElementName and appRef must be set"
@@ -43,6 +42,7 @@ type ContentEntry struct {
 
 // +kubebuilder:object:root=true
 // +kubebuilder:resource:scope=Namespaced,shortName=kdex-pb
+// +kubebuilder:subresource:status
 
 // KDexPageBinding is the Schema for the kdexpagebindings API
 //
@@ -52,7 +52,15 @@ type ContentEntry struct {
 //
 // +kubebuilder:printcolumn:name="Ready",type=string,JSONPath=`.status.conditions[?(@.type=="Ready")].status`,description="The state of the Ready condition"
 type KDexPageBinding struct {
-	base.KDexObject `json:",inline"`
+	metav1.TypeMeta `json:",inline"`
+
+	// metadata is a standard object metadata
+	// +optional
+	metav1.ObjectMeta `json:"metadata,omitempty,omitzero"`
+
+	// status defines the observed state of KDexApp
+	// +optional
+	Status KDexObjectStatus `json:"status,omitempty,omitzero"`
 
 	// spec defines the desired state of KDexPageBinding
 	// +kubebuilder:validation:Required
