@@ -26,6 +26,7 @@ import (
 type ContentEntry struct {
 	// appRef is a reference to the KDexApp to include in this binding.
 	// +optional
+	// +kubebuilder:validation:XValidation:rule=`self.kind == "KDexApp" || self.kind == "KDexClusterApp"`,message="'kind' must be either KDexApp or KDexClusterApp"
 	AppRef *KDexObjectReference `json:"appRef,omitempty"`
 	// customElementName is the name of the KDexApp custom element to render in the specified slot (if present in the template).
 	// +optional
@@ -99,18 +100,22 @@ type KDexPageBindingSpec struct {
 
 	// overrideFooterRef is an optional reference to a KDexPageFooter resource. If not specified, the footer from the archetype will be used.
 	// +optional
+	// +kubebuilder:validation:XValidation:rule=`self.kind == "KDexPageFooter" || self.kind == "KDexClusterPageFooter"`,message="'kind' must be either KDexPageFooter or KDexClusterPageFooter"
 	OverrideFooterRef *KDexObjectReference `json:"overrideFooterRef,omitempty"`
 
 	// overrideHeaderRef is an optional reference to a KDexPageHeader resource. If not specified, the header from the archetype will be used.
 	// +optional
+	// +kubebuilder:validation:XValidation:rule=`self.kind == "KDexPageHeader" || self.kind == "KDexClusterPageHeader"`,message="'kind' must be either KDexPageHeader or KDexClusterPageHeader"
 	OverrideHeaderRef *KDexObjectReference `json:"overrideHeaderRef,omitempty"`
 
 	// overrideMainNavigationRef is an optional reference to a KDexPageNavigation resource. If not specified, the main navigation from the archetype will be used.
 	// +optional
+	// +kubebuilder:validation:XValidation:rule=`self.kind == "KDexPageNavigation" || self.kind == "KDexClusterPageNavigation"`,message="'kind' must be either KDexPageNavigation or KDexClusterPageNavigation"
 	OverrideMainNavigationRef *KDexObjectReference `json:"overrideMainNavigationRef,omitempty"`
 
 	// pageArchetypeRef is a reference to the KDexPageArchetype that this binding is for.
 	// +kubebuilder:validation:Required
+	// +kubebuilder:validation:XValidation:rule=`self.kind == "KDexPageArchetype" || self.kind == "KDexClusterPageArchetype"`,message="'kind' must be either KDexPageArchetype or KDexClusterPageArchetype"
 	PageArchetypeRef KDexObjectReference `json:"pageArchetypeRef"`
 
 	// parentPageRef is a reference to the KDexPageBinding bellow which this page will appear in the main navigation. If not set, the page will be placed in the top level of the navigation.
@@ -121,6 +126,7 @@ type KDexPageBindingSpec struct {
 
 	// scriptLibraryRef is an optional reference to a KDexScriptLibrary resource.
 	// +optional
+	// +kubebuilder:validation:XValidation:rule=`self.kind == "KDexScriptLibrary" || self.kind == "KDexClusterScriptLibrary"`,message="'kind' must be either KDexScriptLibrary or KDexClusterScriptLibrary"
 	ScriptLibraryRef *KDexObjectReference `json:"scriptLibraryRef,omitempty"`
 }
 

@@ -46,11 +46,12 @@ type KDexObjectStatus struct {
 
 // +structType=atomic
 type KDexObjectReference struct {
-	Kind string `json:"-"`
+	// Kind is the type of resource being referenced
+	Kind string `json:"kind" protobuf:"bytes,1,opt,name=kind"`
 
 	// Name of the referent.
 	// +kubebuilder:validation:Required
-	Name string `json:"name,omitempty" protobuf:"bytes,1,opt,name=name"`
+	Name string `json:"name,omitempty" protobuf:"bytes,2,opt,name=name"`
 
 	// Namespace, if set, causes the lookup for the namespace scoped Kind of the referent to use the specified
 	// namespace. If not set, the namespace of the resource will be used to lookup the namespace scoped Kind of the

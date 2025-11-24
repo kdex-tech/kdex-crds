@@ -76,6 +76,7 @@ type KDexHostSpec struct {
 
 	// defaultThemeRef is a reference to the theme that should apply to all pages bound to this host unless overridden.
 	// +optional
+	// +kubebuilder:validation:XValidation:rule=`self.kind == "KDexTheme" || self.kind == "KDexClusterTheme"`,message="'kind' must be either KDexTheme or KDexClusterTheme"
 	DefaultThemeRef *KDexObjectReference `json:"defaultThemeRef,omitempty"`
 
 	// modulePolicy defines the policy for JavaScript references in KDexApp, KDexTheme and KDexScriptLibrary resources. When not specified the policy is Strict
@@ -95,6 +96,7 @@ type KDexHostSpec struct {
 
 	// scriptLibraryRef is an optional reference to a KDexScriptLibrary resource.
 	// +optional
+	// +kubebuilder:validation:XValidation:rule=`self.kind == "KDexScriptLibrary" || self.kind == "KDexClusterScriptLibrary"`,message="'kind' must be either KDexScriptLibrary or KDexClusterScriptLibrary"
 	ScriptLibraryRef *KDexObjectReference `json:"scriptLibraryRef,omitempty"`
 }
 

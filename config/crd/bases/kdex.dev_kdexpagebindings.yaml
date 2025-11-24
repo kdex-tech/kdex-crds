@@ -68,6 +68,9 @@ spec:
                       description: appRef is a reference to the KDexApp to include
                         in this binding.
                       properties:
+                        kind:
+                          description: Kind is the type of resource being referenced
+                          type: string
                         name:
                           description: Name of the referent.
                           type: string
@@ -80,9 +83,13 @@ spec:
                             Defaulted to nil.
                           type: string
                       required:
+                      - kind
                       - name
                       type: object
                       x-kubernetes-map-type: atomic
+                      x-kubernetes-validations:
+                      - message: '''kind'' must be either KDexApp or KDexClusterApp'
+                        rule: self.kind == "KDexApp" || self.kind == "KDexClusterApp"
                     customElementName:
                       description: customElementName is the name of the KDexApp custom
                         element to render in the specified slot (if present in the
@@ -151,6 +158,9 @@ spec:
                   resource. If not specified, the footer from the archetype will be
                   used.
                 properties:
+                  kind:
+                    description: Kind is the type of resource being referenced
+                    type: string
                   name:
                     description: Name of the referent.
                     type: string
@@ -163,14 +173,21 @@ spec:
                       Defaulted to nil.
                     type: string
                 required:
+                - kind
                 - name
                 type: object
                 x-kubernetes-map-type: atomic
+                x-kubernetes-validations:
+                - message: '''kind'' must be either KDexPageFooter or KDexClusterPageFooter'
+                  rule: self.kind == "KDexPageFooter" || self.kind == "KDexClusterPageFooter"
               overrideHeaderRef:
                 description: overrideHeaderRef is an optional reference to a KDexPageHeader
                   resource. If not specified, the header from the archetype will be
                   used.
                 properties:
+                  kind:
+                    description: Kind is the type of resource being referenced
+                    type: string
                   name:
                     description: Name of the referent.
                     type: string
@@ -183,14 +200,21 @@ spec:
                       Defaulted to nil.
                     type: string
                 required:
+                - kind
                 - name
                 type: object
                 x-kubernetes-map-type: atomic
+                x-kubernetes-validations:
+                - message: '''kind'' must be either KDexPageHeader or KDexClusterPageHeader'
+                  rule: self.kind == "KDexPageHeader" || self.kind == "KDexClusterPageHeader"
               overrideMainNavigationRef:
                 description: overrideMainNavigationRef is an optional reference to
                   a KDexPageNavigation resource. If not specified, the main navigation
                   from the archetype will be used.
                 properties:
+                  kind:
+                    description: Kind is the type of resource being referenced
+                    type: string
                   name:
                     description: Name of the referent.
                     type: string
@@ -203,13 +227,20 @@ spec:
                       Defaulted to nil.
                     type: string
                 required:
+                - kind
                 - name
                 type: object
                 x-kubernetes-map-type: atomic
+                x-kubernetes-validations:
+                - message: '''kind'' must be either KDexPageNavigation or KDexClusterPageNavigation'
+                  rule: self.kind == "KDexPageNavigation" || self.kind == "KDexClusterPageNavigation"
               pageArchetypeRef:
                 description: pageArchetypeRef is a reference to the KDexPageArchetype
                   that this binding is for.
                 properties:
+                  kind:
+                    description: Kind is the type of resource being referenced
+                    type: string
                   name:
                     description: Name of the referent.
                     type: string
@@ -222,9 +253,13 @@ spec:
                       Defaulted to nil.
                     type: string
                 required:
+                - kind
                 - name
                 type: object
                 x-kubernetes-map-type: atomic
+                x-kubernetes-validations:
+                - message: '''kind'' must be either KDexPageArchetype or KDexClusterPageArchetype'
+                  rule: self.kind == "KDexPageArchetype" || self.kind == "KDexClusterPageArchetype"
               parentPageRef:
                 description: parentPageRef is a reference to the KDexPageBinding bellow
                   which this page will appear in the main navigation. If not set,
@@ -251,6 +286,9 @@ spec:
                 description: scriptLibraryRef is an optional reference to a KDexScriptLibrary
                   resource.
                 properties:
+                  kind:
+                    description: Kind is the type of resource being referenced
+                    type: string
                   name:
                     description: Name of the referent.
                     type: string
@@ -263,9 +301,13 @@ spec:
                       Defaulted to nil.
                     type: string
                 required:
+                - kind
                 - name
                 type: object
                 x-kubernetes-map-type: atomic
+                x-kubernetes-validations:
+                - message: '''kind'' must be either KDexScriptLibrary or KDexClusterScriptLibrary'
+                  rule: self.kind == "KDexScriptLibrary" || self.kind == "KDexClusterScriptLibrary"
             required:
             - basePath
             - contentEntries

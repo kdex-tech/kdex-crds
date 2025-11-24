@@ -74,6 +74,9 @@ spec:
                     description: defaultThemeRef is a reference to the theme that
                       should apply to all pages bound to this host unless overridden.
                     properties:
+                      kind:
+                        description: Kind is the type of resource being referenced
+                        type: string
                       name:
                         description: Name of the referent.
                         type: string
@@ -86,9 +89,13 @@ spec:
                           Defaulted to nil.
                         type: string
                     required:
+                    - kind
                     - name
                     type: object
                     x-kubernetes-map-type: atomic
+                    x-kubernetes-validations:
+                    - message: '''kind'' must be either KDexTheme or KDexClusterTheme'
+                      rule: self.kind == "KDexTheme" || self.kind == "KDexClusterTheme"
                   modulePolicy:
                     default: Strict
                     description: |-
@@ -157,6 +164,9 @@ spec:
                     description: scriptLibraryRef is an optional reference to a KDexScriptLibrary
                       resource.
                     properties:
+                      kind:
+                        description: Kind is the type of resource being referenced
+                        type: string
                       name:
                         description: Name of the referent.
                         type: string
@@ -169,9 +179,13 @@ spec:
                           Defaulted to nil.
                         type: string
                     required:
+                    - kind
                     - name
                     type: object
                     x-kubernetes-map-type: atomic
+                    x-kubernetes-validations:
+                    - message: '''kind'' must be either KDexScriptLibrary or KDexClusterScriptLibrary'
+                      rule: self.kind == "KDexScriptLibrary" || self.kind == "KDexClusterScriptLibrary"
                 required:
                 - brandName
                 - organization

@@ -54,12 +54,6 @@ spec:
               content:
                 description: content is a go string template that defines the structure
                   of an HTML page.
-                example: <!DOCTYPE html>\n<html lang="{{ .Language }}">\n  <head>\n    {{
-                  .Meta }}\n    {{ .Title }}\n    {{ .Theme }}\n    {{ .HeadScript
-                  }}\n  </head>\n  <body>\n    <header>\n      {{ .Header }}\n    </header>\n    <nav>\n      {{
-                  .Navigation["main"] }}\n    </nav>\n    <main>\n      {{ .Content["main"]
-                  }}\n    </main>\n    <footer>\n      {{ .Footer }}\n    </footer>\n    {{
-                  .FootScript }}\n  </body>\n</html>
                 minLength: 5
                 type: string
               defaultFooterRef:
@@ -67,6 +61,9 @@ spec:
                   resource. If not specified, no footer will be displayed. Use the
                   `.Footer` property to position its content in the template.
                 properties:
+                  kind:
+                    description: Kind is the type of resource being referenced
+                    type: string
                   name:
                     description: Name of the referent.
                     type: string
@@ -79,14 +76,21 @@ spec:
                       Defaulted to nil.
                     type: string
                 required:
+                - kind
                 - name
                 type: object
                 x-kubernetes-map-type: atomic
+                x-kubernetes-validations:
+                - message: '''kind'' must be either KDexPageFooter or KDexClusterPageFooter'
+                  rule: self.kind == "KDexPageFooter" || self.kind == "KDexClusterPageFooter"
               defaultHeaderRef:
                 description: defaultHeaderRef is an optional reference to a KDexPageHeader
                   resource. If not specified, no header will be displayed. Use the
                   `.Header` property to position its content in the template.
                 properties:
+                  kind:
+                    description: Kind is the type of resource being referenced
+                    type: string
                   name:
                     description: Name of the referent.
                     type: string
@@ -99,15 +103,22 @@ spec:
                       Defaulted to nil.
                     type: string
                 required:
+                - kind
                 - name
                 type: object
                 x-kubernetes-map-type: atomic
+                x-kubernetes-validations:
+                - message: '''kind'' must be either KDexPageHeader or KDexClusterPageHeader'
+                  rule: self.kind == "KDexPageHeader" || self.kind == "KDexClusterPageHeader"
               defaultMainNavigationRef:
                 description: defaultMainNavigationRef is an optional reference to
                   a KDexPageNavigation resource. If not specified, no navigation will
-                  be displayed. Use the `.Navigation["main"]` property to position
-                  its content in the template.
+                  be displayed. Use the `.Navigation.main` property to position its
+                  content in the template.
                 properties:
+                  kind:
+                    description: Kind is the type of resource being referenced
+                    type: string
                   name:
                     description: Name of the referent.
                     type: string
@@ -120,12 +131,19 @@ spec:
                       Defaulted to nil.
                     type: string
                 required:
+                - kind
                 - name
                 type: object
                 x-kubernetes-map-type: atomic
+                x-kubernetes-validations:
+                - message: '''kind'' must be either KDexPageNavigation or KDexClusterPageNavigation'
+                  rule: self.kind == "KDexPageNavigation" || self.kind == "KDexClusterPageNavigation"
               extraNavigations:
                 additionalProperties:
                   properties:
+                    kind:
+                      description: Kind is the type of resource being referenced
+                      type: string
                     name:
                       description: Name of the referent.
                       type: string
@@ -138,11 +156,12 @@ spec:
                         Defaulted to nil.
                       type: string
                   required:
+                  - kind
                   - name
                   type: object
                   x-kubernetes-map-type: atomic
                 description: extraNavigations is an optional map of named navigation
-                  object references. Use `.Navigation["<name>"]` to position the named
+                  object references. Use `.Navigation.<name>` to position the named
                   navigation's content in the template.
                 type: object
                 x-kubernetes-validations:
@@ -152,6 +171,9 @@ spec:
                 description: scriptLibraryRef is an optional reference to a KDexScriptLibrary
                   resource.
                 properties:
+                  kind:
+                    description: Kind is the type of resource being referenced
+                    type: string
                   name:
                     description: Name of the referent.
                     type: string
@@ -164,9 +186,13 @@ spec:
                       Defaulted to nil.
                     type: string
                 required:
+                - kind
                 - name
                 type: object
                 x-kubernetes-map-type: atomic
+                x-kubernetes-validations:
+                - message: '''kind'' must be either KDexScriptLibrary or KDexClusterScriptLibrary'
+                  rule: self.kind == "KDexScriptLibrary" || self.kind == "KDexClusterScriptLibrary"
             required:
             - content
             type: object

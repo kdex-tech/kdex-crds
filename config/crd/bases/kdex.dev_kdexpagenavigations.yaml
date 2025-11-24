@@ -55,19 +55,15 @@ spec:
                 description: content is a go string template that defines the content
                   of an App Server page navigation. Use the `.Navigation["<name>"]`
                   property to position its content in the template.
-                example: '{{- define "menu" -}}\n  <ul>\n    {{- range $label, $value
-                  := . }}\n      <li>\n        {{- if ($value.Path != "") -}}\n          <a
-                  href="{{ $value.Path }}">{{ $label }}</a>\n        {{- else -}}\n          <span>{{
-                  $label }}</span>\n        {{- end -}}\n        {{- if ($value.Children
-                  != nil) -}}\n          {{- template "menu" $value.Children -}}\n        {{-
-                  end -}}\n      </li>\n    {{- end -}}\n  </ul>\n{{- end -}}\n{{-
-                  template "menu" .MenuEntries -}}'
                 minLength: 5
                 type: string
               scriptLibraryRef:
                 description: scriptLibraryRef is an optional reference to a KDexScriptLibrary
                   resource.
                 properties:
+                  kind:
+                    description: Kind is the type of resource being referenced
+                    type: string
                   name:
                     description: Name of the referent.
                     type: string
@@ -80,9 +76,13 @@ spec:
                       Defaulted to nil.
                     type: string
                 required:
+                - kind
                 - name
                 type: object
                 x-kubernetes-map-type: atomic
+                x-kubernetes-validations:
+                - message: '''kind'' must be either KDexScriptLibrary or KDexClusterScriptLibrary'
+                  rule: self.kind == "KDexScriptLibrary" || self.kind == "KDexClusterScriptLibrary"
             required:
             - content
             type: object

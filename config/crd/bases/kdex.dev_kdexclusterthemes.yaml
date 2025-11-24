@@ -117,6 +117,9 @@ spec:
                 description: scriptLibraryRef is an optional reference to a KDexScriptLibrary
                   resource.
                 properties:
+                  kind:
+                    description: Kind is the type of resource being referenced
+                    type: string
                   name:
                     description: Name of the referent.
                     type: string
@@ -129,9 +132,13 @@ spec:
                       Defaulted to nil.
                     type: string
                 required:
+                - kind
                 - name
                 type: object
                 x-kubernetes-map-type: atomic
+                x-kubernetes-validations:
+                - message: '''kind'' must be either KDexScriptLibrary or KDexClusterScriptLibrary'
+                  rule: self.kind == "KDexScriptLibrary" || self.kind == "KDexClusterScriptLibrary"
               webserver:
                 description: webserver defines the configuration for the theme webserver.
                 properties:
