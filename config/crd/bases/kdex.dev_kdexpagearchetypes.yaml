@@ -76,10 +76,21 @@ spec:
                   name:
                     description: Name of the referent.
                     type: string
+                  namespace:
+                    description: |-
+                      Namespace, if set, causes the lookup for the namespace scoped Kind of the referent to use the specified
+                      namespace. If not set, the namespace of the resource will be used to lookup the namespace scoped Kind of the
+                      referent.
+                      If the referring resource is cluster scoped, this field is ignored.
+                      Defaulted to nil.
+                    type: string
                 required:
                 - name
                 type: object
                 x-kubernetes-map-type: atomic
+                x-kubernetes-validations:
+                - message: namespace must not be set when clustered is true
+                  rule: '!(self.clustered == true) || self.namespace == ”'
               defaultHeaderRef:
                 description: defaultHeaderRef is an optional reference to a KDexPageHeader
                   resource. If not specified, no header will be displayed. Use the
@@ -94,10 +105,21 @@ spec:
                   name:
                     description: Name of the referent.
                     type: string
+                  namespace:
+                    description: |-
+                      Namespace, if set, causes the lookup for the namespace scoped Kind of the referent to use the specified
+                      namespace. If not set, the namespace of the resource will be used to lookup the namespace scoped Kind of the
+                      referent.
+                      If the referring resource is cluster scoped, this field is ignored.
+                      Defaulted to nil.
+                    type: string
                 required:
                 - name
                 type: object
                 x-kubernetes-map-type: atomic
+                x-kubernetes-validations:
+                - message: namespace must not be set when clustered is true
+                  rule: '!(self.clustered == true) || self.namespace == ”'
               defaultMainNavigationRef:
                 description: defaultMainNavigationRef is an optional reference to
                   a KDexPageNavigation resource. If not specified, no navigation will
@@ -113,10 +135,21 @@ spec:
                   name:
                     description: Name of the referent.
                     type: string
+                  namespace:
+                    description: |-
+                      Namespace, if set, causes the lookup for the namespace scoped Kind of the referent to use the specified
+                      namespace. If not set, the namespace of the resource will be used to lookup the namespace scoped Kind of the
+                      referent.
+                      If the referring resource is cluster scoped, this field is ignored.
+                      Defaulted to nil.
+                    type: string
                 required:
                 - name
                 type: object
                 x-kubernetes-map-type: atomic
+                x-kubernetes-validations:
+                - message: namespace must not be set when clustered is true
+                  rule: '!(self.clustered == true) || self.namespace == ”'
               extraNavigations:
                 additionalProperties:
                   properties:
@@ -129,10 +162,21 @@ spec:
                     name:
                       description: Name of the referent.
                       type: string
+                    namespace:
+                      description: |-
+                        Namespace, if set, causes the lookup for the namespace scoped Kind of the referent to use the specified
+                        namespace. If not set, the namespace of the resource will be used to lookup the namespace scoped Kind of the
+                        referent.
+                        If the referring resource is cluster scoped, this field is ignored.
+                        Defaulted to nil.
+                      type: string
                   required:
                   - name
                   type: object
                   x-kubernetes-map-type: atomic
+                  x-kubernetes-validations:
+                  - message: namespace must not be set when clustered is true
+                    rule: '!(self.clustered == true) || self.namespace == ”'
                 description: extraNavigations is an optional map of named navigation
                   object references. Use `.Navigation["<name>"]` to position the named
                   navigation's content in the template.
@@ -153,10 +197,21 @@ spec:
                   name:
                     description: Name of the referent.
                     type: string
+                  namespace:
+                    description: |-
+                      Namespace, if set, causes the lookup for the namespace scoped Kind of the referent to use the specified
+                      namespace. If not set, the namespace of the resource will be used to lookup the namespace scoped Kind of the
+                      referent.
+                      If the referring resource is cluster scoped, this field is ignored.
+                      Defaulted to nil.
+                    type: string
                 required:
                 - name
                 type: object
                 x-kubernetes-map-type: atomic
+                x-kubernetes-validations:
+                - message: namespace must not be set when clustered is true
+                  rule: '!(self.clustered == true) || self.namespace == ”'
             required:
             - content
             type: object

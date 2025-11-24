@@ -43,6 +43,7 @@ type KDexObjectStatus struct {
 }
 
 // +structType=atomic
+// +kubebuilder:validation:XValidation:rule="!(self.clustered == true) || self.namespace == ”",message="namespace must not be set when clustered is true"
 type KDexObjectReference struct {
 	// Name of the referent.
 	// +kubebuilder:validation:Required
@@ -52,5 +53,13 @@ type KDexObjectReference struct {
 	// referring resource is cluster scoped, then Clustered is implicitly true.
 	// Defaulted to nil.
 	// +optional
-	Clustered *bool `json:"clustered,omitempty" protobuf:"varint,5,opt,name=clustered"`
+	Clustered *bool `json:"clustered,omitempty" protobuf:"varint,2,opt,name=clustered"`
+
+	// Namespace, if set, causes the lookup for the namespace scoped Kind of the referent to use the specified
+	// namespace. If not set, the namespace of the resource will be used to lookup the namespace scoped Kind of the
+	// referent.
+	// If the referring resource is cluster scoped, this field is ignored.
+	// Defaulted to nil.
+	// +optional
+	Namespace string `json:"namespace,omitempty" protobuf:"bytes,3,opt,name=namespace"`
 }
