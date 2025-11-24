@@ -41,3 +41,16 @@ type KDexObjectStatus struct {
 	// +optional
 	ObservedGeneration int64 `json:"observedGeneration,omitempty"`
 }
+
+// +structType=atomic
+type KDexObjectReference struct {
+	// Name of the referent.
+	// +kubebuilder:validation:Required
+	Name string `json:"name,omitempty" protobuf:"bytes,1,opt,name=name"`
+
+	// Clustered, if set to true, ensures that the cluster scoped Kind of the referent will be lookup up. If the
+	// referring resource is cluster scoped, then Clustered is implicitly true.
+	// Defaulted to nil.
+	// +optional
+	Clustered *bool `json:"clustered,omitempty" protobuf:"varint,5,opt,name=clustered"`
+}

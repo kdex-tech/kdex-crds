@@ -58,15 +58,17 @@ spec:
                   resource. If not specified, no footer will be displayed. Use the
                   `.Footer` property to position its content in the template.
                 properties:
-                  name:
-                    default: ""
+                  clustered:
                     description: |-
-                      Name of the referent.
-                      This field is effectively required, but due to backwards compatibility is
-                      allowed to be empty. Instances of this type with an empty value here are
-                      almost certainly wrong.
-                      More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#names
+                      Clustered, if set to true, ensures that the cluster scoped Kind of the referent will be lookup up. If the
+                      referring resource is cluster scoped, then Clustered is implicitly true.
+                      Defaulted to nil.
+                    type: boolean
+                  name:
+                    description: Name of the referent.
                     type: string
+                required:
+                - name
                 type: object
                 x-kubernetes-map-type: atomic
               defaultHeaderRef:
@@ -74,15 +76,17 @@ spec:
                   resource. If not specified, no header will be displayed. Use the
                   `.Header` property to position its content in the template.
                 properties:
-                  name:
-                    default: ""
+                  clustered:
                     description: |-
-                      Name of the referent.
-                      This field is effectively required, but due to backwards compatibility is
-                      allowed to be empty. Instances of this type with an empty value here are
-                      almost certainly wrong.
-                      More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#names
+                      Clustered, if set to true, ensures that the cluster scoped Kind of the referent will be lookup up. If the
+                      referring resource is cluster scoped, then Clustered is implicitly true.
+                      Defaulted to nil.
+                    type: boolean
+                  name:
+                    description: Name of the referent.
                     type: string
+                required:
+                - name
                 type: object
                 x-kubernetes-map-type: atomic
               defaultMainNavigationRef:
@@ -91,32 +95,33 @@ spec:
                   be displayed. Use the `.Navigation["main"]` property to position
                   its content in the template.
                 properties:
-                  name:
-                    default: ""
+                  clustered:
                     description: |-
-                      Name of the referent.
-                      This field is effectively required, but due to backwards compatibility is
-                      allowed to be empty. Instances of this type with an empty value here are
-                      almost certainly wrong.
-                      More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#names
+                      Clustered, if set to true, ensures that the cluster scoped Kind of the referent will be lookup up. If the
+                      referring resource is cluster scoped, then Clustered is implicitly true.
+                      Defaulted to nil.
+                    type: boolean
+                  name:
+                    description: Name of the referent.
                     type: string
+                required:
+                - name
                 type: object
                 x-kubernetes-map-type: atomic
               extraNavigations:
                 additionalProperties:
-                  description: |-
-                    LocalObjectReference contains enough information to let you locate the
-                    referenced object inside the same namespace.
                   properties:
-                    name:
-                      default: ""
+                    clustered:
                       description: |-
-                        Name of the referent.
-                        This field is effectively required, but due to backwards compatibility is
-                        allowed to be empty. Instances of this type with an empty value here are
-                        almost certainly wrong.
-                        More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#names
+                        Clustered, if set to true, ensures that the cluster scoped Kind of the referent will be lookup up. If the
+                        referring resource is cluster scoped, then Clustered is implicitly true.
+                        Defaulted to nil.
+                      type: boolean
+                    name:
+                      description: Name of the referent.
                       type: string
+                  required:
+                  - name
                   type: object
                   x-kubernetes-map-type: atomic
                 description: extraNavigations is an optional map of named navigation
@@ -130,15 +135,17 @@ spec:
                 description: scriptLibraryRef is an optional reference to a KDexScriptLibrary
                   resource.
                 properties:
-                  name:
-                    default: ""
+                  clustered:
                     description: |-
-                      Name of the referent.
-                      This field is effectively required, but due to backwards compatibility is
-                      allowed to be empty. Instances of this type with an empty value here are
-                      almost certainly wrong.
-                      More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#names
+                      Clustered, if set to true, ensures that the cluster scoped Kind of the referent will be lookup up. If the
+                      referring resource is cluster scoped, then Clustered is implicitly true.
+                      Defaulted to nil.
+                    type: boolean
+                  name:
+                    description: Name of the referent.
                     type: string
+                required:
+                - name
                 type: object
                 x-kubernetes-map-type: atomic
             required:

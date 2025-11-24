@@ -150,7 +150,7 @@ type KDexThemeSpec struct {
 
 	// scriptLibraryRef is an optional reference to a KDexScriptLibrary resource.
 	// +optional
-	ScriptLibraryRef *corev1.LocalObjectReference `json:"scriptLibraryRef,omitempty"`
+	ScriptLibraryRef *KDexObjectReference `json:"scriptLibraryRef,omitempty"`
 
 	// webserver defines the configuration for the theme webserver.
 	// +optional

@@ -17,7 +17,6 @@ limitations under the License.
 package v1alpha1
 
 import (
-	corev1 "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
 
@@ -77,7 +76,7 @@ type KDexHostSpec struct {
 
 	// defaultThemeRef is a reference to the theme that should apply to all pages bound to this host unless overridden.
 	// +optional
-	DefaultThemeRef *corev1.LocalObjectReference `json:"defaultThemeRef,omitempty"`
+	DefaultThemeRef *KDexObjectReference `json:"defaultThemeRef,omitempty"`
 
 	// modulePolicy defines the policy for JavaScript references in KDexApp, KDexTheme and KDexScriptLibrary resources. When not specified the policy is Strict
 	// A Host must not accept JavaScript references which do not comply with the specified policy.
@@ -96,7 +95,7 @@ type KDexHostSpec struct {
 
 	// scriptLibraryRef is an optional reference to a KDexScriptLibrary resource.
 	// +optional
-	ScriptLibraryRef *corev1.LocalObjectReference `json:"scriptLibraryRef,omitempty"`
+	ScriptLibraryRef *KDexObjectReference `json:"scriptLibraryRef,omitempty"`
 }
 
 // ModulePolicy defines the policy for the use of JavaScript Modules.

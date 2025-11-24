@@ -26,7 +26,7 @@ import (
 type ContentEntry struct {
 	// appRef is a reference to the KDexApp to include in this binding.
 	// +optional
-	AppRef *corev1.LocalObjectReference `json:"appRef,omitempty"`
+	AppRef *KDexObjectReference `json:"appRef,omitempty"`
 	// customElementName is the name of the KDexApp custom element to render in the specified slot (if present in the template).
 	// +optional
 	CustomElementName string `json:"customElementName,omitempty"`
@@ -99,19 +99,19 @@ type KDexPageBindingSpec struct {
 
 	// overrideFooterRef is an optional reference to a KDexPageFooter resource. If not specified, the footer from the archetype will be used.
 	// +optional
-	OverrideFooterRef *corev1.LocalObjectReference `json:"overrideFooterRef,omitempty"`
+	OverrideFooterRef *KDexObjectReference `json:"overrideFooterRef,omitempty"`
 
 	// overrideHeaderRef is an optional reference to a KDexPageHeader resource. If not specified, the header from the archetype will be used.
 	// +optional
-	OverrideHeaderRef *corev1.LocalObjectReference `json:"overrideHeaderRef,omitempty"`
+	OverrideHeaderRef *KDexObjectReference `json:"overrideHeaderRef,omitempty"`
 
 	// overrideMainNavigationRef is an optional reference to a KDexPageNavigation resource. If not specified, the main navigation from the archetype will be used.
 	// +optional
-	OverrideMainNavigationRef *corev1.LocalObjectReference `json:"overrideMainNavigationRef,omitempty"`
+	OverrideMainNavigationRef *KDexObjectReference `json:"overrideMainNavigationRef,omitempty"`
 
 	// pageArchetypeRef is a reference to the KDexPageArchetype that this binding is for.
 	// +kubebuilder:validation:Required
-	PageArchetypeRef corev1.LocalObjectReference `json:"pageArchetypeRef"`
+	PageArchetypeRef KDexObjectReference `json:"pageArchetypeRef"`
 
 	// parentPageRef is a reference to the KDexPageBinding bellow which this page will appear in the main navigation. If not set, the page will be placed in the top level of the navigation.
 	// +optional
@@ -121,7 +121,7 @@ type KDexPageBindingSpec struct {
 
 	// scriptLibraryRef is an optional reference to a KDexScriptLibrary resource.
 	// +optional
-	ScriptLibraryRef *corev1.LocalObjectReference `json:"scriptLibraryRef,omitempty"`
+	ScriptLibraryRef *KDexObjectReference `json:"scriptLibraryRef,omitempty"`
 }
 
 type NavigationHints struct {

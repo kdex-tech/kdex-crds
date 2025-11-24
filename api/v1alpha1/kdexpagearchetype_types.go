@@ -17,7 +17,6 @@ limitations under the License.
 package v1alpha1
 
 import (
-	corev1 "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
 
@@ -67,24 +66,24 @@ type KDexPageArchetypeSpec struct {
 
 	// defaultFooterRef is an optional reference to a KDexPageFooter resource. If not specified, no footer will be displayed. Use the `.Footer` property to position its content in the template.
 	// +optional
-	DefaultFooterRef *corev1.LocalObjectReference `json:"defaultFooterRef,omitempty"`
+	DefaultFooterRef *KDexObjectReference `json:"defaultFooterRef,omitempty"`
 
 	// defaultHeaderRef is an optional reference to a KDexPageHeader resource. If not specified, no header will be displayed. Use the `.Header` property to position its content in the template.
 	// +optional
-	DefaultHeaderRef *corev1.LocalObjectReference `json:"defaultHeaderRef,omitempty"`
+	DefaultHeaderRef *KDexObjectReference `json:"defaultHeaderRef,omitempty"`
 
 	// defaultMainNavigationRef is an optional reference to a KDexPageNavigation resource. If not specified, no navigation will be displayed. Use the `.Navigation["main"]` property to position its content in the template.
 	// +optional
-	DefaultMainNavigationRef *corev1.LocalObjectReference `json:"defaultMainNavigationRef,omitempty"`
+	DefaultMainNavigationRef *KDexObjectReference `json:"defaultMainNavigationRef,omitempty"`
 
 	// extraNavigations is an optional map of named navigation object references. Use `.Navigation["<name>"]` to position the named navigation's content in the template.
 	// +optional
 	// +kubebuilder:validation:XValidation:rule="!has(self.main)",message="'main' is a reserved name for an extra navigation"
-	ExtraNavigations map[string]*corev1.LocalObjectReference `json:"extraNavigations,omitempty"`
+	ExtraNavigations map[string]*KDexObjectReference `json:"extraNavigations,omitempty"`
 
 	// scriptLibraryRef is an optional reference to a KDexScriptLibrary resource.
 	// +optional
-	ScriptLibraryRef *corev1.LocalObjectReference `json:"scriptLibraryRef,omitempty"`
+	ScriptLibraryRef *KDexObjectReference `json:"scriptLibraryRef,omitempty"`
 }
 
 func init() {
