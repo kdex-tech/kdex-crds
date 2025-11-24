@@ -72,6 +72,8 @@ type KDexAppList struct {
 
 // KDexAppSpec defines the desired state of KDexApp
 type KDexAppSpec struct {
+	Clustered bool `json:"-"`
+
 	// customElements is a list of custom elements implemented by the micro-frontend application.
 	// +kubebuilder:validation:MaxItems=32
 	// +kubebuilder:validation:MinItems=1

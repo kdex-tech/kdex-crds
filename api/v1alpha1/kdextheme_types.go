@@ -121,6 +121,8 @@ type KDexThemeSpec struct {
 	// +kubebuilder:validation:MinItems=1
 	Assets []Asset `json:"assets"`
 
+	Clustered bool `json:"-"`
+
 	// image is the name of an OCI image that contains Theme resources.
 	// More info: https://kubernetes.io/docs/concepts/containers/images
 	// +optional

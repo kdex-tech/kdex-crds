@@ -58,6 +58,8 @@ type KDexPageNavigationList struct {
 
 // KDexPageNavigationSpec defines the desired state of KDexPageNavigation
 type KDexPageNavigationSpec struct {
+	Clustered bool `json:"-"`
+
 	// content is a go string template that defines the content of an App Server page navigation. Use the `.Navigation["<name>"]` property to position its content in the template.
 	// +kubebuilder:validation:Required
 	// +kubebuilder:validation:MinLength=5

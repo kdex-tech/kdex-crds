@@ -57,6 +57,8 @@ type KDexPageHeaderList struct {
 
 // KDexPageHeaderSpec defines the desired state of KDexPageHeader
 type KDexPageHeaderSpec struct {
+	Clustered bool `json:"-"`
+
 	// content is a go string template that defines the content of an App Server page header section. Use the `.Header` property to position its content in the template.
 	// +kubebuilder:validation:Required
 	// +kubebuilder:validation:MinLength=5
