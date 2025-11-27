@@ -52,6 +52,12 @@ else
 	go test $(TEST_PKGS) -coverprofile cover.out $(TEST_ARGS)
 endif
 
+.PHONY: coverage
+coverage: test ## Generate and view test coverage report.
+	@echo "--> Generating coverage report"
+	go tool cover -html=cover.out -o cover.html
+	@echo "--> Coverage report generated at file://$$(pwd)/cover.html"
+
 .PHONY: docs
 docs: generate crd-ref-docs ## Generate CRD reference documentation.
 	$(CRD_REF_DOCS) --source-path=api/v1alpha1 --config=crd-ref-docs-config.yaml --renderer=markdown --output-path=CRD_REFERENCE.md
