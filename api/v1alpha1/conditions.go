@@ -35,9 +35,10 @@ func NewCondition(
 	status metav1.ConditionStatus,
 	reason ConditionReason,
 	message string,
+	time metav1.Time,
 ) *metav1.Condition {
 	return &metav1.Condition{
-		LastTransitionTime: metav1.Now(),
+		LastTransitionTime: time,
 		Message:            message,
 		Reason:             string(reason),
 		Status:             status,
@@ -61,29 +62,33 @@ type ConditionStatuses struct {
 	Progressing metav1.ConditionStatus
 }
 
-func SetConditions(conditions *[]metav1.Condition, args ConditionStatuses, reason ConditionReason, message string) {
-	if args.Degraded != "" {
+func SetConditions(conditions *[]metav1.Condition, status ConditionStatuses, reason ConditionReason, message string) {
+	now := metav1.Now()
+	if status.Degraded != "" {
 		meta.SetStatusCondition(conditions, *NewCondition(
 			ConditionTypeDegraded,
-			args.Degraded,
+			status.Degraded,
 			reason,
 			message,
+			now,
 		))
 	}
-	if args.Progressing != "" {
+	if status.Progressing != "" {
 		meta.SetStatusCondition(conditions, *NewCondition(
 			ConditionTypeProgressing,
-			args.Progressing,
+			status.Progressing,
 			reason,
 			message,
+			now,
 		))
 	}
-	if args.Ready != "" {
+	if status.Ready != "" {
 		meta.SetStatusCondition(conditions, *NewCondition(
 			ConditionTypeReady,
-			args.Ready,
+			status.Ready,
 			reason,
 			message,
+			now,
 		))
 	}
 }
