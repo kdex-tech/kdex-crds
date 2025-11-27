@@ -1,34 +1,6 @@
 package npm
 
-import (
-	"fmt"
-	"strings"
-
-	corev1 "k8s.io/api/core/v1"
-	"kdex.dev/crds/configuration"
-)
-
-func RegistryConfigurationNew(
-	c *configuration.NexusConfiguration,
-	secret *corev1.Secret,
-) *configuration.RegistryConfiguration {
-	if secret == nil ||
-		secret.Annotations == nil ||
-		secret.Annotations["kdex.dev/npm-server-address"] == "" {
-
-		return &c.DefaultNpmRegistry
-	}
-
-	return &configuration.RegistryConfiguration{
-		AuthData: configuration.AuthData{
-			Password: string(secret.Data["password"]),
-			Token:    string(secret.Data["token"]),
-			Username: string(secret.Data["username"]),
-		},
-		Host:     secret.Annotations["kdex.dev/npm-server-address"],
-		InSecure: secret.Annotations["kdex.dev/npm-server-insecure"] == "true",
-	}
-}
+import "kdex.dev/crds/configuration"
 
 type PackageInfo struct {
 	DistTags struct {
@@ -69,36 +41,11 @@ type PackageJSON struct {
 	Version              string                       `json:"version"`
 }
 
-func (p *PackageJSON) HasESModule() error {
-	if p.Browser != "" {
-		return nil
-	}
+type Registry interface {
+	ValidatePackage(packageName string, packageVersion string) error
+}
 
-	if p.Type == "module" {
-		return nil
-	}
-
-	if p.Module != "" {
-		return nil
-	}
-
-	if p.Exports != nil {
-		_, ok := p.Exports["browser"]
-
-		if ok {
-			return nil
-		}
-
-		_, ok = p.Exports["import"]
-
-		if ok {
-			return nil
-		}
-	}
-
-	if strings.HasSuffix(p.Main, ".mjs") {
-		return nil
-	}
-
-	return fmt.Errorf("package does not contain an ES module")
+type RegistryImpl struct {
+	Config *configuration.RegistryConfiguration
+	Error  func(err error, msg string, keysAndValues ...any)
 }

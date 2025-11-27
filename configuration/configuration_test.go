@@ -75,3 +75,86 @@ func TestLoadConfiguration(t *testing.T) {
 		})
 	}
 }
+
+func TestRegistryConfiguration_EncodeAuthorization(t *testing.T) {
+	tests := []struct {
+		name      string
+		regConfig RegistryConfiguration
+		want      string
+	}{
+		{
+			name: "token auth",
+			regConfig: RegistryConfiguration{
+				AuthData: AuthData{
+					Token: "token",
+				},
+			},
+			want: "Bearer token",
+		},
+		{
+			name: "basic auth",
+			regConfig: RegistryConfiguration{
+				AuthData: AuthData{
+					Password: "password",
+					Username: "username",
+				},
+			},
+			want: "Basic dXNlcm5hbWU6cGFzc3dvcmQ=",
+		},
+		{
+			name: "prefer token auth",
+			regConfig: RegistryConfiguration{
+				AuthData: AuthData{
+					Token:    "token",
+					Password: "password",
+					Username: "username",
+				},
+			},
+			want: "Bearer token",
+		},
+		{
+			name: "empty",
+			regConfig: RegistryConfiguration{
+				AuthData: AuthData{},
+			},
+			want: "",
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			got := tt.regConfig.EncodeAuthorization()
+			assert.Equal(t, tt.want, got)
+		})
+	}
+}
+
+func TestRegistryConfiguration_GetAddress(t *testing.T) {
+	tests := []struct {
+		name      string
+		regConfig RegistryConfiguration
+		want      string
+	}{
+		{
+			name: "insecure",
+			regConfig: RegistryConfiguration{
+				Host:     "host",
+				InSecure: true,
+			},
+			want: "http://host",
+		},
+		{
+			name: "secure",
+			regConfig: RegistryConfiguration{
+				Host:     "host",
+				InSecure: false,
+			},
+			want: "https://host",
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			got := tt.regConfig.GetAddress()
+			assert.Equal(t, tt.want, got)
+		})
+	}
+}
