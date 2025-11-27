@@ -49,10 +49,10 @@ func TestGetCondition(t *testing.T) {
 				return
 			}
 
-			assert.Equal(t, got.Type, tt.want.Type)
-			assert.Equal(t, got.Status, tt.want.Status)
-			assert.Equal(t, got.Reason, tt.want.Reason)
-			assert.Equal(t, got.Message, tt.want.Message)
+			assert.Equal(t, tt.want.Type, got.Type)
+			assert.Equal(t, tt.want.Status, got.Status)
+			assert.Equal(t, tt.want.Reason, got.Reason)
+			assert.Equal(t, tt.want.Message, got.Message)
 		})
 	}
 }
@@ -96,10 +96,10 @@ func TestSetConditions(t *testing.T) {
 				return
 			}
 
-			assert.Equal(t, got.Type, tt.want.Type)
-			assert.Equal(t, got.Status, tt.want.Status)
-			assert.Equal(t, got.Reason, tt.want.Reason)
-			assert.Equal(t, got.Message, tt.want.Message)
+			assert.Equal(t, tt.want.Type, got.Type)
+			assert.Equal(t, tt.want.Status, got.Status)
+			assert.Equal(t, tt.want.Reason, got.Reason)
+			assert.Equal(t, tt.want.Message, got.Message)
 		})
 	}
 }
