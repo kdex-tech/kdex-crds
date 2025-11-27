@@ -15,11 +15,17 @@ func NewRegistry(
 	c *configuration.NexusConfiguration,
 	secret *corev1.Secret,
 	error func(err error, msg string, keysAndValues ...any),
-) Registry {
-	return &RegistryImpl{
-		Config: RegistryConfigurationNew(c, secret),
-		Error:  error,
+) (Registry, error) {
+	config, err := RegistryConfigurationNew(c, secret)
+
+	if err != nil {
+		return nil, err
 	}
+
+	return &RegistryImpl{
+		Config: config,
+		Error:  error,
+	}, nil
 }
 
 func (p *PackageJSON) HasESModule() error {
@@ -36,16 +42,22 @@ func (p *PackageJSON) HasESModule() error {
 	}
 
 	if p.Exports != nil {
-		_, ok := p.Exports["browser"]
-
-		if ok {
+		if strings.HasSuffix(p.Exports.Single, ".mjs") {
 			return nil
 		}
 
-		_, ok = p.Exports["import"]
+		if p.Exports.Multiple != nil {
+			_, ok := p.Exports.Multiple["browser"]
 
-		if ok {
-			return nil
+			if ok {
+				return nil
+			}
+
+			_, ok = p.Exports.Multiple["import"]
+
+			if ok {
+				return nil
+			}
 		}
 	}
 
@@ -59,12 +71,25 @@ func (p *PackageJSON) HasESModule() error {
 func RegistryConfigurationNew(
 	c *configuration.NexusConfiguration,
 	secret *corev1.Secret,
-) *configuration.RegistryConfiguration {
-	if secret == nil ||
-		secret.Annotations == nil ||
-		secret.Annotations["kdex.dev/npm-server-address"] == "" {
+) (*configuration.RegistryConfiguration, error) {
+	if secret == nil {
+		return &c.DefaultNpmRegistry, nil
+	}
 
-		return &c.DefaultNpmRegistry
+	host := secret.Annotations["kdex.dev/npm-server-address"]
+
+	if host == "" {
+		return nil, fmt.Errorf("kdex.dev/npm-server-address annotation is missing")
+	}
+
+	if strings.Contains(host, "://") {
+		host = strings.Split(host, "://")[1]
+	}
+
+	insecure := secret.Annotations["kdex.dev/npm-server-insecure"]
+
+	if insecure == "" {
+		insecure = "false"
 	}
 
 	return &configuration.RegistryConfiguration{
@@ -73,9 +98,9 @@ func RegistryConfigurationNew(
 			Token:    string(secret.Data["token"]),
 			Username: string(secret.Data["username"]),
 		},
-		Host:     secret.Annotations["kdex.dev/npm-server-address"],
-		InSecure: secret.Annotations["kdex.dev/npm-server-insecure"] == "true",
-	}
+		Host:     host,
+		InSecure: insecure == "true",
+	}, nil
 }
 
 func (r *RegistryImpl) GetPackageInfo(packageName string) (*PackageInfo, error) {
@@ -107,7 +132,7 @@ func (r *RegistryImpl) GetPackageInfo(packageName string) (*PackageInfo, error) 
 	fmt.Println("Response Status:", resp.Status)
 
 	if resp.StatusCode != http.StatusOK {
-		return nil, fmt.Errorf("package not found: %s", packageURL)
+		return nil, fmt.Errorf("%s", resp.Status)
 	}
 
 	packageInfo := &PackageInfo{}
