@@ -51,7 +51,10 @@ func TestRegistryImpl_ValidatePackage(t *testing.T) {
 				w.Header().Set("Content-Type", "application/vnd.npm.formats+json")
 				w.WriteHeader(http.StatusOK)
 				enc := json.NewEncoder(w)
-				enc.Encode(packageInfo)
+				err := enc.Encode(packageInfo)
+				if err != nil {
+					w.WriteHeader(http.StatusInternalServerError)
+				}
 			},
 			packageName:    "test",
 			packageVersion: "1.0.0",
@@ -76,7 +79,10 @@ func TestRegistryImpl_ValidatePackage(t *testing.T) {
 				w.Header().Set("Content-Type", "application/vnd.npm.formats+json")
 				w.WriteHeader(http.StatusOK)
 				enc := json.NewEncoder(w)
-				enc.Encode(packageInfo)
+				err := enc.Encode(packageInfo)
+				if err != nil {
+					w.WriteHeader(http.StatusInternalServerError)
+				}
 			},
 			packageName:    "test",
 			packageVersion: "1.0.0",
@@ -103,7 +109,10 @@ func TestRegistryImpl_ValidatePackage(t *testing.T) {
 				w.Header().Set("Content-Type", "application/vnd.npm.formats+json")
 				w.WriteHeader(http.StatusOK)
 				enc := json.NewEncoder(w)
-				enc.Encode(packageInfo)
+				err := enc.Encode(packageInfo)
+				if err != nil {
+					w.WriteHeader(http.StatusInternalServerError)
+				}
 			},
 			packageName:    "test",
 			packageVersion: "1.0.0",
@@ -132,7 +141,10 @@ func TestRegistryImpl_ValidatePackage(t *testing.T) {
 				w.Header().Set("Content-Type", "application/vnd.npm.formats+json")
 				w.WriteHeader(http.StatusOK)
 				enc := json.NewEncoder(w)
-				enc.Encode(packageInfo)
+				err := enc.Encode(packageInfo)
+				if err != nil {
+					w.WriteHeader(http.StatusInternalServerError)
+				}
 			},
 			packageName:    "test",
 			packageVersion: "1.0.0",
@@ -161,7 +173,10 @@ func TestRegistryImpl_ValidatePackage(t *testing.T) {
 				w.Header().Set("Content-Type", "application/vnd.npm.formats+json")
 				w.WriteHeader(http.StatusOK)
 				enc := json.NewEncoder(w)
-				enc.Encode(packageInfo)
+				err := enc.Encode(packageInfo)
+				if err != nil {
+					w.WriteHeader(http.StatusInternalServerError)
+				}
 			},
 			packageName:    "test",
 			packageVersion: "1.0.0",
@@ -186,7 +201,10 @@ func TestRegistryImpl_ValidatePackage(t *testing.T) {
 				w.Header().Set("Content-Type", "application/vnd.npm.formats+json")
 				w.WriteHeader(http.StatusOK)
 				enc := json.NewEncoder(w)
-				enc.Encode(packageInfo)
+				err := enc.Encode(packageInfo)
+				if err != nil {
+					w.WriteHeader(http.StatusInternalServerError)
+				}
 			},
 			packageName:    "test",
 			packageVersion: "1.0.0",
@@ -211,7 +229,10 @@ func TestRegistryImpl_ValidatePackage(t *testing.T) {
 				w.Header().Set("Content-Type", "application/vnd.npm.formats+json")
 				w.WriteHeader(http.StatusOK)
 				enc := json.NewEncoder(w)
-				enc.Encode(packageInfo)
+				err := enc.Encode(packageInfo)
+				if err != nil {
+					w.WriteHeader(http.StatusInternalServerError)
+				}
 			},
 			packageName:    "test",
 			packageVersion: "1.0.0",
@@ -236,7 +257,10 @@ func TestRegistryImpl_ValidatePackage(t *testing.T) {
 				w.Header().Set("Content-Type", "application/vnd.npm.formats+json")
 				w.WriteHeader(http.StatusOK)
 				enc := json.NewEncoder(w)
-				enc.Encode(packageInfo)
+				err := enc.Encode(packageInfo)
+				if err != nil {
+					w.WriteHeader(http.StatusInternalServerError)
+				}
 			},
 			packageName:    "test",
 			packageVersion: "1.0.0",
@@ -261,7 +285,10 @@ func TestRegistryImpl_ValidatePackage(t *testing.T) {
 				w.Header().Set("Content-Type", "application/vnd.npm.formats+json")
 				w.WriteHeader(http.StatusOK)
 				enc := json.NewEncoder(w)
-				enc.Encode(packageInfo)
+				err := enc.Encode(packageInfo)
+				if err != nil {
+					w.WriteHeader(http.StatusInternalServerError)
+				}
 			},
 			packageName:    "test",
 			packageVersion: "1.1.0",
@@ -289,7 +316,10 @@ func TestRegistryImpl_ValidatePackage(t *testing.T) {
 				w.Header().Set("Content-Type", "application/vnd.npm.formats+json")
 				w.WriteHeader(http.StatusOK)
 				enc := json.NewEncoder(w)
-				enc.Encode(packageInfo)
+				err := enc.Encode(packageInfo)
+				if err != nil {
+					w.WriteHeader(http.StatusInternalServerError)
+				}
 			},
 			packageName:    "test",
 			packageVersion: "1.0.0",
