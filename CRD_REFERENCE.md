@@ -87,7 +87,7 @@ _Appears in:_
 
 | Field | Description | Default | Validation |
 | --- | --- | --- | --- |
-| `appRef` _[LocalObjectReference](https://kubernetes.io/docs/reference/generated/kubernetes-api/v/#localobjectreference-v1-core)_ | appRef is a reference to the KDexApp to include in this binding. |  |  |
+| `appRef` _[KDexObjectReference](#kdexobjectreference)_ | appRef is a reference to the KDexApp to include in this binding. |  |  |
 | `customElementName` _string_ | customElementName is the name of the KDexApp custom element to render in the specified slot (if present in the template). |  |  |
 | `rawHTML` _string_ | rawHTML is a raw HTML string to be rendered in the specified slot (if present in the template). |  |  |
 | `slot` _string_ | slot is the name of the App slot to which this entry will be bound. If omitted, the slot used will be `main`. No more than one entry can be bound to a slot. |  |  |
@@ -173,8 +173,6 @@ _Appears in:_
 | `scripts` _[Script](#script) array_ | scripts is a set of script references. They may contain URLs that point to resources hosted at some public address, npm module references or they may contain tag contents. |  | MaxItems: 32 <br /> |
 
 
-
-
 #### KDexClusterApp
 
 
@@ -210,8 +208,6 @@ KDexClusterAppList contains a list of KDexClusterApp
 | `kind` _string_ | `KDexClusterAppList` | | |
 | `metadata` _[ListMeta](https://kubernetes.io/docs/reference/generated/kubernetes-api/v/#listmeta-v1-meta)_ | Refer to Kubernetes API documentation for fields of `metadata`. |  |  |
 | `items` _[KDexClusterApp](#kdexclusterapp) array_ |  |  |  |
-
-
 
 
 #### KDexClusterPageArchetype
@@ -251,8 +247,6 @@ KDexClusterPageArchetypeList contains a list of KDexClusterPageArchetype
 | `items` _[KDexClusterPageArchetype](#kdexclusterpagearchetype) array_ |  |  |  |
 
 
-
-
 #### KDexClusterPageFooter
 
 
@@ -288,8 +282,6 @@ KDexClusterPageFooterList contains a list of KDexClusterPageFooter
 | `kind` _string_ | `KDexClusterPageFooterList` | | |
 | `metadata` _[ListMeta](https://kubernetes.io/docs/reference/generated/kubernetes-api/v/#listmeta-v1-meta)_ | Refer to Kubernetes API documentation for fields of `metadata`. |  |  |
 | `items` _[KDexClusterPageFooter](#kdexclusterpagefooter) array_ |  |  |  |
-
-
 
 
 #### KDexClusterPageHeader
@@ -329,8 +321,6 @@ KDexClusterPageHeaderList contains a list of KDexClusterPageHeader
 | `items` _[KDexClusterPageHeader](#kdexclusterpageheader) array_ |  |  |  |
 
 
-
-
 #### KDexClusterPageNavigation
 
 
@@ -366,8 +356,6 @@ KDexClusterPageNavigationList contains a list of KDexClusterPageNavigation
 | `kind` _string_ | `KDexClusterPageNavigationList` | | |
 | `metadata` _[ListMeta](https://kubernetes.io/docs/reference/generated/kubernetes-api/v/#listmeta-v1-meta)_ | Refer to Kubernetes API documentation for fields of `metadata`. |  |  |
 | `items` _[KDexClusterPageNavigation](#kdexclusterpagenavigation) array_ |  |  |  |
-
-
 
 
 #### KDexClusterScriptLibrary
@@ -407,8 +395,6 @@ KDexClusterScriptLibraryList contains a list of KDexClusterScriptLibrary
 | `items` _[KDexClusterScriptLibrary](#kdexclusterscriptlibrary) array_ |  |  |  |
 
 
-
-
 #### KDexClusterTheme
 
 
@@ -444,8 +430,6 @@ KDexClusterThemeList contains a list of KDexClusterTheme
 | `kind` _string_ | `KDexClusterThemeList` | | |
 | `metadata` _[ListMeta](https://kubernetes.io/docs/reference/generated/kubernetes-api/v/#listmeta-v1-meta)_ | Refer to Kubernetes API documentation for fields of `metadata`. |  |  |
 | `items` _[KDexClusterTheme](#kdexclustertheme) array_ |  |  |  |
-
-
 
 
 #### KDexHost
@@ -531,8 +515,6 @@ _Appears in:_
 | `host` _[KDexHostSpec](#kdexhostspec)_ |  |  | Required: \{\} <br /> |
 
 
-
-
 #### KDexHostList
 
 
@@ -608,13 +590,11 @@ _Appears in:_
 | `packageReferences` _[PackageReference](#packagereference) array_ |  |  | MinItems: 1 <br /> |
 
 
-
-
 #### KDexHostSpec
 
 
 
-
+KDexHostSpec defines the desired state of KDexHost
 
 
 
@@ -627,11 +607,38 @@ _Appears in:_
 | `baseMeta` _string_ | baseMeta is a string containing a base set of meta tags to use on every page rendered for the host. |  | MinLength: 5 <br /> |
 | `brandName` _string_ | brandName is the name used when rendering pages belonging to the host. For example, it may be used as alt text for the logo displayed in the page header. |  | Required: \{\} <br /> |
 | `defaultLang` _string_ | defaultLang is a string containing a BCP 47 language tag.<br />See https://developer.mozilla.org/en-US/docs/Glossary/BCP_47_language_tag.<br />When render page paths do not specify a 'lang' path parameter this will be the value used. When not set the default will be 'en'. |  |  |
-| `defaultThemeRef` _[LocalObjectReference](https://kubernetes.io/docs/reference/generated/kubernetes-api/v/#localobjectreference-v1-core)_ | defaultThemeRef is a reference to the theme that should apply to all pages bound to this host unless overridden. |  |  |
+| `defaultThemeRef` _[KDexObjectReference](#kdexobjectreference)_ | defaultThemeRef is a reference to the theme that should apply to all pages bound to this host unless overridden. |  |  |
 | `modulePolicy` _[ModulePolicy](#modulepolicy)_ | modulePolicy defines the policy for JavaScript references in KDexApp, KDexTheme and KDexScriptLibrary resources. When not specified the policy is Strict<br />A Host must not accept JavaScript references which do not comply with the specified policy. | Strict | Enum: [ExternalDependencies Loose ModulesRequired Strict] <br /> |
 | `organization` _string_ | organization is the name of the Organization to which the host belongs. |  | MinLength: 5 <br />Required: \{\} <br /> |
 | `routing` _[Routing](#routing)_ | routing defines the desired routing configuration for the host. |  | Required: \{\} <br /> |
-| `scriptLibraryRef` _[LocalObjectReference](https://kubernetes.io/docs/reference/generated/kubernetes-api/v/#localobjectreference-v1-core)_ | scriptLibraryRef is an optional reference to a KDexScriptLibrary resource. |  |  |
+| `scriptLibraryRef` _[KDexObjectReference](#kdexobjectreference)_ | scriptLibraryRef is an optional reference to a KDexScriptLibrary resource. |  |  |
+
+
+
+
+#### KDexObjectReference
+
+
+
+
+
+
+
+_Appears in:_
+- [ContentEntry](#contententry)
+- [KDexHostSpec](#kdexhostspec)
+- [KDexPageArchetypeSpec](#kdexpagearchetypespec)
+- [KDexPageBindingSpec](#kdexpagebindingspec)
+- [KDexPageFooterSpec](#kdexpagefooterspec)
+- [KDexPageHeaderSpec](#kdexpageheaderspec)
+- [KDexPageNavigationSpec](#kdexpagenavigationspec)
+- [KDexThemeSpec](#kdexthemespec)
+
+| Field | Description | Default | Validation |
+| --- | --- | --- | --- |
+| `kind` _string_ | Kind is the type of resource being referenced |  |  |
+| `name` _string_ | Name of the referent. |  | Required: \{\} <br /> |
+| `namespace` _string_ | Namespace, if set, causes the lookup for the namespace scoped Kind of the referent to use the specified<br />namespace. If not set, the namespace of the resource will be used to lookup the namespace scoped Kind of the<br />referent.<br />If the referring resource is cluster scoped, this field is ignored.<br />Defaulted to nil. |  |  |
 
 
 
@@ -692,13 +699,11 @@ _Appears in:_
 | Field | Description | Default | Validation |
 | --- | --- | --- | --- |
 | `content` _string_ | content is a go string template that defines the structure of an HTML page. |  | MinLength: 5 <br />Required: \{\} <br /> |
-| `defaultFooterRef` _[LocalObjectReference](https://kubernetes.io/docs/reference/generated/kubernetes-api/v/#localobjectreference-v1-core)_ | defaultFooterRef is an optional reference to a KDexPageFooter resource. If not specified, no footer will be displayed. Use the `.Footer` property to position its content in the template. |  |  |
-| `defaultHeaderRef` _[LocalObjectReference](https://kubernetes.io/docs/reference/generated/kubernetes-api/v/#localobjectreference-v1-core)_ | defaultHeaderRef is an optional reference to a KDexPageHeader resource. If not specified, no header will be displayed. Use the `.Header` property to position its content in the template. |  |  |
-| `defaultMainNavigationRef` _[LocalObjectReference](https://kubernetes.io/docs/reference/generated/kubernetes-api/v/#localobjectreference-v1-core)_ | defaultMainNavigationRef is an optional reference to a KDexPageNavigation resource. If not specified, no navigation will be displayed. Use the `.Navigation["main"]` property to position its content in the template. |  |  |
-| `extraNavigations` _object (keys:string, values:[LocalObjectReference](https://kubernetes.io/docs/reference/generated/kubernetes-api/v/#localobjectreference-v1-core))_ | extraNavigations is an optional map of named navigation object references. Use `.Navigation["<name>"]` to position the named navigation's content in the template. |  |  |
-| `scriptLibraryRef` _[LocalObjectReference](https://kubernetes.io/docs/reference/generated/kubernetes-api/v/#localobjectreference-v1-core)_ | scriptLibraryRef is an optional reference to a KDexScriptLibrary resource. |  |  |
-
-
+| `defaultFooterRef` _[KDexObjectReference](#kdexobjectreference)_ | defaultFooterRef is an optional reference to a KDexPageFooter resource. If not specified, no footer will be displayed. Use the `.Footer` property to position its content in the template. |  |  |
+| `defaultHeaderRef` _[KDexObjectReference](#kdexobjectreference)_ | defaultHeaderRef is an optional reference to a KDexPageHeader resource. If not specified, no header will be displayed. Use the `.Header` property to position its content in the template. |  |  |
+| `defaultMainNavigationRef` _[KDexObjectReference](#kdexobjectreference)_ | defaultMainNavigationRef is an optional reference to a KDexPageNavigation resource. If not specified, no navigation will be displayed. Use the `.Navigation.main` property to position its content in the template. |  |  |
+| `extraNavigations` _object (keys:string, values:[KDexObjectReference](#kdexobjectreference))_ | extraNavigations is an optional map of named navigation object references. Use `.Navigation.<name>` to position the named navigation's content in the template. |  |  |
+| `scriptLibraryRef` _[KDexObjectReference](#kdexobjectreference)_ | scriptLibraryRef is an optional reference to a KDexScriptLibrary resource. |  |  |
 
 
 #### KDexPageBinding
@@ -759,16 +764,14 @@ _Appears in:_
 | `hostRef` _[LocalObjectReference](https://kubernetes.io/docs/reference/generated/kubernetes-api/v/#localobjectreference-v1-core)_ | hostRef is a reference to the KDexHost that this binding is for. |  | Required: \{\} <br /> |
 | `label` _string_ | label is the value used in menus and page titles before localization occurs (or when no translation exists for the current language). |  | Required: \{\} <br /> |
 | `navigationHints` _[NavigationHints](#navigationhints)_ | navigationHints are optional navigation properties that if omitted result in the page being hidden from the navigation. |  |  |
-| `overrideFooterRef` _[LocalObjectReference](https://kubernetes.io/docs/reference/generated/kubernetes-api/v/#localobjectreference-v1-core)_ | overrideFooterRef is an optional reference to a KDexPageFooter resource. If not specified, the footer from the archetype will be used. |  |  |
-| `overrideHeaderRef` _[LocalObjectReference](https://kubernetes.io/docs/reference/generated/kubernetes-api/v/#localobjectreference-v1-core)_ | overrideHeaderRef is an optional reference to a KDexPageHeader resource. If not specified, the header from the archetype will be used. |  |  |
-| `overrideMainNavigationRef` _[LocalObjectReference](https://kubernetes.io/docs/reference/generated/kubernetes-api/v/#localobjectreference-v1-core)_ | overrideMainNavigationRef is an optional reference to a KDexPageNavigation resource. If not specified, the main navigation from the archetype will be used. |  |  |
-| `pageArchetypeRef` _[LocalObjectReference](https://kubernetes.io/docs/reference/generated/kubernetes-api/v/#localobjectreference-v1-core)_ | pageArchetypeRef is a reference to the KDexPageArchetype that this binding is for. |  | Required: \{\} <br /> |
+| `overrideFooterRef` _[KDexObjectReference](#kdexobjectreference)_ | overrideFooterRef is an optional reference to a KDexPageFooter resource. If not specified, the footer from the archetype will be used. |  |  |
+| `overrideHeaderRef` _[KDexObjectReference](#kdexobjectreference)_ | overrideHeaderRef is an optional reference to a KDexPageHeader resource. If not specified, the header from the archetype will be used. |  |  |
+| `overrideMainNavigationRef` _[KDexObjectReference](#kdexobjectreference)_ | overrideMainNavigationRef is an optional reference to a KDexPageNavigation resource. If not specified, the main navigation from the archetype will be used. |  |  |
+| `pageArchetypeRef` _[KDexObjectReference](#kdexobjectreference)_ | pageArchetypeRef is a reference to the KDexPageArchetype that this binding is for. |  | Required: \{\} <br /> |
 | `parentPageRef` _[LocalObjectReference](https://kubernetes.io/docs/reference/generated/kubernetes-api/v/#localobjectreference-v1-core)_ | parentPageRef is a reference to the KDexPageBinding bellow which this page will appear in the main navigation. If not set, the page will be placed in the top level of the navigation. |  |  |
 | `basePath` _string_ | basePath is the shortest path by which the page may be accessed. It must not contain path parameters. This path will be used in site navigation. This path is subject to being prefixed for localization by `/\{l10n\}` and will be when the user selects a non-default language. |  | Pattern: `^/` <br />Required: \{\} <br /> |
 | `patternPath` _string_ | patternPath, which must be prefixed by BasePath, is an extension of basePath that adds pattern matching as defined by https://pkg.go.dev/net/http#hdr-Patterns-ServeMux. This path is subject to being prefixed for localization by `/\{l10n\}` such as when the user selects a non-default language. |  |  |
-| `scriptLibraryRef` _[LocalObjectReference](https://kubernetes.io/docs/reference/generated/kubernetes-api/v/#localobjectreference-v1-core)_ | scriptLibraryRef is an optional reference to a KDexScriptLibrary resource. |  |  |
-
-
+| `scriptLibraryRef` _[KDexObjectReference](#kdexobjectreference)_ | scriptLibraryRef is an optional reference to a KDexScriptLibrary resource. |  |  |
 
 
 #### KDexPageFooter
@@ -826,9 +829,7 @@ _Appears in:_
 | Field | Description | Default | Validation |
 | --- | --- | --- | --- |
 | `content` _string_ | content is a go string template that defines the content of an App Server page footer section. Use the `.Footer` property to position its content in the template. |  | MinLength: 5 <br />Required: \{\} <br /> |
-| `scriptLibraryRef` _[LocalObjectReference](https://kubernetes.io/docs/reference/generated/kubernetes-api/v/#localobjectreference-v1-core)_ | scriptLibraryRef is an optional reference to a KDexScriptLibrary resource. |  |  |
-
-
+| `scriptLibraryRef` _[KDexObjectReference](#kdexobjectreference)_ | scriptLibraryRef is an optional reference to a KDexScriptLibrary resource. |  |  |
 
 
 #### KDexPageHeader
@@ -886,9 +887,7 @@ _Appears in:_
 | Field | Description | Default | Validation |
 | --- | --- | --- | --- |
 | `content` _string_ | content is a go string template that defines the content of an App Server page header section. Use the `.Header` property to position its content in the template. |  | MinLength: 5 <br />Required: \{\} <br /> |
-| `scriptLibraryRef` _[LocalObjectReference](https://kubernetes.io/docs/reference/generated/kubernetes-api/v/#localobjectreference-v1-core)_ | scriptLibraryRef is an optional reference to a KDexScriptLibrary resource. |  |  |
-
-
+| `scriptLibraryRef` _[KDexObjectReference](#kdexobjectreference)_ | scriptLibraryRef is an optional reference to a KDexScriptLibrary resource. |  |  |
 
 
 #### KDexPageNavigation
@@ -947,9 +946,7 @@ _Appears in:_
 | Field | Description | Default | Validation |
 | --- | --- | --- | --- |
 | `content` _string_ | content is a go string template that defines the content of an App Server page navigation. Use the `.Navigation["<name>"]` property to position its content in the template. |  | MinLength: 5 <br />Required: \{\} <br /> |
-| `scriptLibraryRef` _[LocalObjectReference](https://kubernetes.io/docs/reference/generated/kubernetes-api/v/#localobjectreference-v1-core)_ | scriptLibraryRef is an optional reference to a KDexScriptLibrary resource. |  |  |
-
-
+| `scriptLibraryRef` _[KDexObjectReference](#kdexobjectreference)_ | scriptLibraryRef is an optional reference to a KDexScriptLibrary resource. |  |  |
 
 
 #### KDexScriptLibrary
@@ -1011,8 +1008,6 @@ _Appears in:_
 | `scripts` _[Script](#script) array_ | scripts is a set of script references. They may contain URLs that point to resources hosted at some public address, npm module references or they may contain tag contents. |  | MaxItems: 32 <br /> |
 
 
-
-
 #### KDexTheme
 
 
@@ -1072,29 +1067,8 @@ _Appears in:_
 | `pullPolicy` _[PullPolicy](https://kubernetes.io/docs/reference/generated/kubernetes-api/v/#pullpolicy-v1-core)_ | Policy for pulling the OCI theme image. Possible values are:<br />Always: the kubelet always attempts to pull the reference. Container creation will fail If the pull fails.<br />Never: the kubelet never pulls the reference and only uses a local image or artifact. Container creation will fail if the reference isn't present.<br />IfNotPresent: the kubelet pulls if the reference isn't already present on disk. Container creation will fail if the reference isn't present and the pull fails.<br />Defaults to Always if :latest tag is specified, or IfNotPresent otherwise. |  |  |
 | `pullSecrets` _[LocalObjectReference](https://kubernetes.io/docs/reference/generated/kubernetes-api/v/#localobjectreference-v1-core) array_ | pullSecrets is an optional list of references to secrets in the same namespace to use for pulling the image. Also used for the webserver image if specified.<br />More info: https://kubernetes.io/docs/concepts/containers/images#specifying-imagepullsecrets-on-a-pod |  |  |
 | `routePath` _string_ | routePath is a prefix beginning with a forward slash (/) plus at least 1 additional character. KDexPageBindings associated with the KDexHost that have conflicting urls will be rejected and marked as conflicting. |  | Pattern: `^/.+` <br /> |
-| `scriptLibraryRef` _[LocalObjectReference](https://kubernetes.io/docs/reference/generated/kubernetes-api/v/#localobjectreference-v1-core)_ | scriptLibraryRef is an optional reference to a KDexScriptLibrary resource. |  |  |
-| `webserver` _[KDexThemeWebServer](#kdexthemewebserver)_ | webserver defines the configuration for the theme webserver. |  |  |
-
-
-
-
-#### KDexThemeWebServer
-
-
-
-KDexThemeWebServer defines the desired state of the KDexTheme web server
-
-
-
-_Appears in:_
-- [KDexThemeSpec](#kdexthemespec)
-
-| Field | Description | Default | Validation |
-| --- | --- | --- | --- |
-| `image` _string_ | image is the name of webserver image.<br />More info: https://kubernetes.io/docs/concepts/containers/images |  | MinLength: 5 <br />Required: \{\} <br /> |
-| `pullPolicy` _[PullPolicy](https://kubernetes.io/docs/reference/generated/kubernetes-api/v/#pullpolicy-v1-core)_ | Policy for pulling the webserver image. Possible values are:<br />Always: the kubelet always attempts to pull the reference. Container creation will fail If the pull fails.<br />Never: the kubelet never pulls the reference and only uses a local image or artifact. Container creation will fail if the reference isn't present.<br />IfNotPresent: the kubelet pulls if the reference isn't already present on disk. Container creation will fail if the reference isn't present and the pull fails.<br />Defaults to Always if :latest tag is specified, or IfNotPresent otherwise. |  |  |
-| `replicas` _integer_ | replicas is the number of desired pods. This is a pointer to distinguish between explicit<br />zero and not specified. Defaults to 1. |  |  |
-| `resources` _[ResourceRequirements](https://kubernetes.io/docs/reference/generated/kubernetes-api/v/#resourcerequirements-v1-core)_ | resources defines the compute resources required by the container.<br />More info: https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/ |  |  |
+| `scriptLibraryRef` _[KDexObjectReference](#kdexobjectreference)_ | scriptLibraryRef is an optional reference to a KDexScriptLibrary resource. |  |  |
+| `webserver` _[WebServer](#webserver)_ | webserver defines the configuration for the theme webserver. |  |  |
 
 
 #### KDexTranslation
@@ -1152,8 +1126,6 @@ _Appears in:_
 | --- | --- | --- | --- |
 | `hostRef` _[LocalObjectReference](https://kubernetes.io/docs/reference/generated/kubernetes-api/v/#localobjectreference-v1-core)_ | hostRef is a reference to the KDexHost that this render page is for. |  | Required: \{\} <br /> |
 | `translations` _[Translation](#translation) array_ | translations is an array of objects where each one specifies a language (lang) and a map (keysAndValues) consisting of key/value pairs. If the lang property is not unique in the array and its keysAndValues map contains the same keys, the last one takes precedence. |  | MinItems: 1 <br />Required: \{\} <br /> |
-
-
 
 
 #### ModulePolicy
@@ -1319,5 +1291,24 @@ _Appears in:_
 | --- | --- | --- | --- |
 | `keysAndValues` _object (keys:string, values:string)_ | keysAndValues is a map of key=/value pairs where the key is the identifier and the value is the translation of that key in the language specified by the lang property. |  | MinProperties: 1 <br />Required: \{\} <br /> |
 | `lang` _string_ | lang is a string containing a BCP 47 language tag that identifies the set of translations.<br />See https://developer.mozilla.org/en-US/docs/Glossary/BCP_47_language_tag. |  | Required: \{\} <br /> |
+
+
+#### WebServer
+
+
+
+WebServer defines the desired state of the KDexTheme web server
+
+
+
+_Appears in:_
+- [KDexThemeSpec](#kdexthemespec)
+
+| Field | Description | Default | Validation |
+| --- | --- | --- | --- |
+| `image` _string_ | image is the name of webserver image.<br />More info: https://kubernetes.io/docs/concepts/containers/images |  | MinLength: 5 <br />Required: \{\} <br /> |
+| `pullPolicy` _[PullPolicy](https://kubernetes.io/docs/reference/generated/kubernetes-api/v/#pullpolicy-v1-core)_ | Policy for pulling the webserver image. Possible values are:<br />Always: the kubelet always attempts to pull the reference. Container creation will fail If the pull fails.<br />Never: the kubelet never pulls the reference and only uses a local image or artifact. Container creation will fail if the reference isn't present.<br />IfNotPresent: the kubelet pulls if the reference isn't already present on disk. Container creation will fail if the reference isn't present and the pull fails.<br />Defaults to Always if :latest tag is specified, or IfNotPresent otherwise. |  |  |
+| `replicas` _integer_ | replicas is the number of desired pods. This is a pointer to distinguish between explicit<br />zero and not specified. Defaults to 1. |  |  |
+| `resources` _[ResourceRequirements](https://kubernetes.io/docs/reference/generated/kubernetes-api/v/#resourcerequirements-v1-core)_ | resources defines the compute resources required by the container.<br />More info: https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/ |  |  |
 
 
