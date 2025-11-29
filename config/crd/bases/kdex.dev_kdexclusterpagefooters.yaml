@@ -16,7 +16,12 @@ spec:
     singular: kdexclusterpagefooter
   scope: Cluster
   versions:
-  - name: v1alpha1
+  - additionalPrinterColumns:
+    - description: The state of the Ready condition
+      jsonPath: .status.conditions[?(@.type=="Ready")].status
+      name: Ready
+      type: string
+    name: v1alpha1
     schema:
       openAPIV3Schema:
         description: KDexClusterPageFooter is the Schema for the kdexclusterpagefooters

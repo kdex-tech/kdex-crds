@@ -25,6 +25,8 @@ import (
 // +kubebuilder:subresource:status
 
 // KDexClusterApp is the Schema for the kdexclusterapps API
+//
+// +kubebuilder:printcolumn:name="Ready",type=string,JSONPath=`.status.conditions[?(@.type=="Ready")].status`,description="The state of the Ready condition"
 type KDexClusterApp struct {
 	metav1.TypeMeta `json:",inline"`
 

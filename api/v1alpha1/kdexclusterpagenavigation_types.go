@@ -25,6 +25,8 @@ import (
 // +kubebuilder:subresource:status
 
 // KDexClusterPageNavigation is the Schema for the kdexclusterpagenavigations API
+//
+// +kubebuilder:printcolumn:name="Ready",type=string,JSONPath=`.status.conditions[?(@.type=="Ready")].status`,description="The state of the Ready condition"
 type KDexClusterPageNavigation struct {
 	metav1.TypeMeta `json:",inline"`
 

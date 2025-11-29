@@ -25,6 +25,8 @@ import (
 // +kubebuilder:subresource:status
 
 // KDexClusterScriptLibrary is the Schema for the kdexclusterscriptlibraries API
+//
+// +kubebuilder:printcolumn:name="Ready",type=string,JSONPath=`.status.conditions[?(@.type=="Ready")].status`,description="The state of the Ready condition"
 type KDexClusterScriptLibrary struct {
 	metav1.TypeMeta `json:",inline"`
 

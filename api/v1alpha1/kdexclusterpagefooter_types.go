@@ -25,6 +25,8 @@ import (
 // +kubebuilder:subresource:status
 
 // KDexClusterPageFooter is the Schema for the kdexclusterpagefooters API
+//
+// +kubebuilder:printcolumn:name="Ready",type=string,JSONPath=`.status.conditions[?(@.type=="Ready")].status`,description="The state of the Ready condition"
 type KDexClusterPageFooter struct {
 	metav1.TypeMeta `json:",inline"`
 

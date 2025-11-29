@@ -25,6 +25,8 @@ import (
 // +kubebuilder:subresource:status
 
 // KDexClusterTheme is the Schema for the kdexclusterthemes API
+//
+// +kubebuilder:printcolumn:name="Ready",type=string,JSONPath=`.status.conditions[?(@.type=="Ready")].status`,description="The state of the Ready condition"
 type KDexClusterTheme struct {
 	metav1.TypeMeta `json:",inline"`
 
