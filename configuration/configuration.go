@@ -24,10 +24,10 @@ type AuthData struct {
 	Username string `json:"username,omitempty" yaml:"username,omitempty"`
 }
 
-type FocusControllerConfiguration struct {
-	Deployment      appsv1.DeploymentSpec `json:"deployment" yaml:"deployment"`
-	Service         corev1.ServiceSpec    `json:"service" yaml:"service"`
-	RolePolicyRules []rbacv1.PolicyRule   `json:"rolePolicyRules" yaml:"rolePolicyRules"`
+type HostControllerConfiguration struct {
+	Deployment appsv1.DeploymentSpec `json:"deployment" yaml:"deployment"`
+	RoleRef    rbacv1.RoleRef        `json:"roleRef" yaml:"roleRef"`
+	Service    corev1.ServiceSpec    `json:"service" yaml:"service"`
 }
 
 // +kubebuilder:object:root=true
@@ -37,10 +37,10 @@ type NexusConfiguration struct {
 	// +optional
 	metav1.ObjectMeta `json:"metadata,omitempty,omitzero"`
 
-	DefaultImageRegistry RegistryConfiguration        `json:"defaultImageRegistry" yaml:"defaultImageRegistry"`
-	DefaultNpmRegistry   RegistryConfiguration        `json:"defaultNpmRegistry" yaml:"defaultNpmRegistry"`
-	FocusController      FocusControllerConfiguration `json:"controller" yaml:"controller"`
-	StaticServing        StaticServingConfiguration   `json:"staticServing" yaml:"staticServing"`
+	DefaultImageRegistry RegistryConfiguration       `json:"defaultImageRegistry" yaml:"defaultImageRegistry"`
+	DefaultNpmRegistry   RegistryConfiguration       `json:"defaultNpmRegistry" yaml:"defaultNpmRegistry"`
+	HostController       HostControllerConfiguration `json:"hostController" yaml:"hostController"`
+	StaticServing        StaticServingConfiguration  `json:"staticServing" yaml:"staticServing"`
 }
 
 type RegistryConfiguration struct {
@@ -83,7 +83,7 @@ type StaticServingConfiguration struct {
 
 func LoadConfiguration(configFile string, scheme *runtime.Scheme) NexusConfiguration {
 	defaultContent := []byte(`
-controller:
+hostController:
   deployment:
     selector:
       matchLabels: {}
@@ -138,6 +138,11 @@ controller:
           configMap:
             name: controller-manager
 
+  roleRef:
+    apiGroup: rbac.authorization.k8s.io
+    kind: ClusterRole
+    name: kdex-nexus-host-controller-role
+
   service:
     selector: {}
     ports:
@@ -145,128 +150,6 @@ controller:
       port: 8090
       protocol: TCP
       targetPort: server
-
-  rolePolicyRules:
-  - apiGroups:
-    - ""
-    resources:
-    - configmaps
-    - secrets
-    - services
-    verbs:
-    - create
-    - delete
-    - get
-    - list
-    - patch
-    - update
-    - watch
-  - apiGroups:
-    - ""
-    resources:
-    - pods
-    verbs:
-    - get
-    - list
-    - watch
-  - apiGroups:
-    - apps
-    resources:
-    - deployments
-    verbs:
-    - create
-    - delete
-    - get
-    - list
-    - patch
-    - update
-    - watch
-  - apiGroups:
-    - batch
-    resources:
-    - jobs
-    verbs:
-    - create
-    - delete
-    - get
-    - list
-    - patch
-    - update
-    - watch
-  - apiGroups:
-    - gateway.networking.k8s.io
-    resources:
-    - httproutes
-    verbs:
-    - create
-    - delete
-    - get
-    - list
-    - patch
-    - update
-    - watch
-  - apiGroups:
-    - kdex.dev
-    resources:
-    - kdexapps
-    - kdexhosts
-    - kdexpagearchetypes
-    - kdexpagefooters
-    - kdexpageheaders
-    - kdexpagenavigations
-    - kdexscriptlibraries
-    - kdexthemes
-    verbs:
-    - get
-    - list
-    - watch
-  - apiGroups:
-    - kdex.dev
-    resources:
-    - kdexhostcontrollers
-    - kdexhostpackagereferences
-    - kdexpagebindings
-    - kdextranslations
-    verbs:
-    - create
-    - delete
-    - get
-    - list
-    - patch
-    - update
-    - watch
-  - apiGroups:
-    - kdex.dev
-    resources:
-    - kdexhostcontrollers/finalizers
-    - kdexhostpackagereferences/finalizers
-    - kdexpagebindings/finalizers
-    - kdextranslations/finalizers
-    verbs:
-    - update
-  - apiGroups:
-    - kdex.dev
-    resources:
-    - kdexhostcontrollers/status
-    - kdexhostpackagereferences/status
-    - kdexpagebindings/status
-    - kdextranslations/status
-    verbs:
-    - get
-    - patch
-    - update
-  - apiGroups:
-    - networking.k8s.io
-    resources:
-    - ingresses
-    verbs:
-    - create
-    - delete
-    - get
-    - list
-    - patch
-    - update
-    - watch
 
 defaultNpmRegistry:
   host: registry.npmjs.org

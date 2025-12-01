@@ -33,7 +33,7 @@ func TestLoadConfiguration(t *testing.T) {
 			name:       "replicas",
 			configFile: "/config.yaml",
 			find: func(config NexusConfiguration) any {
-				return config.FocusController.Deployment.Replicas
+				return config.HostController.Deployment.Replicas
 			},
 			want: func() *int32 {
 				replicas := int32(1)
@@ -44,7 +44,7 @@ func TestLoadConfiguration(t *testing.T) {
 			name:       "configmap volume name",
 			configFile: "/config.yaml",
 			find: func(config NexusConfiguration) any {
-				return config.FocusController.Deployment.Template.Spec.Volumes[0].ConfigMap.Name
+				return config.HostController.Deployment.Template.Spec.Volumes[0].ConfigMap.Name
 			},
 			want: "controller-manager",
 		},
@@ -52,7 +52,7 @@ func TestLoadConfiguration(t *testing.T) {
 			name:       "override replicas from file",
 			configFile: "../test_fixtures/1_config.yaml",
 			find: func(config NexusConfiguration) any {
-				return config.FocusController.Deployment.Replicas
+				return config.HostController.Deployment.Replicas
 			},
 			want: func() *int32 {
 				replicas := int32(4)
@@ -63,7 +63,7 @@ func TestLoadConfiguration(t *testing.T) {
 			name:       "override selector from file",
 			configFile: "../test_fixtures/1_config.yaml",
 			find: func(config NexusConfiguration) any {
-				return config.FocusController.Deployment.Selector.MatchLabels["control-plane"]
+				return config.HostController.Deployment.Selector.MatchLabels["control-plane"]
 			},
 			want: "controller-manager",
 		},
