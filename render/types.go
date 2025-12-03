@@ -9,13 +9,13 @@ import (
 )
 
 type PageEntry struct {
-	BasePath string                `json:"basePath" yaml:"basePath"`
-	Children *map[string]PageEntry `json:"children,omitempty" yaml:"children,omitempty"`
-	Href     string                `json:"href,omitempty" yaml:"href,omitempty"`
-	Icon     string                `json:"icon,omitempty" yaml:"icon,omitempty"`
-	Label    string                `json:"label" yaml:"label"`
-	Name     string                `json:"name" yaml:"name"`
-	Weight   resource.Quantity     `json:"weight,omitempty" yaml:"weight,omitempty"`
+	BasePath string                  `json:"basePath" yaml:"basePath"`
+	Children *map[string]interface{} `json:"children,omitempty" yaml:"children,omitempty"`
+	Href     string                  `json:"href,omitempty" yaml:"href,omitempty"`
+	Icon     string                  `json:"icon,omitempty" yaml:"icon,omitempty"`
+	Label    string                  `json:"label" yaml:"label"`
+	Name     string                  `json:"name" yaml:"name"`
+	Weight   resource.Quantity       `json:"weight,omitempty" yaml:"weight,omitempty"`
 }
 
 type Renderer struct {

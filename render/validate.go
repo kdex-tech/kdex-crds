@@ -55,8 +55,8 @@ func init() {
 			},
 			"Three": PageEntry{
 				BasePath: "/three",
-				Children: &map[string]PageEntry{
-					"Four": {
+				Children: &map[string]interface{}{
+					"Four": PageEntry{
 						BasePath: "/four",
 						Href:     "/four",
 						Icon:     "four",
