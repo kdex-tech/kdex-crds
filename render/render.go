@@ -28,9 +28,11 @@ func (r *Renderer) TemplateData() (TemplateData, error) {
 		date = time.Now()
 	}
 
-	pageMap := map[string]*PageEntry{}
+	pageMap := map[string]interface{}{}
 	if r.PageMap != nil {
-		pageMap = *r.PageMap
+		for k, v := range r.PageMap {
+			pageMap[k] = v
+		}
 	}
 
 	templateData := TemplateData{
@@ -124,13 +126,31 @@ func (r *Renderer) RenderOne(
 	data TemplateData,
 ) (string, error) {
 	funcs := sprig.FuncMap()
+	funcs["extract"] = func(key string, v []interface{}) ([]interface{}, error) {
+		res := []interface{}{}
+		for _, item := range v {
+			itemValue := reflect.ValueOf(item)
+			if itemValue.Kind() == reflect.Ptr {
+				itemValue = itemValue.Elem()
+			}
+			if itemValue.Kind() != reflect.Struct {
+				return nil, fmt.Errorf("item is not a struct")
+			}
+			if val := itemValue.FieldByName(key); val.IsValid() {
+				res = append(res, val.Interface())
+			} else {
+				return nil, fmt.Errorf("field %s not found in struct", key)
+			}
+		}
+		return res, nil
+	}
 	funcs["l10n"] = func(key string, args ...string) string {
 		if r.MessagePrinter == nil {
 			return key
 		}
 		return r.MessagePrinter.Sprintf(key, args)
 	}
-	funcs["sortBy"] = func(v interface{}, field string, ascending bool) ([]interface{}, error) {
+	funcs["sortBy"] = func(field string, ascending bool, v interface{}) ([]interface{}, error) {
 		tp := reflect.TypeOf(v).Kind()
 		switch tp {
 		case reflect.Slice, reflect.Array:

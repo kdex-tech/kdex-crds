@@ -36,8 +36,8 @@ func init() {
 		Meta:            `<meta charset="UTF-8">`,
 		Organization:    "KDex Tech Inc.",
 		BasePath:        "/one",
-		PageMap: map[string]*PageEntry{
-			"One": {
+		PageMap: map[string]interface{}{
+			"One": PageEntry{
 				BasePath: "/one",
 				Href:     "/one",
 				Icon:     "one",
@@ -45,7 +45,7 @@ func init() {
 				Name:     "one",
 				Weight:   resource.MustParse("0"),
 			},
-			"Two": {
+			"Two": PageEntry{
 				BasePath: "/two",
 				Href:     "/two",
 				Icon:     "two",
@@ -53,9 +53,9 @@ func init() {
 				Name:     "two",
 				Weight:   resource.MustParse("1"),
 			},
-			"Three": {
+			"Three": PageEntry{
 				BasePath: "/three",
-				Children: &map[string]*PageEntry{
+				Children: &map[string]PageEntry{
 					"Four": {
 						BasePath: "/four",
 						Href:     "/four",

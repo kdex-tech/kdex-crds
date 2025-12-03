@@ -5,6 +5,7 @@ import (
 	"time"
 
 	"github.com/stretchr/testify/assert"
+	"k8s.io/apimachinery/pkg/api/resource"
 )
 
 func TestRenderOne(t *testing.T) {
@@ -49,7 +50,7 @@ func TestRenderAll(t *testing.T) {
 			"main": "main-nav",
 		},
 		Organization: "Test Inc.",
-		PageMap: &map[string]*PageEntry{
+		PageMap: map[string]PageEntry{
 			"home": {
 				BasePath: "/",
 				Href:     "/",
@@ -153,4 +154,56 @@ func TestRenderAll_InvalidMainTemplate(t *testing.T) {
 	}
 	_, err := r.RenderPage()
 	assert.Error(t, err)
+}
+
+func TestRenderer_RenderOne(t *testing.T) {
+	tests := []struct {
+		name            string
+		templateName    string
+		templateContent string
+		data            TemplateData
+		want            string
+		wantErr         bool
+	}{
+		{
+			name:            "test",
+			templateName:    "test",
+			templateContent: "test",
+			data:            TemplateData{},
+			want:            "test",
+			wantErr:         false,
+		},
+		{
+			name:            "sortBy",
+			templateName:    "test",
+			templateContent: `{{ .PageMap | values | sortBy "Weight" true | extract "Label" | join "," }}`,
+			data: TemplateData{
+				PageMap: map[string]interface{}{
+					"home": PageEntry{
+						Label:  "Home",
+						Weight: resource.MustParse("0m"),
+					},
+					"about": PageEntry{
+						Label:  "About",
+						Weight: resource.MustParse("1m"),
+					},
+				},
+			},
+			want:    "Home,About",
+			wantErr: false,
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			var r Renderer
+			got, gotErr := r.RenderOne(tt.templateName, tt.templateContent, tt.data)
+			if gotErr != nil {
+				if !tt.wantErr {
+					assert.NoError(t, gotErr)
+				}
+				return
+			}
+			assert.Equal(t, tt.want, got)
+		})
+	}
 }
