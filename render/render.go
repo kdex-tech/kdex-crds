@@ -4,9 +4,12 @@ import (
 	"bytes"
 	"fmt"
 	"html/template"
+	"reflect"
+	"sort"
 	"time"
 
 	"github.com/Masterminds/sprig/v3"
+	"k8s.io/apimachinery/pkg/api/resource"
 )
 
 func (r *Renderer) RenderPage() (string, error) {
@@ -126,6 +129,65 @@ func (r *Renderer) RenderOne(
 			return key
 		}
 		return r.MessagePrinter.Sprintf(key, args)
+	}
+	funcs["sortBy"] = func(v interface{}, field string, ascending bool) ([]interface{}, error) {
+		tp := reflect.TypeOf(v).Kind()
+		switch tp {
+		case reflect.Slice, reflect.Array:
+			l2 := reflect.ValueOf(v)
+
+			l := l2.Len()
+			nl := make([]interface{}, l)
+			for i := 0; i < l; i++ {
+				nl[i] = l2.Index(i).Interface()
+			}
+
+			sort.Slice(nl, func(i, j int) bool {
+				val1 := reflect.ValueOf(nl[i])
+				val2 := reflect.ValueOf(nl[j])
+
+				if !ascending {
+					val1, val2 = val2, val1
+				}
+
+				if val1.Kind() == reflect.Ptr {
+					val1 = val1.Elem()
+				}
+				if val2.Kind() == reflect.Ptr {
+					val2 = val2.Elem()
+				}
+
+				f1 := val1.FieldByName(field)
+				f2 := val2.FieldByName(field)
+
+				if !f1.IsValid() || !f2.IsValid() {
+					return false
+				}
+
+				if f1.Type() == reflect.TypeOf(resource.Quantity{}) {
+					q1 := f1.Interface().(resource.Quantity)
+					q2 := f2.Interface().(resource.Quantity)
+					return q1.Cmp(q2) < 0
+				}
+
+				switch f1.Kind() {
+				case reflect.Int, reflect.Int8, reflect.Int16, reflect.Int32, reflect.Int64:
+					return f1.Int() < f2.Int()
+				case reflect.Uint, reflect.Uint8, reflect.Uint16, reflect.Uint32, reflect.Uint64:
+					return f1.Uint() < f2.Uint()
+				case reflect.Float32, reflect.Float64:
+					return f1.Float() < f2.Float()
+				case reflect.String:
+					return f1.String() < f2.String()
+				}
+
+				return false
+			})
+
+			return nl, nil
+		default:
+			return nil, fmt.Errorf("cannot sort on type %s by field %s", tp, field)
+		}
 	}
 
 	instance, err := template.New(templateName).Funcs(funcs).Parse(templateContent)
