@@ -50,8 +50,8 @@ func TestRenderAll(t *testing.T) {
 			"main": "main-nav",
 		},
 		Organization: "Test Inc.",
-		PageMap: map[string]PageEntry{
-			"home": {
+		PageMap: map[string]interface{}{
+			"home": PageEntry{
 				BasePath: "/",
 				Href:     "/",
 			},

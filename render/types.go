@@ -34,7 +34,7 @@ type Renderer struct {
 	Navigations     map[string]string
 	Meta            string
 	Organization    string
-	PageMap         map[string]PageEntry
+	PageMap         map[string]interface{}
 	PatternPath     string
 	TemplateContent string
 	TemplateName    string
