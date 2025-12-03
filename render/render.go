@@ -2,10 +2,11 @@ package render
 
 import (
 	"bytes"
-	"encoding/json"
 	"fmt"
 	"html/template"
 	"time"
+
+	"github.com/Masterminds/sprig/v3"
 )
 
 func (r *Renderer) RenderPage() (string, error) {
@@ -119,20 +120,12 @@ func (r *Renderer) RenderOne(
 	templateContent string,
 	data TemplateData,
 ) (string, error) {
-	funcs := template.FuncMap{
-		"json": func(payload interface{}, args ...string) string {
-			b, err := json.Marshal(payload)
-			if err != nil {
-				return err.Error()
-			}
-			return string(b)
-		},
-		"l10n": func(key string, args ...string) string {
-			if r.MessagePrinter == nil {
-				return key
-			}
-			return r.MessagePrinter.Sprintf(key, args)
-		},
+	funcs := sprig.FuncMap()
+	funcs["l10n"] = func(key string, args ...string) string {
+		if r.MessagePrinter == nil {
+			return key
+		}
+		return r.MessagePrinter.Sprintf(key, args)
 	}
 
 	instance, err := template.New(templateName).Funcs(funcs).Parse(templateContent)
