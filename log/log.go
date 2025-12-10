@@ -1,6 +1,7 @@
 package log
 
 import (
+	"bytes"
 	"fmt"
 	"strconv"
 	"strings"
@@ -12,6 +13,42 @@ import (
 
 	crzap "sigs.k8s.io/controller-runtime/pkg/log/zap"
 )
+
+type NamedLogLevelPairs map[string]string
+
+func (a *NamedLogLevelPairs) Set(s string) error {
+	pair := strings.SplitN(s, "=", 2)
+
+	if len(pair) != 2 {
+		return fmt.Errorf("invalid key-value format: %s (expected KEY=VALUE)", s)
+	}
+
+	key := strings.TrimSpace(pair[0])
+	value := strings.TrimSpace(pair[1])
+
+	if key == "" {
+		return fmt.Errorf("key cannot be empty in %s", s)
+	}
+
+	(*a)[key] = value
+
+	return nil
+}
+
+func (a *NamedLogLevelPairs) String() string {
+	var b bytes.Buffer
+	sep := ""
+
+	for key, value := range *a {
+		b.WriteString(sep)
+		b.WriteString(key)
+		b.WriteString("=")
+		b.WriteString(value)
+		sep = " "
+	}
+
+	return b.String()
+}
 
 type LevelEnablerByName struct {
 	zapcore.Core
