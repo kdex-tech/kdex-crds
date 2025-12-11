@@ -81,7 +81,12 @@ func (c LevelEnablerByName) Enabled(level zapcore.Level) bool {
 }
 
 func (c LevelEnablerByName) With(fields []zapcore.Field) zapcore.Core {
-	return c.Core.With(fields)
+	return LevelEnablerByName{
+		Core:         c.Core.With(fields),
+		MinLevels:    c.MinLevels,
+		DefaultLevel: c.DefaultLevel,
+		MinLevel:     c.MinLevel,
+	}
 }
 
 func (c LevelEnablerByName) Write(ent zapcore.Entry, fields []zapcore.Field) error {
@@ -112,7 +117,7 @@ func New(opts *crzap.Options, levelMap map[string]string) (logr.Logger, error) {
 		MinLevel:     minLevel,
 	}
 
-	return zapr.NewLogger(zap.New(customCore)), nil
+	return zapr.NewLogger(zap.New(customCore)).WithValues("owner", "kdex.dev"), nil
 }
 
 func toZapLevels(levelMap map[string]string) (map[string]zapcore.Level, error) {
