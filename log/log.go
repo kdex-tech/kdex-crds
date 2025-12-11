@@ -52,9 +52,9 @@ func (a *NamedLogLevelPairs) String() string {
 
 type LevelEnablerByName struct {
 	zapcore.Core
-	MinLevels    map[string]zapcore.Level
 	DefaultLevel zapcore.Level
 	MinLevel     zapcore.Level
+	MinLevels    map[string]zapcore.Level
 }
 
 func (c LevelEnablerByName) Check(entry zapcore.Entry, ce *zapcore.CheckedEntry) *zapcore.CheckedEntry {
@@ -83,9 +83,9 @@ func (c LevelEnablerByName) Enabled(level zapcore.Level) bool {
 func (c LevelEnablerByName) With(fields []zapcore.Field) zapcore.Core {
 	return LevelEnablerByName{
 		Core:         c.Core.With(fields),
-		MinLevels:    c.MinLevels,
 		DefaultLevel: c.DefaultLevel,
 		MinLevel:     c.MinLevel,
+		MinLevels:    c.MinLevels,
 	}
 }
 
@@ -112,12 +112,12 @@ func New(opts *crzap.Options, levelMap map[string]string) (logr.Logger, error) {
 
 	customCore := LevelEnablerByName{
 		Core:         zapLog.Core(),
-		MinLevels:    zapLevels,
 		DefaultLevel: defaultLevel,
 		MinLevel:     minLevel,
+		MinLevels:    zapLevels,
 	}
 
-	return zapr.NewLogger(zap.New(customCore)).WithValues("owner", "kdex.dev"), nil
+	return zapr.NewLogger(zap.New(customCore)), nil
 }
 
 func toZapLevels(levelMap map[string]string) (map[string]zapcore.Level, error) {
