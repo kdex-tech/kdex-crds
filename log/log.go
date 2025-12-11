@@ -80,6 +80,10 @@ func (c LevelEnablerByName) Enabled(level zapcore.Level) bool {
 	return level >= c.MinLevel
 }
 
+func (c LevelEnablerByName) With(fields []zapcore.Field) zapcore.Core {
+	return c.Core.With(fields)
+}
+
 func (c LevelEnablerByName) Write(ent zapcore.Entry, fields []zapcore.Field) error {
 	return c.Core.Write(ent, fields)
 }
