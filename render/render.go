@@ -144,11 +144,11 @@ func (r *Renderer) RenderOne(
 		}
 		return res, nil
 	}
-	funcs["l10n"] = func(key string, args ...string) string {
+	funcs["l10n"] = func(key string, args ...interface{}) string {
 		if r.MessagePrinter == nil {
 			return key
 		}
-		return r.MessagePrinter.Sprintf(key, args)
+		return r.MessagePrinter.Sprintf(key, args...)
 	}
 	funcs["sortBy"] = func(field string, ascending bool, v interface{}) ([]interface{}, error) {
 		tp := reflect.TypeOf(v).Kind()
