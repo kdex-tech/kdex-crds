@@ -60,7 +60,6 @@ type KDexAppList struct {
 }
 
 // KDexAppSpec defines the desired state of KDexApp
-// +kubebuilder:validation:XValidation:rule="self.scripts.size() > 0 || has(self.?packageReference.name)",message="at least one of scripts or packageReference must be specified"
 type KDexAppSpec struct {
 	// customElements is a list of custom elements implemented by the micro-frontend application.
 	// +listType=map
@@ -70,8 +69,8 @@ type KDexAppSpec struct {
 	CustomElements []CustomElement `json:"customElements,omitempty"`
 
 	// packageReference specifies the name and version of an NPM package that contains the script. The package.json must describe an ES module.
-	// +kubebuilder:validation:Optional
-	PackageReference *PackageReference `json:"packageReference,omitempty"`
+	// +kubebuilder:validation:Required
+	PackageReference PackageReference `json:"packageReference,omitempty"`
 
 	// scripts is a set of script references. They may contain URLs that point to resources hosted at some public address, npm module references or they may contain tag contents.
 	// +kubebuilder:validation:MaxItems=32
