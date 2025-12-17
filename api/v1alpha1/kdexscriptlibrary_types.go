@@ -63,7 +63,7 @@ type KDexScriptLibraryList struct {
 }
 
 // KDexScriptLibrarySpec defines the desired state of KDexScriptLibrary
-// +kubebuilder:validation:XValidation:rule="[has(self.scripts), has(self.packageReference)].filter(x, x).size() > 0",message="at least one of scripts or packageReference must be specified"
+// +kubebuilder:validation:XValidation:rule="(has(self.scripts) && size(self.scripts) > 0) || has(self.packageReference)",message="at least one of scripts or packageReference must be specified"
 type KDexScriptLibrarySpec struct {
 	// packageReference specifies the name and version of an NPM package that contains the script. The package.json must describe an ES module.
 	// +kubebuilder:validation:Optional
