@@ -6,8 +6,10 @@ metadata:
     app.kubernetes.io/managed-by: kustomize
   name: kdexpagebinding-sample
 spec:
+  basePath: /my-app-page
   contentEntries:
     - appRef:
+        kind: KDexApp
         name: my-app
       customElementName: my-element
       slot: main
@@ -20,11 +22,14 @@ spec:
   navigationHints:
     weight: 1
   overrideFooterRef:
+    kind: KDexPageFooter
     name: generic-footer
   overrideHeaderRef:
+    kind: KDexPageHeader
     name: generic-header
   overrideMainNavigationRef:
+    kind: KDexPageNavigation
     name: generic-navigation
   pageArchetypeRef:
+    kind: KDexPageArchetype
     name: generic-page
-  path: /my-app-page

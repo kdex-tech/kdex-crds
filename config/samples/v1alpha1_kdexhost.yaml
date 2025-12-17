@@ -12,6 +12,7 @@ spec:
   brandName: KDex Sample Site
   defaultLang: en
   defaultThemeRef:
+    kind: KDexTheme
     name: kdextheme-sample
   organization: KDex Tech Inc.
   modulePolicy: Loose

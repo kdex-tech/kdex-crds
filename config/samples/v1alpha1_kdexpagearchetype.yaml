@@ -20,10 +20,10 @@ spec:
           {{ .Header }}
         </header>
         <nav>
-          {{ .Navigation["main"] }}
+          {{ .Navigation.main }}
         </nav>
         <main>
-          {{ .Content["main"] }}
+          {{ .Content.main }}
         </main>
         <footer>
           {{ .Footer }}
@@ -32,10 +32,13 @@ spec:
       </body>
     </html>
   defaultFooterRef:
+    kind: KDexPageFooter
     name: kdexpagefooter-sample
   defaultHeaderRef:
+    kind: KDexPageHeader
     name: kdexpageheader-sample
   defaultMainNavigationRef:
+    kind: KDexPageNavigation
     name: kdexpagenavigation-sample
   defaultThemeRef:
     name: kdextheme-sample
