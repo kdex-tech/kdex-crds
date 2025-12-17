@@ -34,11 +34,11 @@ type KDexPageFooter struct {
 	metav1.TypeMeta `json:",inline"`
 
 	// metadata is a standard object metadata
-	// +optional
+	// +kubebuilder:validation:Optional
 	metav1.ObjectMeta `json:"metadata,omitempty,omitzero"`
 
 	// status defines the observed state of KDexApp
-	// +optional
+	// +kubebuilder:validation:Optional
 	Status KDexObjectStatus `json:"status,omitempty,omitzero"`
 
 	// spec defines the desired state of KDexPageFooter
@@ -66,7 +66,7 @@ type KDexPageFooterSpec struct {
 	Content string `json:"content"`
 
 	// scriptLibraryRef is an optional reference to a KDexScriptLibrary resource.
-	// +optional
+	// +kubebuilder:validation:Optional
 	// +kubebuilder:validation:XValidation:rule=`self.kind == "KDexScriptLibrary" || self.kind == "KDexClusterScriptLibrary"`,message="'kind' must be either KDexScriptLibrary or KDexClusterScriptLibrary"
 	ScriptLibraryRef *KDexObjectReference `json:"scriptLibraryRef,omitempty"`
 }

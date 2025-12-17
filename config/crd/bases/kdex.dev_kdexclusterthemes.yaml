@@ -58,38 +58,26 @@ spec:
                         to the element [link|style] as attributes when rendered.
                       type: object
                     linkHref:
-                      description: linkHref is the content of a <link> href attribute.
+                      description: linkHref is the content of a `<link>` href attribute.
                         The URL may be absolute with protocol and host or it must
                         be prefixed by the RoutePath of the theme.
                       type: string
                     style:
-                      description: style is the text content to be added into a <style>
+                      description: style is the text content to be added into a `<style>`
                         element when rendered.
                       type: string
                   type: object
                   x-kubernetes-validations:
-                  - message: exactly one of linkHref or style must be set
-                    rule: '[has(self.linkHref), has(self.style)].filter(x, x).size()
+                  - message: exactly one of the fields in [linkHref style] must be
+                      set
+                    rule: '[has(self.linkHref),has(self.style)].filter(x,x==true).size()
                       == 1'
                 maxItems: 32
                 minItems: 1
                 type: array
-              image:
+              imagePullSecrets:
                 description: |-
-                  image is the name of an OCI image that contains Theme resources.
-                  More info: https://kubernetes.io/docs/concepts/containers/images
-                type: string
-              pullPolicy:
-                description: |-
-                  Policy for pulling the OCI theme image. Possible values are:
-                  Always: the kubelet always attempts to pull the reference. Container creation will fail If the pull fails.
-                  Never: the kubelet never pulls the reference and only uses a local image or artifact. Container creation will fail if the reference isn't present.
-                  IfNotPresent: the kubelet pulls if the reference isn't already present on disk. Container creation will fail if the reference isn't present and the pull fails.
-                  Defaults to Always if :latest tag is specified, or IfNotPresent otherwise.
-                type: string
-              pullSecrets:
-                description: |-
-                  pullSecrets is an optional list of references to secrets in the same namespace to use for pulling the image. Also used for the webserver image if specified.
+                  imagePullSecrets is an optional list of references to secrets in the same namespace to use for pulling the image. Also used for the webserver image if specified.
                   More info: https://kubernetes.io/docs/concepts/containers/images#specifying-imagepullsecrets-on-a-pod
                 items:
                   description: |-
@@ -111,6 +99,73 @@ spec:
                 x-kubernetes-list-map-keys:
                 - name
                 x-kubernetes-list-type: map
+              replicas:
+                description: |-
+                  replicas is the number of desired pods. This is a pointer to distinguish between explicit
+                  zero and not specified. Defaults to 1.
+                format: int32
+                type: integer
+              resources:
+                description: |-
+                  resources defines the compute resources required by the container.
+                  More info: https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/
+                properties:
+                  claims:
+                    description: |-
+                      Claims lists the names of resources, defined in spec.resourceClaims,
+                      that are used by this container.
+
+                      This field depends on the
+                      DynamicResourceAllocation feature gate.
+
+                      This field is immutable. It can only be set for containers.
+                    items:
+                      description: ResourceClaim references one entry in PodSpec.ResourceClaims.
+                      properties:
+                        name:
+                          description: |-
+                            Name must match the name of one entry in pod.spec.resourceClaims of
+                            the Pod where this field is used. It makes that resource available
+                            inside a container.
+                          type: string
+                        request:
+                          description: |-
+                            Request is the name chosen for a request in the referenced claim.
+                            If empty, everything from the claim is made available, otherwise
+                            only the result of this request.
+                          type: string
+                      required:
+                      - name
+                      type: object
+                    type: array
+                    x-kubernetes-list-map-keys:
+                    - name
+                    x-kubernetes-list-type: map
+                  limits:
+                    additionalProperties:
+                      anyOf:
+                      - type: integer
+                      - type: string
+                      pattern: ^(\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))(([KMGTPE]i)|[numkMGTPE]|([eE](\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))))?$
+                      x-kubernetes-int-or-string: true
+                    description: |-
+                      Limits describes the maximum amount of compute resources allowed.
+                      More info: https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/
+                    type: object
+                  requests:
+                    additionalProperties:
+                      anyOf:
+                      - type: integer
+                      - type: string
+                      pattern: ^(\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))(([KMGTPE]i)|[numkMGTPE]|([eE](\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))))?$
+                      x-kubernetes-int-or-string: true
+                    description: |-
+                      Requests describes the minimum amount of compute resources required.
+                      If Requests is omitted for a container, it defaults to Limits if that is explicitly specified,
+                      otherwise to an implementation-defined value. Requests cannot exceed Limits.
+                      More info: https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/
+                    type: object
+                type: object
               routePath:
                 description: routePath is a prefix beginning with a forward slash
                   (/) plus at least 1 additional character. KDexPageBindings associated
@@ -144,93 +199,34 @@ spec:
                 x-kubernetes-validations:
                 - message: '''kind'' must be either KDexScriptLibrary or KDexClusterScriptLibrary'
                   rule: self.kind == "KDexScriptLibrary" || self.kind == "KDexClusterScriptLibrary"
-              webserver:
-                description: webserver defines the configuration for the theme webserver.
-                properties:
-                  image:
-                    description: |-
-                      image is the name of webserver image.
-                      More info: https://kubernetes.io/docs/concepts/containers/images
-                    minLength: 5
-                    type: string
-                  pullPolicy:
-                    description: |-
-                      Policy for pulling the webserver image. Possible values are:
-                      Always: the kubelet always attempts to pull the reference. Container creation will fail If the pull fails.
-                      Never: the kubelet never pulls the reference and only uses a local image or artifact. Container creation will fail if the reference isn't present.
-                      IfNotPresent: the kubelet pulls if the reference isn't already present on disk. Container creation will fail if the reference isn't present and the pull fails.
-                      Defaults to Always if :latest tag is specified, or IfNotPresent otherwise.
-                    type: string
-                  replicas:
-                    description: |-
-                      replicas is the number of desired pods. This is a pointer to distinguish between explicit
-                      zero and not specified. Defaults to 1.
-                    format: int32
-                    type: integer
-                  resources:
-                    description: |-
-                      resources defines the compute resources required by the container.
-                      More info: https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/
-                    properties:
-                      claims:
-                        description: |-
-                          Claims lists the names of resources, defined in spec.resourceClaims,
-                          that are used by this container.
-
-                          This field depends on the
-                          DynamicResourceAllocation feature gate.
-
-                          This field is immutable. It can only be set for containers.
-                        items:
-                          description: ResourceClaim references one entry in PodSpec.ResourceClaims.
-                          properties:
-                            name:
-                              description: |-
-                                Name must match the name of one entry in pod.spec.resourceClaims of
-                                the Pod where this field is used. It makes that resource available
-                                inside a container.
-                              type: string
-                            request:
-                              description: |-
-                                Request is the name chosen for a request in the referenced claim.
-                                If empty, everything from the claim is made available, otherwise
-                                only the result of this request.
-                              type: string
-                          required:
-                          - name
-                          type: object
-                        type: array
-                        x-kubernetes-list-map-keys:
-                        - name
-                        x-kubernetes-list-type: map
-                      limits:
-                        additionalProperties:
-                          anyOf:
-                          - type: integer
-                          - type: string
-                          pattern: ^(\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))(([KMGTPE]i)|[numkMGTPE]|([eE](\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))))?$
-                          x-kubernetes-int-or-string: true
-                        description: |-
-                          Limits describes the maximum amount of compute resources allowed.
-                          More info: https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/
-                        type: object
-                      requests:
-                        additionalProperties:
-                          anyOf:
-                          - type: integer
-                          - type: string
-                          pattern: ^(\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))(([KMGTPE]i)|[numkMGTPE]|([eE](\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))))?$
-                          x-kubernetes-int-or-string: true
-                        description: |-
-                          Requests describes the minimum amount of compute resources required.
-                          If Requests is omitted for a container, it defaults to Limits if that is explicitly specified,
-                          otherwise to an implementation-defined value. Requests cannot exceed Limits.
-                          More info: https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/
-                        type: object
-                    type: object
-                required:
-                - image
-                type: object
+              serverImage:
+                default: kdex-tech/kdex-themeserver:{{.Release}}
+                description: |-
+                  serverImage is the name of webserver image.
+                  More info: https://kubernetes.io/docs/concepts/containers/images
+                minLength: 5
+                type: string
+              serverImagePullPolicy:
+                description: |-
+                  Policy for pulling the webserver image. Possible values are:
+                  Always: the kubelet always attempts to pull the reference. Container creation will fail If the pull fails.
+                  Never: the kubelet never pulls the reference and only uses a local image or artifact. Container creation will fail if the reference isn't present.
+                  IfNotPresent: the kubelet pulls if the reference isn't already present on disk. Container creation will fail if the reference isn't present and the pull fails.
+                  Defaults to Always if :latest tag is specified, or IfNotPresent otherwise.
+                type: string
+              volumeImage:
+                description: |-
+                  volumeImage is the name of an OCI image that contains static resources that will be served by the webserver.
+                  More info: https://kubernetes.io/docs/concepts/containers/images
+                type: string
+              volumeImagePullPolicy:
+                description: |-
+                  Policy for pulling the OCI theme image. Possible values are:
+                  Always: the kubelet always attempts to pull the reference. Container creation will fail If the pull fails.
+                  Never: the kubelet never pulls the reference and only uses a local image or artifact. Container creation will fail if the reference isn't present.
+                  IfNotPresent: the kubelet pulls if the reference isn't already present on disk. Container creation will fail if the reference isn't present and the pull fails.
+                  Defaults to Always if :latest tag is specified, or IfNotPresent otherwise.
+                type: string
             required:
             - assets
             type: object

@@ -21,6 +21,7 @@ import (
 )
 
 // +kubebuilder:object:root=true
+// +kubebuilder:resource:scope=Namespaced,shortName=kdex-hc
 // +kubebuilder:subresource:status
 
 // KDexHostController is the Schema for the kdexhostcontrollers API
@@ -36,15 +37,15 @@ type KDexHostController struct {
 	metav1.TypeMeta `json:",inline"`
 
 	// metadata is a standard object metadata
-	// +optional
+	// +kubebuilder:validation:Optional
 	metav1.ObjectMeta `json:"metadata,omitempty,omitzero"`
 
 	// status defines the observed state of KDexApp
-	// +optional
+	// +kubebuilder:validation:Optional
 	Status KDexObjectStatus `json:"status,omitempty,omitzero"`
 
 	// spec defines the desired state of KDexHostController
-	// +required
+	// +kubebuilder:validation:Required
 	Spec KDexHostControllerSpec `json:"spec"`
 }
 

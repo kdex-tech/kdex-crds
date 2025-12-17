@@ -20,17 +20,6 @@ import (
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
 
-// CustomElement defines a custom element exposed by a micro-frontend application.
-type CustomElement struct {
-	// description of the custom element.
-	// +optional
-	Description string `json:"description,omitempty"`
-
-	// name of the custom element.
-	// +kubebuilder:validation:Required
-	Name string `json:"name"`
-}
-
 // +kubebuilder:object:root=true
 // +kubebuilder:resource:scope=Namespaced,shortName=kdex-a
 // +kubebuilder:subresource:status
@@ -49,11 +38,11 @@ type KDexApp struct {
 	metav1.TypeMeta `json:",inline"`
 
 	// metadata is a standard object metadata
-	// +optional
+	// +kubebuilder:validation:Optional
 	metav1.ObjectMeta `json:"metadata,omitempty,omitzero"`
 
 	// status defines the observed state of KDexApp
-	// +optional
+	// +kubebuilder:validation:Optional
 	Status KDexObjectStatus `json:"status,omitempty,omitzero"`
 
 	// spec defines the desired state of KDexApp
@@ -72,21 +61,17 @@ type KDexAppList struct {
 
 // KDexAppSpec defines the desired state of KDexApp
 type KDexAppSpec struct {
-	Clustered bool `json:"-"`
-
 	// customElements is a list of custom elements implemented by the micro-frontend application.
+	// +listType=map
+	// +listMapKey=name
 	// +kubebuilder:validation:MaxItems=32
 	// +kubebuilder:validation:MinItems=1
 	CustomElements []CustomElement `json:"customElements,omitempty"`
 
-	// packageReference specifies the name and version of an NPM package that contains the micro-frontend application. The package.json must describe an ES module.
-	// +kubebuilder:validation:Required
-	PackageReference PackageReference `json:"packageReference"`
+	ScriptLibrary KDexScriptLibrarySpec `json:",inline"`
 
-	// scripts is a set of script references. They may contain URLs that point to resources hosted at some public address, npm module references or they may contain tag contents.
-	// +kubebuilder:validation:MaxItems=32
-	// +optional
-	Scripts []Script `json:"scripts,omitempty"`
+	// When not specified the default routePath (path where the webserver will be mounted into the Ingress/HTTPRoute) will be `/{{.metadata.name}}`
+	WebServer WebServer `json:",inline"`
 }
 
 func init() {

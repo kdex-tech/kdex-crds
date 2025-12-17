@@ -16,11 +16,11 @@ import (
 )
 
 type AuthData struct {
-	// +optional
+	// +kubebuilder:validation:Optional
 	Password string `json:"password,omitempty" yaml:"password,omitempty"`
-	// +optional
+	// +kubebuilder:validation:Optional
 	Token string `json:"token,omitempty" yaml:"token,omitempty"`
-	// +optional
+	// +kubebuilder:validation:Optional
 	Username string `json:"username,omitempty" yaml:"username,omitempty"`
 }
 
@@ -34,7 +34,7 @@ type HostControllerConfiguration struct {
 type NexusConfiguration struct {
 	metav1.TypeMeta `json:",inline"`
 	// metadata is a standard object metadata
-	// +optional
+	// +kubebuilder:validation:Optional
 	metav1.ObjectMeta `json:"metadata,omitempty,omitzero"`
 
 	DefaultImageRegistry RegistryConfiguration       `json:"defaultImageRegistry" yaml:"defaultImageRegistry"`
@@ -44,11 +44,11 @@ type NexusConfiguration struct {
 }
 
 type RegistryConfiguration struct {
-	// +optional
+	// +kubebuilder:validation:Optional
 	AuthData AuthData `json:"authData,omitempty" yaml:"authData,omitempty"`
 	// +required
 	Host string `json:"host" yaml:"host"`
-	// +optional
+	// +kubebuilder:validation:Optional
 	InSecure bool `json:"insecure,omitempty" yaml:"insecure,omitempty"`
 }
 

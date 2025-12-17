@@ -18,28 +18,8 @@ package v1alpha1
 
 import (
 	corev1 "k8s.io/api/core/v1"
-	"k8s.io/apimachinery/pkg/api/resource"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
-
-// +kubebuilder:validation:XValidation:rule="has(self.rawHTML) != (has(self.customElementName) && has(self.appRef))",message="exactly one of rawHTML or both customElementName and appRef must be set"
-type ContentEntry struct {
-	// appRef is a reference to the KDexApp to include in this binding.
-	// +optional
-	// +kubebuilder:validation:XValidation:rule=`self.kind == "KDexApp" || self.kind == "KDexClusterApp"`,message="'kind' must be either KDexApp or KDexClusterApp"
-	AppRef *KDexObjectReference `json:"appRef,omitempty"`
-	// customElementName is the name of the KDexApp custom element to render in the specified slot (if present in the template).
-	// +optional
-	CustomElementName string `json:"customElementName,omitempty"`
-
-	// rawHTML is a raw HTML string to be rendered in the specified slot (if present in the template).
-	// +optional
-	RawHTML string `json:"rawHTML,omitempty"`
-
-	// slot is the name of the App slot to which this entry will be bound. If omitted, the slot used will be `main`. No more than one entry can be bound to a slot.
-	// +optional
-	Slot string `json:"slot"`
-}
 
 // +kubebuilder:object:root=true
 // +kubebuilder:resource:scope=Namespaced,shortName=kdex-pb
@@ -56,11 +36,11 @@ type KDexPageBinding struct {
 	metav1.TypeMeta `json:",inline"`
 
 	// metadata is a standard object metadata
-	// +optional
+	// +kubebuilder:validation:Optional
 	metav1.ObjectMeta `json:"metadata,omitempty,omitzero"`
 
 	// status defines the observed state of KDexApp
-	// +optional
+	// +kubebuilder:validation:Optional
 	Status KDexObjectStatus `json:"status,omitempty,omitzero"`
 
 	// spec defines the desired state of KDexPageBinding
@@ -80,6 +60,8 @@ type KDexPageBindingList struct {
 // KDexPageBindingSpec defines the desired state of KDexPageBinding
 type KDexPageBindingSpec struct {
 	// contentEntries is a set of content entries to bind to this page. They may be either raw HTML fragments or KDexApp references.
+	// +listType=map
+	// +listMapKey=slot
 	// +kubebuilder:validation:MaxItems=8
 	// +kubebuilder:validation:MinItems=1
 	// +kubebuilder:validation:Required
@@ -95,21 +77,21 @@ type KDexPageBindingSpec struct {
 	Label string `json:"label"`
 
 	// navigationHints are optional navigation properties that if omitted result in the page being hidden from the navigation.
-	// +optional
+	// +kubebuilder:validation:Optional
 	NavigationHints *NavigationHints `json:"navigationHints,omitempty"`
 
 	// overrideFooterRef is an optional reference to a KDexPageFooter resource. If not specified, the footer from the archetype will be used.
-	// +optional
+	// +kubebuilder:validation:Optional
 	// +kubebuilder:validation:XValidation:rule=`self.kind == "KDexPageFooter" || self.kind == "KDexClusterPageFooter"`,message="'kind' must be either KDexPageFooter or KDexClusterPageFooter"
 	OverrideFooterRef *KDexObjectReference `json:"overrideFooterRef,omitempty"`
 
 	// overrideHeaderRef is an optional reference to a KDexPageHeader resource. If not specified, the header from the archetype will be used.
-	// +optional
+	// +kubebuilder:validation:Optional
 	// +kubebuilder:validation:XValidation:rule=`self.kind == "KDexPageHeader" || self.kind == "KDexClusterPageHeader"`,message="'kind' must be either KDexPageHeader or KDexClusterPageHeader"
 	OverrideHeaderRef *KDexObjectReference `json:"overrideHeaderRef,omitempty"`
 
 	// overrideMainNavigationRef is an optional reference to a KDexPageNavigation resource. If not specified, the main navigation from the archetype will be used.
-	// +optional
+	// +kubebuilder:validation:Optional
 	// +kubebuilder:validation:XValidation:rule=`self.kind == "KDexPageNavigation" || self.kind == "KDexClusterPageNavigation"`,message="'kind' must be either KDexPageNavigation or KDexClusterPageNavigation"
 	OverrideMainNavigationRef *KDexObjectReference `json:"overrideMainNavigationRef,omitempty"`
 
@@ -119,37 +101,15 @@ type KDexPageBindingSpec struct {
 	PageArchetypeRef KDexObjectReference `json:"pageArchetypeRef"`
 
 	// parentPageRef is a reference to the KDexPageBinding bellow which this page will appear in the main navigation. If not set, the page will be placed in the top level of the navigation.
-	// +optional
+	// +kubebuilder:validation:Optional
 	ParentPageRef *corev1.LocalObjectReference `json:"parentPageRef,omitempty"`
 
 	Paths `json:",inline"`
 
 	// scriptLibraryRef is an optional reference to a KDexScriptLibrary resource.
-	// +optional
+	// +kubebuilder:validation:Optional
 	// +kubebuilder:validation:XValidation:rule=`self.kind == "KDexScriptLibrary" || self.kind == "KDexClusterScriptLibrary"`,message="'kind' must be either KDexScriptLibrary or KDexClusterScriptLibrary"
 	ScriptLibraryRef *KDexObjectReference `json:"scriptLibraryRef,omitempty"`
-}
-
-type NavigationHints struct {
-	// icon is the name of the icon to display next to the menu entry for this page.
-	// +optional
-	Icon string `json:"icon,omitempty"`
-
-	// weight is a property that influences the position of the page menu entry. Items at each level are sorted first by ascending weight and then ascending lexicographically.
-	// +optional
-	Weight resource.Quantity `json:"weight,omitempty"`
-}
-
-// +kubebuilder:validation:XValidation:rule="!has(self.patternPath) || self.patternPath.startsWith(self.basePath)",message="if patternPath is specified, basePath must be a prefix of patternPath"
-type Paths struct {
-	// basePath is the shortest path by which the page may be accessed. It must not contain path parameters. This path will be used in site navigation. This path is subject to being prefixed for localization by `/{l10n}` and will be when the user selects a non-default language.
-	// +kubebuilder:validation:Pattern=`^/`
-	// +kubebuilder:validation:Required
-	BasePath string `json:"basePath"`
-
-	// patternPath, which must be prefixed by BasePath, is an extension of basePath that adds pattern matching as defined by https://pkg.go.dev/net/http#hdr-Patterns-ServeMux. This path is subject to being prefixed for localization by `/{l10n}` such as when the user selects a non-default language.
-	// +optional
-	PatternPath string `json:"patternPath,omitempty"`
 }
 
 func init() {

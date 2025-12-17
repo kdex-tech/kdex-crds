@@ -19,64 +19,8 @@ package v1alpha1
 import (
 	"bytes"
 
-	corev1 "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
-
-const (
-	href = "href"
-	src  = "src"
-)
-
-// +kubebuilder:validation:XValidation:rule="[has(self.linkHref), has(self.style)].filter(x, x).size() == 1",message="exactly one of linkHref or style must be set"
-type Asset struct {
-	// attributes are key/value pairs that will be added to the element [link|style] as attributes when rendered.
-	// +optional
-	Attributes map[string]string `json:"attributes,omitempty"`
-
-	// linkHref is the content of a <link> href attribute. The URL may be absolute with protocol and host or it must be prefixed by the RoutePath of the theme.
-	// +optional
-	LinkHref string `json:"linkHref,omitempty"`
-
-	// style is the text content to be added into a <style> element when rendered.
-	// +optional
-	Style string `json:"style,omitempty"`
-}
-
-func (a *Asset) String() string {
-	var buffer bytes.Buffer
-
-	if a.LinkHref != "" {
-		buffer.WriteString("<link")
-		for key, value := range a.Attributes {
-			if key == href {
-				continue
-			}
-			buffer.WriteRune(' ')
-			buffer.WriteString(key)
-			buffer.WriteString("=\"")
-			buffer.WriteString(value)
-			buffer.WriteRune('"')
-		}
-		buffer.WriteString(" href=\"")
-		buffer.WriteString(a.LinkHref)
-		buffer.WriteString("\"/>")
-	} else if a.Style != "" {
-		buffer.WriteString("<style")
-		for key, value := range a.Attributes {
-			buffer.WriteRune(' ')
-			buffer.WriteString(key)
-			buffer.WriteString("=\"")
-			buffer.WriteString(value)
-			buffer.WriteRune('"')
-		}
-		buffer.WriteString(">\n")
-		buffer.WriteString(a.Style)
-		buffer.WriteString("\n</style>")
-	}
-
-	return buffer.String()
-}
 
 // +kubebuilder:object:root=true
 // +kubebuilder:resource:scope=Namespaced,shortName=kdex-th
@@ -92,11 +36,11 @@ type KDexTheme struct {
 	metav1.TypeMeta `json:",inline"`
 
 	// metadata is a standard object metadata
-	// +optional
+	// +kubebuilder:validation:Optional
 	metav1.ObjectMeta `json:"metadata,omitempty,omitzero"`
 
 	// status defines the observed state of KDexApp
-	// +optional
+	// +kubebuilder:validation:Optional
 	Status KDexObjectStatus `json:"status,omitempty,omitzero"`
 
 	// spec defines the desired state of KDexTheme
@@ -123,41 +67,13 @@ type KDexThemeSpec struct {
 
 	Clustered bool `json:"-"`
 
-	// image is the name of an OCI image that contains Theme resources.
-	// More info: https://kubernetes.io/docs/concepts/containers/images
-	// +optional
-	Image string `json:"image,omitempty"`
-
-	// Policy for pulling the OCI theme image. Possible values are:
-	// Always: the kubelet always attempts to pull the reference. Container creation will fail If the pull fails.
-	// Never: the kubelet never pulls the reference and only uses a local image or artifact. Container creation will fail if the reference isn't present.
-	// IfNotPresent: the kubelet pulls if the reference isn't already present on disk. Container creation will fail if the reference isn't present and the pull fails.
-	// Defaults to Always if :latest tag is specified, or IfNotPresent otherwise.
-	// +optional
-	PullPolicy corev1.PullPolicy `json:"pullPolicy,omitempty" protobuf:"bytes,2,opt,name=pullPolicy,casttype=PullPolicy"`
-
-	// pullSecrets is an optional list of references to secrets in the same namespace to use for pulling the image. Also used for the webserver image if specified.
-	// More info: https://kubernetes.io/docs/concepts/containers/images#specifying-imagepullsecrets-on-a-pod
-	// +optional
-	// +patchMergeKey=name
-	// +patchStrategy=merge
-	// +listType=map
-	// +listMapKey=name
-	PullSecrets []corev1.LocalObjectReference `json:"pullSecrets,omitempty" patchStrategy:"merge" patchMergeKey:"name" protobuf:"bytes,15,rep,name=imagePullSecrets"`
-
-	// routePath is a prefix beginning with a forward slash (/) plus at least 1 additional character. KDexPageBindings associated with the KDexHost that have conflicting urls will be rejected and marked as conflicting.
-	// +optional
-	// +kubebuilder:validation:Pattern=`^/.+`
-	RoutePath string `json:"routePath,omitempty"`
-
 	// scriptLibraryRef is an optional reference to a KDexScriptLibrary resource.
-	// +optional
+	// +kubebuilder:validation:Optional
 	// +kubebuilder:validation:XValidation:rule=`self.kind == "KDexScriptLibrary" || self.kind == "KDexClusterScriptLibrary"`,message="'kind' must be either KDexScriptLibrary or KDexClusterScriptLibrary"
 	ScriptLibraryRef *KDexObjectReference `json:"scriptLibraryRef,omitempty"`
 
-	// webserver defines the configuration for the theme webserver.
-	// +optional
-	WebServer *WebServer `json:"webserver,omitempty"`
+	// When not specified the default routePath (path where the webserver will be mounted into the Ingress/HTTPRoute) will be `/theme`
+	WebServer WebServer `json:",inline"`
 }
 
 func (s *KDexThemeSpec) String() string {
@@ -171,33 +87,6 @@ func (s *KDexThemeSpec) String() string {
 	}
 
 	return buffer.String()
-}
-
-// WebServer defines the desired state of the KDexTheme web server
-type WebServer struct {
-	// image is the name of webserver image.
-	// More info: https://kubernetes.io/docs/concepts/containers/images
-	// +kubebuilder:validation:Required
-	// +kubebuilder:validation:MinLength=5
-	Image string `json:"image"`
-
-	// Policy for pulling the webserver image. Possible values are:
-	// Always: the kubelet always attempts to pull the reference. Container creation will fail If the pull fails.
-	// Never: the kubelet never pulls the reference and only uses a local image or artifact. Container creation will fail if the reference isn't present.
-	// IfNotPresent: the kubelet pulls if the reference isn't already present on disk. Container creation will fail if the reference isn't present and the pull fails.
-	// Defaults to Always if :latest tag is specified, or IfNotPresent otherwise.
-	// +optional
-	PullPolicy corev1.PullPolicy `json:"pullPolicy,omitempty" protobuf:"bytes,2,opt,name=pullPolicy,casttype=PullPolicy"`
-
-	// replicas is the number of desired pods. This is a pointer to distinguish between explicit
-	// zero and not specified. Defaults to 1.
-	// +optional
-	Replicas *int32 `json:"replicas,omitempty"`
-
-	// resources defines the compute resources required by the container.
-	// More info: https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/
-	// +optional
-	Resources corev1.ResourceRequirements `json:"resources,omitempty"`
 }
 
 func init() {

@@ -17,10 +17,6 @@ limitations under the License.
 package v1alpha1
 
 import (
-	"bytes"
-	"fmt"
-
-	corev1 "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
 
@@ -45,11 +41,11 @@ type KDexScriptLibrary struct {
 	metav1.TypeMeta `json:",inline"`
 
 	// metadata is a standard object metadata
-	// +optional
+	// +kubebuilder:validation:Optional
 	metav1.ObjectMeta `json:"metadata,omitempty,omitzero"`
 
 	// status defines the observed state of KDexApp
-	// +optional
+	// +kubebuilder:validation:Optional
 	Status KDexObjectStatus `json:"status,omitempty,omitzero"`
 
 	// spec defines the desired state of KDexScriptLibrary
@@ -72,113 +68,13 @@ type KDexScriptLibrarySpec struct {
 	Clustered bool `json:"-"`
 
 	// packageReference specifies the name and version of an NPM package that contains the script. The package.json must describe an ES module.
-	// +optional
+	// +kubebuilder:validation:Optional
 	PackageReference *PackageReference `json:"packageReference,omitempty"`
 
 	// scripts is a set of script references. They may contain URLs that point to resources hosted at some public address, npm module references or they may contain tag contents.
 	// +kubebuilder:validation:MaxItems=32
-	// +optional
+	// +kubebuilder:validation:Optional
 	Scripts []Script `json:"scripts,omitempty"`
-}
-
-// PackageReference specifies the name and version of an NPM package that contains the micro-frontend application.
-type PackageReference struct {
-	// exportMapping is a mapping of the module's exports that will be used when the module import is written. e.g. `import [exportMapping] from [module_name];`. If exportMapping is not provided the module will be written as `import [module_name];`
-	// +optional
-	ExportMapping string `json:"exportMapping,omitempty"`
-
-	// name contains a scoped npm package name.
-	// +kubebuilder:validation:Required
-	Name string `json:"name"`
-
-	// secretRef is a reference to a secret containing authentication credentials for the NPM registry that holds the package.
-	// +optional
-	SecretRef *corev1.LocalObjectReference `json:"secretRef,omitempty"`
-
-	// version contains a specific npm package version.
-	// +kubebuilder:validation:Required
-	Version string `json:"version"`
-}
-
-func (p *PackageReference) ToImportStatement() string {
-	var buffer bytes.Buffer
-
-	buffer.WriteString("import ")
-	if p.ExportMapping != "" {
-		buffer.WriteString(p.ExportMapping)
-		buffer.WriteString(" from ")
-	}
-	buffer.WriteString("\"")
-	buffer.WriteString(p.Name)
-	buffer.WriteString("\";")
-
-	return buffer.String()
-}
-
-func (p *PackageReference) ToScriptTag() string {
-	return fmt.Sprintf(importStatementTemplate, p.ToImportStatement())
-}
-
-// +kubebuilder:validation:XValidation:rule="[has(self.script), has(self.scriptSrc)].filter(x, x).size() == 1",message="script and scriptSrc are mutually exclusive"
-type Script struct {
-	// attributes are key/value pairs that will be added to the element when rendered.
-	// +optional
-	Attributes map[string]string `json:"attributes,omitempty"`
-
-	// footScript is a flag for script or scriptSrc that indicates if the tag should be added in the head of the page or at the foot. The default is false (add to head). To add the script to the foot of the page set footScript to true.
-	// +optional
-	// +kubebuilder:default:=false
-	FootScript bool `json:"footScript,omitempty"`
-
-	// script is the text content to be added into a <script> element when rendered.
-	// +optional
-	Script string `json:"script,omitempty"`
-
-	// scriptSrc must be an absolute URL with a protocol and host which can be used in a src attribute.
-	// +optional
-	ScriptSrc string `json:"scriptSrc,omitempty"`
-}
-
-func (s *Script) ToScriptTag(footScript bool) string {
-	if !s.FootScript && footScript {
-		return ""
-	}
-
-	var buffer bytes.Buffer
-
-	if s.ScriptSrc != "" {
-		buffer.WriteString("<script")
-		for key, value := range s.Attributes {
-			if key == src {
-				continue
-			}
-			buffer.WriteRune(' ')
-			buffer.WriteString(key)
-			buffer.WriteString("=\"")
-			buffer.WriteString(value)
-			buffer.WriteRune('"')
-		}
-		buffer.WriteString(" src=\"")
-		buffer.WriteString(s.ScriptSrc)
-		buffer.WriteString("\"></script>")
-	} else if s.Script != "" {
-		buffer.WriteString("<script")
-		for key, value := range s.Attributes {
-			if key == src {
-				continue
-			}
-			buffer.WriteRune(' ')
-			buffer.WriteString(key)
-			buffer.WriteString("=\"")
-			buffer.WriteString(value)
-			buffer.WriteRune('"')
-		}
-		buffer.WriteString(">\n")
-		buffer.WriteString(s.Script)
-		buffer.WriteString("\n</script>")
-	}
-
-	return buffer.String()
 }
 
 func init() {

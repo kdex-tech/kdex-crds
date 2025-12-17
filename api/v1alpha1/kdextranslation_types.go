@@ -35,11 +35,11 @@ type KDexTranslation struct {
 	metav1.TypeMeta `json:",inline"`
 
 	// metadata is a standard object metadata
-	// +optional
+	// +kubebuilder:validation:Optional
 	metav1.ObjectMeta `json:"metadata,omitempty,omitzero"`
 
 	// status defines the observed state of KDexApp
-	// +optional
+	// +kubebuilder:validation:Optional
 	Status KDexObjectStatus `json:"status,omitempty,omitzero"`
 
 	// spec defines the desired state of KDexTranslation
@@ -63,21 +63,11 @@ type KDexTranslationSpec struct {
 	HostRef corev1.LocalObjectReference `json:"hostRef"`
 
 	// translations is an array of objects where each one specifies a language (lang) and a map (keysAndValues) consisting of key/value pairs. If the lang property is not unique in the array and its keysAndValues map contains the same keys, the last one takes precedence.
+	// +listType=map
+	// +listMapKey=lang
 	// +kubebuilder:validation:MinItems=1
 	// +kubebuilder:validation:Required
 	Translations []Translation `json:"translations"`
-}
-
-type Translation struct {
-	// keysAndValues is a map of key=/value pairs where the key is the identifier and the value is the translation of that key in the language specified by the lang property.
-	// +kubebuilder:validation:MinProperties=1
-	// +kubebuilder:validation:Required
-	KeysAndValues map[string]string `json:"keysAndValues"`
-
-	// lang is a string containing a BCP 47 language tag that identifies the set of translations.
-	// See https://developer.mozilla.org/en-US/docs/Glossary/BCP_47_language_tag.
-	// +kubebuilder:validation:Required
-	Lang string `json:"lang"`
 }
 
 func init() {

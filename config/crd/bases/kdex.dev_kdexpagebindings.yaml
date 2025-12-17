@@ -90,6 +90,12 @@ spec:
                       x-kubernetes-validations:
                       - message: '''kind'' must be either KDexApp or KDexClusterApp'
                         rule: self.kind == "KDexApp" || self.kind == "KDexClusterApp"
+                    attributes:
+                      additionalProperties:
+                        type: string
+                      description: attributes are key/value pairs that will be added
+                        to the custom element as attributes when rendered.
+                      type: object
                     customElementName:
                       description: customElementName is the name of the KDexApp custom
                         element to render in the specified slot (if present in the
@@ -104,14 +110,23 @@ spec:
                         entry will be bound. If omitted, the slot used will be `main`.
                         No more than one entry can be bound to a slot.
                       type: string
+                  required:
+                  - appRef
+                  - customElementName
+                  - rawHTML
+                  - slot
                   type: object
                   x-kubernetes-validations:
-                  - message: exactly one of rawHTML or both customElementName and
-                      appRef must be set
-                    rule: has(self.rawHTML) != (has(self.customElementName) && has(self.appRef))
+                  - message: exactly one of the fields in [appRef rawHTML] must be
+                      set
+                    rule: '[has(self.appRef),has(self.rawHTML)].filter(x,x==true).size()
+                      == 1'
                 maxItems: 8
                 minItems: 1
                 type: array
+                x-kubernetes-list-map-keys:
+                - slot
+                x-kubernetes-list-type: map
                 x-kubernetes-validations:
                 - message: if there are multiple entries, one must be 'main'
                   rule: self.size() <= 1 || self.exists(x, x.slot == 'main')

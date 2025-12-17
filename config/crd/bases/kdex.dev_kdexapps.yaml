@@ -73,10 +73,37 @@ spec:
                 maxItems: 32
                 minItems: 1
                 type: array
+                x-kubernetes-list-map-keys:
+                - name
+                x-kubernetes-list-type: map
+              imagePullSecrets:
+                description: |-
+                  imagePullSecrets is an optional list of references to secrets in the same namespace to use for pulling the image. Also used for the webserver image if specified.
+                  More info: https://kubernetes.io/docs/concepts/containers/images#specifying-imagepullsecrets-on-a-pod
+                items:
+                  description: |-
+                    LocalObjectReference contains enough information to let you locate the
+                    referenced object inside the same namespace.
+                  properties:
+                    name:
+                      default: ""
+                      description: |-
+                        Name of the referent.
+                        This field is effectively required, but due to backwards compatibility is
+                        allowed to be empty. Instances of this type with an empty value here are
+                        almost certainly wrong.
+                        More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#names
+                      type: string
+                  type: object
+                  x-kubernetes-map-type: atomic
+                type: array
+                x-kubernetes-list-map-keys:
+                - name
+                x-kubernetes-list-type: map
               packageReference:
                 description: packageReference specifies the name and version of an
-                  NPM package that contains the micro-frontend application. The package.json
-                  must describe an ES module.
+                  NPM package that contains the script. The package.json must describe
+                  an ES module.
                 properties:
                   exportMapping:
                     description: exportMapping is a mapping of the module's exports
@@ -109,6 +136,80 @@ spec:
                 - name
                 - version
                 type: object
+              replicas:
+                description: |-
+                  replicas is the number of desired pods. This is a pointer to distinguish between explicit
+                  zero and not specified. Defaults to 1.
+                format: int32
+                type: integer
+              resources:
+                description: |-
+                  resources defines the compute resources required by the container.
+                  More info: https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/
+                properties:
+                  claims:
+                    description: |-
+                      Claims lists the names of resources, defined in spec.resourceClaims,
+                      that are used by this container.
+
+                      This field depends on the
+                      DynamicResourceAllocation feature gate.
+
+                      This field is immutable. It can only be set for containers.
+                    items:
+                      description: ResourceClaim references one entry in PodSpec.ResourceClaims.
+                      properties:
+                        name:
+                          description: |-
+                            Name must match the name of one entry in pod.spec.resourceClaims of
+                            the Pod where this field is used. It makes that resource available
+                            inside a container.
+                          type: string
+                        request:
+                          description: |-
+                            Request is the name chosen for a request in the referenced claim.
+                            If empty, everything from the claim is made available, otherwise
+                            only the result of this request.
+                          type: string
+                      required:
+                      - name
+                      type: object
+                    type: array
+                    x-kubernetes-list-map-keys:
+                    - name
+                    x-kubernetes-list-type: map
+                  limits:
+                    additionalProperties:
+                      anyOf:
+                      - type: integer
+                      - type: string
+                      pattern: ^(\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))(([KMGTPE]i)|[numkMGTPE]|([eE](\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))))?$
+                      x-kubernetes-int-or-string: true
+                    description: |-
+                      Limits describes the maximum amount of compute resources allowed.
+                      More info: https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/
+                    type: object
+                  requests:
+                    additionalProperties:
+                      anyOf:
+                      - type: integer
+                      - type: string
+                      pattern: ^(\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))(([KMGTPE]i)|[numkMGTPE]|([eE](\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))))?$
+                      x-kubernetes-int-or-string: true
+                    description: |-
+                      Requests describes the minimum amount of compute resources required.
+                      If Requests is omitted for a container, it defaults to Limits if that is explicitly specified,
+                      otherwise to an implementation-defined value. Requests cannot exceed Limits.
+                      More info: https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/
+                    type: object
+                type: object
+              routePath:
+                description: routePath is a prefix beginning with a forward slash
+                  (/) plus at least 1 additional character. KDexPageBindings associated
+                  with the KDexHost that have conflicting urls will be rejected and
+                  marked as conflicting.
+                pattern: ^/.+
+                type: string
               scripts:
                 description: scripts is a set of script references. They may contain
                   URLs that point to resources hosted at some public address, npm
@@ -138,14 +239,45 @@ spec:
                       type: string
                   type: object
                   x-kubernetes-validations:
-                  - message: script and scriptSrc are mutually exclusive
-                    rule: '[has(self.script), has(self.scriptSrc)].filter(x, x).size()
+                  - message: exactly one of the fields in [script scriptSrc] must
+                      be set
+                    rule: '[has(self.script),has(self.scriptSrc)].filter(x,x==true).size()
                       == 1'
                 maxItems: 32
                 type: array
-            required:
-            - packageReference
+              serverImage:
+                default: kdex-tech/kdex-themeserver:{{.Release}}
+                description: |-
+                  serverImage is the name of webserver image.
+                  More info: https://kubernetes.io/docs/concepts/containers/images
+                minLength: 5
+                type: string
+              serverImagePullPolicy:
+                description: |-
+                  Policy for pulling the webserver image. Possible values are:
+                  Always: the kubelet always attempts to pull the reference. Container creation will fail If the pull fails.
+                  Never: the kubelet never pulls the reference and only uses a local image or artifact. Container creation will fail if the reference isn't present.
+                  IfNotPresent: the kubelet pulls if the reference isn't already present on disk. Container creation will fail if the reference isn't present and the pull fails.
+                  Defaults to Always if :latest tag is specified, or IfNotPresent otherwise.
+                type: string
+              volumeImage:
+                description: |-
+                  volumeImage is the name of an OCI image that contains static resources that will be served by the webserver.
+                  More info: https://kubernetes.io/docs/concepts/containers/images
+                type: string
+              volumeImagePullPolicy:
+                description: |-
+                  Policy for pulling the OCI theme image. Possible values are:
+                  Always: the kubelet always attempts to pull the reference. Container creation will fail If the pull fails.
+                  Never: the kubelet never pulls the reference and only uses a local image or artifact. Container creation will fail if the reference isn't present.
+                  IfNotPresent: the kubelet pulls if the reference isn't already present on disk. Container creation will fail if the reference isn't present and the pull fails.
+                  Defaults to Always if :latest tag is specified, or IfNotPresent otherwise.
+                type: string
             type: object
+            x-kubernetes-validations:
+            - message: at least one of scripts or packageReference must be specified
+              rule: '[has(self.scripts), has(self.packageReference)].filter(x, x).size()
+                > 0'
           status:
             description: status defines the observed state of KDexApp
             properties:
