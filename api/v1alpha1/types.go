@@ -374,6 +374,11 @@ type WebServer struct {
 	// +listMapKey=name
 	ImagePullSecrets []corev1.LocalObjectReference `json:"imagePullSecrets,omitempty" patchStrategy:"merge" patchMergeKey:"name" protobuf:"bytes,15,rep,name=imagePullSecrets"`
 
+	// ingressPath is a prefix beginning with a forward slash (/) plus at least 1 additional character. KDexPageBindings associated with the KDexHost that have conflicting urls will be rejected and marked as conflicting.
+	// +kubebuilder:validation:Optional
+	// +kubebuilder:validation:Pattern=`^/.+`
+	IngressPath string `json:"ingressPath,omitempty"`
+
 	// replicas is the number of desired pods. This is a pointer to distinguish between explicit
 	// zero and not specified. Defaults to 1.
 	// +kubebuilder:validation:Optional
@@ -383,11 +388,6 @@ type WebServer struct {
 	// More info: https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/
 	// +kubebuilder:validation:Optional
 	Resources corev1.ResourceRequirements `json:"resources,omitempty"`
-
-	// routePath is a prefix beginning with a forward slash (/) plus at least 1 additional character. KDexPageBindings associated with the KDexHost that have conflicting urls will be rejected and marked as conflicting.
-	// +kubebuilder:validation:Optional
-	// +kubebuilder:validation:Pattern=`^/.+`
-	RoutePath string `json:"routePath,omitempty"`
 
 	// serverImage is the name of webserver image.
 	// More info: https://kubernetes.io/docs/concepts/containers/images

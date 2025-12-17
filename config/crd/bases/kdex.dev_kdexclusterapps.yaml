@@ -92,6 +92,13 @@ spec:
                 x-kubernetes-list-map-keys:
                 - name
                 x-kubernetes-list-type: map
+              ingressPath:
+                description: ingressPath is a prefix beginning with a forward slash
+                  (/) plus at least 1 additional character. KDexPageBindings associated
+                  with the KDexHost that have conflicting urls will be rejected and
+                  marked as conflicting.
+                pattern: ^/.+
+                type: string
               packageReference:
                 description: packageReference specifies the name and version of an
                   NPM package that contains the script. The package.json must describe
@@ -195,13 +202,6 @@ spec:
                       More info: https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/
                     type: object
                 type: object
-              routePath:
-                description: routePath is a prefix beginning with a forward slash
-                  (/) plus at least 1 additional character. KDexPageBindings associated
-                  with the KDexHost that have conflicting urls will be rejected and
-                  marked as conflicting.
-                pattern: ^/.+
-                type: string
               scripts:
                 description: scripts is a set of script references. They may contain
                   URLs that point to resources hosted at some public address, npm

@@ -70,7 +70,7 @@ type KDexAppSpec struct {
 
 	ScriptLibrary KDexScriptLibrarySpec `json:",inline"`
 
-	// When not specified the default routePath (path where the webserver will be mounted into the Ingress/HTTPRoute) will be `/{{.metadata.name}}`
+	// When not specified the default ingressPath (path where the webserver will be mounted into the Ingress/HTTPRoute) will be `/{{.metadata.name}}`
 	WebServer WebServer `json:",inline"`
 }
 

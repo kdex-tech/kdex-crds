@@ -118,6 +118,13 @@ spec:
                 x-kubernetes-list-map-keys:
                 - name
                 x-kubernetes-list-type: map
+              ingressPath:
+                description: ingressPath is a prefix beginning with a forward slash
+                  (/) plus at least 1 additional character. KDexPageBindings associated
+                  with the KDexHost that have conflicting urls will be rejected and
+                  marked as conflicting.
+                pattern: ^/.+
+                type: string
               modulePolicy:
                 default: Strict
                 description: |-
@@ -201,13 +208,6 @@ spec:
                       More info: https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/
                     type: object
                 type: object
-              routePath:
-                description: routePath is a prefix beginning with a forward slash
-                  (/) plus at least 1 additional character. KDexPageBindings associated
-                  with the KDexHost that have conflicting urls will be rejected and
-                  marked as conflicting.
-                pattern: ^/.+
-                type: string
               routing:
                 description: routing defines the desired routing configuration for
                   the host.

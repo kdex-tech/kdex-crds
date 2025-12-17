@@ -99,7 +99,7 @@ type KDexHostSpec struct {
 	// +kubebuilder:validation:XValidation:rule=`self.kind == "KDexScriptLibrary" || self.kind == "KDexClusterScriptLibrary"`,message="'kind' must be either KDexScriptLibrary or KDexClusterScriptLibrary"
 	ScriptLibraryRef *KDexObjectReference `json:"scriptLibraryRef,omitempty"`
 
-	// When not specified the default routePath (path where the webserver will be mounted into the Ingress/HTTPRoute) will be `/static`
+	// When not specified the default ingressPath (path where the webserver will be mounted into the Ingress/HTTPRoute) will be `/static`
 	WebServer WebServer `json:",inline"`
 }
 
