@@ -374,7 +374,7 @@ type WebServer struct {
 	// +listMapKey=name
 	ImagePullSecrets []corev1.LocalObjectReference `json:"imagePullSecrets,omitempty" patchStrategy:"merge" patchMergeKey:"name" protobuf:"bytes,15,rep,name=imagePullSecrets"`
 
-	// ingressPath is a prefix beginning with a forward slash (/) plus at least 1 additional character. KDexPageBindings associated with the KDexHost that have conflicting urls will be rejected and marked as conflicting.
+	// ingressPath is a prefix beginning with a forward slash (/) plus at least 1 additional character which indicates where in the Ingress/HTTPRoute of the host the webserver will be mounted. KDexPageBindings associated with the host that have conflicting urls will be rejected from the host.
 	// +kubebuilder:validation:Optional
 	// +kubebuilder:validation:Pattern=`^/.+`
 	IngressPath string `json:"ingressPath,omitempty"`

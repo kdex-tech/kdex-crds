@@ -101,9 +101,10 @@ spec:
                 x-kubernetes-list-type: map
               ingressPath:
                 description: ingressPath is a prefix beginning with a forward slash
-                  (/) plus at least 1 additional character. KDexPageBindings associated
-                  with the KDexHost that have conflicting urls will be rejected and
-                  marked as conflicting.
+                  (/) plus at least 1 additional character which indicates where in
+                  the Ingress/HTTPRoute of the host the webserver will be mounted.
+                  KDexPageBindings associated with the host that have conflicting
+                  urls will be rejected from the host.
                 pattern: ^/.+
                 type: string
               replicas:
