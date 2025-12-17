@@ -58,8 +58,6 @@ type KDexPageArchetypeList struct {
 
 // KDexPageArchetypeSpec defines the desired state of KDexPageArchetype
 type KDexPageArchetypeSpec struct {
-	Clustered bool `json:"-"`
-
 	// content is a go string template that defines the structure of an HTML page.
 	// +kubebuilder:validation:Required
 	// +kubebuilder:validation:MinLength=5

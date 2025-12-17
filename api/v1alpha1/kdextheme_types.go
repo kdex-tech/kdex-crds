@@ -65,8 +65,6 @@ type KDexThemeSpec struct {
 	// +kubebuilder:validation:MinItems=1
 	Assets []Asset `json:"assets"`
 
-	Clustered bool `json:"-"`
-
 	// scriptLibraryRef is an optional reference to a KDexScriptLibrary resource.
 	// +kubebuilder:validation:Optional
 	// +kubebuilder:validation:XValidation:rule=`self.kind == "KDexScriptLibrary" || self.kind == "KDexClusterScriptLibrary"`,message="'kind' must be either KDexScriptLibrary or KDexClusterScriptLibrary"
