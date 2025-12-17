@@ -200,7 +200,18 @@ func (in *KDexAppSpec) DeepCopyInto(out *KDexAppSpec) {
 		*out = make([]CustomElement, len(*in))
 		copy(*out, *in)
 	}
-	in.ScriptLibrary.DeepCopyInto(&out.ScriptLibrary)
+	if in.PackageReference != nil {
+		in, out := &in.PackageReference, &out.PackageReference
+		*out = new(PackageReference)
+		(*in).DeepCopyInto(*out)
+	}
+	if in.Scripts != nil {
+		in, out := &in.Scripts, &out.Scripts
+		*out = make([]Script, len(*in))
+		for i := range *in {
+			(*in)[i].DeepCopyInto(&(*out)[i])
+		}
+	}
 	in.WebServer.DeepCopyInto(&out.WebServer)
 }
 

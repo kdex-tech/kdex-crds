@@ -60,6 +60,7 @@ type KDexAppList struct {
 }
 
 // KDexAppSpec defines the desired state of KDexApp
+// +kubebuilder:validation:XValidation:rule="self.scripts.size() > 0 || has(self.?packageReference.name)",message="at least one of scripts or packageReference must be specified"
 type KDexAppSpec struct {
 	// customElements is a list of custom elements implemented by the micro-frontend application.
 	// +listType=map
@@ -68,7 +69,14 @@ type KDexAppSpec struct {
 	// +kubebuilder:validation:MinItems=1
 	CustomElements []CustomElement `json:"customElements,omitempty"`
 
-	ScriptLibrary KDexScriptLibrarySpec `json:",inline"`
+	// packageReference specifies the name and version of an NPM package that contains the script. The package.json must describe an ES module.
+	// +kubebuilder:validation:Optional
+	PackageReference *PackageReference `json:"packageReference,omitempty"`
+
+	// scripts is a set of script references. They may contain URLs that point to resources hosted at some public address, npm module references or they may contain tag contents.
+	// +kubebuilder:validation:MaxItems=32
+	// +kubebuilder:validation:Optional
+	Scripts []Script `json:"scripts,omitempty"`
 
 	// When not specified the default ingressPath (path where the webserver will be mounted into the Ingress/HTTPRoute) will be `/{{.metadata.name}}`
 	WebServer WebServer `json:",inline"`
