@@ -404,10 +404,10 @@ type WebServer struct {
 	// +kubebuilder:validation:Optional
 	ServerImagePullPolicy corev1.PullPolicy `json:"serverImagePullPolicy,omitempty" protobuf:"bytes,2,opt,name=serverImagePullPolicy,casttype=PullPolicy"`
 
-	// volumeImage is the name of an OCI image that contains static resources that will be served by the webserver.
+	// staticImage is the name of an OCI image that contains static resources that will be served by the webserver.
 	// More info: https://kubernetes.io/docs/concepts/containers/images
 	// +kubebuilder:validation:Optional
-	VolumeImage string `json:"volumeImage,omitempty"`
+	StaticImage string `json:"staticImage,omitempty"`
 
 	// Policy for pulling the OCI theme image. Possible values are:
 	// Always: the kubelet always attempts to pull the reference. Container creation will fail If the pull fails.
@@ -415,5 +415,5 @@ type WebServer struct {
 	// IfNotPresent: the kubelet pulls if the reference isn't already present on disk. Container creation will fail if the reference isn't present and the pull fails.
 	// Defaults to Always if :latest tag is specified, or IfNotPresent otherwise.
 	// +kubebuilder:validation:Optional
-	VolumeImagePullPolicy corev1.PullPolicy `json:"volumeImagePullPolicy,omitempty" protobuf:"bytes,2,opt,name=volumeImagePullPolicy,casttype=PullPolicy"`
+	StaticImagePullPolicy corev1.PullPolicy `json:"staticImagePullPolicy,omitempty" protobuf:"bytes,2,opt,name=staticImagePullPolicy,casttype=PullPolicy"`
 }
