@@ -15,25 +15,70 @@ const (
 	src  = "src"
 )
 
-// +kubebuilder:validation:ExactlyOneOf=linkHref;metaId;script;scriptSrc;style
+// +kubebuilder:validation:ExactlyOneOf=linkHref;metaId;style
 type Asset struct {
-	LinkDef   *LinkDef   `json:",inline" protobuf:"bytes,1,opt,name=linkDef"`
-	MetaDef   *MetaDef   `json:",inline" protobuf:"bytes,2,opt,name=metaDef"`
-	ScriptDef *ScriptDef `json:",inline" protobuf:"bytes,3,opt,name=scriptDef"`
-	StyleDef  *StyleDef  `json:",inline" protobuf:"bytes,4,opt,name=styleDef"`
+	// attributes are key/value pairs that will be added to the element as attributes when rendered.
+	// +kubebuilder:validation:Optional
+	Attributes map[string]string `json:"attributes,omitempty" protobuf:"bytes,1,rep,name=attributes"`
+
+	// linkHref is the content of a `<link>` href attribute. The URL may be absolute with protocol and host or it must be prefixed by the RoutePath of the theme.
+	// +kubebuilder:validation:Optional
+	LinkHref string `json:"linkHref,omitempty" protobuf:"bytes,2,opt,name=linkHref"`
+
+	// metaId is required just for semantics of CRD field validation.
+	// +kubebuilder:validation:Optional
+	MetaID string `json:"metaId,omitempty" protobuf:"bytes,3,opt,name=metaId"`
+
+	// style is the text content to be added into a `<style>` element when rendered.
+	// +kubebuilder:validation:Optional
+	Style string `json:"style,omitempty" protobuf:"bytes,7,opt,name=style"`
 }
 
-func (a *Asset) String() string {
+func (a *Asset) ToTag() string {
 	var buffer bytes.Buffer
 
-	if a.LinkDef != nil {
-		buffer.WriteString(a.LinkDef.ToHeadTag())
-	} else if a.MetaDef != nil {
-		buffer.WriteString(a.MetaDef.ToHeadTag())
-	} else if a.ScriptDef != nil {
-		buffer.WriteString(a.ScriptDef.ToHeadTag())
-	} else if a.StyleDef != nil {
-		buffer.WriteString(a.StyleDef.ToHeadTag())
+	if a.LinkHref != "" {
+		buffer.WriteString("<link")
+		for key, value := range a.Attributes {
+			if key == href {
+				continue
+			}
+			buffer.WriteRune(' ')
+			buffer.WriteString(key)
+			buffer.WriteString("=\"")
+			buffer.WriteString(value)
+			buffer.WriteRune('"')
+		}
+		buffer.WriteString(" href=\"")
+		buffer.WriteString(a.LinkHref)
+		buffer.WriteString("\"/>")
+	} else if a.MetaID != "" {
+		buffer.WriteString("<meta")
+		for key, value := range a.Attributes {
+			if key == id {
+				continue
+			}
+			buffer.WriteRune(' ')
+			buffer.WriteString(key)
+			buffer.WriteString("=\"")
+			buffer.WriteString(value)
+			buffer.WriteRune('"')
+		}
+		buffer.WriteString(" id=\"")
+		buffer.WriteString(a.MetaID)
+		buffer.WriteString("\"/>")
+	} else if a.Style != "" {
+		buffer.WriteString("<style")
+		for key, value := range a.Attributes {
+			buffer.WriteRune(' ')
+			buffer.WriteString(key)
+			buffer.WriteString("=\"")
+			buffer.WriteString(value)
+			buffer.WriteRune('"')
+		}
+		buffer.WriteString(">\n")
+		buffer.WriteString(a.Style)
+		buffer.WriteString("\n</style>")
 	}
 
 	return buffer.String()
@@ -49,7 +94,7 @@ func (a *Assets) String() string {
 	for _, asset := range *a {
 		buffer.WriteString(separator)
 		separator = "\n"
-		buffer.WriteString(asset.String())
+		buffer.WriteString(asset.ToTag())
 	}
 
 	return buffer.String()
@@ -157,91 +202,6 @@ type KDexObjectReference struct {
 	// Defaulted to nil.
 	// +kubebuilder:validation:Optional
 	Namespace string `json:"namespace,omitempty" protobuf:"bytes,3,opt,name=namespace"`
-}
-
-type LinkDef struct {
-	// linkHref is the content of a `<link>` href attribute. The URL may be absolute with protocol and host or it must be prefixed by the RoutePath of the theme.
-	// +kubebuilder:validation:Optional
-	LinkHref string `json:"linkHref,omitempty" protobuf:"bytes,1,opt,name=linkHref"`
-
-	// attributes are key/value pairs that will be added to the element as attributes when rendered.
-	// +kubebuilder:validation:Optional
-	Attributes map[string]string `json:"attributes,omitempty" protobuf:"bytes,2,rep,name=attributes"`
-}
-
-func (l *LinkDef) ToFootTag() string {
-	return l.ToTag()
-}
-
-func (l *LinkDef) ToHeadTag() string {
-	return l.ToTag()
-}
-
-func (l *LinkDef) ToTag() string {
-	if l.LinkHref == "" {
-		return ""
-	}
-
-	var buffer bytes.Buffer
-
-	buffer.WriteString("<link")
-	for key, value := range l.Attributes {
-		if key == href {
-			continue
-		}
-		buffer.WriteRune(' ')
-		buffer.WriteString(key)
-		buffer.WriteString("=\"")
-		buffer.WriteString(value)
-		buffer.WriteRune('"')
-	}
-	buffer.WriteString(" href=\"")
-	buffer.WriteString(l.LinkHref)
-	buffer.WriteString("\"/>")
-
-	return buffer.String()
-}
-
-type MetaDef struct {
-	// id is required just for semantics of CRD field validation.
-	// +kubebuilder:validation:Optional
-	MetaID string `json:"metaId" protobuf:"bytes,1,opt,name=metaId"`
-
-	// attributes are key/value pairs that will be added to the element as attributes when rendered.
-	Attributes map[string]string `json:"attributes,omitempty" protobuf:"bytes,2,rep,name=attributes"`
-}
-
-func (l *MetaDef) ToFootTag() string {
-	return l.ToTag()
-}
-
-func (l *MetaDef) ToHeadTag() string {
-	return l.ToTag()
-}
-
-func (l *MetaDef) ToTag() string {
-	if l.MetaID == "" {
-		return ""
-	}
-
-	var buffer bytes.Buffer
-
-	buffer.WriteString("<meta")
-	for key, value := range l.Attributes {
-		if key == id {
-			continue
-		}
-		buffer.WriteRune(' ')
-		buffer.WriteString(key)
-		buffer.WriteString("=\"")
-		buffer.WriteString(value)
-		buffer.WriteRune('"')
-	}
-	buffer.WriteString(" id=\"")
-	buffer.WriteString(l.MetaID)
-	buffer.WriteString("\"/>")
-
-	return buffer.String()
 }
 
 // ModulePolicy defines the policy for the use of JavaScript Modules.
@@ -361,7 +321,7 @@ const (
 	IngressRoutingStrategy RoutingStrategy = "Ingress"
 )
 
-// +kubebuilder:validation:AtMostOneOf=script;scriptSrc
+// +kubebuilder:validation:ExactlyOneOf=script;scriptSrc
 type ScriptDef struct {
 	// script is the content that will be added to a `<script>` element when rendered.
 	// +kubebuilder:validation:Optional

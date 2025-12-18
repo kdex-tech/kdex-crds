@@ -21,9 +21,7 @@ func TestAssets_String(t *testing.T) {
 			name: "style",
 			assets: Assets{
 				{
-					StyleDef: &StyleDef{
-						Style: `color: #fff;`,
-					},
+					Style: `color: #fff;`,
 				},
 			},
 			want: `<style>
@@ -34,12 +32,10 @@ color: #fff;
 			name: "style with attributes",
 			assets: Assets{
 				{
-					StyleDef: &StyleDef{
-						Attributes: map[string]string{
-							"data-foo": "some data",
-						},
-						Style: `color: #fff;`,
+					Attributes: map[string]string{
+						"data-foo": "some data",
 					},
+					Style: `color: #fff;`,
 				},
 			},
 			want: `<style data-foo="some data">
@@ -50,9 +46,7 @@ color: #fff;
 			name: "link href",
 			assets: Assets{
 				{
-					LinkDef: &LinkDef{
-						LinkHref: "/some/path",
-					},
+					LinkHref: "/some/path",
 				},
 			},
 			want: `<link href="/some/path"/>`,
@@ -61,13 +55,11 @@ color: #fff;
 			name: "link href with attributes",
 			assets: Assets{
 				{
-					LinkDef: &LinkDef{
-						Attributes: map[string]string{
-							"data-foo": "some data",
-							"href":     "/some/path",
-						},
-						LinkHref: "/some/path",
+					Attributes: map[string]string{
+						"data-foo": "some data",
+						"href":     "/some/path",
 					},
+					LinkHref: "/some/path",
 				},
 			},
 			want: `<link data-foo="some data" href="/some/path"/>`,
@@ -76,20 +68,16 @@ color: #fff;
 			name: "both link href and style",
 			assets: Assets{
 				{
-					LinkDef: &LinkDef{
-						Attributes: map[string]string{
-							"data-foo": "some data",
-						},
-						LinkHref: "/some/path",
+					Attributes: map[string]string{
+						"data-foo": "some data",
 					},
+					LinkHref: "/some/path",
 				},
 				{
-					StyleDef: &StyleDef{
-						Attributes: map[string]string{
-							"data-foo": "some data",
-						},
-						Style: `color: #fff;`,
+					Attributes: map[string]string{
+						"data-foo": "some data",
 					},
+					Style: `color: #fff;`,
 				},
 			},
 			want: `<link data-foo="some data" href="/some/path"/>
