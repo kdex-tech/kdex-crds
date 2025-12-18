@@ -231,19 +231,20 @@ spec:
                         the script to the foot of the page set footScript to true.
                       type: boolean
                     script:
-                      description: script is the text content to be added into a <script>
+                      description: script is the content that will be added to a `<script>`
                         element when rendered.
                       type: string
                     scriptSrc:
-                      description: scriptSrc must be an absolute URL with a protocol
-                        and host which can be used in a src attribute.
+                      description: |-
+                        scriptSrc is a value for a `<script>` `src` attribute. It must be either and absolute URL with a protocol and host
+                        or it must be relative to the `ingressPath` field of the WebServerProvider that defines it.
                       type: string
                   type: object
                   x-kubernetes-validations:
-                  - message: exactly one of the fields in [script scriptSrc] must
-                      be set
+                  - message: at most one of the fields in [script scriptSrc] may be
+                      set
                     rule: '[has(self.script),has(self.scriptSrc)].filter(x,x==true).size()
-                      == 1'
+                      <= 1'
                 maxItems: 32
                 type: array
               serverImage:

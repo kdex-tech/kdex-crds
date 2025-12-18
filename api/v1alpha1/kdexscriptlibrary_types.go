@@ -72,7 +72,7 @@ type KDexScriptLibrarySpec struct {
 	// scripts is a set of script references. They may contain URLs that point to resources hosted at some public address, npm module references or they may contain tag contents.
 	// +kubebuilder:validation:MaxItems=32
 	// +kubebuilder:validation:Optional
-	Scripts []Script `json:"scripts,omitempty"`
+	Scripts []ScriptDef `json:"scripts,omitempty"`
 }
 
 func init() {

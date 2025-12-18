@@ -57,10 +57,26 @@ spec:
                       description: attributes are key/value pairs that will be added
                         to the element [link|style] as attributes when rendered.
                       type: object
+                    footScript:
+                      default: false
+                      description: footScript is a flag for script or scriptSrc that
+                        indicates if the tag should be added in the head of the page
+                        or at the foot. The default is false (add to head). To add
+                        the script to the foot of the page set footScript to true.
+                      type: boolean
                     linkHref:
                       description: linkHref is the content of a `<link>` href attribute.
                         The URL may be absolute with protocol and host or it must
                         be prefixed by the RoutePath of the theme.
+                      type: string
+                    script:
+                      description: script is the content that will be added to a `<script>`
+                        element when rendered.
+                      type: string
+                    scriptSrc:
+                      description: |-
+                        scriptSrc is a value for a `<script>` `src` attribute. It must be either and absolute URL with a protocol and host
+                        or it must be relative to the `ingressPath` field of the WebServerProvider that defines it.
                       type: string
                     style:
                       description: style is the text content to be added into a `<style>`
@@ -68,10 +84,14 @@ spec:
                       type: string
                   type: object
                   x-kubernetes-validations:
-                  - message: exactly one of the fields in [linkHref style] must be
-                      set
-                    rule: '[has(self.linkHref),has(self.style)].filter(x,x==true).size()
+                  - message: exactly one of the fields in [linkHref script scriptSrc
+                      style] must be set
+                    rule: '[has(self.linkHref),has(self.script),has(self.scriptSrc),has(self.style)].filter(x,x==true).size()
                       == 1'
+                  - message: at most one of the fields in [script scriptSrc] may be
+                      set
+                    rule: '[has(self.script),has(self.scriptSrc)].filter(x,x==true).size()
+                      <= 1'
                 maxItems: 32
                 minItems: 1
                 type: array

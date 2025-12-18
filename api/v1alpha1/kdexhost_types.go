@@ -103,6 +103,14 @@ type KDexHostSpec struct {
 	WebServer WebServer `json:",inline"`
 }
 
+func (a *KDexHostSpec) GetResourceURLs() []string {
+	return []string{}
+}
+
+func (a *KDexHostSpec) GetResourcePath() string {
+	return a.WebServer.IngressPath
+}
+
 func init() {
 	SchemeBuilder.Register(&KDexHost{}, &KDexHostList{})
 }

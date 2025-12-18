@@ -17,8 +17,6 @@ limitations under the License.
 package v1alpha1
 
 import (
-	"bytes"
-
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
 
@@ -61,9 +59,7 @@ type KDexThemeList struct {
 // +kubebuilder:validation:X-kubernetes-validations:rule="self.image == \"\" || self.routePath != \"\"",message="routePath must be specified when an image is specified"
 type KDexThemeSpec struct {
 	// assets is a set of elements that define a portable set of design rules.
-	// +kubebuilder:validation:MaxItems=32
-	// +kubebuilder:validation:MinItems=1
-	Assets []Asset `json:"assets"`
+	Assets Assets `json:"assets"`
 
 	// scriptLibraryRef is an optional reference to a KDexScriptLibrary resource.
 	// +kubebuilder:validation:Optional
@@ -74,17 +70,20 @@ type KDexThemeSpec struct {
 	WebServer WebServer `json:",inline"`
 }
 
-func (s *KDexThemeSpec) String() string {
-	var buffer bytes.Buffer
-	separator := ""
-
-	for _, asset := range s.Assets {
-		buffer.WriteString(separator)
-		separator = "\n"
-		buffer.WriteString(asset.String())
+func (a *KDexThemeSpec) GetResourceURLs() []string {
+	urls := []string{}
+	for _, asset := range a.Assets {
+		if asset.LinkDef.LinkHref != "" {
+			urls = append(urls, asset.LinkDef.LinkHref)
+		} else if asset.ScriptDef.ScriptSrc != "" {
+			urls = append(urls, asset.ScriptDef.ScriptSrc)
+		}
 	}
+	return urls
+}
 
-	return buffer.String()
+func (a *KDexThemeSpec) GetResourcePath() string {
+	return a.WebServer.IngressPath
 }
 
 func init() {

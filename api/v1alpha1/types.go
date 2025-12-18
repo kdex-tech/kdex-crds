@@ -14,51 +14,41 @@ const (
 	src  = "src"
 )
 
-// +kubebuilder:validation:ExactlyOneOf=linkHref;style
+// +kubebuilder:validation:ExactlyOneOf=linkHref;script;scriptSrc;style
 type Asset struct {
-	// attributes are key/value pairs that will be added to the element [link|style] as attributes when rendered.
-	// +kubebuilder:validation:Optional
-	Attributes map[string]string `json:"attributes,omitempty"`
-
-	// linkHref is the content of a `<link>` href attribute. The URL may be absolute with protocol and host or it must be prefixed by the RoutePath of the theme.
-	// +kubebuilder:validation:Optional
-	LinkHref string `json:"linkHref,omitempty"`
-
-	// style is the text content to be added into a `<style>` element when rendered.
-	// +kubebuilder:validation:Optional
-	Style string `json:"style,omitempty"`
+	LinkDef   LinkDef   `json:",inline"`
+	ScriptDef ScriptDef `json:",inline"`
+	StyleDef  StyleDef  `json:",inline"`
 }
 
 func (a *Asset) String() string {
 	var buffer bytes.Buffer
 
-	if a.LinkHref != "" {
-		buffer.WriteString("<link")
-		for key, value := range a.Attributes {
-			if key == href {
-				continue
-			}
-			buffer.WriteRune(' ')
-			buffer.WriteString(key)
-			buffer.WriteString("=\"")
-			buffer.WriteString(value)
-			buffer.WriteRune('"')
-		}
-		buffer.WriteString(" href=\"")
-		buffer.WriteString(a.LinkHref)
-		buffer.WriteString("\"/>")
-	} else if a.Style != "" {
-		buffer.WriteString("<style")
-		for key, value := range a.Attributes {
-			buffer.WriteRune(' ')
-			buffer.WriteString(key)
-			buffer.WriteString("=\"")
-			buffer.WriteString(value)
-			buffer.WriteRune('"')
-		}
-		buffer.WriteString(">\n")
-		buffer.WriteString(a.Style)
-		buffer.WriteString("\n</style>")
+	if a.LinkDef.LinkHref != "" {
+		buffer.WriteString(a.LinkDef.ToHeadTag())
+	} else if a.ScriptDef.Script != "" {
+		buffer.WriteString(a.ScriptDef.ToHeadTag())
+	} else if a.ScriptDef.ScriptSrc != "" {
+		buffer.WriteString(a.ScriptDef.ToHeadTag())
+	} else if a.StyleDef.Style != "" {
+		buffer.WriteString(a.StyleDef.ToHeadTag())
+	}
+
+	return buffer.String()
+}
+
+// +kubebuilder:validation:MaxItems=32
+// +kubebuilder:validation:MinItems=1
+type Assets []Asset
+
+func (a *Assets) String() string {
+	var buffer bytes.Buffer
+	separator := ""
+
+	for _, asset := range *a {
+		buffer.WriteString(separator)
+		separator = "\n"
+		buffer.WriteString(asset.String())
 	}
 
 	return buffer.String()
@@ -163,6 +153,45 @@ type KDexObjectReference struct {
 	// Defaulted to nil.
 	// +kubebuilder:validation:Optional
 	Namespace string `json:"namespace,omitempty" protobuf:"bytes,3,opt,name=namespace"`
+}
+
+type LinkDef struct {
+	// attributes are key/value pairs that will be added to the element [link|style] as attributes when rendered.
+	// +kubebuilder:validation:Optional
+	Attributes map[string]string `json:"attributes,omitempty"`
+
+	// linkHref is the content of a `<link>` href attribute. The URL may be absolute with protocol and host or it must be prefixed by the RoutePath of the theme.
+	// +kubebuilder:validation:Optional
+	LinkHref string `json:"linkHref,omitempty"`
+}
+
+func (l *LinkDef) ToFootTag() string {
+	return l.ToTag()
+}
+
+func (l *LinkDef) ToHeadTag() string {
+	return l.ToTag()
+}
+
+func (l *LinkDef) ToTag() string {
+	var buffer bytes.Buffer
+
+	buffer.WriteString("<link")
+	for key, value := range l.Attributes {
+		if key == href {
+			continue
+		}
+		buffer.WriteRune(' ')
+		buffer.WriteString(key)
+		buffer.WriteString("=\"")
+		buffer.WriteString(value)
+		buffer.WriteRune('"')
+	}
+	buffer.WriteString(" href=\"")
+	buffer.WriteString(l.LinkHref)
+	buffer.WriteString("\"/>")
+
+	return buffer.String()
 }
 
 // ModulePolicy defines the policy for the use of JavaScript Modules.
@@ -282,8 +311,8 @@ const (
 	IngressRoutingStrategy RoutingStrategy = "Ingress"
 )
 
-// +kubebuilder:validation:ExactlyOneOf=script;scriptSrc
-type Script struct {
+// +kubebuilder:validation:AtMostOneOf=script;scriptSrc
+type ScriptDef struct {
 	// attributes are key/value pairs that will be added to the element when rendered.
 	// +kubebuilder:validation:Optional
 	Attributes map[string]string `json:"attributes,omitempty"`
@@ -293,20 +322,33 @@ type Script struct {
 	// +kubebuilder:default:=false
 	FootScript bool `json:"footScript,omitempty"`
 
-	// script is the text content to be added into a <script> element when rendered.
+	// script is the content that will be added to a `<script>` element when rendered.
 	// +kubebuilder:validation:Optional
 	Script string `json:"script,omitempty"`
 
-	// scriptSrc must be an absolute URL with a protocol and host which can be used in a src attribute.
+	// scriptSrc is a value for a `<script>` `src` attribute. It must be either and absolute URL with a protocol and host
+	// or it must be relative to the `ingressPath` field of the WebServerProvider that defines it.
 	// +kubebuilder:validation:Optional
 	ScriptSrc string `json:"scriptSrc,omitempty"`
 }
 
-func (s *Script) ToScriptTag(footScript bool) string {
-	if !s.FootScript && footScript {
+func (s *ScriptDef) ToFootTag() string {
+	if s.FootScript {
+		return s.ToTag()
+	}
+
+	return ""
+}
+
+func (s *ScriptDef) ToHeadTag() string {
+	if s.FootScript {
 		return ""
 	}
 
+	return s.ToTag()
+}
+
+func (s *ScriptDef) ToTag() string {
 	var buffer bytes.Buffer
 
 	if s.ScriptSrc != "" {
@@ -340,6 +382,42 @@ func (s *Script) ToScriptTag(footScript bool) string {
 		buffer.WriteString(s.Script)
 		buffer.WriteString("\n</script>")
 	}
+
+	return buffer.String()
+}
+
+type StyleDef struct {
+	// attributes are key/value pairs that will be added to the element [link|style] as attributes when rendered.
+	// +kubebuilder:validation:Optional
+	Attributes map[string]string `json:"attributes,omitempty"`
+
+	// style is the text content to be added into a `<style>` element when rendered.
+	// +kubebuilder:validation:Optional
+	Style string `json:"style,omitempty"`
+}
+
+func (s *StyleDef) ToFootTag() string {
+	return s.ToTag()
+}
+
+func (s *StyleDef) ToHeadTag() string {
+	return s.ToTag()
+}
+
+func (s *StyleDef) ToTag() string {
+	var buffer bytes.Buffer
+
+	buffer.WriteString("<style")
+	for key, value := range s.Attributes {
+		buffer.WriteRune(' ')
+		buffer.WriteString(key)
+		buffer.WriteString("=\"")
+		buffer.WriteString(value)
+		buffer.WriteRune('"')
+	}
+	buffer.WriteString(">\n")
+	buffer.WriteString(s.Style)
+	buffer.WriteString("\n</style>")
 
 	return buffer.String()
 }

@@ -75,10 +75,24 @@ type KDexAppSpec struct {
 	// scripts is a set of script references. They may contain URLs that point to resources hosted at some public address, npm module references or they may contain tag contents.
 	// +kubebuilder:validation:MaxItems=32
 	// +kubebuilder:validation:Optional
-	Scripts []Script `json:"scripts,omitempty"`
+	Scripts []ScriptDef `json:"scripts,omitempty"`
 
 	// When not specified the default ingressPath (path where the webserver will be mounted into the Ingress/HTTPRoute) will be `/{{.metadata.name}}`
 	WebServer WebServer `json:",inline"`
+}
+
+func (a *KDexAppSpec) GetResourceURLs() []string {
+	urls := []string{}
+	for _, script := range a.Scripts {
+		if script.ScriptSrc != "" {
+			urls = append(urls, script.ScriptSrc)
+		}
+	}
+	return urls
+}
+
+func (a *KDexAppSpec) GetResourcePath() string {
+	return a.WebServer.IngressPath
 }
 
 func init() {
