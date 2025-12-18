@@ -61,18 +61,6 @@ Package v1alpha1 contains API Schema definitions for the  v1alpha1 API group.
 _Appears in:_
 - [Assets](#assets)
 
-| Field | Description | Default | Validation |
-| --- | --- | --- | --- |
-| `attributes` _object (keys:string, values:string)_ | attributes are key/value pairs that will be added to the element as attributes when rendered. |  | Optional: \{\} <br /> |
-| `linkHref` _string_ | linkHref is the content of a `<link>` href attribute. The URL may be absolute with protocol and host or it must be prefixed by the RoutePath of the theme. |  | Optional: \{\} <br /> |
-| `attributes` _object (keys:string, values:string)_ | attributes are key/value pairs that will be added to the element as attributes when rendered. |  |  |
-| `metaId` _string_ | id is required just for semantics of CRD field validation. |  | Optional: \{\} <br /> |
-| `attributes` _object (keys:string, values:string)_ | attributes are key/value pairs that will be added to the element when rendered. |  | Optional: \{\} <br /> |
-| `footScript` _boolean_ | footScript is a flag for script or scriptSrc that indicates if the tag should be added in the head of the page or at the foot. The default is false (add to head). To add the script to the foot of the page set footScript to true. | false | Optional: \{\} <br /> |
-| `script` _string_ | script is the content that will be added to a `<script>` element when rendered. |  | Optional: \{\} <br /> |
-| `scriptSrc` _string_ | scriptSrc is a value for a `<script>` `src` attribute. It must be either and absolute URL with a protocol and host<br />or it must be relative to the `ingressPath` field of the WebServerProvider that defines it. |  | Optional: \{\} <br /> |
-| `attributes` _object (keys:string, values:string)_ | attributes are key/value pairs that will be added to the element as attributes when rendered. |  | Optional: \{\} <br /> |
-| `style` _string_ | style is the text content to be added into a `<style>` element when rendered. |  | Optional: \{\} <br /> |
 
 
 #### Assets
@@ -88,18 +76,6 @@ _Appears in:_
 - [KDexHostSpec](#kdexhostspec)
 - [KDexThemeSpec](#kdexthemespec)
 
-| Field | Description | Default | Validation |
-| --- | --- | --- | --- |
-| `attributes` _object (keys:string, values:string)_ | attributes are key/value pairs that will be added to the element as attributes when rendered. |  | Optional: \{\} <br /> |
-| `linkHref` _string_ | linkHref is the content of a `<link>` href attribute. The URL may be absolute with protocol and host or it must be prefixed by the RoutePath of the theme. |  | Optional: \{\} <br /> |
-| `attributes` _object (keys:string, values:string)_ | attributes are key/value pairs that will be added to the element as attributes when rendered. |  |  |
-| `metaId` _string_ | id is required just for semantics of CRD field validation. |  | Optional: \{\} <br /> |
-| `attributes` _object (keys:string, values:string)_ | attributes are key/value pairs that will be added to the element when rendered. |  | Optional: \{\} <br /> |
-| `footScript` _boolean_ | footScript is a flag for script or scriptSrc that indicates if the tag should be added in the head of the page or at the foot. The default is false (add to head). To add the script to the foot of the page set footScript to true. | false | Optional: \{\} <br /> |
-| `script` _string_ | script is the content that will be added to a `<script>` element when rendered. |  | Optional: \{\} <br /> |
-| `scriptSrc` _string_ | scriptSrc is a value for a `<script>` `src` attribute. It must be either and absolute URL with a protocol and host<br />or it must be relative to the `ingressPath` field of the WebServerProvider that defines it. |  | Optional: \{\} <br /> |
-| `attributes` _object (keys:string, values:string)_ | attributes are key/value pairs that will be added to the element as attributes when rendered. |  | Optional: \{\} <br /> |
-| `style` _string_ | style is the text content to be added into a `<style>` element when rendered. |  | Optional: \{\} <br /> |
 
 
 

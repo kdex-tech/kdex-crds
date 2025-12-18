@@ -16,10 +16,10 @@ const (
 
 // +kubebuilder:validation:ExactlyOneOf=linkHref;metaId;script;scriptSrc;style
 type Asset struct {
-	LinkDef   LinkDef   `json:",inline"`
-	MetaDef   MetaDef   `json:",inline"`
-	ScriptDef ScriptDef `json:",inline"`
-	StyleDef  StyleDef  `json:",inline"`
+	LinkDef   *LinkDef   `json:",inline"`
+	MetaDef   *MetaDef   `json:",inline"`
+	ScriptDef *ScriptDef `json:",inline"`
+	StyleDef  *StyleDef  `json:",inline"`
 }
 
 func (a *Asset) String() string {

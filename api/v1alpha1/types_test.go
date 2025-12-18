@@ -21,7 +21,7 @@ func TestAssets_String(t *testing.T) {
 			name: "style",
 			assets: Assets{
 				{
-					StyleDef: StyleDef{
+					StyleDef: &StyleDef{
 						Style: `color: #fff;`,
 					},
 				},
@@ -34,7 +34,7 @@ color: #fff;
 			name: "style with attributes",
 			assets: Assets{
 				{
-					StyleDef: StyleDef{
+					StyleDef: &StyleDef{
 						Attributes: map[string]string{
 							"data-foo": "some data",
 						},
@@ -50,7 +50,7 @@ color: #fff;
 			name: "link href",
 			assets: Assets{
 				{
-					LinkDef: LinkDef{
+					LinkDef: &LinkDef{
 						LinkHref: "/some/path",
 					},
 				},
@@ -61,7 +61,7 @@ color: #fff;
 			name: "link href with attributes",
 			assets: Assets{
 				{
-					LinkDef: LinkDef{
+					LinkDef: &LinkDef{
 						Attributes: map[string]string{
 							"data-foo": "some data",
 							"href":     "/some/path",
@@ -76,7 +76,7 @@ color: #fff;
 			name: "both link href and style",
 			assets: Assets{
 				{
-					LinkDef: LinkDef{
+					LinkDef: &LinkDef{
 						Attributes: map[string]string{
 							"data-foo": "some data",
 						},
@@ -84,7 +84,7 @@ color: #fff;
 					},
 				},
 				{
-					StyleDef: StyleDef{
+					StyleDef: &StyleDef{
 						Attributes: map[string]string{
 							"data-foo": "some data",
 						},
