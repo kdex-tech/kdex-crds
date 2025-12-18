@@ -59,10 +59,8 @@ type KDexHostList struct {
 
 // KDexHostSpec defines the desired state of KDexHost
 type KDexHostSpec struct {
-	// baseMeta is a string containing a base set of meta tags to use on every page rendered for the host.
-	// +kubebuilder:validation:Optional
-	// +kubebuilder:validation:MinLength=5
-	BaseMeta string `json:"baseMeta,omitempty"`
+	// assets is a set of elements that define a host specific HTML instructions (e.g. favicon, site logo, charset).
+	Assets Assets `json:"assets"`
 
 	// brandName is the name used when rendering pages belonging to the host. For example, it may be used as alt text for the logo displayed in the page header.
 	// +kubebuilder:validation:Required
@@ -104,7 +102,15 @@ type KDexHostSpec struct {
 }
 
 func (a *KDexHostSpec) GetResourceURLs() []string {
-	return []string{}
+	urls := []string{}
+	for _, asset := range a.Assets {
+		if asset.LinkDef.LinkHref != "" {
+			urls = append(urls, asset.LinkDef.LinkHref)
+		} else if asset.ScriptDef.ScriptSrc != "" {
+			urls = append(urls, asset.ScriptDef.ScriptSrc)
+		}
+	}
+	return urls
 }
 
 func (a *KDexHostSpec) GetResourcePath() string {

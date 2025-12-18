@@ -59,7 +59,7 @@ spec:
                       additionalProperties:
                         type: string
                       description: attributes are key/value pairs that will be added
-                        to the element [link|style] as attributes when rendered.
+                        to the element as attributes when rendered.
                       type: object
                     footScript:
                       default: false
@@ -72,6 +72,10 @@ spec:
                       description: linkHref is the content of a `<link>` href attribute.
                         The URL may be absolute with protocol and host or it must
                         be prefixed by the RoutePath of the theme.
+                      type: string
+                    metaId:
+                      description: id is required just for semantics of CRD field
+                        validation.
                       type: string
                     script:
                       description: script is the content that will be added to a `<script>`
@@ -88,9 +92,9 @@ spec:
                       type: string
                   type: object
                   x-kubernetes-validations:
-                  - message: exactly one of the fields in [linkHref script scriptSrc
-                      style] must be set
-                    rule: '[has(self.linkHref),has(self.script),has(self.scriptSrc),has(self.style)].filter(x,x==true).size()
+                  - message: exactly one of the fields in [linkHref metaId script
+                      scriptSrc style] must be set
+                    rule: '[has(self.linkHref),has(self.metaId),has(self.script),has(self.scriptSrc),has(self.style)].filter(x,x==true).size()
                       == 1'
                   - message: at most one of the fields in [script scriptSrc] may be
                       set

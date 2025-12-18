@@ -56,7 +56,6 @@ type KDexThemeList struct {
 }
 
 // KDexThemeSpec defines the desired state of KDexTheme
-// +kubebuilder:validation:X-kubernetes-validations:rule="self.image == \"\" || self.routePath != \"\"",message="routePath must be specified when an image is specified"
 type KDexThemeSpec struct {
 	// assets is a set of elements that define a portable set of design rules.
 	Assets Assets `json:"assets"`

@@ -59,12 +59,47 @@ Package v1alpha1 contains API Schema definitions for the  v1alpha1 API group.
 
 
 _Appears in:_
+- [Assets](#assets)
+
+| Field | Description | Default | Validation |
+| --- | --- | --- | --- |
+| `attributes` _object (keys:string, values:string)_ | attributes are key/value pairs that will be added to the element as attributes when rendered. |  | Optional: \{\} <br /> |
+| `linkHref` _string_ | linkHref is the content of a `<link>` href attribute. The URL may be absolute with protocol and host or it must be prefixed by the RoutePath of the theme. |  | Optional: \{\} <br /> |
+| `attributes` _object (keys:string, values:string)_ | attributes are key/value pairs that will be added to the element as attributes when rendered. |  |  |
+| `metaId` _string_ | id is required just for semantics of CRD field validation. |  | Optional: \{\} <br /> |
+| `attributes` _object (keys:string, values:string)_ | attributes are key/value pairs that will be added to the element when rendered. |  | Optional: \{\} <br /> |
+| `footScript` _boolean_ | footScript is a flag for script or scriptSrc that indicates if the tag should be added in the head of the page or at the foot. The default is false (add to head). To add the script to the foot of the page set footScript to true. | false | Optional: \{\} <br /> |
+| `script` _string_ | script is the content that will be added to a `<script>` element when rendered. |  | Optional: \{\} <br /> |
+| `scriptSrc` _string_ | scriptSrc is a value for a `<script>` `src` attribute. It must be either and absolute URL with a protocol and host<br />or it must be relative to the `ingressPath` field of the WebServerProvider that defines it. |  | Optional: \{\} <br /> |
+| `attributes` _object (keys:string, values:string)_ | attributes are key/value pairs that will be added to the element as attributes when rendered. |  | Optional: \{\} <br /> |
+| `style` _string_ | style is the text content to be added into a `<style>` element when rendered. |  | Optional: \{\} <br /> |
+
+
+#### Assets
+
+_Underlying type:_ _[Asset](#asset)_
+
+
+
+_Validation:_
+- MaxItems: 32
+- MinItems: 1
+
+_Appears in:_
+- [KDexHostSpec](#kdexhostspec)
 - [KDexThemeSpec](#kdexthemespec)
 
 | Field | Description | Default | Validation |
 | --- | --- | --- | --- |
-| `attributes` _object (keys:string, values:string)_ | attributes are key/value pairs that will be added to the element [link\|style] as attributes when rendered. |  | Optional: \{\} <br /> |
+| `attributes` _object (keys:string, values:string)_ | attributes are key/value pairs that will be added to the element as attributes when rendered. |  | Optional: \{\} <br /> |
 | `linkHref` _string_ | linkHref is the content of a `<link>` href attribute. The URL may be absolute with protocol and host or it must be prefixed by the RoutePath of the theme. |  | Optional: \{\} <br /> |
+| `attributes` _object (keys:string, values:string)_ | attributes are key/value pairs that will be added to the element as attributes when rendered. |  |  |
+| `metaId` _string_ | id is required just for semantics of CRD field validation. |  | Optional: \{\} <br /> |
+| `attributes` _object (keys:string, values:string)_ | attributes are key/value pairs that will be added to the element when rendered. |  | Optional: \{\} <br /> |
+| `footScript` _boolean_ | footScript is a flag for script or scriptSrc that indicates if the tag should be added in the head of the page or at the foot. The default is false (add to head). To add the script to the foot of the page set footScript to true. | false | Optional: \{\} <br /> |
+| `script` _string_ | script is the content that will be added to a `<script>` element when rendered. |  | Optional: \{\} <br /> |
+| `scriptSrc` _string_ | scriptSrc is a value for a `<script>` `src` attribute. It must be either and absolute URL with a protocol and host<br />or it must be relative to the `ingressPath` field of the WebServerProvider that defines it. |  | Optional: \{\} <br /> |
+| `attributes` _object (keys:string, values:string)_ | attributes are key/value pairs that will be added to the element as attributes when rendered. |  | Optional: \{\} <br /> |
 | `style` _string_ | style is the text content to be added into a `<style>` element when rendered. |  | Optional: \{\} <br /> |
 
 
@@ -205,7 +240,7 @@ _Appears in:_
 | --- | --- | --- | --- |
 | `customElements` _[CustomElement](#customelement) array_ | customElements is a list of custom elements implemented by the micro-frontend application. |  | MaxItems: 32 <br />MinItems: 1 <br /> |
 | `packageReference` _[PackageReference](#packagereference)_ | packageReference specifies the name and version of an NPM package that contains the script. The package.json must describe an ES module. |  | Required: \{\} <br /> |
-| `scripts` _[Script](#script) array_ | scripts is a set of script references. They may contain URLs that point to resources hosted at some public address, npm module references or they may contain tag contents. |  | MaxItems: 32 <br />Optional: \{\} <br /> |
+| `scripts` _[ScriptDef](#scriptdef) array_ | scripts is a set of script references. They may contain URLs that point to resources hosted at some public address, npm module references or they may contain tag contents. |  | MaxItems: 32 <br />Optional: \{\} <br /> |
 | `imagePullSecrets` _[LocalObjectReference](https://kubernetes.io/docs/reference/generated/kubernetes-api/v/#localobjectreference-v1-core) array_ | imagePullSecrets is an optional list of references to secrets in the same namespace to use for pulling the image. Also used for the webserver image if specified.<br />More info: https://kubernetes.io/docs/concepts/containers/images#specifying-imagepullsecrets-on-a-pod |  | Optional: \{\} <br /> |
 | `ingressPath` _string_ | ingressPath is a prefix beginning with a forward slash (/) plus at least 1 additional character which indicates where in the Ingress/HTTPRoute of the host the webserver will be mounted. KDexPageBindings associated with the host that have conflicting urls will be rejected from the host. |  | Optional: \{\} <br />Pattern: `^/.+` <br /> |
 | `replicas` _integer_ | replicas is the number of desired pods. This is a pointer to distinguish between explicit<br />zero and not specified. Defaults to 1. |  | Optional: \{\} <br /> |
@@ -647,7 +682,7 @@ _Appears in:_
 
 | Field | Description | Default | Validation |
 | --- | --- | --- | --- |
-| `baseMeta` _string_ | baseMeta is a string containing a base set of meta tags to use on every page rendered for the host. |  | MinLength: 5 <br />Optional: \{\} <br /> |
+| `assets` _[Assets](#assets)_ | assets is a set of elements that define a host specific HTML instructions (e.g. favicon, site logo, charset). |  | MaxItems: 32 <br />MinItems: 1 <br /> |
 | `brandName` _string_ | brandName is the name used when rendering pages belonging to the host. For example, it may be used as alt text for the logo displayed in the page header. |  | Required: \{\} <br /> |
 | `defaultLang` _string_ | defaultLang is a string containing a BCP 47 language tag.<br />See https://developer.mozilla.org/en-US/docs/Glossary/BCP_47_language_tag.<br />When render page paths do not specify a 'lang' path parameter this will be the value used. When not set the default will be 'en'. |  | Optional: \{\} <br /> |
 | `defaultThemeRef` _[KDexObjectReference](#kdexobjectreference)_ | defaultThemeRef is a reference to the theme that should apply to all pages bound to this host unless overridden. |  | Optional: \{\} <br /> |
@@ -1057,7 +1092,7 @@ _Appears in:_
 | Field | Description | Default | Validation |
 | --- | --- | --- | --- |
 | `packageReference` _[PackageReference](#packagereference)_ | packageReference specifies the name and version of an NPM package that contains the script. The package.json must describe an ES module. |  | Optional: \{\} <br /> |
-| `scripts` _[Script](#script) array_ | scripts is a set of script references. They may contain URLs that point to resources hosted at some public address, npm module references or they may contain tag contents. |  | MaxItems: 32 <br />Optional: \{\} <br /> |
+| `scripts` _[ScriptDef](#scriptdef) array_ | scripts is a set of script references. They may contain URLs that point to resources hosted at some public address, npm module references or they may contain tag contents. |  | MaxItems: 32 <br />Optional: \{\} <br /> |
 
 
 #### KDexTheme
@@ -1114,7 +1149,7 @@ _Appears in:_
 
 | Field | Description | Default | Validation |
 | --- | --- | --- | --- |
-| `assets` _[Asset](#asset) array_ | assets is a set of elements that define a portable set of design rules. |  | MaxItems: 32 <br />MinItems: 1 <br /> |
+| `assets` _[Assets](#assets)_ | assets is a set of elements that define a portable set of design rules. |  | MaxItems: 32 <br />MinItems: 1 <br /> |
 | `scriptLibraryRef` _[KDexObjectReference](#kdexobjectreference)_ | scriptLibraryRef is an optional reference to a KDexScriptLibrary resource. |  | Optional: \{\} <br /> |
 | `imagePullSecrets` _[LocalObjectReference](https://kubernetes.io/docs/reference/generated/kubernetes-api/v/#localobjectreference-v1-core) array_ | imagePullSecrets is an optional list of references to secrets in the same namespace to use for pulling the image. Also used for the webserver image if specified.<br />More info: https://kubernetes.io/docs/concepts/containers/images#specifying-imagepullsecrets-on-a-pod |  | Optional: \{\} <br /> |
 | `ingressPath` _string_ | ingressPath is a prefix beginning with a forward slash (/) plus at least 1 additional character which indicates where in the Ingress/HTTPRoute of the host the webserver will be mounted. KDexPageBindings associated with the host that have conflicting urls will be rejected from the host. |  | Optional: \{\} <br />Pattern: `^/.+` <br /> |
@@ -1181,6 +1216,40 @@ _Appears in:_
 | --- | --- | --- | --- |
 | `hostRef` _[LocalObjectReference](https://kubernetes.io/docs/reference/generated/kubernetes-api/v/#localobjectreference-v1-core)_ | hostRef is a reference to the KDexHost that this render page is for. |  | Required: \{\} <br /> |
 | `translations` _[Translation](#translation) array_ | translations is an array of objects where each one specifies a language (lang) and a map (keysAndValues) consisting of key/value pairs. If the lang property is not unique in the array and its keysAndValues map contains the same keys, the last one takes precedence. |  | MinItems: 1 <br />Required: \{\} <br /> |
+
+
+#### LinkDef
+
+
+
+
+
+
+
+_Appears in:_
+- [Asset](#asset)
+
+| Field | Description | Default | Validation |
+| --- | --- | --- | --- |
+| `attributes` _object (keys:string, values:string)_ | attributes are key/value pairs that will be added to the element as attributes when rendered. |  | Optional: \{\} <br /> |
+| `linkHref` _string_ | linkHref is the content of a `<link>` href attribute. The URL may be absolute with protocol and host or it must be prefixed by the RoutePath of the theme. |  | Optional: \{\} <br /> |
+
+
+#### MetaDef
+
+
+
+
+
+
+
+_Appears in:_
+- [Asset](#asset)
+
+| Field | Description | Default | Validation |
+| --- | --- | --- | --- |
+| `attributes` _object (keys:string, values:string)_ | attributes are key/value pairs that will be added to the element as attributes when rendered. |  |  |
+| `metaId` _string_ | id is required just for semantics of CRD field validation. |  | Optional: \{\} <br /> |
 
 
 #### ModulePolicy
@@ -1295,7 +1364,7 @@ _Appears in:_
 | `Ingress` | IngressRoutingStrategy uses Ingress to expose the host.<br /> |
 
 
-#### Script
+#### ScriptDef
 
 
 
@@ -1304,6 +1373,7 @@ _Appears in:_
 
 
 _Appears in:_
+- [Asset](#asset)
 - [KDexAppSpec](#kdexappspec)
 - [KDexScriptLibrarySpec](#kdexscriptlibraryspec)
 
@@ -1311,8 +1381,25 @@ _Appears in:_
 | --- | --- | --- | --- |
 | `attributes` _object (keys:string, values:string)_ | attributes are key/value pairs that will be added to the element when rendered. |  | Optional: \{\} <br /> |
 | `footScript` _boolean_ | footScript is a flag for script or scriptSrc that indicates if the tag should be added in the head of the page or at the foot. The default is false (add to head). To add the script to the foot of the page set footScript to true. | false | Optional: \{\} <br /> |
-| `script` _string_ | script is the text content to be added into a <script> element when rendered. |  | Optional: \{\} <br /> |
-| `scriptSrc` _string_ | scriptSrc must be an absolute URL with a protocol and host which can be used in a src attribute. |  | Optional: \{\} <br /> |
+| `script` _string_ | script is the content that will be added to a `<script>` element when rendered. |  | Optional: \{\} <br /> |
+| `scriptSrc` _string_ | scriptSrc is a value for a `<script>` `src` attribute. It must be either and absolute URL with a protocol and host<br />or it must be relative to the `ingressPath` field of the WebServerProvider that defines it. |  | Optional: \{\} <br /> |
+
+
+#### StyleDef
+
+
+
+
+
+
+
+_Appears in:_
+- [Asset](#asset)
+
+| Field | Description | Default | Validation |
+| --- | --- | --- | --- |
+| `attributes` _object (keys:string, values:string)_ | attributes are key/value pairs that will be added to the element as attributes when rendered. |  | Optional: \{\} <br /> |
+| `style` _string_ | style is the text content to be added into a `<style>` element when rendered. |  | Optional: \{\} <br /> |
 
 
 #### TLSSpec

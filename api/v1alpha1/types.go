@@ -14,9 +14,10 @@ const (
 	src  = "src"
 )
 
-// +kubebuilder:validation:ExactlyOneOf=linkHref;script;scriptSrc;style
+// +kubebuilder:validation:ExactlyOneOf=linkHref;metaId;script;scriptSrc;style
 type Asset struct {
 	LinkDef   LinkDef   `json:",inline"`
+	MetaDef   MetaDef   `json:",inline"`
 	ScriptDef ScriptDef `json:",inline"`
 	StyleDef  StyleDef  `json:",inline"`
 }
@@ -26,6 +27,8 @@ func (a *Asset) String() string {
 
 	if a.LinkDef.LinkHref != "" {
 		buffer.WriteString(a.LinkDef.ToHeadTag())
+	} else if a.MetaDef.MetaID != "" {
+		buffer.WriteString(a.MetaDef.ToHeadTag())
 	} else if a.ScriptDef.Script != "" {
 		buffer.WriteString(a.ScriptDef.ToHeadTag())
 	} else if a.ScriptDef.ScriptSrc != "" {
@@ -156,7 +159,7 @@ type KDexObjectReference struct {
 }
 
 type LinkDef struct {
-	// attributes are key/value pairs that will be added to the element [link|style] as attributes when rendered.
+	// attributes are key/value pairs that will be added to the element as attributes when rendered.
 	// +kubebuilder:validation:Optional
 	Attributes map[string]string `json:"attributes,omitempty"`
 
@@ -189,6 +192,39 @@ func (l *LinkDef) ToTag() string {
 	}
 	buffer.WriteString(" href=\"")
 	buffer.WriteString(l.LinkHref)
+	buffer.WriteString("\"/>")
+
+	return buffer.String()
+}
+
+type MetaDef struct {
+	// attributes are key/value pairs that will be added to the element as attributes when rendered.
+	Attributes map[string]string `json:"attributes,omitempty"`
+
+	// id is required just for semantics of CRD field validation.
+	// +kubebuilder:validation:Optional
+	MetaID string `json:"metaId"`
+}
+
+func (l *MetaDef) ToFootTag() string {
+	return l.ToTag()
+}
+
+func (l *MetaDef) ToHeadTag() string {
+	return l.ToTag()
+}
+
+func (l *MetaDef) ToTag() string {
+	var buffer bytes.Buffer
+
+	buffer.WriteString("<meta")
+	for key, value := range l.Attributes {
+		buffer.WriteRune(' ')
+		buffer.WriteString(key)
+		buffer.WriteString("=\"")
+		buffer.WriteString(value)
+		buffer.WriteRune('"')
+	}
 	buffer.WriteString("\"/>")
 
 	return buffer.String()
@@ -387,7 +423,7 @@ func (s *ScriptDef) ToTag() string {
 }
 
 type StyleDef struct {
-	// attributes are key/value pairs that will be added to the element [link|style] as attributes when rendered.
+	// attributes are key/value pairs that will be added to the element as attributes when rendered.
 	// +kubebuilder:validation:Optional
 	Attributes map[string]string `json:"attributes,omitempty"`
 
