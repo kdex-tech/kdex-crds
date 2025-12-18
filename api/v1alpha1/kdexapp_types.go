@@ -81,6 +81,14 @@ type KDexAppSpec struct {
 	WebServer WebServer `json:",inline"`
 }
 
+func (a *KDexAppSpec) GetResourceImage() string {
+	return a.WebServer.StaticImage
+}
+
+func (a *KDexAppSpec) GetResourcePath() string {
+	return a.WebServer.IngressPath
+}
+
 func (a *KDexAppSpec) GetResourceURLs() []string {
 	urls := []string{}
 	for _, script := range a.Scripts {
@@ -89,10 +97,6 @@ func (a *KDexAppSpec) GetResourceURLs() []string {
 		}
 	}
 	return urls
-}
-
-func (a *KDexAppSpec) GetResourcePath() string {
-	return a.WebServer.IngressPath
 }
 
 func init() {

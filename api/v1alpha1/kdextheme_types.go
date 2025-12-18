@@ -69,6 +69,14 @@ type KDexThemeSpec struct {
 	WebServer WebServer `json:",inline"`
 }
 
+func (a *KDexThemeSpec) GetResourceImage() string {
+	return a.WebServer.StaticImage
+}
+
+func (a *KDexThemeSpec) GetResourcePath() string {
+	return a.WebServer.IngressPath
+}
+
 func (a *KDexThemeSpec) GetResourceURLs() []string {
 	urls := []string{}
 	for _, asset := range a.Assets {
@@ -79,10 +87,6 @@ func (a *KDexThemeSpec) GetResourceURLs() []string {
 		}
 	}
 	return urls
-}
-
-func (a *KDexThemeSpec) GetResourcePath() string {
-	return a.WebServer.IngressPath
 }
 
 func init() {
