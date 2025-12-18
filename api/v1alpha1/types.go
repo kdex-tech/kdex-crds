@@ -16,22 +16,22 @@ const (
 
 // +kubebuilder:validation:ExactlyOneOf=linkHref;metaId;script;scriptSrc;style
 type Asset struct {
-	LinkDef   *LinkDef   `json:",inline"`
-	MetaDef   *MetaDef   `json:",inline"`
-	ScriptDef *ScriptDef `json:",inline"`
-	StyleDef  *StyleDef  `json:",inline"`
+	LinkDef   LinkDef   `json:",inline"`
+	MetaDef   MetaDef   `json:",inline"`
+	ScriptDef ScriptDef `json:",inline"`
+	StyleDef  StyleDef  `json:",inline"`
 }
 
 func (a *Asset) String() string {
 	var buffer bytes.Buffer
 
-	if a.LinkDef != nil {
+	if a.LinkDef.LinkHref != nil {
 		buffer.WriteString(a.LinkDef.ToHeadTag())
-	} else if a.MetaDef != nil {
+	} else if a.MetaDef.MetaID != nil {
 		buffer.WriteString(a.MetaDef.ToHeadTag())
-	} else if a.ScriptDef != nil {
+	} else if a.ScriptDef.Script != nil && a.ScriptDef.ScriptSrc != nil {
 		buffer.WriteString(a.ScriptDef.ToHeadTag())
-	} else if a.StyleDef != nil {
+	} else if a.StyleDef.Style != nil {
 		buffer.WriteString(a.StyleDef.ToHeadTag())
 	}
 
@@ -162,7 +162,7 @@ type LinkDef struct {
 
 	// linkHref is the content of a `<link>` href attribute. The URL may be absolute with protocol and host or it must be prefixed by the RoutePath of the theme.
 	// +kubebuilder:validation:Optional
-	LinkHref string `json:"linkHref,omitempty"`
+	LinkHref *string `json:"linkHref,omitempty"`
 }
 
 func (l *LinkDef) ToFootTag() string {
@@ -174,6 +174,10 @@ func (l *LinkDef) ToHeadTag() string {
 }
 
 func (l *LinkDef) ToTag() string {
+	if l.LinkHref == nil {
+		return ""
+	}
+
 	var buffer bytes.Buffer
 
 	buffer.WriteString("<link")
@@ -188,7 +192,7 @@ func (l *LinkDef) ToTag() string {
 		buffer.WriteRune('"')
 	}
 	buffer.WriteString(" href=\"")
-	buffer.WriteString(l.LinkHref)
+	buffer.WriteString(*l.LinkHref)
 	buffer.WriteString("\"/>")
 
 	return buffer.String()
@@ -200,7 +204,7 @@ type MetaDef struct {
 
 	// id is required just for semantics of CRD field validation.
 	// +kubebuilder:validation:Optional
-	MetaID string `json:"metaId"`
+	MetaID *string `json:"metaId"`
 }
 
 func (l *MetaDef) ToFootTag() string {
@@ -212,6 +216,10 @@ func (l *MetaDef) ToHeadTag() string {
 }
 
 func (l *MetaDef) ToTag() string {
+	if l.MetaID == nil {
+		return ""
+	}
+
 	var buffer bytes.Buffer
 
 	buffer.WriteString("<meta")
@@ -357,12 +365,12 @@ type ScriptDef struct {
 
 	// script is the content that will be added to a `<script>` element when rendered.
 	// +kubebuilder:validation:Optional
-	Script string `json:"script,omitempty"`
+	Script *string `json:"script,omitempty"`
 
 	// scriptSrc is a value for a `<script>` `src` attribute. It must be either and absolute URL with a protocol and host
 	// or it must be relative to the `ingressPath` field of the WebServerProvider that defines it.
 	// +kubebuilder:validation:Optional
-	ScriptSrc string `json:"scriptSrc,omitempty"`
+	ScriptSrc *string `json:"scriptSrc,omitempty"`
 }
 
 func (s *ScriptDef) ToFootTag() string {
@@ -384,7 +392,7 @@ func (s *ScriptDef) ToHeadTag() string {
 func (s *ScriptDef) ToTag() string {
 	var buffer bytes.Buffer
 
-	if s.ScriptSrc != "" {
+	if s.ScriptSrc != nil {
 		buffer.WriteString("<script")
 		for key, value := range s.Attributes {
 			if key == src {
@@ -397,9 +405,9 @@ func (s *ScriptDef) ToTag() string {
 			buffer.WriteRune('"')
 		}
 		buffer.WriteString(" src=\"")
-		buffer.WriteString(s.ScriptSrc)
+		buffer.WriteString(*s.ScriptSrc)
 		buffer.WriteString("\"></script>")
-	} else if s.Script != "" {
+	} else if s.Script != nil {
 		buffer.WriteString("<script")
 		for key, value := range s.Attributes {
 			if key == src {
@@ -412,7 +420,7 @@ func (s *ScriptDef) ToTag() string {
 			buffer.WriteRune('"')
 		}
 		buffer.WriteString(">\n")
-		buffer.WriteString(s.Script)
+		buffer.WriteString(*s.Script)
 		buffer.WriteString("\n</script>")
 	}
 
@@ -426,7 +434,7 @@ type StyleDef struct {
 
 	// style is the text content to be added into a `<style>` element when rendered.
 	// +kubebuilder:validation:Optional
-	Style string `json:"style,omitempty"`
+	Style *string `json:"style,omitempty"`
 }
 
 func (s *StyleDef) ToFootTag() string {
@@ -438,6 +446,10 @@ func (s *StyleDef) ToHeadTag() string {
 }
 
 func (s *StyleDef) ToTag() string {
+	if s.Style == nil {
+		return ""
+	}
+
 	var buffer bytes.Buffer
 
 	buffer.WriteString("<style")
@@ -449,7 +461,7 @@ func (s *StyleDef) ToTag() string {
 		buffer.WriteRune('"')
 	}
 	buffer.WriteString(">\n")
-	buffer.WriteString(s.Style)
+	buffer.WriteString(*s.Style)
 	buffer.WriteString("\n</style>")
 
 	return buffer.String()

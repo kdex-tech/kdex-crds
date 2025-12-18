@@ -21,8 +21,8 @@ func TestAssets_String(t *testing.T) {
 			name: "style",
 			assets: Assets{
 				{
-					StyleDef: &StyleDef{
-						Style: `color: #fff;`,
+					StyleDef: StyleDef{
+						Style: Ptr(`color: #fff;`),
 					},
 				},
 			},
@@ -34,11 +34,11 @@ color: #fff;
 			name: "style with attributes",
 			assets: Assets{
 				{
-					StyleDef: &StyleDef{
+					StyleDef: StyleDef{
 						Attributes: map[string]string{
 							"data-foo": "some data",
 						},
-						Style: `color: #fff;`,
+						Style: Ptr(`color: #fff;`),
 					},
 				},
 			},
@@ -50,8 +50,8 @@ color: #fff;
 			name: "link href",
 			assets: Assets{
 				{
-					LinkDef: &LinkDef{
-						LinkHref: "/some/path",
+					LinkDef: LinkDef{
+						LinkHref: Ptr("/some/path"),
 					},
 				},
 			},
@@ -61,12 +61,12 @@ color: #fff;
 			name: "link href with attributes",
 			assets: Assets{
 				{
-					LinkDef: &LinkDef{
+					LinkDef: LinkDef{
 						Attributes: map[string]string{
 							"data-foo": "some data",
 							"href":     "/some/path",
 						},
-						LinkHref: "/some/path",
+						LinkHref: Ptr("/some/path"),
 					},
 				},
 			},
@@ -76,19 +76,19 @@ color: #fff;
 			name: "both link href and style",
 			assets: Assets{
 				{
-					LinkDef: &LinkDef{
+					LinkDef: LinkDef{
 						Attributes: map[string]string{
 							"data-foo": "some data",
 						},
-						LinkHref: "/some/path",
+						LinkHref: Ptr("/some/path"),
 					},
 				},
 				{
-					StyleDef: &StyleDef{
+					StyleDef: StyleDef{
 						Attributes: map[string]string{
 							"data-foo": "some data",
 						},
-						Style: `color: #fff;`,
+						Style: Ptr(`color: #fff;`),
 					},
 				},
 			},
@@ -151,7 +151,7 @@ func TestScript_ToHeadTag(t *testing.T) {
 		{
 			name: "basic",
 			script: ScriptDef{
-				Script: "test",
+				Script: Ptr("test"),
 			},
 			want: `<script>
 test
@@ -160,7 +160,7 @@ test
 		{
 			name: "no foot script",
 			script: ScriptDef{
-				Script:     "test",
+				Script:     Ptr("test"),
 				FootScript: true,
 			},
 			want: "",
@@ -168,7 +168,7 @@ test
 		{
 			name: "foot script",
 			script: ScriptDef{
-				Script: "test",
+				Script: Ptr("test"),
 			},
 			want: `<script>
 test
@@ -181,7 +181,7 @@ test
 					"src":      "/some/path",
 					"data-foo": "some data",
 				},
-				Script: "test",
+				Script: Ptr("test"),
 			},
 			want: `<script data-foo="some data">
 test
@@ -190,7 +190,7 @@ test
 		{
 			name: "script src",
 			script: ScriptDef{
-				ScriptSrc: "/some/path",
+				ScriptSrc: Ptr("/some/path"),
 			},
 			want: `<script src="/some/path"></script>`,
 		},
@@ -201,7 +201,7 @@ test
 					"src":      "/bad/path",
 					"data-foo": "some data",
 				},
-				ScriptSrc: "/some/path",
+				ScriptSrc: Ptr("/some/path"),
 			},
 			want: `<script data-foo="some data" src="/some/path"></script>`,
 		},
@@ -223,7 +223,7 @@ func TestScript_ToFootTag(t *testing.T) {
 		{
 			name: "basic",
 			script: ScriptDef{
-				Script:     "test",
+				Script:     Ptr("test"),
 				FootScript: true,
 			},
 			want: `<script>
@@ -233,14 +233,14 @@ test
 		{
 			name: "no foot script",
 			script: ScriptDef{
-				Script: "test",
+				Script: Ptr("test"),
 			},
 			want: "",
 		},
 		{
 			name: "foot script",
 			script: ScriptDef{
-				Script:     "test",
+				Script:     Ptr("test"),
 				FootScript: true,
 			},
 			want: `<script>
@@ -255,7 +255,7 @@ test
 					"data-foo": "some data",
 				},
 				FootScript: true,
-				Script:     "test",
+				Script:     Ptr("test"),
 			},
 			want: `<script data-foo="some data">
 test
@@ -264,7 +264,7 @@ test
 		{
 			name: "script src",
 			script: ScriptDef{
-				ScriptSrc:  "/some/path",
+				ScriptSrc:  Ptr("/some/path"),
 				FootScript: true,
 			},
 			want: `<script src="/some/path"></script>`,
@@ -277,7 +277,7 @@ test
 					"data-foo": "some data",
 				},
 				FootScript: true,
-				ScriptSrc:  "/some/path",
+				ScriptSrc:  Ptr("/some/path"),
 			},
 			want: `<script data-foo="some data" src="/some/path"></script>`,
 		},
@@ -288,4 +288,8 @@ test
 			assert.Equal(t, tt.want, got)
 		})
 	}
+}
+
+func Ptr[T any](v T) *T {
+	return &v
 }
