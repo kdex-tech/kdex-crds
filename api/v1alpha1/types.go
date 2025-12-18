@@ -25,15 +25,13 @@ type Asset struct {
 func (a *Asset) String() string {
 	var buffer bytes.Buffer
 
-	if a.LinkDef.LinkHref != "" {
+	if a.LinkDef != nil {
 		buffer.WriteString(a.LinkDef.ToHeadTag())
-	} else if a.MetaDef.MetaID != "" {
+	} else if a.MetaDef != nil {
 		buffer.WriteString(a.MetaDef.ToHeadTag())
-	} else if a.ScriptDef.Script != "" {
+	} else if a.ScriptDef != nil {
 		buffer.WriteString(a.ScriptDef.ToHeadTag())
-	} else if a.ScriptDef.ScriptSrc != "" {
-		buffer.WriteString(a.ScriptDef.ToHeadTag())
-	} else if a.StyleDef.Style != "" {
+	} else if a.StyleDef != nil {
 		buffer.WriteString(a.StyleDef.ToHeadTag())
 	}
 
