@@ -41,7 +41,6 @@ func (a *Asset) String() string {
 }
 
 // +kubebuilder:validation:MaxItems=32
-// +kubebuilder:validation:MinItems=1
 type Assets []Asset
 
 func (a *Assets) String() string {

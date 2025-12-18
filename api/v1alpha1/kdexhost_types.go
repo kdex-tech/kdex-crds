@@ -60,7 +60,7 @@ type KDexHostList struct {
 // KDexHostSpec defines the desired state of KDexHost
 type KDexHostSpec struct {
 	// assets is a set of elements that define a host specific HTML instructions (e.g. favicon, site logo, charset).
-	Assets Assets `json:"assets"`
+	Assets Assets `json:"assets,omitempty"`
 
 	// brandName is the name used when rendering pages belonging to the host. For example, it may be used as alt text for the logo displayed in the page header.
 	// +kubebuilder:validation:Required

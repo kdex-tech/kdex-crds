@@ -83,7 +83,6 @@ _Underlying type:_ _[Asset](#asset)_
 
 _Validation:_
 - MaxItems: 32
-- MinItems: 1
 
 _Appears in:_
 - [KDexHostSpec](#kdexhostspec)
@@ -682,7 +681,7 @@ _Appears in:_
 
 | Field | Description | Default | Validation |
 | --- | --- | --- | --- |
-| `assets` _[Assets](#assets)_ | assets is a set of elements that define a host specific HTML instructions (e.g. favicon, site logo, charset). |  | MaxItems: 32 <br />MinItems: 1 <br /> |
+| `assets` _[Assets](#assets)_ | assets is a set of elements that define a host specific HTML instructions (e.g. favicon, site logo, charset). |  | MaxItems: 32 <br /> |
 | `brandName` _string_ | brandName is the name used when rendering pages belonging to the host. For example, it may be used as alt text for the logo displayed in the page header. |  | Required: \{\} <br /> |
 | `defaultLang` _string_ | defaultLang is a string containing a BCP 47 language tag.<br />See https://developer.mozilla.org/en-US/docs/Glossary/BCP_47_language_tag.<br />When render page paths do not specify a 'lang' path parameter this will be the value used. When not set the default will be 'en'. |  | Optional: \{\} <br /> |
 | `defaultThemeRef` _[KDexObjectReference](#kdexobjectreference)_ | defaultThemeRef is a reference to the theme that should apply to all pages bound to this host unless overridden. |  | Optional: \{\} <br /> |
@@ -1149,7 +1148,7 @@ _Appears in:_
 
 | Field | Description | Default | Validation |
 | --- | --- | --- | --- |
-| `assets` _[Assets](#assets)_ | assets is a set of elements that define a portable set of design rules. |  | MaxItems: 32 <br />MinItems: 1 <br /> |
+| `assets` _[Assets](#assets)_ | assets is a set of elements that define a portable set of design rules. |  | MaxItems: 32 <br /> |
 | `scriptLibraryRef` _[KDexObjectReference](#kdexobjectreference)_ | scriptLibraryRef is an optional reference to a KDexScriptLibrary resource. |  | Optional: \{\} <br /> |
 | `imagePullSecrets` _[LocalObjectReference](https://kubernetes.io/docs/reference/generated/kubernetes-api/v/#localobjectreference-v1-core) array_ | imagePullSecrets is an optional list of references to secrets in the same namespace to use for pulling the image. Also used for the webserver image if specified.<br />More info: https://kubernetes.io/docs/concepts/containers/images#specifying-imagepullsecrets-on-a-pod |  | Optional: \{\} <br /> |
 | `ingressPath` _string_ | ingressPath is a prefix beginning with a forward slash (/) plus at least 1 additional character which indicates where in the Ingress/HTTPRoute of the host the webserver will be mounted. KDexPageBindings associated with the host that have conflicting urls will be rejected from the host. |  | Optional: \{\} <br />Pattern: `^/.+` <br /> |

@@ -103,7 +103,6 @@ spec:
                     rule: '[has(self.script),has(self.scriptSrc)].filter(x,x==true).size()
                       <= 1'
                 maxItems: 32
-                minItems: 1
                 type: array
               brandName:
                 description: brandName is the name used when rendering pages belonging
@@ -371,7 +370,6 @@ spec:
                   Defaults to Always if :latest tag is specified, or IfNotPresent otherwise.
                 type: string
             required:
-            - assets
             - brandName
             - organization
             - routing

@@ -97,7 +97,6 @@ spec:
                     rule: '[has(self.script),has(self.scriptSrc)].filter(x,x==true).size()
                       <= 1'
                 maxItems: 32
-                minItems: 1
                 type: array
               imagePullSecrets:
                 description: |-
@@ -252,8 +251,6 @@ spec:
                   IfNotPresent: the kubelet pulls if the reference isn't already present on disk. Container creation will fail if the reference isn't present and the pull fails.
                   Defaults to Always if :latest tag is specified, or IfNotPresent otherwise.
                 type: string
-            required:
-            - assets
             type: object
           status:
             description: status defines the observed state of KDexApp
