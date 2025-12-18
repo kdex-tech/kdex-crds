@@ -92,8 +92,8 @@ func (a *KDexAppSpec) GetResourcePath() string {
 func (a *KDexAppSpec) GetResourceURLs() []string {
 	urls := []string{}
 	for _, script := range a.Scripts {
-		if script.ScriptSrc != nil {
-			urls = append(urls, *script.ScriptSrc)
+		if script.ScriptSrc != "" {
+			urls = append(urls, script.ScriptSrc)
 		}
 	}
 	return urls

@@ -80,10 +80,10 @@ func (a *KDexThemeSpec) GetResourcePath() string {
 func (a *KDexThemeSpec) GetResourceURLs() []string {
 	urls := []string{}
 	for _, asset := range a.Assets {
-		if asset.LinkDef.LinkHref != nil {
-			urls = append(urls, *asset.LinkDef.LinkHref)
-		} else if asset.ScriptDef.ScriptSrc != nil {
-			urls = append(urls, *asset.ScriptDef.ScriptSrc)
+		if asset.LinkDef.LinkHref != "" {
+			urls = append(urls, asset.LinkDef.LinkHref)
+		} else if asset.ScriptDef.ScriptSrc != "" {
+			urls = append(urls, asset.ScriptDef.ScriptSrc)
 		}
 	}
 	return urls

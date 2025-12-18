@@ -61,18 +61,6 @@ Package v1alpha1 contains API Schema definitions for the  v1alpha1 API group.
 _Appears in:_
 - [Assets](#assets)
 
-| Field | Description | Default | Validation |
-| --- | --- | --- | --- |
-| `attributes` _object (keys:string, values:string)_ | attributes are key/value pairs that will be added to the element as attributes when rendered. |  | Optional: \{\} <br /> |
-| `linkHref` _string_ | linkHref is the content of a `<link>` href attribute. The URL may be absolute with protocol and host or it must be prefixed by the RoutePath of the theme. |  | Optional: \{\} <br /> |
-| `attributes` _object (keys:string, values:string)_ | attributes are key/value pairs that will be added to the element as attributes when rendered. |  |  |
-| `metaId` _string_ | id is required just for semantics of CRD field validation. |  | Optional: \{\} <br /> |
-| `attributes` _object (keys:string, values:string)_ | attributes are key/value pairs that will be added to the element when rendered. |  | Optional: \{\} <br /> |
-| `footScript` _boolean_ | footScript is a flag for script or scriptSrc that indicates if the tag should be added in the head of the page or at the foot. The default is false (add to head). To add the script to the foot of the page set footScript to true. | false | Optional: \{\} <br /> |
-| `script` _string_ | script is the content that will be added to a `<script>` element when rendered. |  | Optional: \{\} <br /> |
-| `scriptSrc` _string_ | scriptSrc is a value for a `<script>` `src` attribute. It must be either and absolute URL with a protocol and host<br />or it must be relative to the `ingressPath` field of the WebServerProvider that defines it. |  | Optional: \{\} <br /> |
-| `attributes` _object (keys:string, values:string)_ | attributes are key/value pairs that will be added to the element as attributes when rendered. |  | Optional: \{\} <br /> |
-| `style` _string_ | style is the text content to be added into a `<style>` element when rendered. |  | Optional: \{\} <br /> |
 
 
 #### Assets
@@ -88,18 +76,6 @@ _Appears in:_
 - [KDexHostSpec](#kdexhostspec)
 - [KDexThemeSpec](#kdexthemespec)
 
-| Field | Description | Default | Validation |
-| --- | --- | --- | --- |
-| `attributes` _object (keys:string, values:string)_ | attributes are key/value pairs that will be added to the element as attributes when rendered. |  | Optional: \{\} <br /> |
-| `linkHref` _string_ | linkHref is the content of a `<link>` href attribute. The URL may be absolute with protocol and host or it must be prefixed by the RoutePath of the theme. |  | Optional: \{\} <br /> |
-| `attributes` _object (keys:string, values:string)_ | attributes are key/value pairs that will be added to the element as attributes when rendered. |  |  |
-| `metaId` _string_ | id is required just for semantics of CRD field validation. |  | Optional: \{\} <br /> |
-| `attributes` _object (keys:string, values:string)_ | attributes are key/value pairs that will be added to the element when rendered. |  | Optional: \{\} <br /> |
-| `footScript` _boolean_ | footScript is a flag for script or scriptSrc that indicates if the tag should be added in the head of the page or at the foot. The default is false (add to head). To add the script to the foot of the page set footScript to true. | false | Optional: \{\} <br /> |
-| `script` _string_ | script is the content that will be added to a `<script>` element when rendered. |  | Optional: \{\} <br /> |
-| `scriptSrc` _string_ | scriptSrc is a value for a `<script>` `src` attribute. It must be either and absolute URL with a protocol and host<br />or it must be relative to the `ingressPath` field of the WebServerProvider that defines it. |  | Optional: \{\} <br /> |
-| `attributes` _object (keys:string, values:string)_ | attributes are key/value pairs that will be added to the element as attributes when rendered. |  | Optional: \{\} <br /> |
-| `style` _string_ | style is the text content to be added into a `<style>` element when rendered. |  | Optional: \{\} <br /> |
 
 
 
@@ -121,11 +97,11 @@ _Appears in:_
 
 | Field | Description | Default | Validation |
 | --- | --- | --- | --- |
-| `attributes` _object (keys:string, values:string)_ | attributes are key/value pairs that will be added to the custom element as attributes when rendered. |  | Optional: \{\} <br /> |
+| `slot` _string_ | slot is the name of the App slot to which this entry will be bound. If omitted, the slot used will be `main`. No more than one entry can be bound to a slot. |  | Required: \{\} <br /> |
 | `appRef` _[KDexObjectReference](#kdexobjectreference)_ | appRef is a reference to the KDexApp to include in this binding. |  | Required: \{\} <br /> |
 | `customElementName` _string_ | customElementName is the name of the KDexApp custom element to render in the specified slot (if present in the template). |  | Required: \{\} <br /> |
+| `attributes` _object (keys:string, values:string)_ | attributes are key/value pairs that will be added to the custom element as attributes when rendered. |  | Optional: \{\} <br /> |
 | `rawHTML` _string_ | rawHTML is a raw HTML string to be rendered in the specified slot (if present in the template). |  | Required: \{\} <br /> |
-| `slot` _string_ | slot is the name of the App slot to which this entry will be bound. If omitted, the slot used will be `main`. No more than one entry can be bound to a slot. |  | Required: \{\} <br /> |
 
 
 #### ContentEntryApp
@@ -141,9 +117,9 @@ _Appears in:_
 
 | Field | Description | Default | Validation |
 | --- | --- | --- | --- |
-| `attributes` _object (keys:string, values:string)_ | attributes are key/value pairs that will be added to the custom element as attributes when rendered. |  | Optional: \{\} <br /> |
 | `appRef` _[KDexObjectReference](#kdexobjectreference)_ | appRef is a reference to the KDexApp to include in this binding. |  | Required: \{\} <br /> |
 | `customElementName` _string_ | customElementName is the name of the KDexApp custom element to render in the specified slot (if present in the template). |  | Required: \{\} <br /> |
+| `attributes` _object (keys:string, values:string)_ | attributes are key/value pairs that will be added to the custom element as attributes when rendered. |  | Optional: \{\} <br /> |
 
 
 #### ContentEntryStatic
@@ -175,8 +151,8 @@ _Appears in:_
 
 | Field | Description | Default | Validation |
 | --- | --- | --- | --- |
-| `description` _string_ | description of the custom element. |  | Optional: \{\} <br /> |
 | `name` _string_ | name of the custom element. |  | Required: \{\} <br /> |
+| `description` _string_ | description of the custom element. |  | Optional: \{\} <br /> |
 
 
 #### KDexApp
@@ -722,8 +698,8 @@ _Appears in:_
 
 | Field | Description | Default | Validation |
 | --- | --- | --- | --- |
-| `kind` _string_ | Kind is the type of resource being referenced |  |  |
 | `name` _string_ | Name of the referent. |  | Required: \{\} <br /> |
+| `kind` _string_ | Kind is the type of resource being referenced |  | Required: \{\} <br /> |
 | `namespace` _string_ | Namespace, if set, causes the lookup for the namespace scoped Kind of the referent to use the specified<br />namespace. If not set, the namespace of the resource will be used to lookup the namespace scoped Kind of the<br />referent.<br />If the referring resource is cluster scoped, this field is ignored.<br />Defaulted to nil. |  | Optional: \{\} <br /> |
 
 
@@ -1230,8 +1206,8 @@ _Appears in:_
 
 | Field | Description | Default | Validation |
 | --- | --- | --- | --- |
-| `attributes` _object (keys:string, values:string)_ | attributes are key/value pairs that will be added to the element as attributes when rendered. |  | Optional: \{\} <br /> |
 | `linkHref` _string_ | linkHref is the content of a `<link>` href attribute. The URL may be absolute with protocol and host or it must be prefixed by the RoutePath of the theme. |  | Optional: \{\} <br /> |
+| `attributes` _object (keys:string, values:string)_ | attributes are key/value pairs that will be added to the element as attributes when rendered. |  | Optional: \{\} <br /> |
 
 
 #### MetaDef
@@ -1247,8 +1223,8 @@ _Appears in:_
 
 | Field | Description | Default | Validation |
 | --- | --- | --- | --- |
-| `attributes` _object (keys:string, values:string)_ | attributes are key/value pairs that will be added to the element as attributes when rendered. |  |  |
 | `metaId` _string_ | id is required just for semantics of CRD field validation. |  | Optional: \{\} <br /> |
+| `attributes` _object (keys:string, values:string)_ | attributes are key/value pairs that will be added to the element as attributes when rendered. |  |  |
 
 
 #### ModulePolicy
@@ -1303,10 +1279,10 @@ _Appears in:_
 
 | Field | Description | Default | Validation |
 | --- | --- | --- | --- |
-| `exportMapping` _string_ | exportMapping is a mapping of the module's exports that will be used when the module import is written. e.g. `import [exportMapping] from [module_name];`. If exportMapping is not provided the module will be written as `import [module_name];` |  | Optional: \{\} <br /> |
 | `name` _string_ | name contains a scoped npm package name. |  | Required: \{\} <br /> |
-| `secretRef` _[LocalObjectReference](https://kubernetes.io/docs/reference/generated/kubernetes-api/v/#localobjectreference-v1-core)_ | secretRef is a reference to a secret containing authentication credentials for the NPM registry that holds the package. |  | Optional: \{\} <br /> |
 | `version` _string_ | version contains a specific npm package version. |  | Required: \{\} <br /> |
+| `exportMapping` _string_ | exportMapping is a mapping of the module's exports that will be used when the module import is written. e.g. `import [exportMapping] from [module_name];`. If exportMapping is not provided the module will be written as `import [module_name];` |  | Optional: \{\} <br /> |
+| `secretRef` _[LocalObjectReference](https://kubernetes.io/docs/reference/generated/kubernetes-api/v/#localobjectreference-v1-core)_ | secretRef is a reference to a secret containing authentication credentials for the NPM registry that holds the package. |  | Optional: \{\} <br /> |
 
 
 #### Paths
@@ -1378,10 +1354,10 @@ _Appears in:_
 
 | Field | Description | Default | Validation |
 | --- | --- | --- | --- |
-| `attributes` _object (keys:string, values:string)_ | attributes are key/value pairs that will be added to the element when rendered. |  | Optional: \{\} <br /> |
-| `footScript` _boolean_ | footScript is a flag for script or scriptSrc that indicates if the tag should be added in the head of the page or at the foot. The default is false (add to head). To add the script to the foot of the page set footScript to true. | false | Optional: \{\} <br /> |
 | `script` _string_ | script is the content that will be added to a `<script>` element when rendered. |  | Optional: \{\} <br /> |
 | `scriptSrc` _string_ | scriptSrc is a value for a `<script>` `src` attribute. It must be either and absolute URL with a protocol and host<br />or it must be relative to the `ingressPath` field of the WebServerProvider that defines it. |  | Optional: \{\} <br /> |
+| `footScript` _boolean_ | footScript is a flag for script or scriptSrc that indicates if the tag should be added in the head of the page or at the foot. The default is false (add to head). To add the script to the foot of the page set footScript to true. | false | Optional: \{\} <br /> |
+| `attributes` _object (keys:string, values:string)_ | attributes are key/value pairs that will be added to the element when rendered. |  | Optional: \{\} <br /> |
 
 
 #### StyleDef
@@ -1397,8 +1373,8 @@ _Appears in:_
 
 | Field | Description | Default | Validation |
 | --- | --- | --- | --- |
-| `attributes` _object (keys:string, values:string)_ | attributes are key/value pairs that will be added to the element as attributes when rendered. |  | Optional: \{\} <br /> |
 | `style` _string_ | style is the text content to be added into a `<style>` element when rendered. |  | Optional: \{\} <br /> |
+| `attributes` _object (keys:string, values:string)_ | attributes are key/value pairs that will be added to the element as attributes when rendered. |  | Optional: \{\} <br /> |
 
 
 #### TLSSpec
@@ -1430,15 +1406,15 @@ _Appears in:_
 
 | Field | Description | Default | Validation |
 | --- | --- | --- | --- |
-| `keysAndValues` _object (keys:string, values:string)_ | keysAndValues is a map of key=/value pairs where the key is the identifier and the value is the translation of that key in the language specified by the lang property. |  | MinProperties: 1 <br />Required: \{\} <br /> |
 | `lang` _string_ | lang is a string containing a BCP 47 language tag that identifies the set of translations.<br />See https://developer.mozilla.org/en-US/docs/Glossary/BCP_47_language_tag. |  | Required: \{\} <br /> |
+| `keysAndValues` _object (keys:string, values:string)_ | keysAndValues is a map of key=/value pairs where the key is the identifier and the value is the translation of that key in the language specified by the lang property. |  | MinProperties: 1 <br />Required: \{\} <br /> |
 
 
 #### WebServer
 
 
 
-WebServer defines the desired state of the KDexTheme web server
+WebServer defines a webserver deployment for serving static resources.
 
 
 

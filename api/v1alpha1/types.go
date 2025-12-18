@@ -11,27 +11,28 @@ import (
 
 const (
 	href = "href"
+	id   = "id"
 	src  = "src"
 )
 
 // +kubebuilder:validation:ExactlyOneOf=linkHref;metaId;script;scriptSrc;style
 type Asset struct {
-	LinkDef   LinkDef   `json:",inline"`
-	MetaDef   MetaDef   `json:",inline"`
-	ScriptDef ScriptDef `json:",inline"`
-	StyleDef  StyleDef  `json:",inline"`
+	LinkDef   *LinkDef   `json:",inline" protobuf:"bytes,1,opt,name=linkDef"`
+	MetaDef   *MetaDef   `json:",inline" protobuf:"bytes,2,opt,name=metaDef"`
+	ScriptDef *ScriptDef `json:",inline" protobuf:"bytes,3,opt,name=scriptDef"`
+	StyleDef  *StyleDef  `json:",inline" protobuf:"bytes,4,opt,name=styleDef"`
 }
 
 func (a *Asset) String() string {
 	var buffer bytes.Buffer
 
-	if a.LinkDef.LinkHref != nil {
+	if a.LinkDef != nil {
 		buffer.WriteString(a.LinkDef.ToHeadTag())
-	} else if a.MetaDef.MetaID != nil {
+	} else if a.MetaDef != nil {
 		buffer.WriteString(a.MetaDef.ToHeadTag())
-	} else if a.ScriptDef.Script != nil && a.ScriptDef.ScriptSrc != nil {
+	} else if a.ScriptDef != nil {
 		buffer.WriteString(a.ScriptDef.ToHeadTag())
-	} else if a.StyleDef.Style != nil {
+	} else if a.StyleDef != nil {
 		buffer.WriteString(a.StyleDef.ToHeadTag())
 	}
 
@@ -55,46 +56,46 @@ func (a *Assets) String() string {
 }
 
 type ContentEntryApp struct {
-	// attributes are key/value pairs that will be added to the custom element as attributes when rendered.
-	// +kubebuilder:validation:Optional
-	Attributes map[string]string `json:"attributes,omitempty"`
-
 	// appRef is a reference to the KDexApp to include in this binding.
 	// +kubebuilder:validation:Required
 	// +kubebuilder:validation:XValidation:rule=`self.kind == "KDexApp" || self.kind == "KDexClusterApp"`,message="'kind' must be either KDexApp or KDexClusterApp"
-	AppRef KDexObjectReference `json:"appRef,omitempty"`
+	AppRef KDexObjectReference `json:"appRef" protobuf:"bytes,1,req,name=appRef"`
 
 	// customElementName is the name of the KDexApp custom element to render in the specified slot (if present in the template).
 	// +kubebuilder:validation:Required
-	CustomElementName string `json:"customElementName,omitempty"`
+	CustomElementName string `json:"customElementName" protobuf:"bytes,2,req,name=customElementName"`
+
+	// attributes are key/value pairs that will be added to the custom element as attributes when rendered.
+	// +kubebuilder:validation:Optional
+	Attributes map[string]string `json:"attributes,omitempty" protobuf:"bytes,3,rep,name=attributes"`
 }
 
 type ContentEntryStatic struct {
 	// rawHTML is a raw HTML string to be rendered in the specified slot (if present in the template).
 	// +kubebuilder:validation:Required
-	RawHTML string `json:"rawHTML,omitempty"`
+	RawHTML string `json:"rawHTML,omitempty" protobuf:"bytes,1,req,name=rawHTML"`
 }
 
 // +kubebuilder:validation:ExactlyOneOf=appRef;rawHTML
 type ContentEntry struct {
-	ContentEntryApp ContentEntryApp `json:",inline"`
-
-	ContentEntryStatic ContentEntryStatic `json:",inline"`
-
 	// slot is the name of the App slot to which this entry will be bound. If omitted, the slot used will be `main`. No more than one entry can be bound to a slot.
 	// +kubebuilder:validation:Required
-	Slot string `json:"slot"`
+	Slot string `json:"slot" protobuf:"bytes,1,req,name=slot"`
+
+	ContentEntryApp ContentEntryApp `json:",inline" protobuf:"bytes,2,opt,name=contentEntryApp"`
+
+	ContentEntryStatic ContentEntryStatic `json:",inline" protobuf:"bytes,3,opt,name=contentEntryStatic"`
 }
 
 // CustomElement defines a custom element exposed by a micro-frontend application.
 type CustomElement struct {
-	// description of the custom element.
-	// +kubebuilder:validation:Optional
-	Description string `json:"description,omitempty"`
-
 	// name of the custom element.
 	// +kubebuilder:validation:Required
-	Name string `json:"name"`
+	Name string `json:"name" protobuf:"bytes,1,req,name=name"`
+
+	// description of the custom element.
+	// +kubebuilder:validation:Optional
+	Description string `json:"description,omitempty" protobuf:"bytes,2,opt,name=description"`
 }
 
 type KDexObject struct {
@@ -102,17 +103,21 @@ type KDexObject struct {
 
 	// metadata is a standard object metadata
 	// +kubebuilder:validation:Optional
-	metav1.ObjectMeta `json:"metadata,omitempty,omitzero"`
+	metav1.ObjectMeta `json:"metadata,omitempty" protobuf:"bytes,1,opt,name=metadata"`
 
 	// status defines the observed state of the resource
 	// +kubebuilder:validation:Optional
-	Status KDexObjectStatus `json:"status,omitempty,omitzero"`
+	Status KDexObjectStatus `json:"status,omitempty" protobuf:"bytes,2,opt,name=status"`
 }
 
 type KDexObjectStatus struct {
-	// attributes hold state of the resource as key/value pairs.
+	// For Kubernetes API conventions, see:
+	// https://github.com/kubernetes/community/blob/master/contributors/devel/sig-architecture/api-conventions.md#typical-status-properties
+
+	// observedGeneration is the most recent generation observed for this resource. It corresponds to the
+	// resource's generation, which is updated on mutation by the API Server.
 	// +kubebuilder:validation:Optional
-	Attributes map[string]string `json:"attributes,omitempty"`
+	ObservedGeneration int64 `json:"observedGeneration,omitempty" protobuf:"varint,1,opt,name=observedGeneration"`
 
 	// conditions represent the current state of the resource.
 	// Each condition has a unique type and reflects the status of a specific aspect of the resource.
@@ -125,26 +130,25 @@ type KDexObjectStatus struct {
 	// The status of each condition is one of True, False, or Unknown.
 	// +listType=map
 	// +listMapKey=type
+	// +patchMergeKey=type
+	// +patchStrategy=merge
 	// +kubebuilder:validation:Optional
-	Conditions []metav1.Condition `json:"conditions,omitempty"`
+	Conditions []metav1.Condition `json:"conditions,omitempty" patchStrategy:"merge" patchMergeKey:"type" protobuf:"bytes,2,rep,name=conditions"`
 
-	// For Kubernetes API conventions, see:
-	// https://github.com/kubernetes/community/blob/master/contributors/devel/sig-architecture/api-conventions.md#typical-status-properties
-
-	// observedGeneration is the most recent generation observed for this resource. It corresponds to the
-	// resource's generation, which is updated on mutation by the API Server.
+	// attributes hold state of the resource as key/value pairs.
 	// +kubebuilder:validation:Optional
-	ObservedGeneration int64 `json:"observedGeneration,omitempty"`
+	Attributes map[string]string `json:"attributes,omitempty" protobuf:"bytes,3,rep,name=attributes"`
 }
 
 // +structType=atomic
 type KDexObjectReference struct {
-	// Kind is the type of resource being referenced
-	Kind string `json:"kind" protobuf:"bytes,1,opt,name=kind"`
-
 	// Name of the referent.
 	// +kubebuilder:validation:Required
-	Name string `json:"name,omitempty" protobuf:"bytes,2,opt,name=name"`
+	Name string `json:"name" protobuf:"bytes,1,req,name=name"`
+
+	// Kind is the type of resource being referenced
+	// +kubebuilder:validation:Required
+	Kind string `json:"kind" protobuf:"bytes,2,req,name=kind"`
 
 	// Namespace, if set, causes the lookup for the namespace scoped Kind of the referent to use the specified
 	// namespace. If not set, the namespace of the resource will be used to lookup the namespace scoped Kind of the
@@ -156,13 +160,13 @@ type KDexObjectReference struct {
 }
 
 type LinkDef struct {
-	// attributes are key/value pairs that will be added to the element as attributes when rendered.
-	// +kubebuilder:validation:Optional
-	Attributes map[string]string `json:"attributes,omitempty"`
-
 	// linkHref is the content of a `<link>` href attribute. The URL may be absolute with protocol and host or it must be prefixed by the RoutePath of the theme.
 	// +kubebuilder:validation:Optional
-	LinkHref *string `json:"linkHref,omitempty"`
+	LinkHref string `json:"linkHref,omitempty" protobuf:"bytes,1,opt,name=linkHref"`
+
+	// attributes are key/value pairs that will be added to the element as attributes when rendered.
+	// +kubebuilder:validation:Optional
+	Attributes map[string]string `json:"attributes,omitempty" protobuf:"bytes,2,rep,name=attributes"`
 }
 
 func (l *LinkDef) ToFootTag() string {
@@ -174,7 +178,7 @@ func (l *LinkDef) ToHeadTag() string {
 }
 
 func (l *LinkDef) ToTag() string {
-	if l.LinkHref == nil {
+	if l.LinkHref == "" {
 		return ""
 	}
 
@@ -192,19 +196,19 @@ func (l *LinkDef) ToTag() string {
 		buffer.WriteRune('"')
 	}
 	buffer.WriteString(" href=\"")
-	buffer.WriteString(*l.LinkHref)
+	buffer.WriteString(l.LinkHref)
 	buffer.WriteString("\"/>")
 
 	return buffer.String()
 }
 
 type MetaDef struct {
-	// attributes are key/value pairs that will be added to the element as attributes when rendered.
-	Attributes map[string]string `json:"attributes,omitempty"`
-
 	// id is required just for semantics of CRD field validation.
 	// +kubebuilder:validation:Optional
-	MetaID *string `json:"metaId"`
+	MetaID string `json:"metaId" protobuf:"bytes,1,opt,name=metaId"`
+
+	// attributes are key/value pairs that will be added to the element as attributes when rendered.
+	Attributes map[string]string `json:"attributes,omitempty" protobuf:"bytes,2,rep,name=attributes"`
 }
 
 func (l *MetaDef) ToFootTag() string {
@@ -216,7 +220,7 @@ func (l *MetaDef) ToHeadTag() string {
 }
 
 func (l *MetaDef) ToTag() string {
-	if l.MetaID == nil {
+	if l.MetaID == "" {
 		return ""
 	}
 
@@ -224,12 +228,17 @@ func (l *MetaDef) ToTag() string {
 
 	buffer.WriteString("<meta")
 	for key, value := range l.Attributes {
+		if key == id {
+			continue
+		}
 		buffer.WriteRune(' ')
 		buffer.WriteString(key)
 		buffer.WriteString("=\"")
 		buffer.WriteString(value)
 		buffer.WriteRune('"')
 	}
+	buffer.WriteString(" id=\"")
+	buffer.WriteString(l.MetaID)
 	buffer.WriteString("\"/>")
 
 	return buffer.String()
@@ -253,30 +262,30 @@ const (
 type NavigationHints struct {
 	// icon is the name of the icon to display next to the menu entry for this page.
 	// +kubebuilder:validation:Optional
-	Icon string `json:"icon,omitempty"`
+	Icon string `json:"icon,omitempty" protobuf:"bytes,1,opt,name=icon"`
 
 	// weight is a property that influences the position of the page menu entry. Items at each level are sorted first by ascending weight and then ascending lexicographically.
 	// +kubebuilder:validation:Optional
-	Weight resource.Quantity `json:"weight,omitempty"`
+	Weight resource.Quantity `json:"weight,omitempty" protobuf:"bytes,2,opt,name=weight"`
 }
 
 // PackageReference specifies the name and version of an NPM package that contains the micro-frontend application.
 type PackageReference struct {
-	// exportMapping is a mapping of the module's exports that will be used when the module import is written. e.g. `import [exportMapping] from [module_name];`. If exportMapping is not provided the module will be written as `import [module_name];`
-	// +kubebuilder:validation:Optional
-	ExportMapping string `json:"exportMapping,omitempty"`
-
 	// name contains a scoped npm package name.
 	// +kubebuilder:validation:Required
-	Name string `json:"name"`
-
-	// secretRef is a reference to a secret containing authentication credentials for the NPM registry that holds the package.
-	// +kubebuilder:validation:Optional
-	SecretRef *corev1.LocalObjectReference `json:"secretRef,omitempty"`
+	Name string `json:"name" protobuf:"bytes,1,req,name=name"`
 
 	// version contains a specific npm package version.
 	// +kubebuilder:validation:Required
-	Version string `json:"version"`
+	Version string `json:"version" protobuf:"bytes,2,req,name=version"`
+
+	// exportMapping is a mapping of the module's exports that will be used when the module import is written. e.g. `import [exportMapping] from [module_name];`. If exportMapping is not provided the module will be written as `import [module_name];`
+	// +kubebuilder:validation:Optional
+	ExportMapping string `json:"exportMapping,omitempty" protobuf:"bytes,3,opt,name=exportMapping"`
+
+	// secretRef is a reference to a secret containing authentication credentials for the NPM registry that holds the package.
+	// +kubebuilder:validation:Optional
+	SecretRef *corev1.LocalObjectReference `json:"secretRef,omitempty" protobuf:"bytes,4,opt,name=secretRef"`
 }
 
 func (p *PackageReference) ToImportStatement() string {
@@ -303,11 +312,11 @@ type Paths struct {
 	// basePath is the shortest path by which the page may be accessed. It must not contain path parameters. This path will be used in site navigation. This path is subject to being prefixed for localization by `/{l10n}` and will be when the user selects a non-default language.
 	// +kubebuilder:validation:Pattern=`^/`
 	// +kubebuilder:validation:Required
-	BasePath string `json:"basePath"`
+	BasePath string `json:"basePath" protobuf:"bytes,1,opt,name=basePath"`
 
 	// patternPath, which must be prefixed by BasePath, is an extension of basePath that adds pattern matching as defined by https://pkg.go.dev/net/http#hdr-Patterns-ServeMux. This path is subject to being prefixed for localization by `/{l10n}` such as when the user selects a non-default language.
 	// +kubebuilder:validation:Optional
-	PatternPath string `json:"patternPath,omitempty"`
+	PatternPath string `json:"patternPath,omitempty" protobuf:"bytes,2,opt,name=patternPath"`
 }
 
 // Routing defines the desired routing configuration for the host.
@@ -316,7 +325,7 @@ type Routing struct {
 	// +kubebuilder:validation:Required
 	// +kubebuilder:validation:MinItems=1
 	// +kubebuilder:validation:Items:Format=hostname
-	Domains []string `json:"domains"`
+	Domains []string `json:"domains" protobuf:"bytes,1,rep,name=domains"`
 
 	// ingressClassName is the name of an IngressClass cluster resource. Ingress
 	// controller implementations use this field to know whether they should be
@@ -329,16 +338,16 @@ type Routing struct {
 	// though the annotation is officially deprecated, for backwards compatibility
 	// reasons, ingress controllers should still honor that annotation if present.
 	// +kubebuilder:validation:Optional
-	IngressClassName *string `json:"ingressClassName,omitempty" protobuf:"bytes,4,opt,name=ingressClassName"`
+	IngressClassName *string `json:"ingressClassName,omitempty" protobuf:"bytes,2,opt,name=ingressClassName"`
 
 	// strategy is the routing strategy to use. If not specified Ingress is assumed.
 	// +kubebuilder:validation:Optional
 	// +kubebuilder:default:="Ingress"
-	Strategy RoutingStrategy `json:"strategy"`
+	Strategy RoutingStrategy `json:"strategy,omitempty" protobuf:"bytes,3,opt,name=strategy,casttype=RoutingStrategy"`
 
 	// tls is the TLS configuration for the host.
 	// +kubebuilder:validation:Optional
-	TLS *TLSSpec `json:"tls,omitempty"`
+	TLS *TLSSpec `json:"tls,omitempty" protobuf:"bytes,4,opt,name=tls"`
 }
 
 // RoutingStrategy defines the routing strategy to use.
@@ -354,23 +363,23 @@ const (
 
 // +kubebuilder:validation:AtMostOneOf=script;scriptSrc
 type ScriptDef struct {
-	// attributes are key/value pairs that will be added to the element when rendered.
-	// +kubebuilder:validation:Optional
-	Attributes map[string]string `json:"attributes,omitempty"`
-
-	// footScript is a flag for script or scriptSrc that indicates if the tag should be added in the head of the page or at the foot. The default is false (add to head). To add the script to the foot of the page set footScript to true.
-	// +kubebuilder:validation:Optional
-	// +kubebuilder:default:=false
-	FootScript bool `json:"footScript,omitempty"`
-
 	// script is the content that will be added to a `<script>` element when rendered.
 	// +kubebuilder:validation:Optional
-	Script *string `json:"script,omitempty"`
+	Script string `json:"script,omitempty" protobuf:"bytes,1,opt,name=script"`
 
 	// scriptSrc is a value for a `<script>` `src` attribute. It must be either and absolute URL with a protocol and host
 	// or it must be relative to the `ingressPath` field of the WebServerProvider that defines it.
 	// +kubebuilder:validation:Optional
-	ScriptSrc *string `json:"scriptSrc,omitempty"`
+	ScriptSrc string `json:"scriptSrc,omitempty" protobuf:"bytes,2,opt,name=scriptSrc"`
+
+	// footScript is a flag for script or scriptSrc that indicates if the tag should be added in the head of the page or at the foot. The default is false (add to head). To add the script to the foot of the page set footScript to true.
+	// +kubebuilder:validation:Optional
+	// +kubebuilder:default:=false
+	FootScript bool `json:"footScript,omitempty" protobuf:"varint,3,opt,name=footScript"`
+
+	// attributes are key/value pairs that will be added to the element when rendered.
+	// +kubebuilder:validation:Optional
+	Attributes map[string]string `json:"attributes,omitempty" protobuf:"bytes,4,rep,name=attributes"`
 }
 
 func (s *ScriptDef) ToFootTag() string {
@@ -392,7 +401,7 @@ func (s *ScriptDef) ToHeadTag() string {
 func (s *ScriptDef) ToTag() string {
 	var buffer bytes.Buffer
 
-	if s.ScriptSrc != nil {
+	if s.ScriptSrc != "" {
 		buffer.WriteString("<script")
 		for key, value := range s.Attributes {
 			if key == src {
@@ -405,9 +414,9 @@ func (s *ScriptDef) ToTag() string {
 			buffer.WriteRune('"')
 		}
 		buffer.WriteString(" src=\"")
-		buffer.WriteString(*s.ScriptSrc)
+		buffer.WriteString(s.ScriptSrc)
 		buffer.WriteString("\"></script>")
-	} else if s.Script != nil {
+	} else if s.Script != "" {
 		buffer.WriteString("<script")
 		for key, value := range s.Attributes {
 			if key == src {
@@ -420,7 +429,7 @@ func (s *ScriptDef) ToTag() string {
 			buffer.WriteRune('"')
 		}
 		buffer.WriteString(">\n")
-		buffer.WriteString(*s.Script)
+		buffer.WriteString(s.Script)
 		buffer.WriteString("\n</script>")
 	}
 
@@ -428,13 +437,13 @@ func (s *ScriptDef) ToTag() string {
 }
 
 type StyleDef struct {
-	// attributes are key/value pairs that will be added to the element as attributes when rendered.
-	// +kubebuilder:validation:Optional
-	Attributes map[string]string `json:"attributes,omitempty"`
-
 	// style is the text content to be added into a `<style>` element when rendered.
 	// +kubebuilder:validation:Optional
-	Style *string `json:"style,omitempty"`
+	Style string `json:"style,omitempty" protobuf:"bytes,1,opt,name=style"`
+
+	// attributes are key/value pairs that will be added to the element as attributes when rendered.
+	// +kubebuilder:validation:Optional
+	Attributes map[string]string `json:"attributes,omitempty" protobuf:"bytes,2,rep,name=attributes"`
 }
 
 func (s *StyleDef) ToFootTag() string {
@@ -446,7 +455,7 @@ func (s *StyleDef) ToHeadTag() string {
 }
 
 func (s *StyleDef) ToTag() string {
-	if s.Style == nil {
+	if s.Style == "" {
 		return ""
 	}
 
@@ -461,7 +470,7 @@ func (s *StyleDef) ToTag() string {
 		buffer.WriteRune('"')
 	}
 	buffer.WriteString(">\n")
-	buffer.WriteString(*s.Style)
+	buffer.WriteString(s.Style)
 	buffer.WriteString("\n</style>")
 
 	return buffer.String()
@@ -471,22 +480,22 @@ func (s *StyleDef) ToTag() string {
 type TLSSpec struct {
 	// secretRef is a reference to a secret containing a TLS certificate and key for the domains specified on the host.
 	// +kubebuilder:validation:Required
-	SecretRef corev1.LocalObjectReference `json:"secretRef"`
+	SecretRef corev1.LocalObjectReference `json:"secretRef" protobuf:"bytes,1,req,name=secretRef"`
 }
 
 type Translation struct {
-	// keysAndValues is a map of key=/value pairs where the key is the identifier and the value is the translation of that key in the language specified by the lang property.
-	// +kubebuilder:validation:MinProperties=1
-	// +kubebuilder:validation:Required
-	KeysAndValues map[string]string `json:"keysAndValues"`
-
 	// lang is a string containing a BCP 47 language tag that identifies the set of translations.
 	// See https://developer.mozilla.org/en-US/docs/Glossary/BCP_47_language_tag.
 	// +kubebuilder:validation:Required
-	Lang string `json:"lang"`
+	Lang string `json:"lang" protobuf:"bytes,1,req,name=lang"`
+
+	// keysAndValues is a map of key=/value pairs where the key is the identifier and the value is the translation of that key in the language specified by the lang property.
+	// +kubebuilder:validation:MinProperties=1
+	// +kubebuilder:validation:Required
+	KeysAndValues map[string]string `json:"keysAndValues" protobuf:"bytes,2,rep,name=keysAndValues"`
 }
 
-// WebServer defines the desired state of the KDexTheme web server
+// WebServer defines a webserver deployment for serving static resources.
 type WebServer struct {
 	// imagePullSecrets is an optional list of references to secrets in the same namespace to use for pulling the image. Also used for the webserver image if specified.
 	// More info: https://kubernetes.io/docs/concepts/containers/images#specifying-imagepullsecrets-on-a-pod
@@ -495,29 +504,29 @@ type WebServer struct {
 	// +patchStrategy=merge
 	// +listType=map
 	// +listMapKey=name
-	ImagePullSecrets []corev1.LocalObjectReference `json:"imagePullSecrets,omitempty" patchStrategy:"merge" patchMergeKey:"name" protobuf:"bytes,15,rep,name=imagePullSecrets"`
+	ImagePullSecrets []corev1.LocalObjectReference `json:"imagePullSecrets,omitempty" patchStrategy:"merge" patchMergeKey:"name" protobuf:"bytes,1,rep,name=imagePullSecrets"`
 
 	// ingressPath is a prefix beginning with a forward slash (/) plus at least 1 additional character which indicates where in the Ingress/HTTPRoute of the host the webserver will be mounted. KDexPageBindings associated with the host that have conflicting urls will be rejected from the host.
 	// +kubebuilder:validation:Optional
 	// +kubebuilder:validation:Pattern=`^/.+`
-	IngressPath string `json:"ingressPath,omitempty"`
+	IngressPath string `json:"ingressPath,omitempty" protobuf:"bytes,2,opt,name=ingressPath"`
 
 	// replicas is the number of desired pods. This is a pointer to distinguish between explicit
 	// zero and not specified. Defaults to 1.
 	// +kubebuilder:validation:Optional
-	Replicas *int32 `json:"replicas,omitempty"`
+	Replicas *int32 `json:"replicas,omitempty" protobuf:"varint,3,opt,name=replicas"`
 
 	// resources defines the compute resources required by the container.
 	// More info: https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/
 	// +kubebuilder:validation:Optional
-	Resources corev1.ResourceRequirements `json:"resources,omitempty"`
+	Resources corev1.ResourceRequirements `json:"resources,omitempty" protobuf:"bytes,4,opt,name=resources"`
 
 	// serverImage is the name of webserver image.
 	// More info: https://kubernetes.io/docs/concepts/containers/images
 	// +kubebuilder:validation:Optional
 	// +kubebuilder:validation:MinLength=5
 	// +kubebuilder:default:="kdex-tech/kdex-themeserver:{{.Release}}"
-	ServerImage string `json:"serverImage"`
+	ServerImage string `json:"serverImage,omitempty" protobuf:"bytes,5,opt,name=serverImage"`
 
 	// Policy for pulling the webserver image. Possible values are:
 	// Always: the kubelet always attempts to pull the reference. Container creation will fail If the pull fails.
@@ -525,12 +534,12 @@ type WebServer struct {
 	// IfNotPresent: the kubelet pulls if the reference isn't already present on disk. Container creation will fail if the reference isn't present and the pull fails.
 	// Defaults to Always if :latest tag is specified, or IfNotPresent otherwise.
 	// +kubebuilder:validation:Optional
-	ServerImagePullPolicy corev1.PullPolicy `json:"serverImagePullPolicy,omitempty" protobuf:"bytes,2,opt,name=serverImagePullPolicy,casttype=PullPolicy"`
+	ServerImagePullPolicy corev1.PullPolicy `json:"serverImagePullPolicy,omitempty" protobuf:"bytes,6,opt,name=serverImagePullPolicy,casttype=PullPolicy"`
 
 	// staticImage is the name of an OCI image that contains static resources that will be served by the webserver.
 	// More info: https://kubernetes.io/docs/concepts/containers/images
 	// +kubebuilder:validation:Optional
-	StaticImage string `json:"staticImage,omitempty"`
+	StaticImage string `json:"staticImage,omitempty" protobuf:"bytes,7,opt,name=staticImage"`
 
 	// Policy for pulling the OCI theme image. Possible values are:
 	// Always: the kubelet always attempts to pull the reference. Container creation will fail If the pull fails.
@@ -538,5 +547,5 @@ type WebServer struct {
 	// IfNotPresent: the kubelet pulls if the reference isn't already present on disk. Container creation will fail if the reference isn't present and the pull fails.
 	// Defaults to Always if :latest tag is specified, or IfNotPresent otherwise.
 	// +kubebuilder:validation:Optional
-	StaticImagePullPolicy corev1.PullPolicy `json:"staticImagePullPolicy,omitempty" protobuf:"bytes,2,opt,name=staticImagePullPolicy,casttype=PullPolicy"`
+	StaticImagePullPolicy corev1.PullPolicy `json:"staticImagePullPolicy,omitempty" protobuf:"bytes,8,opt,name=staticImagePullPolicy,casttype=PullPolicy"`
 }
