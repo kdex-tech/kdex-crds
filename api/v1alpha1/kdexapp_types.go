@@ -78,19 +78,28 @@ type KDexAppSpec struct {
 	Scripts []ScriptDef `json:"scripts,omitempty"`
 
 	// When not specified the default ingressPath (path where the webserver will be mounted into the Ingress/HTTPRoute) will be `/{{.metadata.name}}`
-	WebServer WebServer `json:",inline"`
+	WebServer *WebServer `json:",inline"`
 }
 
 func (a *KDexAppSpec) GetResourceImage() string {
+	if a.WebServer == nil {
+		return ""
+	}
 	return a.WebServer.StaticImage
 }
 
 func (a *KDexAppSpec) GetResourcePath() string {
+	if a.WebServer == nil {
+		return ""
+	}
 	return a.WebServer.IngressPath
 }
 
 func (a *KDexAppSpec) GetResourceURLs() []string {
 	urls := []string{}
+	if a.WebServer == nil {
+		return urls
+	}
 	for _, script := range a.Scripts {
 		if script.ScriptSrc != "" {
 			urls = append(urls, script.ScriptSrc)

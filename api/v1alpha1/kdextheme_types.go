@@ -66,19 +66,28 @@ type KDexThemeSpec struct {
 	ScriptLibraryRef *KDexObjectReference `json:"scriptLibraryRef,omitempty"`
 
 	// When not specified the default ingressPath (path where the webserver will be mounted into the Ingress/HTTPRoute) will be `/theme`
-	WebServer WebServer `json:",inline"`
+	WebServer *WebServer `json:",inline"`
 }
 
 func (a *KDexThemeSpec) GetResourceImage() string {
+	if a.WebServer == nil {
+		return ""
+	}
 	return a.WebServer.StaticImage
 }
 
 func (a *KDexThemeSpec) GetResourcePath() string {
+	if a.WebServer == nil {
+		return ""
+	}
 	return a.WebServer.IngressPath
 }
 
 func (a *KDexThemeSpec) GetResourceURLs() []string {
 	urls := []string{}
+	if a.WebServer == nil {
+		return urls
+	}
 	for _, asset := range a.Assets {
 		if asset.LinkDef.LinkHref != "" {
 			urls = append(urls, asset.LinkDef.LinkHref)
