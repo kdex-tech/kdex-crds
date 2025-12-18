@@ -60,45 +60,45 @@ type KDexHostList struct {
 // KDexHostSpec defines the desired state of KDexHost
 type KDexHostSpec struct {
 	// assets is a set of elements that define a host specific HTML instructions (e.g. favicon, site logo, charset).
-	Assets Assets `json:"assets,omitempty"`
+	Assets Assets `json:"assets,omitempty" protobuf:"bytes,1,rep,name=assets"`
 
 	// brandName is the name used when rendering pages belonging to the host. For example, it may be used as alt text for the logo displayed in the page header.
 	// +kubebuilder:validation:Required
-	BrandName string `json:"brandName"`
+	BrandName string `json:"brandName" protobuf:"bytes,2,req,name=brandName"`
 
 	// defaultLang is a string containing a BCP 47 language tag.
 	// See https://developer.mozilla.org/en-US/docs/Glossary/BCP_47_language_tag.
 	// When render page paths do not specify a 'lang' path parameter this will be the value used. When not set the default will be 'en'.
 	// +kubebuilder:validation:Optional
-	DefaultLang string `json:"defaultLang,omitempty"`
+	DefaultLang string `json:"defaultLang,omitempty" protobuf:"bytes,3,opt,name=defaultLang"`
 
 	// defaultThemeRef is a reference to the theme that should apply to all pages bound to this host unless overridden.
 	// +kubebuilder:validation:Optional
 	// +kubebuilder:validation:XValidation:rule=`self.kind == "KDexTheme" || self.kind == "KDexClusterTheme"`,message="'kind' must be either KDexTheme or KDexClusterTheme"
-	DefaultThemeRef *KDexObjectReference `json:"defaultThemeRef,omitempty"`
+	DefaultThemeRef *KDexObjectReference `json:"defaultThemeRef,omitempty" protobuf:"bytes,4,opt,name=defaultThemeRef"`
 
 	// modulePolicy defines the policy for JavaScript references in KDexApp, KDexTheme and KDexScriptLibrary resources. When not specified the policy is Strict
 	// A Host must not accept JavaScript references which do not comply with the specified policy.
 	// +kubebuilder:validation:Optional
 	// +kubebuilder:default:="Strict"
-	ModulePolicy ModulePolicy `json:"modulePolicy"`
+	ModulePolicy ModulePolicy `json:"modulePolicy" protobuf:"bytes,5,opt,name=modulePolicy,casttype=ModulePolicy"`
 
 	// organization is the name of the Organization to which the host belongs.
 	// +kubebuilder:validation:Required
 	// +kubebuilder:validation:MinLength=5
-	Organization string `json:"organization"`
+	Organization string `json:"organization" protobuf:"bytes,6,req,name=organization"`
 
 	// routing defines the desired routing configuration for the host.
 	// +kubebuilder:validation:Required
-	Routing Routing `json:"routing"`
+	Routing Routing `json:"routing" protobuf:"bytes,7,req,name=routing"`
 
 	// scriptLibraryRef is an optional reference to a KDexScriptLibrary resource.
 	// +kubebuilder:validation:Optional
 	// +kubebuilder:validation:XValidation:rule=`self.kind == "KDexScriptLibrary" || self.kind == "KDexClusterScriptLibrary"`,message="'kind' must be either KDexScriptLibrary or KDexClusterScriptLibrary"
-	ScriptLibraryRef *KDexObjectReference `json:"scriptLibraryRef,omitempty"`
+	ScriptLibraryRef *KDexObjectReference `json:"scriptLibraryRef,omitempty" protobuf:"bytes,8,opt,name=scriptLibraryRef"`
 
 	// When not specified the default ingressPath (path where the webserver will be mounted into the Ingress/HTTPRoute) will be `/static`
-	WebServer WebServer `json:",inline"`
+	WebServer WebServer `json:",inline" protobuf:"bytes,9,opt,name=webServer"`
 }
 
 func (a *KDexHostSpec) GetResourceImage() string {

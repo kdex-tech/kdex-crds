@@ -66,19 +66,19 @@ type KDexAppSpec struct {
 	// +listMapKey=name
 	// +kubebuilder:validation:MaxItems=32
 	// +kubebuilder:validation:MinItems=1
-	CustomElements []CustomElement `json:"customElements,omitempty"`
+	CustomElements []CustomElement `json:"customElements,omitempty" protobuf:"bytes,1,rep,name=customElements"`
 
 	// packageReference specifies the name and version of an NPM package that contains the script. The package.json must describe an ES module.
 	// +kubebuilder:validation:Required
-	PackageReference PackageReference `json:"packageReference,omitempty"`
+	PackageReference PackageReference `json:"packageReference,omitempty" protobuf:"bytes,2,req,name=packageReference"`
 
 	// scripts is a set of script references. They may contain URLs that point to resources hosted at some public address, npm module references or they may contain tag contents.
 	// +kubebuilder:validation:MaxItems=32
 	// +kubebuilder:validation:Optional
-	Scripts []ScriptDef `json:"scripts,omitempty"`
+	Scripts []ScriptDef `json:"scripts,omitempty" protobuf:"bytes,3,rep,name=scripts"`
 
 	// When not specified the default ingressPath (path where the webserver will be mounted into the Ingress/HTTPRoute) will be `/{{.metadata.name}}`
-	WebServer WebServer `json:",inline"`
+	WebServer WebServer `json:",inline" protobuf:"bytes,4,opt,name=webServer"`
 }
 
 func (a *KDexAppSpec) GetResourceImage() string {
