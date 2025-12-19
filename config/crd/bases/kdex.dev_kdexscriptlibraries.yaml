@@ -126,7 +126,7 @@ spec:
             type: object
             x-kubernetes-validations:
             - message: at least one of scripts or packageReference must be specified
-              rule: self.scripts.size() > 0 || has(self.?packageReference.name)
+              rule: (has(self.scripts) && self.scripts.size() > 0) || has(self.packageReference)
           status:
             description: status defines the observed state of KDexApp
             properties:
