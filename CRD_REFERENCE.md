@@ -64,7 +64,7 @@ _Appears in:_
 | Field | Description | Default | Validation |
 | --- | --- | --- | --- |
 | `attributes` _object (keys:string, values:string)_ | attributes are key/value pairs that will be added to the element as attributes when rendered. |  | Optional: \{\} <br /> |
-| `linkHref` _string_ | linkHref is the content of a `<link>` href attribute. The URL may be absolute with protocol and host or it must be prefixed by the RoutePath of the theme. |  | Optional: \{\} <br /> |
+| `linkHref` _string_ | linkHref is the content of a `<link>` href attribute. The URL may be absolute with protocol and host or it must be prefixed by the IngressPath of the WebServer. |  | Optional: \{\} <br /> |
 | `metaId` _string_ | metaId is required just for semantics of CRD field validation. |  | Optional: \{\} <br /> |
 | `style` _string_ | style is the text content to be added into a `<style>` element when rendered. |  | Optional: \{\} <br /> |
 
@@ -85,7 +85,7 @@ _Appears in:_
 | Field | Description | Default | Validation |
 | --- | --- | --- | --- |
 | `attributes` _object (keys:string, values:string)_ | attributes are key/value pairs that will be added to the element as attributes when rendered. |  | Optional: \{\} <br /> |
-| `linkHref` _string_ | linkHref is the content of a `<link>` href attribute. The URL may be absolute with protocol and host or it must be prefixed by the RoutePath of the theme. |  | Optional: \{\} <br /> |
+| `linkHref` _string_ | linkHref is the content of a `<link>` href attribute. The URL may be absolute with protocol and host or it must be prefixed by the IngressPath of the WebServer. |  | Optional: \{\} <br /> |
 | `metaId` _string_ | metaId is required just for semantics of CRD field validation. |  | Optional: \{\} <br /> |
 | `style` _string_ | style is the text content to be added into a `<style>` element when rendered. |  | Optional: \{\} <br /> |
 

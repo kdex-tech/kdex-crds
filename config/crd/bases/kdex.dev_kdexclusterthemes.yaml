@@ -60,7 +60,7 @@ spec:
                     linkHref:
                       description: linkHref is the content of a `<link>` href attribute.
                         The URL may be absolute with protocol and host or it must
-                        be prefixed by the RoutePath of the theme.
+                        be prefixed by the IngressPath of the WebServer.
                       type: string
                     metaId:
                       description: metaId is required just for semantics of CRD field

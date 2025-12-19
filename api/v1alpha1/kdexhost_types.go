@@ -102,11 +102,11 @@ type KDexHostSpec struct {
 }
 
 func (a *KDexHostSpec) GetResourceImage() string {
-	return a.WebServer.StaticImage
+	return a.StaticImage
 }
 
 func (a *KDexHostSpec) GetResourcePath() string {
-	return a.WebServer.IngressPath
+	return a.IngressPath
 }
 
 func (a *KDexHostSpec) GetResourceURLs() []string {

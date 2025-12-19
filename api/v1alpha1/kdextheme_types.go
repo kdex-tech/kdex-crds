@@ -71,11 +71,11 @@ type KDexThemeSpec struct {
 }
 
 func (a *KDexThemeSpec) GetResourceImage() string {
-	return a.WebServer.StaticImage
+	return a.StaticImage
 }
 
 func (a *KDexThemeSpec) GetResourcePath() string {
-	return a.WebServer.IngressPath
+	return a.IngressPath
 }
 
 func (a *KDexThemeSpec) GetResourceURLs() []string {

@@ -21,7 +21,7 @@ type Asset struct {
 	// +kubebuilder:validation:Optional
 	Attributes map[string]string `json:"attributes,omitempty" protobuf:"bytes,1,rep,name=attributes"`
 
-	// linkHref is the content of a `<link>` href attribute. The URL may be absolute with protocol and host or it must be prefixed by the RoutePath of the theme.
+	// linkHref is the content of a `<link>` href attribute. The URL may be absolute with protocol and host or it must be prefixed by the IngressPath of the WebServer.
 	// +kubebuilder:validation:Optional
 	LinkHref string `json:"linkHref,omitempty" protobuf:"bytes,2,opt,name=linkHref"`
 
