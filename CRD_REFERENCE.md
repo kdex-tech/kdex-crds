@@ -61,6 +61,12 @@ Package v1alpha1 contains API Schema definitions for the  v1alpha1 API group.
 _Appears in:_
 - [Assets](#assets)
 
+| Field | Description | Default | Validation |
+| --- | --- | --- | --- |
+| `attributes` _object (keys:string, values:string)_ | attributes are key/value pairs that will be added to the element as attributes when rendered. |  | Optional: \{\} <br /> |
+| `linkHref` _string_ | linkHref is the content of a `<link>` href attribute. The URL may be absolute with protocol and host or it must be prefixed by the RoutePath of the theme. |  | Optional: \{\} <br /> |
+| `metaId` _string_ | metaId is required just for semantics of CRD field validation. |  | Optional: \{\} <br /> |
+| `style` _string_ | style is the text content to be added into a `<style>` element when rendered. |  | Optional: \{\} <br /> |
 
 
 #### Assets
@@ -76,6 +82,12 @@ _Appears in:_
 - [KDexHostSpec](#kdexhostspec)
 - [KDexThemeSpec](#kdexthemespec)
 
+| Field | Description | Default | Validation |
+| --- | --- | --- | --- |
+| `attributes` _object (keys:string, values:string)_ | attributes are key/value pairs that will be added to the element as attributes when rendered. |  | Optional: \{\} <br /> |
+| `linkHref` _string_ | linkHref is the content of a `<link>` href attribute. The URL may be absolute with protocol and host or it must be prefixed by the RoutePath of the theme. |  | Optional: \{\} <br /> |
+| `metaId` _string_ | metaId is required just for semantics of CRD field validation. |  | Optional: \{\} <br /> |
+| `style` _string_ | style is the text content to be added into a `<style>` element when rendered. |  | Optional: \{\} <br /> |
 
 
 
@@ -1193,40 +1205,6 @@ _Appears in:_
 | `translations` _[Translation](#translation) array_ | translations is an array of objects where each one specifies a language (lang) and a map (keysAndValues) consisting of key/value pairs. If the lang property is not unique in the array and its keysAndValues map contains the same keys, the last one takes precedence. |  | MinItems: 1 <br />Required: \{\} <br /> |
 
 
-#### LinkDef
-
-
-
-
-
-
-
-_Appears in:_
-- [Asset](#asset)
-
-| Field | Description | Default | Validation |
-| --- | --- | --- | --- |
-| `linkHref` _string_ | linkHref is the content of a `<link>` href attribute. The URL may be absolute with protocol and host or it must be prefixed by the RoutePath of the theme. |  | Optional: \{\} <br /> |
-| `attributes` _object (keys:string, values:string)_ | attributes are key/value pairs that will be added to the element as attributes when rendered. |  | Optional: \{\} <br /> |
-
-
-#### MetaDef
-
-
-
-
-
-
-
-_Appears in:_
-- [Asset](#asset)
-
-| Field | Description | Default | Validation |
-| --- | --- | --- | --- |
-| `metaId` _string_ | id is required just for semantics of CRD field validation. |  | Optional: \{\} <br /> |
-| `attributes` _object (keys:string, values:string)_ | attributes are key/value pairs that will be added to the element as attributes when rendered. |  |  |
-
-
 #### ModulePolicy
 
 _Underlying type:_ _string_
@@ -1348,7 +1326,6 @@ _Appears in:_
 
 
 _Appears in:_
-- [Asset](#asset)
 - [KDexAppSpec](#kdexappspec)
 - [KDexScriptLibrarySpec](#kdexscriptlibraryspec)
 
@@ -1360,21 +1337,6 @@ _Appears in:_
 | `attributes` _object (keys:string, values:string)_ | attributes are key/value pairs that will be added to the element when rendered. |  | Optional: \{\} <br /> |
 
 
-#### StyleDef
-
-
-
-
-
-
-
-_Appears in:_
-- [Asset](#asset)
-
-| Field | Description | Default | Validation |
-| --- | --- | --- | --- |
-| `style` _string_ | style is the text content to be added into a `<style>` element when rendered. |  | Optional: \{\} <br /> |
-| `attributes` _object (keys:string, values:string)_ | attributes are key/value pairs that will be added to the element as attributes when rendered. |  | Optional: \{\} <br /> |
 
 
 #### TLSSpec
