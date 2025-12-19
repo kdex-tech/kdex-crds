@@ -78,7 +78,7 @@ type KDexAppSpec struct {
 	Scripts []ScriptDef `json:"scripts,omitempty" protobuf:"bytes,3,rep,name=scripts"`
 
 	// When not specified the default ingressPath (path where the webserver will be mounted into the Ingress/HTTPRoute) will be `/{{.metadata.name}}`
-	WebServer WebServer `json:",inline" protobuf:"bytes,4,opt,name=webServer"`
+	WebServer `json:",inline" protobuf:"bytes,4,opt,name=webServer"`
 }
 
 func (a *KDexAppSpec) GetResourceImage() string {

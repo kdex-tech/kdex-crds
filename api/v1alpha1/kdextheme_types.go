@@ -67,7 +67,7 @@ type KDexThemeSpec struct {
 	ScriptLibraryRef *KDexObjectReference `json:"scriptLibraryRef,omitempty" protobuf:"bytes,2,opt,name=scriptLibraryRef"`
 
 	// When not specified the default ingressPath (path where the webserver will be mounted into the Ingress/HTTPRoute) will be `/theme`
-	WebServer WebServer `json:",inline" protobuf:"bytes,3,opt,name=webServer"`
+	WebServer `json:",inline" protobuf:"bytes,3,opt,name=webServer"`
 }
 
 func (a *KDexThemeSpec) GetResourceImage() string {
