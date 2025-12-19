@@ -58,6 +58,7 @@ type KDexThemeList struct {
 // KDexThemeSpec defines the desired state of KDexTheme
 type KDexThemeSpec struct {
 	// assets is a set of elements that define a portable set of design rules.
+	// +kubebuilder:validation:XValidation:rule=`self.size() > 0`,message="at least one asset must be specified"
 	Assets Assets `json:"assets,omitempty" protobuf:"bytes,1,rep,name=assets"`
 
 	// scriptLibraryRef is an optional reference to a KDexScriptLibrary resource.

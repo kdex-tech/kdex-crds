@@ -82,6 +82,9 @@ spec:
                       == 1'
                 maxItems: 32
                 type: array
+                x-kubernetes-validations:
+                - message: at least one asset must be specified
+                  rule: self.size() > 0
               imagePullSecrets:
                 description: |-
                   imagePullSecrets is an optional list of references to secrets in the same namespace to use for pulling the image. Also used for the webserver image if specified.
