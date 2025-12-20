@@ -64,7 +64,6 @@ type KDexScriptLibraryList struct {
 
 // KDexScriptLibrarySpec defines the desired state of KDexScriptLibrary
 // +kubebuilder:validation:XValidation:rule="(has(self.scripts) && self.scripts.size() > 0) || has(self.packageReference)",message="at least one of scripts or packageReference must be specified"
-// +kubebuilder:validation:XValidation:rule=`self.ingressPath.startsWith("/_script/")`,message=`ingressPath must start with "/_script/"`
 type KDexScriptLibrarySpec struct {
 	// packageReference specifies the name and version of an NPM package that contains the script. The package.json must describe an ES module.
 	// +kubebuilder:validation:Optional
@@ -75,7 +74,6 @@ type KDexScriptLibrarySpec struct {
 	// +kubebuilder:validation:Optional
 	Scripts []ScriptDef `json:"scripts,omitempty" protobuf:"bytes,2,rep,name=scripts"`
 
-	// The ingressPath (path where the Backend will be mounted into the Ingress/HTTPRoute) will be `/_script/{{.metadata.name}}`
 	Backend `json:",inline" protobuf:"bytes,3,opt,name=backend"`
 }
 

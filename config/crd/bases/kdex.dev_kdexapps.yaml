@@ -101,9 +101,9 @@ spec:
                 - name
                 x-kubernetes-list-type: map
               ingressPath:
-                description: ingressPath is a prefix beginning with '/_' plus additional
-                  characters. This indicates where in the Ingress/HTTPRoute of the
-                  host the Backend will be mounted.
+                description: |-
+                  ingressPath is a prefix beginning with '/_' plus additional characters. This indicates where in the Ingress/HTTPRoute the Backend will be mounted.
+                  This value is determined by the implementation that embeds the Backend and cannot be changed.
                 pattern: ^/_.+
                 type: string
               packageReference:
@@ -276,9 +276,6 @@ spec:
             required:
             - packageReference
             type: object
-            x-kubernetes-validations:
-            - message: ingressPath must start with "/_app/"
-              rule: self.ingressPath.startsWith("/_app/")
           status:
             description: status defines the observed state of KDexApp
             properties:
