@@ -58,6 +58,7 @@ type KDexHostList struct {
 }
 
 // KDexHostSpec defines the desired state of KDexHost
+// +kubebuilder:validation:XValidation:rule=`self.ingressPath == "/_host"`,message=`ingressPath must be "/_host"`
 type KDexHostSpec struct {
 	// assets is a set of elements that define a host specific HTML instructions (e.g. favicon, site logo, charset).
 	Assets Assets `json:"assets,omitempty" protobuf:"bytes,1,rep,name=assets"`
@@ -97,8 +98,8 @@ type KDexHostSpec struct {
 	// +kubebuilder:validation:XValidation:rule=`self.kind == "KDexScriptLibrary" || self.kind == "KDexClusterScriptLibrary"`,message="'kind' must be either KDexScriptLibrary or KDexClusterScriptLibrary"
 	ScriptLibraryRef *KDexObjectReference `json:"scriptLibraryRef,omitempty" protobuf:"bytes,8,opt,name=scriptLibraryRef"`
 
-	// When not specified the default ingressPath (path where the webserver will be mounted into the Ingress/HTTPRoute) will be `/static`
-	WebServer `json:",inline" protobuf:"bytes,9,opt,name=webServer"`
+	// The ingressPath (path where the Backend will be mounted into the Ingress/HTTPRoute) will be `/_host`
+	Backend `json:",inline" protobuf:"bytes,9,opt,name=backend"`
 }
 
 func (a *KDexHostSpec) GetResourceImage() string {

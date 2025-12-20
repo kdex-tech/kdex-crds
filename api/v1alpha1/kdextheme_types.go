@@ -57,6 +57,7 @@ type KDexThemeList struct {
 
 // KDexThemeSpec defines the desired state of KDexTheme
 // +kubebuilder:validation:XValidation:rule=`has(self.assets) && self.assets.size() > 0`,message="at least one asset must be specified"
+// +kubebuilder:validation:XValidation:rule=`self.ingressPath == "/_theme"`,message=`ingressPath must be "/_theme"`
 type KDexThemeSpec struct {
 	// assets is a set of elements that define a portable set of design rules.
 	Assets Assets `json:"assets,omitempty" protobuf:"bytes,1,rep,name=assets"`
@@ -66,8 +67,8 @@ type KDexThemeSpec struct {
 	// +kubebuilder:validation:XValidation:rule=`self.kind == "KDexScriptLibrary" || self.kind == "KDexClusterScriptLibrary"`,message="'kind' must be either KDexScriptLibrary or KDexClusterScriptLibrary"
 	ScriptLibraryRef *KDexObjectReference `json:"scriptLibraryRef,omitempty" protobuf:"bytes,2,opt,name=scriptLibraryRef"`
 
-	// When not specified the default ingressPath (path where the webserver will be mounted into the Ingress/HTTPRoute) will be `/theme`
-	WebServer `json:",inline" protobuf:"bytes,3,opt,name=webServer"`
+	// The ingressPath (path where the Backend will be mounted into the Ingress/HTTPRoute) will be `/_theme`
+	Backend `json:",inline" protobuf:"bytes,3,opt,name=backend"`
 }
 
 func (a *KDexThemeSpec) GetResourceImage() string {

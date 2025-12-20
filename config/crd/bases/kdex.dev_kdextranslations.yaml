@@ -89,6 +89,7 @@ spec:
                   - keysAndValues
                   - lang
                   type: object
+                maxItems: 32
                 minItems: 1
                 type: array
                 x-kubernetes-list-map-keys:

@@ -60,14 +60,15 @@ type KDexTranslationList struct {
 type KDexTranslationSpec struct {
 	// hostRef is a reference to the KDexHost that this render page is for.
 	// +kubebuilder:validation:Required
-	HostRef corev1.LocalObjectReference `json:"hostRef"`
+	HostRef corev1.LocalObjectReference `json:"hostRef" protobuf:"bytes,1,req,name=hostRef"`
 
 	// translations is an array of objects where each one specifies a language (lang) and a map (keysAndValues) consisting of key/value pairs. If the lang property is not unique in the array and its keysAndValues map contains the same keys, the last one takes precedence.
 	// +listType=map
 	// +listMapKey=lang
+	// +kubebuilder:validation:MaxItems=32
 	// +kubebuilder:validation:MinItems=1
 	// +kubebuilder:validation:Required
-	Translations []Translation `json:"translations"`
+	Translations []Translation `json:"translations" protobuf:"bytes,2,rep,name=translations"`
 }
 
 func init() {

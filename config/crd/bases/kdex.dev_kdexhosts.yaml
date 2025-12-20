@@ -66,7 +66,7 @@ spec:
                     linkHref:
                       description: linkHref is the content of a `<link>` href attribute.
                         The URL may be absolute with protocol and host or it must
-                        be prefixed by the IngressPath of the WebServer.
+                        be prefixed by the IngressPath of the Backend.
                       type: string
                     metaId:
                       description: metaId is required just for semantics of CRD field
@@ -97,7 +97,7 @@ spec:
                 type: string
               imagePullSecrets:
                 description: |-
-                  imagePullSecrets is an optional list of references to secrets in the same namespace to use for pulling the image. Also used for the webserver image if specified.
+                  imagePullSecrets is an optional list of references to secrets in the same namespace to use for pulling the referenced images.
                   More info: https://kubernetes.io/docs/concepts/containers/images#specifying-imagepullsecrets-on-a-pod
                 items:
                   description: |-
@@ -120,12 +120,10 @@ spec:
                 - name
                 x-kubernetes-list-type: map
               ingressPath:
-                description: ingressPath is a prefix beginning with a forward slash
-                  (/) plus at least 1 additional character which indicates where in
-                  the Ingress/HTTPRoute of the host the webserver will be mounted.
-                  KDexPageBindings associated with the host that have conflicting
-                  urls will be rejected from the host.
-                pattern: ^/.+
+                description: ingressPath is a prefix beginning with '/_' plus additional
+                  characters. This indicates where in the Ingress/HTTPRoute of the
+                  host the Backend will be mounted.
+                pattern: ^/_.+
                 type: string
               modulePolicy:
                 default: Strict
@@ -298,13 +296,13 @@ spec:
               serverImage:
                 default: kdex-tech/kdex-themeserver:{{.Release}}
                 description: |-
-                  serverImage is the name of webserver image.
+                  serverImage is the name of Backend image.
                   More info: https://kubernetes.io/docs/concepts/containers/images
                 minLength: 5
                 type: string
               serverImagePullPolicy:
                 description: |-
-                  Policy for pulling the webserver image. Possible values are:
+                  Policy for pulling the Backend server image. Possible values are:
                   Always: the kubelet always attempts to pull the reference. Container creation will fail If the pull fails.
                   Never: the kubelet never pulls the reference and only uses a local image or artifact. Container creation will fail if the reference isn't present.
                   IfNotPresent: the kubelet pulls if the reference isn't already present on disk. Container creation will fail if the reference isn't present and the pull fails.
@@ -312,7 +310,7 @@ spec:
                 type: string
               staticImage:
                 description: |-
-                  staticImage is the name of an OCI image that contains static resources that will be served by the webserver.
+                  staticImage is the name of an OCI image that contains static resources that will be served by the Backend. This may not apply if the serverImage is set to a custom implementation.
                   More info: https://kubernetes.io/docs/concepts/containers/images
                 type: string
               staticImagePullPolicy:
@@ -355,8 +353,8 @@ spec:
             - routing
             type: object
             x-kubernetes-validations:
-            - message: staticImage or serverImage must be specified
-              rule: has(self.staticImage) || has(self.serverImage)
+            - message: ingressPath must be "/_host"
+              rule: self.ingressPath == "/_host"
           status:
             description: status defines the observed state of KDexApp
             properties:

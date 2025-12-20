@@ -61,7 +61,7 @@ type KDexHostPackageReferencesSpec struct {
 	// +listType=map
 	// +listMapKey=name
 	// +kubebuilder:validation:MinItems=1
-	PackageReferences []PackageReference `json:"packageReferences"`
+	PackageReferences []PackageReference `json:"packageReferences" protobuf:"bytes,1,rep,name=packageReferences"`
 }
 
 func init() {

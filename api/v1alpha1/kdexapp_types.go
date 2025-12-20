@@ -60,7 +60,7 @@ type KDexAppList struct {
 }
 
 // KDexAppSpec defines the desired state of KDexApp
-// +kubebuilder:validation:XValidation:rule="has(self.packageReference)",message="packageReference must be specified"
+// +kubebuilder:validation:XValidation:rule=`self.ingressPath.startsWith("/_app/")`,message=`ingressPath must start with "/_app/"`
 type KDexAppSpec struct {
 	// customElements is a list of custom elements implemented by the micro-frontend application.
 	// +listType=map
@@ -69,7 +69,17 @@ type KDexAppSpec struct {
 	// +kubebuilder:validation:MinItems=1
 	CustomElements []CustomElement `json:"customElements,omitempty" protobuf:"bytes,1,rep,name=customElements"`
 
-	KDexScriptLibrarySpec `json:",inline" protobuf:"bytes,2,req,name=scriptLibrarySpec"`
+	// packageReference specifies the name and version of an NPM package that contains the script. The package.json must describe an ES module.
+	// +kubebuilder:validation:Required
+	PackageReference PackageReference `json:"packageReference" protobuf:"bytes,2,req,name=packageReference"`
+
+	// scripts is a set of script references. They may contain URLs that point to resources hosted at some public address, npm module references or they may contain tag contents.
+	// +kubebuilder:validation:MaxItems=32
+	// +kubebuilder:validation:Optional
+	Scripts []ScriptDef `json:"scripts,omitempty" protobuf:"bytes,3,rep,name=scripts"`
+
+	// When not specified the default ingressPath (path where the Backend will be mounted into the Ingress/HTTPRoute) will be `/_app/{{.metadata.name}}`
+	Backend `json:",inline" protobuf:"bytes,4,opt,name=backend"`
 }
 
 func (a *KDexAppSpec) GetResourceImage() string {

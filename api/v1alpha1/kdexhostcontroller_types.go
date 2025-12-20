@@ -61,7 +61,7 @@ type KDexHostControllerList struct {
 // KDexHostControllerSpec defines the desired state of KDexHostController
 type KDexHostControllerSpec struct {
 	// +kubebuilder:validation:Required
-	Host KDexHostSpec `json:"host"`
+	Host KDexHostSpec `json:"host" protobuf:"bytes,1,req,name=host"`
 }
 
 func init() {

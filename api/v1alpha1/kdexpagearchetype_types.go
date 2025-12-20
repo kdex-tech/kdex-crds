@@ -61,32 +61,32 @@ type KDexPageArchetypeSpec struct {
 	// content is a go string template that defines the structure of an HTML page.
 	// +kubebuilder:validation:Required
 	// +kubebuilder:validation:MinLength=5
-	Content string `json:"content"`
+	Content string `json:"content" protobuf:"bytes,1,req,name=content"`
 
 	// defaultFooterRef is an optional reference to a KDexPageFooter resource. If not specified, no footer will be displayed. Use the `.Footer` property to position its content in the template.
 	// +kubebuilder:validation:Optional
 	// +kubebuilder:validation:XValidation:rule=`self.kind == "KDexPageFooter" || self.kind == "KDexClusterPageFooter"`,message="'kind' must be either KDexPageFooter or KDexClusterPageFooter"
-	DefaultFooterRef *KDexObjectReference `json:"defaultFooterRef,omitempty"`
+	DefaultFooterRef *KDexObjectReference `json:"defaultFooterRef,omitempty" protobuf:"bytes,2,opt,name=defaultFooterRef"`
 
 	// defaultHeaderRef is an optional reference to a KDexPageHeader resource. If not specified, no header will be displayed. Use the `.Header` property to position its content in the template.
 	// +kubebuilder:validation:Optional
 	// +kubebuilder:validation:XValidation:rule=`self.kind == "KDexPageHeader" || self.kind == "KDexClusterPageHeader"`,message="'kind' must be either KDexPageHeader or KDexClusterPageHeader"
-	DefaultHeaderRef *KDexObjectReference `json:"defaultHeaderRef,omitempty"`
+	DefaultHeaderRef *KDexObjectReference `json:"defaultHeaderRef,omitempty" protobuf:"bytes,3,opt,name=defaultHeaderRef"`
 
 	// defaultMainNavigationRef is an optional reference to a KDexPageNavigation resource. If not specified, no navigation will be displayed. Use the `.Navigation.main` property to position its content in the template.
 	// +kubebuilder:validation:Optional
 	// +kubebuilder:validation:XValidation:rule=`self.kind == "KDexPageNavigation" || self.kind == "KDexClusterPageNavigation"`,message="'kind' must be either KDexPageNavigation or KDexClusterPageNavigation"
-	DefaultMainNavigationRef *KDexObjectReference `json:"defaultMainNavigationRef,omitempty"`
+	DefaultMainNavigationRef *KDexObjectReference `json:"defaultMainNavigationRef,omitempty" protobuf:"bytes,4,opt,name=defaultMainNavigationRef"`
 
 	// extraNavigations is an optional map of named navigation object references. Use `.Navigation.<name>` to position the named navigation's content in the template.
 	// +kubebuilder:validation:Optional
 	// +kubebuilder:validation:XValidation:rule="!has(self.main)",message="'main' is a reserved name for an extra navigation"
-	ExtraNavigations map[string]*KDexObjectReference `json:"extraNavigations,omitempty"`
+	ExtraNavigations map[string]*KDexObjectReference `json:"extraNavigations,omitempty" protobuf:"bytes,5,rep,name=extraNavigations"`
 
 	// scriptLibraryRef is an optional reference to a KDexScriptLibrary resource.
 	// +kubebuilder:validation:Optional
 	// +kubebuilder:validation:XValidation:rule=`self.kind == "KDexScriptLibrary" || self.kind == "KDexClusterScriptLibrary"`,message="'kind' must be either KDexScriptLibrary or KDexClusterScriptLibrary"
-	ScriptLibraryRef *KDexObjectReference `json:"scriptLibraryRef,omitempty"`
+	ScriptLibraryRef *KDexObjectReference `json:"scriptLibraryRef,omitempty" protobuf:"bytes,6,opt,name=scriptLibraryRef"`
 }
 
 func init() {

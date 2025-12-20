@@ -21,7 +21,7 @@ type Asset struct {
 	// +kubebuilder:validation:Optional
 	Attributes map[string]string `json:"attributes,omitempty" protobuf:"bytes,1,rep,name=attributes"`
 
-	// linkHref is the content of a `<link>` href attribute. The URL may be absolute with protocol and host or it must be prefixed by the IngressPath of the WebServer.
+	// linkHref is the content of a `<link>` href attribute. The URL may be absolute with protocol and host or it must be prefixed by the IngressPath of the Backend.
 	// +kubebuilder:validation:Optional
 	LinkHref string `json:"linkHref,omitempty" protobuf:"bytes,2,opt,name=linkHref"`
 
@@ -328,7 +328,7 @@ type ScriptDef struct {
 	Script string `json:"script,omitempty" protobuf:"bytes,1,opt,name=script"`
 
 	// scriptSrc is a value for a `<script>` `src` attribute. It must be either and absolute URL with a protocol and host
-	// or it must be relative to the `ingressPath` field of the WebServerProvider that defines it.
+	// or it must be relative to the `ingressPath` field of the specified Backend.
 	// +kubebuilder:validation:Optional
 	ScriptSrc string `json:"scriptSrc,omitempty" protobuf:"bytes,2,opt,name=scriptSrc"`
 
@@ -455,10 +455,9 @@ type Translation struct {
 	KeysAndValues map[string]string `json:"keysAndValues" protobuf:"bytes,2,rep,name=keysAndValues"`
 }
 
-// WebServer defines a webserver deployment for serving static resources.
-// +kubebuilder:validation:XValidation:rule=`has(self.staticImage) || has(self.serverImage)`,message="staticImage or serverImage must be specified"
-type WebServer struct {
-	// imagePullSecrets is an optional list of references to secrets in the same namespace to use for pulling the image. Also used for the webserver image if specified.
+// Backend defines a deployment for serving resources specific to the refer.
+type Backend struct {
+	// imagePullSecrets is an optional list of references to secrets in the same namespace to use for pulling the referenced images.
 	// More info: https://kubernetes.io/docs/concepts/containers/images#specifying-imagepullsecrets-on-a-pod
 	// +kubebuilder:validation:Optional
 	// +patchMergeKey=name
@@ -467,9 +466,9 @@ type WebServer struct {
 	// +listMapKey=name
 	ImagePullSecrets []corev1.LocalObjectReference `json:"imagePullSecrets,omitempty" patchStrategy:"merge" patchMergeKey:"name" protobuf:"bytes,1,rep,name=imagePullSecrets"`
 
-	// ingressPath is a prefix beginning with a forward slash (/) plus at least 1 additional character which indicates where in the Ingress/HTTPRoute of the host the webserver will be mounted. KDexPageBindings associated with the host that have conflicting urls will be rejected from the host.
+	// ingressPath is a prefix beginning with '/_' plus additional characters. This indicates where in the Ingress/HTTPRoute of the host the Backend will be mounted.
 	// +kubebuilder:validation:Optional
-	// +kubebuilder:validation:Pattern=`^/.+`
+	// +kubebuilder:validation:Pattern=`^/_.+`
 	IngressPath string `json:"ingressPath,omitempty" protobuf:"bytes,2,opt,name=ingressPath"`
 
 	// replicas is the number of desired pods. This is a pointer to distinguish between explicit
@@ -482,14 +481,14 @@ type WebServer struct {
 	// +kubebuilder:validation:Optional
 	Resources corev1.ResourceRequirements `json:"resources,omitempty" protobuf:"bytes,4,opt,name=resources"`
 
-	// serverImage is the name of webserver image.
+	// serverImage is the name of Backend image.
 	// More info: https://kubernetes.io/docs/concepts/containers/images
 	// +kubebuilder:validation:Optional
 	// +kubebuilder:validation:MinLength=5
 	// +kubebuilder:default:="kdex-tech/kdex-themeserver:{{.Release}}"
 	ServerImage string `json:"serverImage,omitempty" protobuf:"bytes,5,opt,name=serverImage"`
 
-	// Policy for pulling the webserver image. Possible values are:
+	// Policy for pulling the Backend server image. Possible values are:
 	// Always: the kubelet always attempts to pull the reference. Container creation will fail If the pull fails.
 	// Never: the kubelet never pulls the reference and only uses a local image or artifact. Container creation will fail if the reference isn't present.
 	// IfNotPresent: the kubelet pulls if the reference isn't already present on disk. Container creation will fail if the reference isn't present and the pull fails.
@@ -497,7 +496,7 @@ type WebServer struct {
 	// +kubebuilder:validation:Optional
 	ServerImagePullPolicy corev1.PullPolicy `json:"serverImagePullPolicy,omitempty" protobuf:"bytes,6,opt,name=serverImagePullPolicy,casttype=PullPolicy"`
 
-	// staticImage is the name of an OCI image that contains static resources that will be served by the webserver.
+	// staticImage is the name of an OCI image that contains static resources that will be served by the Backend. This may not apply if the serverImage is set to a custom implementation.
 	// More info: https://kubernetes.io/docs/concepts/containers/images
 	// +kubebuilder:validation:Optional
 	StaticImage string `json:"staticImage,omitempty" protobuf:"bytes,7,opt,name=staticImage"`

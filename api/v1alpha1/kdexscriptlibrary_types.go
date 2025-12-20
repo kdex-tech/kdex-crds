@@ -64,18 +64,37 @@ type KDexScriptLibraryList struct {
 
 // KDexScriptLibrarySpec defines the desired state of KDexScriptLibrary
 // +kubebuilder:validation:XValidation:rule="(has(self.scripts) && self.scripts.size() > 0) || has(self.packageReference)",message="at least one of scripts or packageReference must be specified"
+// +kubebuilder:validation:XValidation:rule=`self.ingressPath.startsWith("/_script/")`,message=`ingressPath must start with "/_script/"`
 type KDexScriptLibrarySpec struct {
 	// packageReference specifies the name and version of an NPM package that contains the script. The package.json must describe an ES module.
 	// +kubebuilder:validation:Optional
-	PackageReference *PackageReference `json:"packageReference,omitempty"`
+	PackageReference *PackageReference `json:"packageReference,omitempty" protobuf:"bytes,1,opt,name=packageReference"`
 
 	// scripts is a set of script references. They may contain URLs that point to resources hosted at some public address, npm module references or they may contain tag contents.
 	// +kubebuilder:validation:MaxItems=32
 	// +kubebuilder:validation:Optional
-	Scripts []ScriptDef `json:"scripts,omitempty"`
+	Scripts []ScriptDef `json:"scripts,omitempty" protobuf:"bytes,2,rep,name=scripts"`
 
-	// When not specified the default ingressPath (path where the webserver will be mounted into the Ingress/HTTPRoute) will be `/_/script/{{.metadata.name}}`
-	WebServer `json:",inline" protobuf:"bytes,4,opt,name=webServer"`
+	// The ingressPath (path where the Backend will be mounted into the Ingress/HTTPRoute) will be `/_script/{{.metadata.name}}`
+	Backend `json:",inline" protobuf:"bytes,3,opt,name=backend"`
+}
+
+func (a *KDexScriptLibrarySpec) GetResourceImage() string {
+	return a.StaticImage
+}
+
+func (a *KDexScriptLibrarySpec) GetResourcePath() string {
+	return a.IngressPath
+}
+
+func (a *KDexScriptLibrarySpec) GetResourceURLs() []string {
+	urls := []string{}
+	for _, script := range a.Scripts {
+		if script.ScriptSrc != "" {
+			urls = append(urls, script.ScriptSrc)
+		}
+	}
+	return urls
 }
 
 func init() {

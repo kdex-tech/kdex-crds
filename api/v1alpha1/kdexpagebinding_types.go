@@ -66,50 +66,50 @@ type KDexPageBindingSpec struct {
 	// +kubebuilder:validation:MinItems=1
 	// +kubebuilder:validation:Required
 	// +kubebuilder:validation:XValidation:rule="self.size() <= 1 || self.exists(x, x.slot == 'main')",message="if there are multiple entries, one must be 'main'"
-	ContentEntries []ContentEntry `json:"contentEntries"`
+	ContentEntries []ContentEntry `json:"contentEntries" protobuf:"bytes,1,rep,name=contentEntries"`
 
 	// hostRef is a reference to the KDexHost that this binding is for.
 	// +kubebuilder:validation:Required
-	HostRef corev1.LocalObjectReference `json:"hostRef"`
+	HostRef corev1.LocalObjectReference `json:"hostRef" protobuf:"bytes,2,req,name=hostRef"`
 
 	// label is the value used in menus and page titles before localization occurs (or when no translation exists for the current language).
 	// +kubebuilder:validation:Required
-	Label string `json:"label"`
+	Label string `json:"label" protobuf:"bytes,3,req,name=label"`
 
 	// navigationHints are optional navigation properties that if omitted result in the page being hidden from the navigation.
 	// +kubebuilder:validation:Optional
-	NavigationHints *NavigationHints `json:"navigationHints,omitempty"`
+	NavigationHints *NavigationHints `json:"navigationHints,omitempty" protobuf:"bytes,4,opt,name=navigationHints"`
 
 	// overrideFooterRef is an optional reference to a KDexPageFooter resource. If not specified, the footer from the archetype will be used.
 	// +kubebuilder:validation:Optional
 	// +kubebuilder:validation:XValidation:rule=`self.kind == "KDexPageFooter" || self.kind == "KDexClusterPageFooter"`,message="'kind' must be either KDexPageFooter or KDexClusterPageFooter"
-	OverrideFooterRef *KDexObjectReference `json:"overrideFooterRef,omitempty"`
+	OverrideFooterRef *KDexObjectReference `json:"overrideFooterRef,omitempty" protobuf:"bytes,5,opt,name=overrideFooterRef"`
 
 	// overrideHeaderRef is an optional reference to a KDexPageHeader resource. If not specified, the header from the archetype will be used.
 	// +kubebuilder:validation:Optional
 	// +kubebuilder:validation:XValidation:rule=`self.kind == "KDexPageHeader" || self.kind == "KDexClusterPageHeader"`,message="'kind' must be either KDexPageHeader or KDexClusterPageHeader"
-	OverrideHeaderRef *KDexObjectReference `json:"overrideHeaderRef,omitempty"`
+	OverrideHeaderRef *KDexObjectReference `json:"overrideHeaderRef,omitempty" protobuf:"bytes,6,opt,name=overrideHeaderRef"`
 
 	// overrideMainNavigationRef is an optional reference to a KDexPageNavigation resource. If not specified, the main navigation from the archetype will be used.
 	// +kubebuilder:validation:Optional
 	// +kubebuilder:validation:XValidation:rule=`self.kind == "KDexPageNavigation" || self.kind == "KDexClusterPageNavigation"`,message="'kind' must be either KDexPageNavigation or KDexClusterPageNavigation"
-	OverrideMainNavigationRef *KDexObjectReference `json:"overrideMainNavigationRef,omitempty"`
+	OverrideMainNavigationRef *KDexObjectReference `json:"overrideMainNavigationRef,omitempty" protobuf:"bytes,7,opt,name=overrideMainNavigationRef"`
 
 	// pageArchetypeRef is a reference to the KDexPageArchetype that this binding is for.
 	// +kubebuilder:validation:Required
 	// +kubebuilder:validation:XValidation:rule=`self.kind == "KDexPageArchetype" || self.kind == "KDexClusterPageArchetype"`,message="'kind' must be either KDexPageArchetype or KDexClusterPageArchetype"
-	PageArchetypeRef KDexObjectReference `json:"pageArchetypeRef"`
+	PageArchetypeRef KDexObjectReference `json:"pageArchetypeRef" protobuf:"bytes,8,req,name=pageArchetypeRef"`
 
 	// parentPageRef is a reference to the KDexPageBinding bellow which this page will appear in the main navigation. If not set, the page will be placed in the top level of the navigation.
 	// +kubebuilder:validation:Optional
-	ParentPageRef *corev1.LocalObjectReference `json:"parentPageRef,omitempty"`
+	ParentPageRef *corev1.LocalObjectReference `json:"parentPageRef,omitempty" protobuf:"bytes,9,opt,name=parentPageRef"`
 
-	Paths `json:",inline"`
+	Paths `json:",inline" protobuf:"bytes,10,req,name=paths"`
 
 	// scriptLibraryRef is an optional reference to a KDexScriptLibrary resource.
 	// +kubebuilder:validation:Optional
 	// +kubebuilder:validation:XValidation:rule=`self.kind == "KDexScriptLibrary" || self.kind == "KDexClusterScriptLibrary"`,message="'kind' must be either KDexScriptLibrary or KDexClusterScriptLibrary"
-	ScriptLibraryRef *KDexObjectReference `json:"scriptLibraryRef,omitempty"`
+	ScriptLibraryRef *KDexObjectReference `json:"scriptLibraryRef,omitempty" protobuf:"bytes,11,opt,name=scriptLibraryRef"`
 }
 
 func init() {
