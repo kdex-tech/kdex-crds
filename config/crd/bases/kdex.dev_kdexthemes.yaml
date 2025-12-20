@@ -239,6 +239,8 @@ spec:
             x-kubernetes-validations:
             - message: at least one asset must be specified
               rule: has(self.assets) && self.assets.size() > 0
+            - message: staticImage or serverImage must be specified
+              rule: has(self.staticImage) || has(self.serverImage)
           status:
             description: status defines the observed state of KDexApp
             properties:

@@ -95,32 +95,6 @@ spec:
                   See https://developer.mozilla.org/en-US/docs/Glossary/BCP_47_language_tag.
                   When render page paths do not specify a 'lang' path parameter this will be the value used. When not set the default will be 'en'.
                 type: string
-              defaultThemeRef:
-                description: defaultThemeRef is a reference to the theme that should
-                  apply to all pages bound to this host unless overridden.
-                properties:
-                  kind:
-                    description: Kind is the type of resource being referenced
-                    type: string
-                  name:
-                    description: Name of the referent.
-                    type: string
-                  namespace:
-                    description: |-
-                      Namespace, if set, causes the lookup for the namespace scoped Kind of the referent to use the specified
-                      namespace. If not set, the namespace of the resource will be used to lookup the namespace scoped Kind of the
-                      referent.
-                      If the referring resource is cluster scoped, this field is ignored.
-                      Defaulted to nil.
-                    type: string
-                required:
-                - kind
-                - name
-                type: object
-                x-kubernetes-map-type: atomic
-                x-kubernetes-validations:
-                - message: '''kind'' must be either KDexTheme or KDexClusterTheme'
-                  rule: self.kind == "KDexTheme" || self.kind == "KDexClusterTheme"
               imagePullSecrets:
                 description: |-
                   imagePullSecrets is an optional list of references to secrets in the same namespace to use for pulling the image. Also used for the webserver image if specified.
@@ -349,11 +323,40 @@ spec:
                   IfNotPresent: the kubelet pulls if the reference isn't already present on disk. Container creation will fail if the reference isn't present and the pull fails.
                   Defaults to Always if :latest tag is specified, or IfNotPresent otherwise.
                 type: string
+              themeRef:
+                description: themeRef is a reference to the theme that should apply
+                  to all pages bound to this host.
+                properties:
+                  kind:
+                    description: Kind is the type of resource being referenced
+                    type: string
+                  name:
+                    description: Name of the referent.
+                    type: string
+                  namespace:
+                    description: |-
+                      Namespace, if set, causes the lookup for the namespace scoped Kind of the referent to use the specified
+                      namespace. If not set, the namespace of the resource will be used to lookup the namespace scoped Kind of the
+                      referent.
+                      If the referring resource is cluster scoped, this field is ignored.
+                      Defaulted to nil.
+                    type: string
+                required:
+                - kind
+                - name
+                type: object
+                x-kubernetes-map-type: atomic
+                x-kubernetes-validations:
+                - message: '''kind'' must be either KDexTheme or KDexClusterTheme'
+                  rule: self.kind == "KDexTheme" || self.kind == "KDexClusterTheme"
             required:
             - brandName
             - organization
             - routing
             type: object
+            x-kubernetes-validations:
+            - message: staticImage or serverImage must be specified
+              rule: has(self.staticImage) || has(self.serverImage)
           status:
             description: status defines the observed state of KDexApp
             properties:

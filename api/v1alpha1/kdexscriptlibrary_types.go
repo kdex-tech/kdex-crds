@@ -73,6 +73,9 @@ type KDexScriptLibrarySpec struct {
 	// +kubebuilder:validation:MaxItems=32
 	// +kubebuilder:validation:Optional
 	Scripts []ScriptDef `json:"scripts,omitempty"`
+
+	// When not specified the default ingressPath (path where the webserver will be mounted into the Ingress/HTTPRoute) will be `/_/script/{{.metadata.name}}`
+	WebServer `json:",inline" protobuf:"bytes,4,opt,name=webServer"`
 }
 
 func init() {

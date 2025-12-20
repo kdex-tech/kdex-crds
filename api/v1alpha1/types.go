@@ -456,6 +456,7 @@ type Translation struct {
 }
 
 // WebServer defines a webserver deployment for serving static resources.
+// +kubebuilder:validation:XValidation:rule=`has(self.staticImage) || has(self.serverImage)`,message="staticImage or serverImage must be specified"
 type WebServer struct {
 	// imagePullSecrets is an optional list of references to secrets in the same namespace to use for pulling the image. Also used for the webserver image if specified.
 	// More info: https://kubernetes.io/docs/concepts/containers/images#specifying-imagepullsecrets-on-a-pod

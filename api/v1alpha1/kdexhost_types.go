@@ -72,10 +72,10 @@ type KDexHostSpec struct {
 	// +kubebuilder:validation:Optional
 	DefaultLang string `json:"defaultLang,omitempty" protobuf:"bytes,3,opt,name=defaultLang"`
 
-	// defaultThemeRef is a reference to the theme that should apply to all pages bound to this host unless overridden.
+	// themeRef is a reference to the theme that should apply to all pages bound to this host.
 	// +kubebuilder:validation:Optional
 	// +kubebuilder:validation:XValidation:rule=`self.kind == "KDexTheme" || self.kind == "KDexClusterTheme"`,message="'kind' must be either KDexTheme or KDexClusterTheme"
-	DefaultThemeRef *KDexObjectReference `json:"defaultThemeRef,omitempty" protobuf:"bytes,4,opt,name=defaultThemeRef"`
+	ThemeRef *KDexObjectReference `json:"themeRef,omitempty" protobuf:"bytes,4,opt,name=themeRef"`
 
 	// modulePolicy defines the policy for JavaScript references in KDexApp, KDexTheme and KDexScriptLibrary resources. When not specified the policy is Strict
 	// A Host must not accept JavaScript references which do not comply with the specified policy.
