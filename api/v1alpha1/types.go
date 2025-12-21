@@ -104,11 +104,11 @@ type ContentEntryApp struct {
 	// appRef is a reference to the KDexApp to include in this binding.
 	// +kubebuilder:validation:Optional
 	// +kubebuilder:validation:XValidation:rule=`self.kind == "KDexApp" || self.kind == "KDexClusterApp"`,message="'kind' must be either KDexApp or KDexClusterApp"
-	AppRef *KDexObjectReference `json:"appRef" protobuf:"bytes,1,req,name=appRef"`
+	AppRef *KDexObjectReference `json:"appRef,omitempty" protobuf:"bytes,1,opt,name=appRef"`
 
 	// customElementName is the name of the KDexApp custom element to render in the specified slot (if present in the template).
 	// +kubebuilder:validation:Optional
-	CustomElementName string `json:"customElementName" protobuf:"bytes,2,req,name=customElementName"`
+	CustomElementName string `json:"customElementName,omitempty" protobuf:"bytes,2,opt,name=customElementName"`
 
 	// attributes are key/value pairs that will be added to the custom element as attributes when rendered.
 	// +kubebuilder:validation:Optional
@@ -118,13 +118,13 @@ type ContentEntryApp struct {
 type ContentEntryStatic struct {
 	// rawHTML is a raw HTML string to be rendered in the specified slot (if present in the template).
 	// +kubebuilder:validation:Optional
-	RawHTML string `json:"rawHTML,omitempty" protobuf:"bytes,1,req,name=rawHTML"`
+	RawHTML string `json:"rawHTML,omitempty" protobuf:"bytes,1,opt,name=rawHTML"`
 }
 
 // +kubebuilder:validation:ExactlyOneOf=appRef;rawHTML
-// +kubebuilder:validation:XValidation:rule=`has(self.appRef) && self.customElementName != ""`,message="appRef must be accompanied by customElementName"
+// +kubebuilder:validation:XValidation:rule=`!has(self.appRef) || self.customElementName != ""`,message="appRef must be accompanied by customElementName"
 type ContentEntry struct {
-	// slot is the name of the App slot to which this entry will be bound. If omitted, the slot used will be `main`. No more than one entry can be bound to a slot.
+	// slot is the unique name to which this entry will be bound.
 	// +kubebuilder:validation:Required
 	Slot string `json:"slot" protobuf:"bytes,1,req,name=slot"`
 

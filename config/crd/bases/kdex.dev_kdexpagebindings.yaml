@@ -106,16 +106,15 @@ spec:
                         the specified slot (if present in the template).
                       type: string
                     slot:
-                      description: slot is the name of the App slot to which this
-                        entry will be bound. If omitted, the slot used will be `main`.
-                        No more than one entry can be bound to a slot.
+                      description: slot is the unique name to which this entry will
+                        be bound.
                       type: string
                   required:
                   - slot
                   type: object
                   x-kubernetes-validations:
                   - message: appRef must be accompanied by customElementName
-                    rule: has(self.appRef) && self.customElementName != ""
+                    rule: '!has(self.appRef) || self.customElementName != ""'
                   - message: exactly one of the fields in [appRef rawHTML] must be
                       set
                     rule: '[has(self.appRef),has(self.rawHTML)].filter(x,x==true).size()
