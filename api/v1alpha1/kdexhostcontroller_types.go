@@ -46,7 +46,7 @@ type KDexHostController struct {
 
 	// spec defines the desired state of KDexHostController
 	// +kubebuilder:validation:Required
-	Spec KDexHostControllerSpec `json:"spec"`
+	Spec KDexHostSpec `json:"spec"`
 }
 
 // +kubebuilder:object:root=true
@@ -56,12 +56,6 @@ type KDexHostControllerList struct {
 	metav1.TypeMeta `json:",inline"`
 	metav1.ListMeta `json:"metadata,omitempty"`
 	Items           []KDexHostController `json:"items"`
-}
-
-// KDexHostControllerSpec defines the desired state of KDexHostController
-type KDexHostControllerSpec struct {
-	// +kubebuilder:validation:Required
-	Host KDexHostSpec `json:"host" protobuf:"bytes,1,req,name=host"`
 }
 
 func init() {
