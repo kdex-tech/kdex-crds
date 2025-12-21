@@ -65,7 +65,7 @@ type KDexPageBindingSpec struct {
 	// +kubebuilder:validation:MaxItems=8
 	// +kubebuilder:validation:MinItems=1
 	// +kubebuilder:validation:Required
-	// +kubebuilder:validation:XValidation:rule="self.size() <= 1 || self.exists(x, x.slot == 'main')",message="if there are multiple entries, one must be 'main'"
+	// +kubebuilder:validation:XValidation:rule="self.exists(x, x.slot == 'main')",message="slot 'main' must be specified"
 	ContentEntries []ContentEntry `json:"contentEntries" protobuf:"bytes,1,rep,name=contentEntries"`
 
 	// hostRef is a reference to the KDexHost that this binding is for.

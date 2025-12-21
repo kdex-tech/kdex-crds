@@ -111,12 +111,11 @@ spec:
                         No more than one entry can be bound to a slot.
                       type: string
                   required:
-                  - appRef
-                  - customElementName
-                  - rawHTML
                   - slot
                   type: object
                   x-kubernetes-validations:
+                  - message: appRef must be accompanied by customElementName
+                    rule: has(self.appRef) && self.customElementName != ""
                   - message: exactly one of the fields in [appRef rawHTML] must be
                       set
                     rule: '[has(self.appRef),has(self.rawHTML)].filter(x,x==true).size()
@@ -128,8 +127,8 @@ spec:
                 - slot
                 x-kubernetes-list-type: map
                 x-kubernetes-validations:
-                - message: if there are multiple entries, one must be 'main'
-                  rule: self.size() <= 1 || self.exists(x, x.slot == 'main')
+                - message: slot 'main' must be specified
+                  rule: self.exists(x, x.slot == 'main')
               hostRef:
                 description: hostRef is a reference to the KDexHost that this binding
                   is for.
