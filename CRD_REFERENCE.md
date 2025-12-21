@@ -569,7 +569,7 @@ _Appears in:_
 | `apiVersion` _string_ | `kdex.dev/v1alpha1` | | |
 | `kind` _string_ | `KDexHostController` | | |
 | `metadata` _[ObjectMeta](https://kubernetes.io/docs/reference/generated/kubernetes-api/v/#objectmeta-v1-meta)_ | Refer to Kubernetes API documentation for fields of `metadata`. |  | Optional: \{\} <br /> |
-| `spec` _[KDexHostControllerSpec](#kdexhostcontrollerspec)_ | spec defines the desired state of KDexHostController |  | Required: \{\} <br /> |
+| `spec` _[KDexHostSpec](#kdexhostspec)_ | spec defines the desired state of KDexHostController |  | Required: \{\} <br /> |
 
 
 #### KDexHostControllerList
@@ -588,22 +588,6 @@ KDexHostControllerList contains a list of KDexHostController
 | `kind` _string_ | `KDexHostControllerList` | | |
 | `metadata` _[ListMeta](https://kubernetes.io/docs/reference/generated/kubernetes-api/v/#listmeta-v1-meta)_ | Refer to Kubernetes API documentation for fields of `metadata`. |  |  |
 | `items` _[KDexHostController](#kdexhostcontroller) array_ |  |  |  |
-
-
-#### KDexHostControllerSpec
-
-
-
-KDexHostControllerSpec defines the desired state of KDexHostController
-
-
-
-_Appears in:_
-- [KDexHostController](#kdexhostcontroller)
-
-| Field | Description | Default | Validation |
-| --- | --- | --- | --- |
-| `host` _[KDexHostSpec](#kdexhostspec)_ |  |  | Required: \{\} <br /> |
 
 
 #### KDexHostList
@@ -691,7 +675,7 @@ KDexHostSpec defines the desired state of KDexHost
 
 _Appears in:_
 - [KDexHost](#kdexhost)
-- [KDexHostControllerSpec](#kdexhostcontrollerspec)
+- [KDexHostController](#kdexhostcontroller)
 
 | Field | Description | Default | Validation |
 | --- | --- | --- | --- |

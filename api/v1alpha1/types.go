@@ -127,9 +127,9 @@ type ContentEntry struct {
 	// +kubebuilder:validation:Required
 	Slot string `json:"slot" protobuf:"bytes,1,req,name=slot"`
 
-	ContentEntryApp ContentEntryApp `json:",inline" protobuf:"bytes,2,opt,name=contentEntryApp"`
+	ContentEntryApp `json:",inline" protobuf:"bytes,2,opt,name=contentEntryApp"`
 
-	ContentEntryStatic ContentEntryStatic `json:",inline" protobuf:"bytes,3,opt,name=contentEntryStatic"`
+	ContentEntryStatic `json:",inline" protobuf:"bytes,3,opt,name=contentEntryStatic"`
 }
 
 // CustomElement defines a custom element exposed by a micro-frontend application.
