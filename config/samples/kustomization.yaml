@@ -19,4 +19,5 @@ resources:
 - v1alpha1_kdexclusterpagenavigation.yaml
 - v1alpha1_kdexclusterscriptlibrary.yaml
 - v1alpha1_kdexclustertheme.yaml
+- v1alpha1_kdexinternaltranslation.yaml
 # +kubebuilder:scaffold:manifestskustomizesamples
