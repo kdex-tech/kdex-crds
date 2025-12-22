@@ -65,6 +65,9 @@ spec:
                     type: string
                 type: object
                 x-kubernetes-map-type: atomic
+                x-kubernetes-validations:
+                - message: hostRef.name must not be empty
+                  rule: self.name.size() > 0
               translations:
                 description: translations is an array of objects where each one specifies
                   a language (lang) and a map (keysAndValues) consisting of key/value

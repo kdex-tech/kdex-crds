@@ -60,6 +60,7 @@ type KDexTranslationList struct {
 type KDexTranslationSpec struct {
 	// hostRef is a reference to the KDexHost that this render page is for.
 	// +kubebuilder:validation:Required
+	// +kubebuilder:validation:XValidation:rule="self.name.size() > 0",message="hostRef.name must not be empty"
 	HostRef corev1.LocalObjectReference `json:"hostRef" protobuf:"bytes,1,req,name=hostRef"`
 
 	// translations is an array of objects where each one specifies a language (lang) and a map (keysAndValues) consisting of key/value pairs. If the lang property is not unique in the array and its keysAndValues map contains the same keys, the last one takes precedence.

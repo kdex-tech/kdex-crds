@@ -70,6 +70,7 @@ type KDexPageBindingSpec struct {
 
 	// hostRef is a reference to the KDexHost that this binding is for.
 	// +kubebuilder:validation:Required
+	// +kubebuilder:validation:XValidation:rule="self.name.size() > 0",message="hostRef.name must not be empty"
 	HostRef corev1.LocalObjectReference `json:"hostRef" protobuf:"bytes,2,req,name=hostRef"`
 
 	// label is the value used in menus and page titles before localization occurs (or when no translation exists for the current language).

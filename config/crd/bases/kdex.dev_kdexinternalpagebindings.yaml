@@ -132,6 +132,9 @@ spec:
                     type: string
                 type: object
                 x-kubernetes-map-type: atomic
+                x-kubernetes-validations:
+                - message: hostRef.name must not be empty
+                  rule: self.name.size() > 0
               label:
                 description: label is the value used in menus and page titles before
                   localization occurs (or when no translation exists for the current
