@@ -276,6 +276,8 @@ spec:
                 type: object
                 x-kubernetes-map-type: atomic
                 x-kubernetes-validations:
+                - message: pageArchetypeRef.name must not be empty
+                  rule: self.name.size() > 0
                 - message: '''kind'' must be either KDexPageArchetype or KDexClusterPageArchetype'
                   rule: self.kind == "KDexPageArchetype" || self.kind == "KDexClusterPageArchetype"
               parentPageRef:

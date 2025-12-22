@@ -100,6 +100,7 @@ type KDexPageBindingSpec struct {
 
 	// pageArchetypeRef is a reference to the KDexPageArchetype that this binding is for.
 	// +kubebuilder:validation:Required
+	// +kubebuilder:validation:XValidation:rule="self.name.size() > 0",message="pageArchetypeRef.name must not be empty"
 	// +kubebuilder:validation:XValidation:rule=`self.kind == "KDexPageArchetype" || self.kind == "KDexClusterPageArchetype"`,message="'kind' must be either KDexPageArchetype or KDexClusterPageArchetype"
 	PageArchetypeRef KDexObjectReference `json:"pageArchetypeRef" protobuf:"bytes,8,req,name=pageArchetypeRef"`
 
