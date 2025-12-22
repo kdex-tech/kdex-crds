@@ -136,6 +136,8 @@ spec:
                 description: label is the value used in menus and page titles before
                   localization occurs (or when no translation exists for the current
                   language).
+                maxLength: 256
+                minLength: 3
                 type: string
               navigationHints:
                 description: navigationHints are optional navigation properties that
