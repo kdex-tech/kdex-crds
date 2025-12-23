@@ -53,8 +53,10 @@ spec:
             properties:
               packageReferences:
                 items:
-                  description: PackageReference specifies the name and version of
-                    an NPM package that contains the micro-frontend application.
+                  description: |-
+                    PackageReference specifies the name and version of an NPM package. Prefereably the package should be available from
+                    the public npm registry. If the package is not available from the public npm registry, a secretRef should be provided
+                    to authenticate to the npm registry. That package must contain an ES module for use in the browser.
                   properties:
                     exportMapping:
                       description: exportMapping is a mapping of the module's exports

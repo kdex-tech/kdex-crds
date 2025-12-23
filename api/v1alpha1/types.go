@@ -230,7 +230,9 @@ type NavigationHints struct {
 	Weight resource.Quantity `json:"weight,omitempty" protobuf:"bytes,2,opt,name=weight"`
 }
 
-// PackageReference specifies the name and version of an NPM package that contains the micro-frontend application.
+// PackageReference specifies the name and version of an NPM package. Prefereably the package should be available from
+// the public npm registry. If the package is not available from the public npm registry, a secretRef should be provided
+// to authenticate to the npm registry. That package must contain an ES module for use in the browser.
 type PackageReference struct {
 	// name contains a scoped npm package name.
 	// +kubebuilder:validation:Required

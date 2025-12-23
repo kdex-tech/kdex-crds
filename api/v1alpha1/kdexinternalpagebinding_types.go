@@ -20,6 +20,21 @@ import (
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
 
+// KDexInternalPageBindingSpec defines the desired state of KDexInternalPageBinding
+type KDexInternalPageBindingSpec struct {
+	KDexPageBindingSpec `json:",inline" protobuf:"bytes,1,req,name=pageBindingSpec"`
+
+	// packageReferences are the references to the packages that are used by this binding.
+	// +listType=map
+	// +listMapKey=name
+	// +kubebuilder:validation:Optional
+	PackageReferences []PackageReference `json:"packageReferences,omitempty" protobuf:"bytes,2,rep,name=packageReferences"`
+
+	// scripts is a set of script references. They may contain URLs that point to resources hosted at some public address, npm module references or they may contain tag contents.
+	// +kubebuilder:validation:Optional
+	Scripts []ScriptDef `json:"scripts,omitempty" protobuf:"bytes,3,rep,name=scripts"`
+}
+
 // +kubebuilder:object:root=true
 // +kubebuilder:subresource:status
 
@@ -31,13 +46,13 @@ type KDexInternalPageBinding struct {
 	// +optional
 	metav1.ObjectMeta `json:"metadata,omitzero"`
 
+	// spec defines the desired state of KDexInternalPageBinding
+	// +required
+	Spec KDexInternalPageBindingSpec `json:"spec"`
+
 	// status defines the observed state of KDexApp
 	// +kubebuilder:validation:Optional
 	Status KDexObjectStatus `json:"status,omitempty,omitzero"`
-
-	// spec defines the desired state of KDexPageBinding
-	// +kubebuilder:validation:Required
-	Spec KDexPageBindingSpec `json:"spec"`
 }
 
 // +kubebuilder:object:root=true
