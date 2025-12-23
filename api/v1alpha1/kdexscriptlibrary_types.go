@@ -70,7 +70,7 @@ type KDexScriptLibrarySpec struct {
 	PackageReference *PackageReference `json:"packageReference,omitempty" protobuf:"bytes,1,opt,name=packageReference"`
 
 	// scripts is a set of script references. They may contain URLs that point to resources hosted at some public address, npm module references or they may contain tag contents.
-	// +kubebuilder:validation:MaxItems=32
+	// +kubebuilder:validation:MaxItems=8
 	// +kubebuilder:validation:Optional
 	Scripts []ScriptDef `json:"scripts,omitempty" protobuf:"bytes,2,rep,name=scripts"`
 

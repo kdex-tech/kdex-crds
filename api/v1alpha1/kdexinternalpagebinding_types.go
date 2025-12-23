@@ -31,6 +31,7 @@ type KDexInternalPageBindingSpec struct {
 	PackageReferences []PackageReference `json:"packageReferences,omitempty" protobuf:"bytes,2,rep,name=packageReferences"`
 
 	// scripts is a set of script references. They may contain URLs that point to resources hosted at some public address, npm module references or they may contain tag contents.
+	// +kubebuilder:validation:MaxItems=64
 	// +kubebuilder:validation:Optional
 	Scripts []ScriptDef `json:"scripts,omitempty" protobuf:"bytes,3,rep,name=scripts"`
 }

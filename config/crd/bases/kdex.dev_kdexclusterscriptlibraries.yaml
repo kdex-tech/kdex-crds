@@ -214,7 +214,7 @@ spec:
                       be set
                     rule: '[has(self.script),has(self.scriptSrc)].filter(x,x==true).size()
                       == 1'
-                maxItems: 32
+                maxItems: 8
                 type: array
               serverImage:
                 default: kdex-tech/kdex-themeserver:{{.Release}}

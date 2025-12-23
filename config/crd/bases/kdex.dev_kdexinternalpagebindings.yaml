@@ -396,6 +396,7 @@ spec:
                       be set
                     rule: '[has(self.script),has(self.scriptSrc)].filter(x,x==true).size()
                       == 1'
+                maxItems: 64
                 type: array
             required:
             - basePath

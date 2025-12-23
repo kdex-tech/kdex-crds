@@ -31,6 +31,10 @@ Package v1alpha1 contains API Schema definitions for the  v1alpha1 API group.
 - [KDexHostList](#kdexhostlist)
 - [KDexHostPackageReferences](#kdexhostpackagereferences)
 - [KDexHostPackageReferencesList](#kdexhostpackagereferenceslist)
+- [KDexInternalPageBinding](#kdexinternalpagebinding)
+- [KDexInternalPageBindingList](#kdexinternalpagebindinglist)
+- [KDexInternalTranslation](#kdexinternaltranslation)
+- [KDexInternalTranslationList](#kdexinternaltranslationlist)
 - [KDexPageArchetype](#kdexpagearchetype)
 - [KDexPageArchetypeList](#kdexpagearchetypelist)
 - [KDexPageBinding](#kdexpagebinding)
@@ -131,6 +135,7 @@ _Appears in:_
 
 
 _Appears in:_
+- [KDexInternalPageBindingSpec](#kdexinternalpagebindingspec)
 - [KDexPageBindingSpec](#kdexpagebindingspec)
 
 | Field | Description | Default | Validation |
@@ -253,7 +258,7 @@ _Appears in:_
 | --- | --- | --- | --- |
 | `customElements` _[CustomElement](#customelement) array_ | customElements is a list of custom elements implemented by the micro-frontend application. |  | MaxItems: 32 <br />MinItems: 1 <br /> |
 | `packageReference` _[PackageReference](#packagereference)_ | packageReference specifies the name and version of an NPM package that contains the script. The package.json must describe an ES module. |  | Required: \{\} <br /> |
-| `scripts` _[ScriptDef](#scriptdef) array_ | scripts is a set of script references. They may contain URLs that point to resources hosted at some public address, npm module references or they may contain tag contents. |  | MaxItems: 32 <br />Optional: \{\} <br /> |
+| `scripts` _[ScriptDef](#scriptdef) array_ | scripts is a set of script references. They may contain URLs that point to resources hosted at some public address, npm module references or they may contain tag contents. |  | MaxItems: 8 <br />Optional: \{\} <br /> |
 | `imagePullSecrets` _[LocalObjectReference](https://kubernetes.io/docs/reference/generated/kubernetes-api/v/#localobjectreference-v1-core) array_ | imagePullSecrets is an optional list of references to secrets in the same namespace to use for pulling the referenced images.<br />More info: https://kubernetes.io/docs/concepts/containers/images#specifying-imagepullsecrets-on-a-pod |  | Optional: \{\} <br /> |
 | `ingressPath` _string_ | ingressPath is a prefix beginning with '/_' plus additional characters. This indicates where in the Ingress/HTTPRoute the Backend will be mounted.<br />This value is determined by the implementation that embeds the Backend and cannot be changed. |  | Optional: \{\} <br />Pattern: `^/_.+` <br /> |
 | `replicas` _integer_ | replicas is the number of desired pods. This is a pointer to distinguish between explicit<br />zero and not specified. Defaults to 1. |  | Optional: \{\} <br /> |
@@ -697,6 +702,109 @@ _Appears in:_
 | `staticImagePullPolicy` _[PullPolicy](https://kubernetes.io/docs/reference/generated/kubernetes-api/v/#pullpolicy-v1-core)_ | Policy for pulling the OCI theme image. Possible values are:<br />Always: the kubelet always attempts to pull the reference. Container creation will fail If the pull fails.<br />Never: the kubelet never pulls the reference and only uses a local image or artifact. Container creation will fail if the reference isn't present.<br />IfNotPresent: the kubelet pulls if the reference isn't already present on disk. Container creation will fail if the reference isn't present and the pull fails.<br />Defaults to Always if :latest tag is specified, or IfNotPresent otherwise. |  | Optional: \{\} <br /> |
 
 
+#### KDexInternalPageBinding
+
+
+
+KDexInternalPageBinding is the Schema for the kdexinternalpagebindings API
+
+
+
+_Appears in:_
+- [KDexInternalPageBindingList](#kdexinternalpagebindinglist)
+
+| Field | Description | Default | Validation |
+| --- | --- | --- | --- |
+| `apiVersion` _string_ | `kdex.dev/v1alpha1` | | |
+| `kind` _string_ | `KDexInternalPageBinding` | | |
+| `metadata` _[ObjectMeta](https://kubernetes.io/docs/reference/generated/kubernetes-api/v/#objectmeta-v1-meta)_ | Refer to Kubernetes API documentation for fields of `metadata`. |  |  |
+| `spec` _[KDexInternalPageBindingSpec](#kdexinternalpagebindingspec)_ | spec defines the desired state of KDexInternalPageBinding |  |  |
+
+
+#### KDexInternalPageBindingList
+
+
+
+KDexInternalPageBindingList contains a list of KDexInternalPageBinding
+
+
+
+
+
+| Field | Description | Default | Validation |
+| --- | --- | --- | --- |
+| `apiVersion` _string_ | `kdex.dev/v1alpha1` | | |
+| `kind` _string_ | `KDexInternalPageBindingList` | | |
+| `metadata` _[ListMeta](https://kubernetes.io/docs/reference/generated/kubernetes-api/v/#listmeta-v1-meta)_ | Refer to Kubernetes API documentation for fields of `metadata`. |  |  |
+| `items` _[KDexInternalPageBinding](#kdexinternalpagebinding) array_ |  |  |  |
+
+
+#### KDexInternalPageBindingSpec
+
+
+
+KDexInternalPageBindingSpec defines the desired state of KDexInternalPageBinding
+
+
+
+_Appears in:_
+- [KDexInternalPageBinding](#kdexinternalpagebinding)
+
+| Field | Description | Default | Validation |
+| --- | --- | --- | --- |
+| `contentEntries` _[ContentEntry](#contententry) array_ | contentEntries is a set of content entries to bind to this page. They may be either raw HTML fragments or KDexApp references. |  | MaxItems: 8 <br />MinItems: 1 <br />Required: \{\} <br /> |
+| `hostRef` _[LocalObjectReference](https://kubernetes.io/docs/reference/generated/kubernetes-api/v/#localobjectreference-v1-core)_ | hostRef is a reference to the KDexHost that this binding is for. |  | Required: \{\} <br /> |
+| `label` _string_ | label is the value used in menus and page titles before localization occurs (or when no translation exists for the current language). |  | MaxLength: 256 <br />MinLength: 3 <br />Required: \{\} <br /> |
+| `navigationHints` _[NavigationHints](#navigationhints)_ | navigationHints are optional navigation properties that if omitted result in the page being hidden from the navigation. |  | Optional: \{\} <br /> |
+| `overrideFooterRef` _[KDexObjectReference](#kdexobjectreference)_ | overrideFooterRef is an optional reference to a KDexPageFooter resource. If not specified, the footer from the archetype will be used. |  | Optional: \{\} <br /> |
+| `overrideHeaderRef` _[KDexObjectReference](#kdexobjectreference)_ | overrideHeaderRef is an optional reference to a KDexPageHeader resource. If not specified, the header from the archetype will be used. |  | Optional: \{\} <br /> |
+| `overrideMainNavigationRef` _[KDexObjectReference](#kdexobjectreference)_ | overrideMainNavigationRef is an optional reference to a KDexPageNavigation resource. If not specified, the main navigation from the archetype will be used. |  | Optional: \{\} <br /> |
+| `pageArchetypeRef` _[KDexObjectReference](#kdexobjectreference)_ | pageArchetypeRef is a reference to the KDexPageArchetype that this binding is for. |  | Required: \{\} <br /> |
+| `parentPageRef` _[LocalObjectReference](https://kubernetes.io/docs/reference/generated/kubernetes-api/v/#localobjectreference-v1-core)_ | parentPageRef is a reference to the KDexPageBinding bellow which this page will appear in the main navigation. If not set, the page will be placed in the top level of the navigation. |  | Optional: \{\} <br /> |
+| `basePath` _string_ | basePath is the shortest path by which the page may be accessed. It must not contain path parameters. This path will be used in site navigation. This path is subject to being prefixed for localization by `/\{l10n\}` and will be when the user selects a non-default language. |  | Pattern: `^/` <br />Required: \{\} <br /> |
+| `patternPath` _string_ | patternPath, which must be prefixed by BasePath, is an extension of basePath that adds pattern matching as defined by https://pkg.go.dev/net/http#hdr-Patterns-ServeMux. This path is subject to being prefixed for localization by `/\{l10n\}` such as when the user selects a non-default language. |  | Optional: \{\} <br /> |
+| `scriptLibraryRef` _[KDexObjectReference](#kdexobjectreference)_ | scriptLibraryRef is an optional reference to a KDexScriptLibrary resource. |  | Optional: \{\} <br /> |
+| `packageReferences` _[PackageReference](#packagereference) array_ | packageReferences are the references to the packages that are used by this binding. |  | Optional: \{\} <br /> |
+| `scripts` _[ScriptDef](#scriptdef) array_ | scripts is a set of script references. They may contain URLs that point to resources hosted at some public address, npm module references or they may contain tag contents. |  | MaxItems: 64 <br />Optional: \{\} <br /> |
+
+
+#### KDexInternalTranslation
+
+
+
+KDexInternalTranslation is the Schema for the kdexinternaltranslations API
+
+
+
+_Appears in:_
+- [KDexInternalTranslationList](#kdexinternaltranslationlist)
+
+| Field | Description | Default | Validation |
+| --- | --- | --- | --- |
+| `apiVersion` _string_ | `kdex.dev/v1alpha1` | | |
+| `kind` _string_ | `KDexInternalTranslation` | | |
+| `metadata` _[ObjectMeta](https://kubernetes.io/docs/reference/generated/kubernetes-api/v/#objectmeta-v1-meta)_ | Refer to Kubernetes API documentation for fields of `metadata`. |  |  |
+| `spec` _[KDexTranslationSpec](#kdextranslationspec)_ | spec defines the desired state of KDexTranslation |  | Required: \{\} <br /> |
+
+
+#### KDexInternalTranslationList
+
+
+
+KDexInternalTranslationList contains a list of KDexInternalTranslation
+
+
+
+
+
+| Field | Description | Default | Validation |
+| --- | --- | --- | --- |
+| `apiVersion` _string_ | `kdex.dev/v1alpha1` | | |
+| `kind` _string_ | `KDexInternalTranslationList` | | |
+| `metadata` _[ListMeta](https://kubernetes.io/docs/reference/generated/kubernetes-api/v/#listmeta-v1-meta)_ | Refer to Kubernetes API documentation for fields of `metadata`. |  |  |
+| `items` _[KDexInternalTranslation](#kdexinternaltranslation) array_ |  |  |  |
+
+
 
 
 #### KDexObjectReference
@@ -711,6 +819,7 @@ _Appears in:_
 - [ContentEntry](#contententry)
 - [ContentEntryApp](#contententryapp)
 - [KDexHostSpec](#kdexhostspec)
+- [KDexInternalPageBindingSpec](#kdexinternalpagebindingspec)
 - [KDexPageArchetypeSpec](#kdexpagearchetypespec)
 - [KDexPageBindingSpec](#kdexpagebindingspec)
 - [KDexPageFooterSpec](#kdexpagefooterspec)
@@ -840,13 +949,14 @@ KDexPageBindingSpec defines the desired state of KDexPageBinding
 
 
 _Appears in:_
+- [KDexInternalPageBindingSpec](#kdexinternalpagebindingspec)
 - [KDexPageBinding](#kdexpagebinding)
 
 | Field | Description | Default | Validation |
 | --- | --- | --- | --- |
 | `contentEntries` _[ContentEntry](#contententry) array_ | contentEntries is a set of content entries to bind to this page. They may be either raw HTML fragments or KDexApp references. |  | MaxItems: 8 <br />MinItems: 1 <br />Required: \{\} <br /> |
 | `hostRef` _[LocalObjectReference](https://kubernetes.io/docs/reference/generated/kubernetes-api/v/#localobjectreference-v1-core)_ | hostRef is a reference to the KDexHost that this binding is for. |  | Required: \{\} <br /> |
-| `label` _string_ | label is the value used in menus and page titles before localization occurs (or when no translation exists for the current language). |  | Required: \{\} <br /> |
+| `label` _string_ | label is the value used in menus and page titles before localization occurs (or when no translation exists for the current language). |  | MaxLength: 256 <br />MinLength: 3 <br />Required: \{\} <br /> |
 | `navigationHints` _[NavigationHints](#navigationhints)_ | navigationHints are optional navigation properties that if omitted result in the page being hidden from the navigation. |  | Optional: \{\} <br /> |
 | `overrideFooterRef` _[KDexObjectReference](#kdexobjectreference)_ | overrideFooterRef is an optional reference to a KDexPageFooter resource. If not specified, the footer from the archetype will be used. |  | Optional: \{\} <br /> |
 | `overrideHeaderRef` _[KDexObjectReference](#kdexobjectreference)_ | overrideHeaderRef is an optional reference to a KDexPageHeader resource. If not specified, the header from the archetype will be used. |  | Optional: \{\} <br /> |
@@ -1089,7 +1199,7 @@ _Appears in:_
 | Field | Description | Default | Validation |
 | --- | --- | --- | --- |
 | `packageReference` _[PackageReference](#packagereference)_ | packageReference specifies the name and version of an NPM package that contains the script. The package.json must describe an ES module. |  | Optional: \{\} <br /> |
-| `scripts` _[ScriptDef](#scriptdef) array_ | scripts is a set of script references. They may contain URLs that point to resources hosted at some public address, npm module references or they may contain tag contents. |  | MaxItems: 32 <br />Optional: \{\} <br /> |
+| `scripts` _[ScriptDef](#scriptdef) array_ | scripts is a set of script references. They may contain URLs that point to resources hosted at some public address, npm module references or they may contain tag contents. |  | MaxItems: 8 <br />Optional: \{\} <br /> |
 | `imagePullSecrets` _[LocalObjectReference](https://kubernetes.io/docs/reference/generated/kubernetes-api/v/#localobjectreference-v1-core) array_ | imagePullSecrets is an optional list of references to secrets in the same namespace to use for pulling the referenced images.<br />More info: https://kubernetes.io/docs/concepts/containers/images#specifying-imagepullsecrets-on-a-pod |  | Optional: \{\} <br /> |
 | `ingressPath` _string_ | ingressPath is a prefix beginning with '/_' plus additional characters. This indicates where in the Ingress/HTTPRoute the Backend will be mounted.<br />This value is determined by the implementation that embeds the Backend and cannot be changed. |  | Optional: \{\} <br />Pattern: `^/_.+` <br /> |
 | `replicas` _integer_ | replicas is the number of desired pods. This is a pointer to distinguish between explicit<br />zero and not specified. Defaults to 1. |  | Optional: \{\} <br /> |
@@ -1215,6 +1325,7 @@ KDexTranslationSpec defines the desired state of KDexTranslation
 
 
 _Appears in:_
+- [KDexInternalTranslation](#kdexinternaltranslation)
 - [KDexTranslation](#kdextranslation)
 
 | Field | Description | Default | Validation |
@@ -1252,6 +1363,7 @@ _Appears in:_
 
 
 _Appears in:_
+- [KDexInternalPageBindingSpec](#kdexinternalpagebindingspec)
 - [KDexPageBindingSpec](#kdexpagebindingspec)
 
 | Field | Description | Default | Validation |
@@ -1264,13 +1376,16 @@ _Appears in:_
 
 
 
-PackageReference specifies the name and version of an NPM package that contains the micro-frontend application.
+PackageReference specifies the name and version of an NPM package. Prefereably the package should be available from
+the public npm registry. If the package is not available from the public npm registry, a secretRef should be provided
+to authenticate to the npm registry. That package must contain an ES module for use in the browser.
 
 
 
 _Appears in:_
 - [KDexAppSpec](#kdexappspec)
 - [KDexHostPackageReferencesSpec](#kdexhostpackagereferencesspec)
+- [KDexInternalPageBindingSpec](#kdexinternalpagebindingspec)
 - [KDexScriptLibrarySpec](#kdexscriptlibraryspec)
 
 | Field | Description | Default | Validation |
@@ -1290,6 +1405,7 @@ _Appears in:_
 
 
 _Appears in:_
+- [KDexInternalPageBindingSpec](#kdexinternalpagebindingspec)
 - [KDexPageBindingSpec](#kdexpagebindingspec)
 
 | Field | Description | Default | Validation |
@@ -1345,6 +1461,7 @@ _Appears in:_
 
 _Appears in:_
 - [KDexAppSpec](#kdexappspec)
+- [KDexInternalPageBindingSpec](#kdexinternalpagebindingspec)
 - [KDexScriptLibrarySpec](#kdexscriptlibraryspec)
 
 | Field | Description | Default | Validation |
