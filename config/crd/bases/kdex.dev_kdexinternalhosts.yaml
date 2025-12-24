@@ -1,0 +1,446 @@
+---
+apiVersion: apiextensions.k8s.io/v1
+kind: CustomResourceDefinition
+metadata:
+  annotations:
+    controller-gen.kubebuilder.io/version: v0.19.0
+  name: kdexinternalhosts.kdex.dev
+spec:
+  group: kdex.dev
+  names:
+    kind: KDexInternalHost
+    listKind: KDexInternalHostList
+    plural: kdexinternalhosts
+    shortNames:
+    - kdex-ih
+    singular: kdexinternalhost
+  scope: Namespaced
+  versions:
+  - additionalPrinterColumns:
+    - description: The state of the Ready condition
+      jsonPath: .status.conditions[?(@.type=="Ready")].status
+      name: Ready
+      type: string
+    name: v1alpha1
+    schema:
+      openAPIV3Schema:
+        description: |-
+          KDexInternalHost is the Schema for the kdexinternalhosts API
+
+          A KDexInternalHost is the resource used to instantiate and manage a unique controller focused on a single KDexHost
+          resource. This focused controller serves to aggregate the host specific resources, primarily KDexPageBindings but
+          also as the main web server handling page rendering and page serving. In order to isolate the resources consumed by
+          those operations from other hosts a unique controller is necessary. This resource is internally generated and managed
+          and not meant for end users.
+        properties:
+          apiVersion:
+            description: |-
+              APIVersion defines the versioned schema of this representation of an object.
+              Servers should convert recognized schemas to the latest internal value, and
+              may reject unrecognized values.
+              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources
+            type: string
+          kind:
+            description: |-
+              Kind is a string value representing the REST resource this object represents.
+              Servers may infer this from the endpoint the client submits requests to.
+              Cannot be updated.
+              In CamelCase.
+              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds
+            type: string
+          metadata:
+            type: object
+          spec:
+            description: spec defines the desired state of KDexInternalHost
+            properties:
+              assets:
+                description: assets is a set of elements that define a host specific
+                  HTML instructions (e.g. favicon, site logo, charset).
+                items:
+                  properties:
+                    attributes:
+                      additionalProperties:
+                        type: string
+                      description: attributes are key/value pairs that will be added
+                        to the element as attributes when rendered.
+                      type: object
+                    linkHref:
+                      description: linkHref is the content of a `<link>` href attribute.
+                        The URL may be absolute with protocol and host or it must
+                        be prefixed by the IngressPath of the Backend.
+                      type: string
+                    metaId:
+                      description: metaId is required just for semantics of CRD field
+                        validation.
+                      type: string
+                    style:
+                      description: style is the text content to be added into a `<style>`
+                        element when rendered.
+                      type: string
+                  type: object
+                  x-kubernetes-validations:
+                  - message: exactly one of the fields in [linkHref metaId style]
+                      must be set
+                    rule: '[has(self.linkHref),has(self.metaId),has(self.style)].filter(x,x==true).size()
+                      == 1'
+                maxItems: 32
+                type: array
+              brandName:
+                description: brandName is the name used when rendering pages belonging
+                  to the host. For example, it may be used as alt text for the logo
+                  displayed in the page header.
+                type: string
+              defaultLang:
+                description: |-
+                  defaultLang is a string containing a BCP 47 language tag.
+                  See https://developer.mozilla.org/en-US/docs/Glossary/BCP_47_language_tag.
+                  When render page paths do not specify a 'lang' path parameter this will be the value used. When not set the default will be 'en'.
+                type: string
+              imagePullSecrets:
+                description: |-
+                  imagePullSecrets is an optional list of references to secrets in the same namespace to use for pulling the referenced images.
+                  More info: https://kubernetes.io/docs/concepts/containers/images#specifying-imagepullsecrets-on-a-pod
+                items:
+                  description: |-
+                    LocalObjectReference contains enough information to let you locate the
+                    referenced object inside the same namespace.
+                  properties:
+                    name:
+                      default: ""
+                      description: |-
+                        Name of the referent.
+                        This field is effectively required, but due to backwards compatibility is
+                        allowed to be empty. Instances of this type with an empty value here are
+                        almost certainly wrong.
+                        More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#names
+                      type: string
+                  type: object
+                  x-kubernetes-map-type: atomic
+                type: array
+                x-kubernetes-list-map-keys:
+                - name
+                x-kubernetes-list-type: map
+              ingressPath:
+                description: |-
+                  ingressPath is a prefix beginning with '/_' plus additional characters. This indicates where in the Ingress/HTTPRoute the Backend will be mounted.
+                  This value is determined by the implementation that embeds the Backend and cannot be changed.
+                pattern: ^/_.+
+                type: string
+              modulePolicy:
+                default: Strict
+                description: |-
+                  modulePolicy defines the policy for JavaScript references in KDexApp, KDexTheme and KDexScriptLibrary resources. When not specified the policy is Strict
+                  A Host must not accept JavaScript references which do not comply with the specified policy.
+                enum:
+                - ExternalDependencies
+                - Loose
+                - ModulesRequired
+                - Strict
+                type: string
+              organization:
+                description: organization is the name of the Organization to which
+                  the host belongs.
+                minLength: 5
+                type: string
+              replicas:
+                description: |-
+                  replicas is the number of desired pods. This is a pointer to distinguish between explicit
+                  zero and not specified. Defaults to 1.
+                format: int32
+                type: integer
+              resources:
+                description: |-
+                  resources defines the compute resources required by the container.
+                  More info: https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/
+                properties:
+                  claims:
+                    description: |-
+                      Claims lists the names of resources, defined in spec.resourceClaims,
+                      that are used by this container.
+
+                      This field depends on the
+                      DynamicResourceAllocation feature gate.
+
+                      This field is immutable. It can only be set for containers.
+                    items:
+                      description: ResourceClaim references one entry in PodSpec.ResourceClaims.
+                      properties:
+                        name:
+                          description: |-
+                            Name must match the name of one entry in pod.spec.resourceClaims of
+                            the Pod where this field is used. It makes that resource available
+                            inside a container.
+                          type: string
+                        request:
+                          description: |-
+                            Request is the name chosen for a request in the referenced claim.
+                            If empty, everything from the claim is made available, otherwise
+                            only the result of this request.
+                          type: string
+                      required:
+                      - name
+                      type: object
+                    type: array
+                    x-kubernetes-list-map-keys:
+                    - name
+                    x-kubernetes-list-type: map
+                  limits:
+                    additionalProperties:
+                      anyOf:
+                      - type: integer
+                      - type: string
+                      pattern: ^(\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))(([KMGTPE]i)|[numkMGTPE]|([eE](\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))))?$
+                      x-kubernetes-int-or-string: true
+                    description: |-
+                      Limits describes the maximum amount of compute resources allowed.
+                      More info: https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/
+                    type: object
+                  requests:
+                    additionalProperties:
+                      anyOf:
+                      - type: integer
+                      - type: string
+                      pattern: ^(\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))(([KMGTPE]i)|[numkMGTPE]|([eE](\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))))?$
+                      x-kubernetes-int-or-string: true
+                    description: |-
+                      Requests describes the minimum amount of compute resources required.
+                      If Requests is omitted for a container, it defaults to Limits if that is explicitly specified,
+                      otherwise to an implementation-defined value. Requests cannot exceed Limits.
+                      More info: https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/
+                    type: object
+                type: object
+              routing:
+                description: routing defines the desired routing configuration for
+                  the host.
+                properties:
+                  domains:
+                    description: domains are the names by which this host is addressed.
+                      The first domain listed is the preferred domain. The domains
+                      may contain wildcard prefix in the form '*.'. Longest match
+                      always wins.
+                    items:
+                      type: string
+                    minItems: 1
+                    type: array
+                  ingressClassName:
+                    description: |-
+                      ingressClassName is the name of an IngressClass cluster resource. Ingress
+                      controller implementations use this field to know whether they should be
+                      serving this Ingress resource, by a transitive connection
+                      (controller -> IngressClass -> Ingress resource). Although the
+                      `kubernetes.io/ingress.class` annotation (simple constant name) was never
+                      formally defined, it was widely supported by Ingress controllers to create
+                      a direct binding between Ingress controller and Ingress resources. Newly
+                      created Ingress resources should prefer using the field. However, even
+                      though the annotation is officially deprecated, for backwards compatibility
+                      reasons, ingress controllers should still honor that annotation if present.
+                    type: string
+                  strategy:
+                    default: Ingress
+                    description: strategy is the routing strategy to use. If not specified
+                      Ingress is assumed.
+                    enum:
+                    - Ingress
+                    - HTTPRoute
+                    type: string
+                  tls:
+                    description: tls is the TLS configuration for the host.
+                    properties:
+                      secretRef:
+                        description: secretRef is a reference to a secret containing
+                          a TLS certificate and key for the domains specified on the
+                          host.
+                        properties:
+                          name:
+                            default: ""
+                            description: |-
+                              Name of the referent.
+                              This field is effectively required, but due to backwards compatibility is
+                              allowed to be empty. Instances of this type with an empty value here are
+                              almost certainly wrong.
+                              More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#names
+                            type: string
+                        type: object
+                        x-kubernetes-map-type: atomic
+                    required:
+                    - secretRef
+                    type: object
+                required:
+                - domains
+                type: object
+              scriptLibraryRef:
+                description: scriptLibraryRef is an optional reference to a KDexScriptLibrary
+                  resource.
+                properties:
+                  kind:
+                    description: Kind is the type of resource being referenced
+                    type: string
+                  name:
+                    description: Name of the referent.
+                    type: string
+                  namespace:
+                    description: |-
+                      Namespace, if set, causes the lookup for the namespace scoped Kind of the referent to use the specified
+                      namespace. If not set, the namespace of the resource will be used to lookup the namespace scoped Kind of the
+                      referent.
+                      If the referring resource is cluster scoped, this field is ignored.
+                      Defaulted to nil.
+                    type: string
+                required:
+                - kind
+                - name
+                type: object
+                x-kubernetes-map-type: atomic
+                x-kubernetes-validations:
+                - message: '''kind'' must be either KDexScriptLibrary or KDexClusterScriptLibrary'
+                  rule: self.kind == "KDexScriptLibrary" || self.kind == "KDexClusterScriptLibrary"
+              serverImage:
+                default: kdex-tech/kdex-themeserver:{{.Release}}
+                description: |-
+                  serverImage is the name of Backend image.
+                  More info: https://kubernetes.io/docs/concepts/containers/images
+                minLength: 5
+                type: string
+              serverImagePullPolicy:
+                description: |-
+                  Policy for pulling the Backend server image. Possible values are:
+                  Always: the kubelet always attempts to pull the reference. Container creation will fail If the pull fails.
+                  Never: the kubelet never pulls the reference and only uses a local image or artifact. Container creation will fail if the reference isn't present.
+                  IfNotPresent: the kubelet pulls if the reference isn't already present on disk. Container creation will fail if the reference isn't present and the pull fails.
+                  Defaults to Always if :latest tag is specified, or IfNotPresent otherwise.
+                type: string
+              staticImage:
+                description: |-
+                  staticImage is the name of an OCI image that contains static resources that will be served by the Backend. This may not apply if the serverImage is set to a custom implementation.
+                  More info: https://kubernetes.io/docs/concepts/containers/images
+                type: string
+              staticImagePullPolicy:
+                description: |-
+                  Policy for pulling the OCI theme image. Possible values are:
+                  Always: the kubelet always attempts to pull the reference. Container creation will fail If the pull fails.
+                  Never: the kubelet never pulls the reference and only uses a local image or artifact. Container creation will fail if the reference isn't present.
+                  IfNotPresent: the kubelet pulls if the reference isn't already present on disk. Container creation will fail if the reference isn't present and the pull fails.
+                  Defaults to Always if :latest tag is specified, or IfNotPresent otherwise.
+                type: string
+              themeRef:
+                description: themeRef is a reference to the theme that should apply
+                  to all pages bound to this host.
+                properties:
+                  kind:
+                    description: Kind is the type of resource being referenced
+                    type: string
+                  name:
+                    description: Name of the referent.
+                    type: string
+                  namespace:
+                    description: |-
+                      Namespace, if set, causes the lookup for the namespace scoped Kind of the referent to use the specified
+                      namespace. If not set, the namespace of the resource will be used to lookup the namespace scoped Kind of the
+                      referent.
+                      If the referring resource is cluster scoped, this field is ignored.
+                      Defaulted to nil.
+                    type: string
+                required:
+                - kind
+                - name
+                type: object
+                x-kubernetes-map-type: atomic
+                x-kubernetes-validations:
+                - message: '''kind'' must be either KDexTheme or KDexClusterTheme'
+                  rule: self.kind == "KDexTheme" || self.kind == "KDexClusterTheme"
+            required:
+            - brandName
+            - organization
+            - routing
+            type: object
+          status:
+            description: status defines the observed state of KDexApp
+            properties:
+              attributes:
+                additionalProperties:
+                  type: string
+                description: attributes hold state of the resource as key/value pairs.
+                type: object
+              conditions:
+                description: |-
+                  conditions represent the current state of the resource.
+                  Each condition has a unique type and reflects the status of a specific aspect of the resource.
+
+                  Standard condition types include:
+                  - "Progressing": the resource is being created or updated
+                  - "Ready": the resource is fully functional
+                  - "Degraded": the resource failed to reach or maintain its desired state
+
+                  The status of each condition is one of True, False, or Unknown.
+                items:
+                  description: Condition contains details for one aspect of the current
+                    state of this API Resource.
+                  properties:
+                    lastTransitionTime:
+                      description: |-
+                        lastTransitionTime is the last time the condition transitioned from one status to another.
+                        This should be when the underlying condition changed.  If that is not known, then using the time when the API field changed is acceptable.
+                      format: date-time
+                      type: string
+                    message:
+                      description: |-
+                        message is a human readable message indicating details about the transition.
+                        This may be an empty string.
+                      maxLength: 32768
+                      type: string
+                    observedGeneration:
+                      description: |-
+                        observedGeneration represents the .metadata.generation that the condition was set based upon.
+                        For instance, if .metadata.generation is currently 12, but the .status.conditions[x].observedGeneration is 9, the condition is out of date
+                        with respect to the current state of the instance.
+                      format: int64
+                      minimum: 0
+                      type: integer
+                    reason:
+                      description: |-
+                        reason contains a programmatic identifier indicating the reason for the condition's last transition.
+                        Producers of specific condition types may define expected values and meanings for this field,
+                        and whether the values are considered a guaranteed API.
+                        The value should be a CamelCase string.
+                        This field may not be empty.
+                      maxLength: 1024
+                      minLength: 1
+                      pattern: ^[A-Za-z]([A-Za-z0-9_,:]*[A-Za-z0-9_])?$
+                      type: string
+                    status:
+                      description: status of the condition, one of True, False, Unknown.
+                      enum:
+                      - "True"
+                      - "False"
+                      - Unknown
+                      type: string
+                    type:
+                      description: type of condition in CamelCase or in foo.example.com/CamelCase.
+                      maxLength: 316
+                      pattern: ^([a-z0-9]([-a-z0-9]*[a-z0-9])?(\.[a-z0-9]([-a-z0-9]*[a-z0-9])?)*/)?(([A-Za-z0-9][-A-Za-z0-9_.]*)?[A-Za-z0-9])$
+                      type: string
+                  required:
+                  - lastTransitionTime
+                  - message
+                  - reason
+                  - status
+                  - type
+                  type: object
+                type: array
+                x-kubernetes-list-map-keys:
+                - type
+                x-kubernetes-list-type: map
+              observedGeneration:
+                description: |-
+                  observedGeneration is the most recent generation observed for this resource. It corresponds to the
+                  resource's generation, which is updated on mutation by the API Server.
+                format: int64
+                type: integer
+            type: object
+        required:
+        - spec
+        type: object
+    served: true
+    storage: true
+    subresources:
+      status: {}

@@ -26,11 +26,11 @@ Package v1alpha1 contains API Schema definitions for the  v1alpha1 API group.
 - [KDexClusterTheme](#kdexclustertheme)
 - [KDexClusterThemeList](#kdexclusterthemelist)
 - [KDexHost](#kdexhost)
-- [KDexHostController](#kdexhostcontroller)
-- [KDexHostControllerList](#kdexhostcontrollerlist)
 - [KDexHostList](#kdexhostlist)
 - [KDexHostPackageReferences](#kdexhostpackagereferences)
 - [KDexHostPackageReferencesList](#kdexhostpackagereferenceslist)
+- [KDexInternalHost](#kdexinternalhost)
+- [KDexInternalHostList](#kdexinternalhostlist)
 - [KDexInternalPageBinding](#kdexinternalpagebinding)
 - [KDexInternalPageBindingList](#kdexinternalpagebindinglist)
 - [KDexInternalTranslation](#kdexinternaltranslation)
@@ -552,49 +552,6 @@ _Appears in:_
 | `spec` _[KDexHostSpec](#kdexhostspec)_ | spec defines the desired state of KDexHost |  | Required: \{\} <br /> |
 
 
-#### KDexHostController
-
-
-
-KDexHostController is the Schema for the kdexhostcontrollers API
-
-A KDexHostController is the resource used to instantiate and manage a unique controller focused on a single KDexHost
-resource. This focused controller serves to aggregate the host specific resources, primarily KDexPageBindings but
-also as the main web server handling page rendering and page serving. In order to isolate the resources consumed by
-those operations from other hosts a unique controller is necessary. This resource is internally generated and managed
-and not meant for end users.
-
-
-
-_Appears in:_
-- [KDexHostControllerList](#kdexhostcontrollerlist)
-
-| Field | Description | Default | Validation |
-| --- | --- | --- | --- |
-| `apiVersion` _string_ | `kdex.dev/v1alpha1` | | |
-| `kind` _string_ | `KDexHostController` | | |
-| `metadata` _[ObjectMeta](https://kubernetes.io/docs/reference/generated/kubernetes-api/v/#objectmeta-v1-meta)_ | Refer to Kubernetes API documentation for fields of `metadata`. |  | Optional: \{\} <br /> |
-| `spec` _[KDexHostSpec](#kdexhostspec)_ | spec defines the desired state of KDexHostController |  | Required: \{\} <br /> |
-
-
-#### KDexHostControllerList
-
-
-
-KDexHostControllerList contains a list of KDexHostController
-
-
-
-
-
-| Field | Description | Default | Validation |
-| --- | --- | --- | --- |
-| `apiVersion` _string_ | `kdex.dev/v1alpha1` | | |
-| `kind` _string_ | `KDexHostControllerList` | | |
-| `metadata` _[ListMeta](https://kubernetes.io/docs/reference/generated/kubernetes-api/v/#listmeta-v1-meta)_ | Refer to Kubernetes API documentation for fields of `metadata`. |  |  |
-| `items` _[KDexHostController](#kdexhostcontroller) array_ |  |  |  |
-
-
 #### KDexHostList
 
 
@@ -680,7 +637,7 @@ KDexHostSpec defines the desired state of KDexHost
 
 _Appears in:_
 - [KDexHost](#kdexhost)
-- [KDexHostController](#kdexhostcontroller)
+- [KDexInternalHost](#kdexinternalhost)
 
 | Field | Description | Default | Validation |
 | --- | --- | --- | --- |
@@ -700,6 +657,49 @@ _Appears in:_
 | `serverImagePullPolicy` _[PullPolicy](https://kubernetes.io/docs/reference/generated/kubernetes-api/v/#pullpolicy-v1-core)_ | Policy for pulling the Backend server image. Possible values are:<br />Always: the kubelet always attempts to pull the reference. Container creation will fail If the pull fails.<br />Never: the kubelet never pulls the reference and only uses a local image or artifact. Container creation will fail if the reference isn't present.<br />IfNotPresent: the kubelet pulls if the reference isn't already present on disk. Container creation will fail if the reference isn't present and the pull fails.<br />Defaults to Always if :latest tag is specified, or IfNotPresent otherwise. |  | Optional: \{\} <br /> |
 | `staticImage` _string_ | staticImage is the name of an OCI image that contains static resources that will be served by the Backend. This may not apply if the serverImage is set to a custom implementation.<br />More info: https://kubernetes.io/docs/concepts/containers/images |  | Optional: \{\} <br /> |
 | `staticImagePullPolicy` _[PullPolicy](https://kubernetes.io/docs/reference/generated/kubernetes-api/v/#pullpolicy-v1-core)_ | Policy for pulling the OCI theme image. Possible values are:<br />Always: the kubelet always attempts to pull the reference. Container creation will fail If the pull fails.<br />Never: the kubelet never pulls the reference and only uses a local image or artifact. Container creation will fail if the reference isn't present.<br />IfNotPresent: the kubelet pulls if the reference isn't already present on disk. Container creation will fail if the reference isn't present and the pull fails.<br />Defaults to Always if :latest tag is specified, or IfNotPresent otherwise. |  | Optional: \{\} <br /> |
+
+
+#### KDexInternalHost
+
+
+
+KDexInternalHost is the Schema for the kdexinternalhosts API
+
+A KDexInternalHost is the resource used to instantiate and manage a unique controller focused on a single KDexHost
+resource. This focused controller serves to aggregate the host specific resources, primarily KDexPageBindings but
+also as the main web server handling page rendering and page serving. In order to isolate the resources consumed by
+those operations from other hosts a unique controller is necessary. This resource is internally generated and managed
+and not meant for end users.
+
+
+
+_Appears in:_
+- [KDexInternalHostList](#kdexinternalhostlist)
+
+| Field | Description | Default | Validation |
+| --- | --- | --- | --- |
+| `apiVersion` _string_ | `kdex.dev/v1alpha1` | | |
+| `kind` _string_ | `KDexInternalHost` | | |
+| `metadata` _[ObjectMeta](https://kubernetes.io/docs/reference/generated/kubernetes-api/v/#objectmeta-v1-meta)_ | Refer to Kubernetes API documentation for fields of `metadata`. |  | Optional: \{\} <br /> |
+| `spec` _[KDexHostSpec](#kdexhostspec)_ | spec defines the desired state of KDexInternalHost |  | Required: \{\} <br /> |
+
+
+#### KDexInternalHostList
+
+
+
+KDexInternalHostList contains a list of KDexInternalHost
+
+
+
+
+
+| Field | Description | Default | Validation |
+| --- | --- | --- | --- |
+| `apiVersion` _string_ | `kdex.dev/v1alpha1` | | |
+| `kind` _string_ | `KDexInternalHostList` | | |
+| `metadata` _[ListMeta](https://kubernetes.io/docs/reference/generated/kubernetes-api/v/#listmeta-v1-meta)_ | Refer to Kubernetes API documentation for fields of `metadata`. |  |  |
+| `items` _[KDexInternalHost](#kdexinternalhost) array_ |  |  |  |
 
 
 #### KDexInternalPageBinding

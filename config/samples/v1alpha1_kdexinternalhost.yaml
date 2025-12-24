@@ -1,9 +1,9 @@
 apiVersion: kdex.dev/v1alpha1
-kind: KDexHostController
+kind: KDexInternalHost
 metadata:
   labels:
     app.kubernetes.io/name: kdex-crds
     app.kubernetes.io/managed-by: kustomize
-  name: kdexhostcontroller-sample
+  name: kdexinternalhost-sample
 spec:
   # TODO(user): Add fields here

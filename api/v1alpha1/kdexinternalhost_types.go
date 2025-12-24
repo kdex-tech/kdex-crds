@@ -21,19 +21,19 @@ import (
 )
 
 // +kubebuilder:object:root=true
-// +kubebuilder:resource:scope=Namespaced,shortName=kdex-hc
+// +kubebuilder:resource:scope=Namespaced,shortName=kdex-ih
 // +kubebuilder:subresource:status
 
-// KDexHostController is the Schema for the kdexhostcontrollers API
+// KDexInternalHost is the Schema for the kdexinternalhosts API
 //
-// A KDexHostController is the resource used to instantiate and manage a unique controller focused on a single KDexHost
+// A KDexInternalHost is the resource used to instantiate and manage a unique controller focused on a single KDexHost
 // resource. This focused controller serves to aggregate the host specific resources, primarily KDexPageBindings but
 // also as the main web server handling page rendering and page serving. In order to isolate the resources consumed by
 // those operations from other hosts a unique controller is necessary. This resource is internally generated and managed
 // and not meant for end users.
 //
 // +kubebuilder:printcolumn:name="Ready",type=string,JSONPath=`.status.conditions[?(@.type=="Ready")].status`,description="The state of the Ready condition"
-type KDexHostController struct {
+type KDexInternalHost struct {
 	metav1.TypeMeta `json:",inline"`
 
 	// metadata is a standard object metadata
@@ -44,20 +44,20 @@ type KDexHostController struct {
 	// +kubebuilder:validation:Optional
 	Status KDexObjectStatus `json:"status,omitempty,omitzero"`
 
-	// spec defines the desired state of KDexHostController
+	// spec defines the desired state of KDexInternalHost
 	// +kubebuilder:validation:Required
 	Spec KDexHostSpec `json:"spec"`
 }
 
 // +kubebuilder:object:root=true
 
-// KDexHostControllerList contains a list of KDexHostController
-type KDexHostControllerList struct {
+// KDexInternalHostList contains a list of KDexInternalHost
+type KDexInternalHostList struct {
 	metav1.TypeMeta `json:",inline"`
 	metav1.ListMeta `json:"metadata,omitempty"`
-	Items           []KDexHostController `json:"items"`
+	Items           []KDexInternalHost `json:"items"`
 }
 
 func init() {
-	SchemeBuilder.Register(&KDexHostController{}, &KDexHostControllerList{})
+	SchemeBuilder.Register(&KDexInternalHost{}, &KDexInternalHostList{})
 }
