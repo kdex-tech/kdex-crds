@@ -336,6 +336,34 @@ spec:
                   This path is subject to being prefixed for localization by `/{l10n}`
                   such as when the user selects a non-default language.
                 type: string
+              requiredBackends:
+                description: requiredBackends is a set of references to KDexApp or
+                  KDexScriptLibrary resources that specify a backend.
+                items:
+                  properties:
+                    kind:
+                      description: Kind is the type of resource being referenced
+                      type: string
+                    name:
+                      description: Name of the referent.
+                      type: string
+                    namespace:
+                      description: |-
+                        Namespace, if set, causes the lookup for the namespace scoped Kind of the referent to use the specified
+                        namespace. If not set, the namespace of the resource will be used to lookup the namespace scoped Kind of the
+                        referent.
+                        If the referring resource is cluster scoped, this field is ignored.
+                        Defaulted to nil.
+                      type: string
+                  required:
+                  - kind
+                  - name
+                  type: object
+                  x-kubernetes-map-type: atomic
+                type: array
+                x-kubernetes-list-map-keys:
+                - name
+                x-kubernetes-list-type: map
               scriptLibraryRef:
                 description: scriptLibraryRef is an optional reference to a KDexScriptLibrary
                   resource.

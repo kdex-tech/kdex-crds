@@ -988,6 +988,11 @@ func (in *KDexInternalPageBindingSpec) DeepCopyInto(out *KDexInternalPageBinding
 			(*in)[i].DeepCopyInto(&(*out)[i])
 		}
 	}
+	if in.RequiredBackends != nil {
+		in, out := &in.RequiredBackends, &out.RequiredBackends
+		*out = make([]KDexObjectReference, len(*in))
+		copy(*out, *in)
+	}
 	if in.Scripts != nil {
 		in, out := &in.Scripts, &out.Scripts
 		*out = make([]ScriptDef, len(*in))

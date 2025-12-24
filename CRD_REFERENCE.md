@@ -27,18 +27,18 @@ Package v1alpha1 contains API Schema definitions for the  v1alpha1 API group.
 - [KDexClusterThemeList](#kdexclusterthemelist)
 - [KDexHost](#kdexhost)
 - [KDexHostList](#kdexhostlist)
-- [KDexInternalPackageReferences](#kdexinternalpackagereferences)
-- [KDexHostPackageReferencesList](#kdexhostpackagereferenceslist)
 - [KDexInternalHost](#kdexinternalhost)
 - [KDexInternalHostList](#kdexinternalhostlist)
+- [KDexInternalPackageReferences](#kdexinternalpackagereferences)
+- [KDexInternalPackageReferencesList](#kdexinternalpackagereferenceslist)
 - [KDexInternalPageBinding](#kdexinternalpagebinding)
 - [KDexInternalPageBindingList](#kdexinternalpagebindinglist)
 - [KDexInternalTranslation](#kdexinternaltranslation)
 - [KDexInternalTranslationList](#kdexinternaltranslationlist)
 - [KDexPageArchetype](#kdexpagearchetype)
 - [KDexPageArchetypeList](#kdexpagearchetypelist)
-- [KDexInternalPageBinding](#kdexpagebinding)
-- [KDexInternalPageBindingList](#kdexpagebindinglist)
+- [KDexPageBinding](#kdexpagebinding)
+- [KDexPageBindingList](#kdexpagebindinglist)
 - [KDexPageFooter](#kdexpagefooter)
 - [KDexPageFooterList](#kdexpagefooterlist)
 - [KDexPageHeader](#kdexpageheader)
@@ -136,7 +136,7 @@ _Appears in:_
 
 _Appears in:_
 - [KDexInternalPageBindingSpec](#kdexinternalpagebindingspec)
-- [KDexInternalPageBindingSpec](#kdexpagebindingspec)
+- [KDexPageBindingSpec](#kdexpagebindingspec)
 
 | Field | Description | Default | Validation |
 | --- | --- | --- | --- |
@@ -209,7 +209,7 @@ the resource developers implement to extend to user interface with a new feature
 Component based and the packaging follows the NPM packaging model the contents of which are ES modules. There are no
 container images to build. Merely package the application code and publish it to an NPM compatible repository,
 configure the KDexApp with the necessary metadata and deploy to Kubernetes. The app can then be consumed and composed
-by KDexInternalPageBindings to produce actual user experiences.
+by KDexPageBindings to produce actual user experiences.
 
 
 
@@ -536,7 +536,7 @@ KDexHost is the Schema for the kdexhosts API
 
 A KDexHost is the central actor in the "KDex Cloud Native Application Server" model. It specifies the basic metadata
 that defines a web property; a set of domain names, TLS certificates, routing strategy and so on. From this central
-point a distinct web property is establish to which are bound KDexInternalPageBindings (i.e. web pages) that provide the web
+point a distinct web property is establish to which are bound KDexPageBindings (i.e. web pages) that provide the web
 properties content in the form of either raw HTML content or applications from KDexApps.s
 
 
@@ -568,63 +568,6 @@ KDexHostList contains a list of KDexHost
 | `kind` _string_ | `KDexHostList` | | |
 | `metadata` _[ListMeta](https://kubernetes.io/docs/reference/generated/kubernetes-api/v/#listmeta-v1-meta)_ | Refer to Kubernetes API documentation for fields of `metadata`. |  |  |
 | `items` _[KDexHost](#kdexhost) array_ |  |  |  |
-
-
-#### KDexHostPackageReferences
-
-
-
-KDexHostPackageReferences is the Schema for the kdexhostpackagereferences API
-
-KDexHostPackageReferences is the resource used to collect and drive the build and packaging of the complete set of npm
-modules referenced by all the resources associated with a given KDexHost. This resource is internally generated and
-managed and not meant for end users.
-
-
-
-_Appears in:_
-- [KDexHostPackageReferencesList](#kdexhostpackagereferenceslist)
-
-| Field | Description | Default | Validation |
-| --- | --- | --- | --- |
-| `apiVersion` _string_ | `kdex.dev/v1alpha1` | | |
-| `kind` _string_ | `KDexHostPackageReferences` | | |
-| `metadata` _[ObjectMeta](https://kubernetes.io/docs/reference/generated/kubernetes-api/v/#objectmeta-v1-meta)_ | Refer to Kubernetes API documentation for fields of `metadata`. |  | Optional: \{\} <br /> |
-| `spec` _[KDexHostPackageReferencesSpec](#kdexhostpackagereferencesspec)_ | spec defines the desired state of KDexHostPackageReferences |  |  |
-
-
-#### KDexHostPackageReferencesList
-
-
-
-KDexHostPackageReferencesList contains a list of KDexHostPackageReferences
-
-
-
-
-
-| Field | Description | Default | Validation |
-| --- | --- | --- | --- |
-| `apiVersion` _string_ | `kdex.dev/v1alpha1` | | |
-| `kind` _string_ | `KDexHostPackageReferencesList` | | |
-| `metadata` _[ListMeta](https://kubernetes.io/docs/reference/generated/kubernetes-api/v/#listmeta-v1-meta)_ | Refer to Kubernetes API documentation for fields of `metadata`. |  |  |
-| `items` _[KDexHostPackageReferences](#kdexhostpackagereferences) array_ |  |  |  |
-
-
-#### KDexHostPackageReferencesSpec
-
-
-
-KDexHostPackageReferencesSpec defines the desired state of KDexHostPackageReferences
-
-
-
-_Appears in:_
-- [KDexInternalPackageReferences](#kdexinternalpackagereferences)
-
-| Field | Description | Default | Validation |
-| --- | --- | --- | --- |
-| `packageReferences` _[PackageReference](#packagereference) array_ |  |  | MinItems: 1 <br /> |
 
 
 #### KDexHostSpec
@@ -666,7 +609,7 @@ _Appears in:_
 KDexInternalHost is the Schema for the kdexinternalhosts API
 
 A KDexInternalHost is the resource used to instantiate and manage a unique controller focused on a single KDexHost
-resource. This focused controller serves to aggregate the host specific resources, primarily KDexInternalPageBindings but
+resource. This focused controller serves to aggregate the host specific resources, primarily KDexPageBindings but
 also as the main web server handling page rendering and page serving. In order to isolate the resources consumed by
 those operations from other hosts a unique controller is necessary. This resource is internally generated and managed
 and not meant for end users.
@@ -700,6 +643,63 @@ KDexInternalHostList contains a list of KDexInternalHost
 | `kind` _string_ | `KDexInternalHostList` | | |
 | `metadata` _[ListMeta](https://kubernetes.io/docs/reference/generated/kubernetes-api/v/#listmeta-v1-meta)_ | Refer to Kubernetes API documentation for fields of `metadata`. |  |  |
 | `items` _[KDexInternalHost](#kdexinternalhost) array_ |  |  |  |
+
+
+#### KDexInternalPackageReferences
+
+
+
+KDexInternalPackageReferences is the Schema for the kdexinternalpackagereferences API
+
+KDexInternalPackageReferences is the resource used to collect and drive the build and packaging of the complete set of npm
+modules referenced by all the resources associated with a given KDexHost. This resource is internally generated and
+managed and not meant for end users.
+
+
+
+_Appears in:_
+- [KDexInternalPackageReferencesList](#kdexinternalpackagereferenceslist)
+
+| Field | Description | Default | Validation |
+| --- | --- | --- | --- |
+| `apiVersion` _string_ | `kdex.dev/v1alpha1` | | |
+| `kind` _string_ | `KDexInternalPackageReferences` | | |
+| `metadata` _[ObjectMeta](https://kubernetes.io/docs/reference/generated/kubernetes-api/v/#objectmeta-v1-meta)_ | Refer to Kubernetes API documentation for fields of `metadata`. |  | Optional: \{\} <br /> |
+| `spec` _[KDexInternalPackageReferencesSpec](#kdexinternalpackagereferencesspec)_ | spec defines the desired state of KDexInternalPackageReferences |  |  |
+
+
+#### KDexInternalPackageReferencesList
+
+
+
+KDexInternalPackageReferencesList contains a list of KDexInternalPackageReferences
+
+
+
+
+
+| Field | Description | Default | Validation |
+| --- | --- | --- | --- |
+| `apiVersion` _string_ | `kdex.dev/v1alpha1` | | |
+| `kind` _string_ | `KDexInternalPackageReferencesList` | | |
+| `metadata` _[ListMeta](https://kubernetes.io/docs/reference/generated/kubernetes-api/v/#listmeta-v1-meta)_ | Refer to Kubernetes API documentation for fields of `metadata`. |  |  |
+| `items` _[KDexInternalPackageReferences](#kdexinternalpackagereferences) array_ |  |  |  |
+
+
+#### KDexInternalPackageReferencesSpec
+
+
+
+KDexInternalPackageReferencesSpec defines the desired state of KDexInternalPackageReferences
+
+
+
+_Appears in:_
+- [KDexInternalPackageReferences](#kdexinternalpackagereferences)
+
+| Field | Description | Default | Validation |
+| --- | --- | --- | --- |
+| `packageReferences` _[PackageReference](#packagereference) array_ |  |  | MinItems: 1 <br /> |
 
 
 #### KDexInternalPageBinding
@@ -760,11 +760,12 @@ _Appears in:_
 | `overrideHeaderRef` _[KDexObjectReference](#kdexobjectreference)_ | overrideHeaderRef is an optional reference to a KDexPageHeader resource. If not specified, the header from the archetype will be used. |  | Optional: \{\} <br /> |
 | `overrideMainNavigationRef` _[KDexObjectReference](#kdexobjectreference)_ | overrideMainNavigationRef is an optional reference to a KDexPageNavigation resource. If not specified, the main navigation from the archetype will be used. |  | Optional: \{\} <br /> |
 | `pageArchetypeRef` _[KDexObjectReference](#kdexobjectreference)_ | pageArchetypeRef is a reference to the KDexPageArchetype that this binding is for. |  | Required: \{\} <br /> |
-| `parentPageRef` _[LocalObjectReference](https://kubernetes.io/docs/reference/generated/kubernetes-api/v/#localobjectreference-v1-core)_ | parentPageRef is a reference to the KDexInternalPageBinding bellow which this page will appear in the main navigation. If not set, the page will be placed in the top level of the navigation. |  | Optional: \{\} <br /> |
+| `parentPageRef` _[LocalObjectReference](https://kubernetes.io/docs/reference/generated/kubernetes-api/v/#localobjectreference-v1-core)_ | parentPageRef is a reference to the KDexPageBinding bellow which this page will appear in the main navigation. If not set, the page will be placed in the top level of the navigation. |  | Optional: \{\} <br /> |
 | `basePath` _string_ | basePath is the shortest path by which the page may be accessed. It must not contain path parameters. This path will be used in site navigation. This path is subject to being prefixed for localization by `/\{l10n\}` and will be when the user selects a non-default language. |  | Pattern: `^/` <br />Required: \{\} <br /> |
 | `patternPath` _string_ | patternPath, which must be prefixed by BasePath, is an extension of basePath that adds pattern matching as defined by https://pkg.go.dev/net/http#hdr-Patterns-ServeMux. This path is subject to being prefixed for localization by `/\{l10n\}` such as when the user selects a non-default language. |  | Optional: \{\} <br /> |
 | `scriptLibraryRef` _[KDexObjectReference](#kdexobjectreference)_ | scriptLibraryRef is an optional reference to a KDexScriptLibrary resource. |  | Optional: \{\} <br /> |
 | `packageReferences` _[PackageReference](#packagereference) array_ | packageReferences are the references to the packages that are used by this binding. |  | Optional: \{\} <br /> |
+| `requiredBackends` _[KDexObjectReference](#kdexobjectreference) array_ | requiredBackends is a set of references to KDexApp or KDexScriptLibrary resources that specify a backend. |  | Optional: \{\} <br /> |
 | `scripts` _[ScriptDef](#scriptdef) array_ | scripts is a set of script references. They may contain URLs that point to resources hosted at some public address, npm module references or they may contain tag contents. |  | MaxItems: 64 <br />Optional: \{\} <br /> |
 
 
@@ -821,7 +822,7 @@ _Appears in:_
 - [KDexHostSpec](#kdexhostspec)
 - [KDexInternalPageBindingSpec](#kdexinternalpagebindingspec)
 - [KDexPageArchetypeSpec](#kdexpagearchetypespec)
-- [KDexInternalPageBindingSpec](#kdexpagebindingspec)
+- [KDexPageBindingSpec](#kdexpagebindingspec)
 - [KDexPageFooterSpec](#kdexpagefooterspec)
 - [KDexPageHeaderSpec](#kdexpageheaderspec)
 - [KDexPageNavigationSpec](#kdexpagenavigationspec)
@@ -842,7 +843,7 @@ _Appears in:_
 
 KDexPageArchetype is the Schema for the kdexpagearchetypes API
 
-A KDexPageArchetype defines a reusable archetype from which web pages can be derived. When creating a KDexInternalPageBinding
+A KDexPageArchetype defines a reusable archetype from which web pages can be derived. When creating a KDexPageBinding
 (i.e. a web page) a developer states which archetype is to be used. This allows the structure to be decoupled from
 the content.
 
@@ -899,34 +900,34 @@ _Appears in:_
 | `scriptLibraryRef` _[KDexObjectReference](#kdexobjectreference)_ | scriptLibraryRef is an optional reference to a KDexScriptLibrary resource. |  | Optional: \{\} <br /> |
 
 
-#### KDexInternalPageBinding
+#### KDexPageBinding
 
 
 
-KDexInternalPageBinding is the Schema for the kdexpagebindings API
+KDexPageBinding is the Schema for the kdexpagebindings API
 
-A KDexInternalPageBinding defines a web page under a KDexHost. It brings together various reusable components like
+A KDexPageBinding defines a web page under a KDexHost. It brings together various reusable components like
 KDexPageArchetype, KDexPageFooter, KDexPageHeader, KDexPageNavigation, KDexScriptLibrary, KDexTheme and content
 components like raw HTML or KDexApps and KDexTranslations to produce internationalized, rendered HTML pages.
 
 
 
 _Appears in:_
-- [KDexInternalPageBindingList](#kdexpagebindinglist)
+- [KDexPageBindingList](#kdexpagebindinglist)
 
 | Field | Description | Default | Validation |
 | --- | --- | --- | --- |
 | `apiVersion` _string_ | `kdex.dev/v1alpha1` | | |
-| `kind` _string_ | `KDexInternalPageBinding` | | |
+| `kind` _string_ | `KDexPageBinding` | | |
 | `metadata` _[ObjectMeta](https://kubernetes.io/docs/reference/generated/kubernetes-api/v/#objectmeta-v1-meta)_ | Refer to Kubernetes API documentation for fields of `metadata`. |  | Optional: \{\} <br /> |
-| `spec` _[KDexInternalPageBindingSpec](#kdexpagebindingspec)_ | spec defines the desired state of KDexInternalPageBinding |  | Required: \{\} <br /> |
+| `spec` _[KDexPageBindingSpec](#kdexpagebindingspec)_ | spec defines the desired state of KDexPageBinding |  | Required: \{\} <br /> |
 
 
-#### KDexInternalPageBindingList
+#### KDexPageBindingList
 
 
 
-KDexInternalPageBindingList contains a list of KDexInternalPageBinding
+KDexPageBindingList contains a list of KDexPageBinding
 
 
 
@@ -935,22 +936,22 @@ KDexInternalPageBindingList contains a list of KDexInternalPageBinding
 | Field | Description | Default | Validation |
 | --- | --- | --- | --- |
 | `apiVersion` _string_ | `kdex.dev/v1alpha1` | | |
-| `kind` _string_ | `KDexInternalPageBindingList` | | |
+| `kind` _string_ | `KDexPageBindingList` | | |
 | `metadata` _[ListMeta](https://kubernetes.io/docs/reference/generated/kubernetes-api/v/#listmeta-v1-meta)_ | Refer to Kubernetes API documentation for fields of `metadata`. |  |  |
-| `items` _[KDexInternalPageBinding](#kdexpagebinding) array_ |  |  |  |
+| `items` _[KDexPageBinding](#kdexpagebinding) array_ |  |  |  |
 
 
-#### KDexInternalPageBindingSpec
+#### KDexPageBindingSpec
 
 
 
-KDexInternalPageBindingSpec defines the desired state of KDexInternalPageBinding
+KDexPageBindingSpec defines the desired state of KDexPageBinding
 
 
 
 _Appears in:_
 - [KDexInternalPageBindingSpec](#kdexinternalpagebindingspec)
-- [KDexInternalPageBinding](#kdexpagebinding)
+- [KDexPageBinding](#kdexpagebinding)
 
 | Field | Description | Default | Validation |
 | --- | --- | --- | --- |
@@ -962,7 +963,7 @@ _Appears in:_
 | `overrideHeaderRef` _[KDexObjectReference](#kdexobjectreference)_ | overrideHeaderRef is an optional reference to a KDexPageHeader resource. If not specified, the header from the archetype will be used. |  | Optional: \{\} <br /> |
 | `overrideMainNavigationRef` _[KDexObjectReference](#kdexobjectreference)_ | overrideMainNavigationRef is an optional reference to a KDexPageNavigation resource. If not specified, the main navigation from the archetype will be used. |  | Optional: \{\} <br /> |
 | `pageArchetypeRef` _[KDexObjectReference](#kdexobjectreference)_ | pageArchetypeRef is a reference to the KDexPageArchetype that this binding is for. |  | Required: \{\} <br /> |
-| `parentPageRef` _[LocalObjectReference](https://kubernetes.io/docs/reference/generated/kubernetes-api/v/#localobjectreference-v1-core)_ | parentPageRef is a reference to the KDexInternalPageBinding bellow which this page will appear in the main navigation. If not set, the page will be placed in the top level of the navigation. |  | Optional: \{\} <br /> |
+| `parentPageRef` _[LocalObjectReference](https://kubernetes.io/docs/reference/generated/kubernetes-api/v/#localobjectreference-v1-core)_ | parentPageRef is a reference to the KDexPageBinding bellow which this page will appear in the main navigation. If not set, the page will be placed in the top level of the navigation. |  | Optional: \{\} <br /> |
 | `basePath` _string_ | basePath is the shortest path by which the page may be accessed. It must not contain path parameters. This path will be used in site navigation. This path is subject to being prefixed for localization by `/\{l10n\}` and will be when the user selects a non-default language. |  | Pattern: `^/` <br />Required: \{\} <br /> |
 | `patternPath` _string_ | patternPath, which must be prefixed by BasePath, is an extension of basePath that adds pattern matching as defined by https://pkg.go.dev/net/http#hdr-Patterns-ServeMux. This path is subject to being prefixed for localization by `/\{l10n\}` such as when the user selects a non-default language. |  | Optional: \{\} <br /> |
 | `scriptLibraryRef` _[KDexObjectReference](#kdexobjectreference)_ | scriptLibraryRef is an optional reference to a KDexScriptLibrary resource. |  | Optional: \{\} <br /> |
@@ -974,7 +975,7 @@ _Appears in:_
 
 KDexPageFooter is the Schema for the kdexpagefooters API
 
-A KDexPageFooter is a reusable footer component for composing KDexInternalPageBindings. It can specify a content template and
+A KDexPageFooter is a reusable footer component for composing KDexPageBindings. It can specify a content template and
 an associated KDexScriptLibrary for driving imperative logic that might be necessary to implement the footer.
 
 
@@ -1032,7 +1033,7 @@ _Appears in:_
 
 KDexPageHeader is the Schema for the kdexpageheaders API
 
-A KDexPageHeader is a reusable header component for composing KDexInternalPageBindings. It can specify a content template and
+A KDexPageHeader is a reusable header component for composing KDexPageBindings. It can specify a content template and
 an associated KDexScriptLibrary for driving imperative logic that might be necessary to implement the header.
 
 
@@ -1090,7 +1091,7 @@ _Appears in:_
 
 KDexPageNavigation is the Schema for the kdexpagenavigations API
 
-A KDexPageNavigation is a reusable navigation component for composing KDexInternalPageBindings. It can specify a content
+A KDexPageNavigation is a reusable navigation component for composing KDexPageBindings. It can specify a content
 template and an associated KDexScriptLibrary for driving imperative logic that might be necessary to implement the
 navigation.
 
@@ -1149,7 +1150,7 @@ _Appears in:_
 
 KDexScriptLibrary is the Schema for the kdexscriptlibraries API
 
-A KDexScriptLibrary is a reusable collection of JavaScript for powering the imperative aspects of KDexInternalPageBindings.
+A KDexScriptLibrary is a reusable collection of JavaScript for powering the imperative aspects of KDexPageBindings.
 Most other components of the model are able to reference KDexScriptLibrary as well in order to encapsulate component
 specific logic.
 
@@ -1217,7 +1218,7 @@ _Appears in:_
 KDexTheme is the Schema for the kdexthemes API
 
 A KDexTheme is a reusable collection of design styles and associated digital assets necessary for providing the
-visual aspects of KDexInternalPageBindings decoupling appearance from structure and content.
+visual aspects of KDexPageBindings decoupling appearance from structure and content.
 
 
 
@@ -1282,7 +1283,7 @@ _Appears in:_
 
 KDexTranslation is the Schema for the kdextranslations API
 
-KDexTranslations allow KDexInternalPageBindings to be internationalized by making translations available in as many languages
+KDexTranslations allow KDexPageBindings to be internationalized by making translations available in as many languages
 as necessary.
 
 
@@ -1364,7 +1365,7 @@ _Appears in:_
 
 _Appears in:_
 - [KDexInternalPageBindingSpec](#kdexinternalpagebindingspec)
-- [KDexInternalPageBindingSpec](#kdexpagebindingspec)
+- [KDexPageBindingSpec](#kdexpagebindingspec)
 
 | Field | Description | Default | Validation |
 | --- | --- | --- | --- |
@@ -1384,7 +1385,7 @@ to authenticate to the npm registry. That package must contain an ES module for 
 
 _Appears in:_
 - [KDexAppSpec](#kdexappspec)
-- [KDexHostPackageReferencesSpec](#kdexhostpackagereferencesspec)
+- [KDexInternalPackageReferencesSpec](#kdexinternalpackagereferencesspec)
 - [KDexInternalPageBindingSpec](#kdexinternalpagebindingspec)
 - [KDexScriptLibrarySpec](#kdexscriptlibraryspec)
 
@@ -1406,7 +1407,7 @@ _Appears in:_
 
 _Appears in:_
 - [KDexInternalPageBindingSpec](#kdexinternalpagebindingspec)
-- [KDexInternalPageBindingSpec](#kdexpagebindingspec)
+- [KDexPageBindingSpec](#kdexpagebindingspec)
 
 | Field | Description | Default | Validation |
 | --- | --- | --- | --- |

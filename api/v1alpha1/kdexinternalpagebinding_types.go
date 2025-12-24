@@ -30,6 +30,12 @@ type KDexInternalPageBindingSpec struct {
 	// +kubebuilder:validation:Optional
 	PackageReferences []PackageReference `json:"packageReferences,omitempty" protobuf:"bytes,2,rep,name=packageReferences"`
 
+	// requiredBackends is a set of references to KDexApp or KDexScriptLibrary resources that specify a backend.
+	// +listType=map
+	// +listMapKey=name
+	// +kubebuilder:validation:Optional
+	RequiredBackends []KDexObjectReference `json:"requiredBackends,omitempty" protobuf:"bytes,4,rep,name=requiredBackends"`
+
 	// scripts is a set of script references. They may contain URLs that point to resources hosted at some public address, npm module references or they may contain tag contents.
 	// +kubebuilder:validation:MaxItems=64
 	// +kubebuilder:validation:Optional
