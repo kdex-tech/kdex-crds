@@ -20,6 +20,17 @@ import (
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
 
+// KDexInternalHostSpec defines the desired state of KDexInternalHost
+type KDexInternalHostSpec struct {
+	KDexHostSpec `json:",inline" protobuf:"bytes,1,req,name=hostSpec"`
+
+	// requiredBackends is a set of references to KDexApp or KDexScriptLibrary resources that specify a backend.
+	// +listType=map
+	// +listMapKey=name
+	// +kubebuilder:validation:Optional
+	RequiredBackends []KDexObjectReference `json:"requiredBackends,omitempty" protobuf:"bytes,2,rep,name=requiredBackends"`
+}
+
 // +kubebuilder:object:root=true
 // +kubebuilder:resource:scope=Namespaced,shortName=kdex-ih
 // +kubebuilder:subresource:status
@@ -46,7 +57,7 @@ type KDexInternalHost struct {
 
 	// spec defines the desired state of KDexInternalHost
 	// +kubebuilder:validation:Required
-	Spec KDexHostSpec `json:"spec"`
+	Spec KDexInternalHostSpec `json:"spec"`
 }
 
 // +kubebuilder:object:root=true

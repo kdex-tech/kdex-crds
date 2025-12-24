@@ -148,6 +148,34 @@ spec:
                   zero and not specified. Defaults to 1.
                 format: int32
                 type: integer
+              requiredBackends:
+                description: requiredBackends is a set of references to KDexApp or
+                  KDexScriptLibrary resources that specify a backend.
+                items:
+                  properties:
+                    kind:
+                      description: Kind is the type of resource being referenced
+                      type: string
+                    name:
+                      description: Name of the referent.
+                      type: string
+                    namespace:
+                      description: |-
+                        Namespace, if set, causes the lookup for the namespace scoped Kind of the referent to use the specified
+                        namespace. If not set, the namespace of the resource will be used to lookup the namespace scoped Kind of the
+                        referent.
+                        If the referring resource is cluster scoped, this field is ignored.
+                        Defaulted to nil.
+                      type: string
+                  required:
+                  - kind
+                  - name
+                  type: object
+                  x-kubernetes-map-type: atomic
+                type: array
+                x-kubernetes-list-map-keys:
+                - name
+                x-kubernetes-list-type: map
               resources:
                 description: |-
                   resources defines the compute resources required by the container.
