@@ -10,7 +10,7 @@ erDiagram
         string packageReference
     }
 
-    KDexHost ||--o{ KDexPageBinding : "hosts"
+    KDexHost ||--o{ KDexInternalPageBinding : "hosts"
     KDexHost ||--o{ KDexScriptLibrary : "script library"
     KDexHost ||--o{ KDexTheme : "default theme"
     KDexHost ||--o{ KDexTranslation : "hosts"
@@ -22,7 +22,7 @@ erDiagram
         string organization
     }
 
-    KDexPageArchetype ||--o{ KDexPageBinding : "archetype"
+    KDexPageArchetype ||--o{ KDexInternalPageBinding : "archetype"
     KDexPageArchetype ||--o{ KDexPageFooter : "default footer"
     KDexPageArchetype ||--o{ KDexPageHeader : "default header"
     KDexPageArchetype ||--o{ KDexPageNavigation : "default navigation"
@@ -33,13 +33,13 @@ erDiagram
         string content
     }
 
-    KDexPageBinding ||--o{ KDexApp : "uses"
-    KDexPageBinding ||--o{ KDexPageBinding : "parent page"
-    KDexPageBinding ||--o{ KDexPageFooter : "override footer"
-    KDexPageBinding ||--o{ KDexPageHeader : "override header"
-    KDexPageBinding ||--o{ KDexPageNavigation : "override navigation"
-    KDexPageBinding ||--o{ KDexScriptLibrary : "script library"
-    KDexPageBinding {
+    KDexInternalPageBinding ||--o{ KDexApp : "uses"
+    KDexInternalPageBinding ||--o{ KDexInternalPageBinding : "parent page"
+    KDexInternalPageBinding ||--o{ KDexPageFooter : "override footer"
+    KDexInternalPageBinding ||--o{ KDexPageHeader : "override header"
+    KDexInternalPageBinding ||--o{ KDexPageNavigation : "override navigation"
+    KDexInternalPageBinding ||--o{ KDexScriptLibrary : "script library"
+    KDexInternalPageBinding {
         string label
         string path
     }

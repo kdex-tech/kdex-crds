@@ -4,16 +4,16 @@ kind: CustomResourceDefinition
 metadata:
   annotations:
     controller-gen.kubebuilder.io/version: v0.19.0
-  name: kdexhostpackagereferences.kdex.dev
+  name: kdexinternalpackagereferences.kdex.dev
 spec:
   group: kdex.dev
   names:
-    kind: KDexHostPackageReferences
-    listKind: KDexHostPackageReferencesList
-    plural: kdexhostpackagereferences
+    kind: KDexInternalPackageReferences
+    listKind: KDexInternalPackageReferencesList
+    plural: kdexinternalpackagereferences
     shortNames:
-    - kdex-pr
-    singular: kdexhostpackagereferences
+    - kdex-ipr
+    singular: kdexinternalpackagereferences
   scope: Namespaced
   versions:
   - additionalPrinterColumns:
@@ -25,9 +25,9 @@ spec:
     schema:
       openAPIV3Schema:
         description: |-
-          KDexHostPackageReferences is the Schema for the kdexhostpackagereferences API
+          KDexInternalPackageReferences is the Schema for the kdexinternalpackagereferences API
 
-          KDexHostPackageReferences is the resource used to collect and drive the build and packaging of the complete set of npm
+          KDexInternalPackageReferences is the resource used to collect and drive the build and packaging of the complete set of npm
           modules referenced by all the resources associated with a given KDexHost. This resource is internally generated and
           managed and not meant for end users.
         properties:
@@ -49,7 +49,7 @@ spec:
           metadata:
             type: object
           spec:
-            description: spec defines the desired state of KDexHostPackageReferences
+            description: spec defines the desired state of KDexInternalPackageReferences
             properties:
               packageReferences:
                 items:

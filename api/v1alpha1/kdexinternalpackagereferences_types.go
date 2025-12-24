@@ -21,17 +21,17 @@ import (
 )
 
 // +kubebuilder:object:root=true
-// +kubebuilder:resource:scope=Namespaced,shortName=kdex-pr
+// +kubebuilder:resource:scope=Namespaced,shortName=kdex-ipr
 // +kubebuilder:subresource:status
 
-// KDexHostPackageReferences is the Schema for the kdexhostpackagereferences API
+// KDexInternalPackageReferences is the Schema for the kdexinternalpackagereferences API
 //
-// KDexHostPackageReferences is the resource used to collect and drive the build and packaging of the complete set of npm
+// KDexInternalPackageReferences is the resource used to collect and drive the build and packaging of the complete set of npm
 // modules referenced by all the resources associated with a given KDexHost. This resource is internally generated and
 // managed and not meant for end users.
 //
 // +kubebuilder:printcolumn:name="Ready",type=string,JSONPath=`.status.conditions[?(@.type=="Ready")].status`,description="The state of the Ready condition"
-type KDexHostPackageReferences struct {
+type KDexInternalPackageReferences struct {
 	metav1.TypeMeta `json:",inline"`
 
 	// metadata is a standard object metadata
@@ -42,22 +42,22 @@ type KDexHostPackageReferences struct {
 	// +kubebuilder:validation:Optional
 	Status KDexObjectStatus `json:"status,omitempty,omitzero"`
 
-	// spec defines the desired state of KDexHostPackageReferences
+	// spec defines the desired state of KDexInternalPackageReferences
 	// +required
-	Spec KDexHostPackageReferencesSpec `json:"spec"`
+	Spec KDexInternalPackageReferencesSpec `json:"spec"`
 }
 
 // +kubebuilder:object:root=true
 
-// KDexHostPackageReferencesList contains a list of KDexHostPackageReferences
-type KDexHostPackageReferencesList struct {
+// KDexInternalPackageReferencesList contains a list of KDexInternalPackageReferences
+type KDexInternalPackageReferencesList struct {
 	metav1.TypeMeta `json:",inline"`
 	metav1.ListMeta `json:"metadata,omitzero"`
-	Items           []KDexHostPackageReferences `json:"items"`
+	Items           []KDexInternalPackageReferences `json:"items"`
 }
 
-// KDexHostPackageReferencesSpec defines the desired state of KDexHostPackageReferences
-type KDexHostPackageReferencesSpec struct {
+// KDexInternalPackageReferencesSpec defines the desired state of KDexInternalPackageReferences
+type KDexInternalPackageReferencesSpec struct {
 	// +listType=map
 	// +listMapKey=name
 	// +kubebuilder:validation:MinItems=1
@@ -65,5 +65,5 @@ type KDexHostPackageReferencesSpec struct {
 }
 
 func init() {
-	SchemeBuilder.Register(&KDexHostPackageReferences{}, &KDexHostPackageReferencesList{})
+	SchemeBuilder.Register(&KDexInternalPackageReferences{}, &KDexInternalPackageReferencesList{})
 }
