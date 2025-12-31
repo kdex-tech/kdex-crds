@@ -30,13 +30,11 @@ linters:
     generated: lax
     rules:
       - linters:
-          - lll
-        path: api/*
-      - linters:
           - dupl
           - lll
-        path: internal/*
+        path: ./*
     paths:
+      - test_fixtures$
       - third_party$
       - builtin$
       - examples$

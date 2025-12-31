@@ -64,16 +64,24 @@ docs: generate crd-ref-docs ## Generate CRD reference documentation.
 	$(CRD_REF_DOCS) --source-path=api/v1alpha1 --config=crd-ref-docs-config.yaml --renderer=markdown --output-path=CRD_REFERENCE.md
 
 .PHONY: lint
-lint: golangci-lint ## Run golangci-lint linter
+lint: golangci-lint modernizer ## Run golangci-lint linter
 	$(GOLANGCI_LINT) run
 
 .PHONY: lint-fix
-lint-fix: golangci-lint ## Run golangci-lint linter and perform fixes
+lint-fix: golangci-lint modernizer-fix ## Run golangci-lint linter and perform fixes
 	$(GOLANGCI_LINT) run --fix
 
 .PHONY: lint-config
 lint-config: golangci-lint ## Verify golangci-lint linter configuration
 	$(GOLANGCI_LINT) config verify
+
+.PHONY: modernizer
+modernizer: ## Run modernizer
+	go run golang.org/x/tools/go/analysis/passes/modernize/cmd/modernize@latest -test ./...
+
+.PHONY: modernizer-fix
+modernizer-fix: ## Run modernizer and perform fixes
+	go run golang.org/x/tools/go/analysis/passes/modernize/cmd/modernize@latest -fix ./...
 
 ##@ Deployment
 
@@ -114,10 +122,14 @@ CRD_REF_DOCS ?= $(LOCALBIN)/crd-ref-docs
 GOLANGCI_LINT = $(LOCALBIN)/golangci-lint
 
 ## Tool Versions
+#https://github.com/kubernetes-sigs/kustomize/releases/latest
 KUSTOMIZE_VERSION ?= v5.8.0
-CONTROLLER_TOOLS_VERSION ?= v0.19.0
+# https://github.com/kubernetes-sigs/controller-tools/releases/latest
+CONTROLLER_TOOLS_VERSION ?= v0.20.0
+# https://github.com/elastic/crd-ref-docs/releases/latest
 CRD_REF_DOCS_VERSION ?= v0.2.0
-GOLANGCI_LINT_VERSION ?= v2.6.1
+# https://github.com/golangci/golangci-lint/releases/latest
+GOLANGCI_LINT_VERSION ?= v2.7.2
 
 .PHONY: kustomize
 kustomize: $(KUSTOMIZE) ## Download kustomize locally if necessary.
