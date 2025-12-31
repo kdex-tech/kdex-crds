@@ -58,8 +58,8 @@ func (c *RegistryConfiguration) EncodeAuthorization() string {
 	}
 
 	if c.AuthData.Username != "" && c.AuthData.Password != "" {
-		return "Basic " + base64.StdEncoding.EncodeToString([]byte(
-			fmt.Sprintf("%s:%s", c.AuthData.Username, c.AuthData.Password)),
+		return "Basic " + base64.StdEncoding.EncodeToString(
+			fmt.Appendf(nil, "%s:%s", c.AuthData.Username, c.AuthData.Password),
 		)
 	}
 

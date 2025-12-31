@@ -15,7 +15,7 @@ type PageEntry struct {
 	Icon     string            `json:"icon,omitempty" yaml:"icon,omitempty"`
 	Label    string            `json:"label" yaml:"label"`
 	Name     string            `json:"name" yaml:"name"`
-	Weight   resource.Quantity `json:"weight,omitempty" yaml:"weight,omitempty"`
+	Weight   resource.Quantity `json:"weight" yaml:"weight,omitempty"`
 }
 
 type Renderer struct {

@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"fmt"
 	"html/template"
+	"maps"
 	"reflect"
 	"sort"
 	"time"
@@ -30,9 +31,7 @@ func (r *Renderer) TemplateData() (TemplateData, error) {
 
 	pageMap := map[string]any{}
 	if r.PageMap != nil {
-		for k, v := range r.PageMap {
-			pageMap[k] = v
-		}
+		maps.Copy(pageMap, r.PageMap)
 	}
 
 	templateData := TemplateData{
@@ -158,7 +157,7 @@ func (r *Renderer) RenderOne(
 
 			l := l2.Len()
 			nl := make([]any, l)
-			for i := 0; i < l; i++ {
+			for i := range l {
 				nl[i] = l2.Index(i).Interface()
 			}
 
@@ -184,7 +183,7 @@ func (r *Renderer) RenderOne(
 					return false
 				}
 
-				if f1.Type() == reflect.TypeOf(resource.Quantity{}) {
+				if f1.Type() == reflect.TypeFor[resource.Quantity]() {
 					q1 := f1.Interface().(resource.Quantity)
 					q2 := f2.Interface().(resource.Quantity)
 					return q1.Cmp(q2) < 0
