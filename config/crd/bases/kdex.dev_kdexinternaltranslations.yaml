@@ -11,6 +11,8 @@ spec:
     kind: KDexInternalTranslation
     listKind: KDexInternalTranslationList
     plural: kdexinternaltranslations
+    shortNames:
+    - kdex-i-t
     singular: kdexinternaltranslation
   scope: Namespaced
   versions:

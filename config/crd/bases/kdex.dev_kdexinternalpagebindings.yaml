@@ -11,6 +11,8 @@ spec:
     kind: KDexInternalPageBinding
     listKind: KDexInternalPageBindingList
     plural: kdexinternalpagebindings
+    shortNames:
+    - kdex-i-pb
     singular: kdexinternalpagebinding
   scope: Namespaced
   versions:

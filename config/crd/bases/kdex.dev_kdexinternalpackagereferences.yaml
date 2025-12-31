@@ -12,7 +12,7 @@ spec:
     listKind: KDexInternalPackageReferencesList
     plural: kdexinternalpackagereferences
     shortNames:
-    - kdex-ipr
+    - kdex-i-pr
     singular: kdexinternalpackagereferences
   scope: Namespaced
   versions:

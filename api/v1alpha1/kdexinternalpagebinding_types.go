@@ -43,6 +43,7 @@ type KDexInternalPageBindingSpec struct {
 }
 
 // +kubebuilder:object:root=true
+// +kubebuilder:resource:scope=Namespaced,shortName=kdex-i-pb
 // +kubebuilder:subresource:status
 
 // KDexInternalPageBinding is the Schema for the kdexinternalpagebindings API

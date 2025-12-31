@@ -12,7 +12,7 @@ spec:
     listKind: KDexInternalHostList
     plural: kdexinternalhosts
     shortNames:
-    - kdex-ih
+    - kdex-i-h
     singular: kdexinternalhost
   scope: Namespaced
   versions:
