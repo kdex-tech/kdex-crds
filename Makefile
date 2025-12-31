@@ -64,7 +64,7 @@ docs: generate crd-ref-docs ## Generate CRD reference documentation.
 	$(CRD_REF_DOCS) --source-path=api/v1alpha1 --config=crd-ref-docs-config.yaml --renderer=markdown --output-path=CRD_REFERENCE.md
 
 .PHONY: lint
-lint: golangci-lint modernizer ## Run golangci-lint linter
+lint: golangci-lint ## Run golangci-lint linter
 	$(GOLANGCI_LINT) run
 
 .PHONY: lint-fix
