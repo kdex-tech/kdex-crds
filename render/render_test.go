@@ -50,7 +50,7 @@ func TestRenderAll(t *testing.T) {
 			"main": "main-nav",
 		},
 		Organization: "Test Inc.",
-		PageMap: map[string]interface{}{
+		PageMap: map[string]any{
 			"home": PageEntry{
 				BasePath: "/",
 				Href:     "/",
@@ -178,7 +178,7 @@ func TestRenderer_RenderOne(t *testing.T) {
 			templateName:    "test",
 			templateContent: `{{ .PageMap | values | sortBy "Weight" true | extract "Label" | join "," }}`,
 			data: TemplateData{
-				PageMap: map[string]interface{}{
+				PageMap: map[string]any{
 					"home": PageEntry{
 						Label:  "Home",
 						Weight: resource.MustParse("0m"),

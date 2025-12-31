@@ -26,7 +26,7 @@ type PackageInfo struct {
 type PackageJSON struct {
 	Author               map[string]string `json:"author"`
 	Browser              string            `json:"browser"`
-	Bugs                 interface{}       `json:"bugs"`
+	Bugs                 any               `json:"bugs"`
 	BundleDependencies   []string          `json:"bundleDependencies,omitempty"`
 	Dependencies         map[string]string `json:"dependencies,omitempty"`
 	Description          string            `json:"description"`

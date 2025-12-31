@@ -36,7 +36,7 @@ func init() {
 		Meta:            `<meta charset="UTF-8">`,
 		Organization:    "KDex Tech Inc.",
 		BasePath:        "/one",
-		PageMap: map[string]interface{}{
+		PageMap: map[string]any{
 			"One": PageEntry{
 				BasePath: "/one",
 				Href:     "/one",
@@ -55,7 +55,7 @@ func init() {
 			},
 			"Three": PageEntry{
 				BasePath: "/three",
-				Children: &map[string]interface{}{
+				Children: &map[string]any{
 					"Four": PageEntry{
 						BasePath: "/four",
 						Href:     "/four",

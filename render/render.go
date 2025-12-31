@@ -28,7 +28,7 @@ func (r *Renderer) TemplateData() (TemplateData, error) {
 		date = time.Now()
 	}
 
-	pageMap := map[string]interface{}{}
+	pageMap := map[string]any{}
 	if r.PageMap != nil {
 		for k, v := range r.PageMap {
 			pageMap[k] = v
@@ -126,8 +126,8 @@ func (r *Renderer) RenderOne(
 	data TemplateData,
 ) (string, error) {
 	funcs := sprig.FuncMap()
-	funcs["extract"] = func(key string, v []interface{}) ([]interface{}, error) {
-		res := []interface{}{}
+	funcs["extract"] = func(key string, v []any) ([]any, error) {
+		res := []any{}
 		for _, item := range v {
 			itemValue := reflect.ValueOf(item)
 			if itemValue.Kind() == reflect.Ptr {
@@ -144,20 +144,20 @@ func (r *Renderer) RenderOne(
 		}
 		return res, nil
 	}
-	funcs["l10n"] = func(key string, args ...interface{}) string {
+	funcs["l10n"] = func(key string, args ...any) string {
 		if r.MessagePrinter == nil {
 			return key
 		}
 		return r.MessagePrinter.Sprintf(key, args...)
 	}
-	funcs["sortBy"] = func(field string, ascending bool, v interface{}) ([]interface{}, error) {
+	funcs["sortBy"] = func(field string, ascending bool, v any) ([]any, error) {
 		tp := reflect.TypeOf(v).Kind()
 		switch tp {
 		case reflect.Slice, reflect.Array:
 			l2 := reflect.ValueOf(v)
 
 			l := l2.Len()
-			nl := make([]interface{}, l)
+			nl := make([]any, l)
 			for i := 0; i < l; i++ {
 				nl[i] = l2.Index(i).Interface()
 			}

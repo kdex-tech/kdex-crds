@@ -17,7 +17,7 @@ func TestNew(t *testing.T) {
 	type message struct {
 		level         int
 		msg           string
-		keysAndValues []interface{}
+		keysAndValues []any
 	}
 	tests := []struct {
 		name         string

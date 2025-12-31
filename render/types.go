@@ -9,13 +9,13 @@ import (
 )
 
 type PageEntry struct {
-	BasePath string                  `json:"basePath" yaml:"basePath"`
-	Children *map[string]interface{} `json:"children,omitempty" yaml:"children,omitempty"`
-	Href     string                  `json:"href,omitempty" yaml:"href,omitempty"`
-	Icon     string                  `json:"icon,omitempty" yaml:"icon,omitempty"`
-	Label    string                  `json:"label" yaml:"label"`
-	Name     string                  `json:"name" yaml:"name"`
-	Weight   resource.Quantity       `json:"weight,omitempty" yaml:"weight,omitempty"`
+	BasePath string            `json:"basePath" yaml:"basePath"`
+	Children *map[string]any   `json:"children,omitempty" yaml:"children,omitempty"`
+	Href     string            `json:"href,omitempty" yaml:"href,omitempty"`
+	Icon     string            `json:"icon,omitempty" yaml:"icon,omitempty"`
+	Label    string            `json:"label" yaml:"label"`
+	Name     string            `json:"name" yaml:"name"`
+	Weight   resource.Quantity `json:"weight,omitempty" yaml:"weight,omitempty"`
 }
 
 type Renderer struct {
@@ -34,7 +34,7 @@ type Renderer struct {
 	Navigations     map[string]string
 	Meta            string
 	Organization    string
-	PageMap         map[string]interface{}
+	PageMap         map[string]any
 	PatternPath     string
 	TemplateContent string
 	TemplateName    string
@@ -59,7 +59,7 @@ type TemplateData struct {
 	Navigation      map[string]template.HTML `json:"navigation" yaml:"navigation"`
 	Meta            template.HTML            `json:"meta,omitempty" yaml:"meta,omitempty"`
 	Organization    string                   `json:"organization" yaml:"organization"`
-	PageMap         map[string]interface{}   `json:"pageMap" yaml:"pageMap"`
+	PageMap         map[string]any           `json:"pageMap" yaml:"pageMap"`
 	PatternPath     string                   `json:"patternPath" yaml:"patternPath"`
 	Theme           template.HTML            `json:"theme,omitempty" yaml:"theme,omitempty"`
 	Title           string                   `json:"title" yaml:"title"`
@@ -71,5 +71,5 @@ type TemplateFuncs interface {
 	// If no value is found the key is returned. If the translation contains
 	// placeholders the arguments will be positionally interpolated into the
 	// result.
-	l10n(key string, args ...interface{}) string
+	l10n(key string, args ...any) string
 }
