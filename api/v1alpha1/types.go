@@ -489,7 +489,7 @@ type Backend struct {
 	// More info: https://kubernetes.io/docs/concepts/containers/images
 	// +kubebuilder:validation:Optional
 	// +kubebuilder:validation:MinLength=5
-	// +kubebuilder:default:="kdex-tech/kdex-themeserver:{{.Release}}"
+	// +kubebuilder:default:="kdex-tech/kdex-themeserver:latest"
 	ServerImage string `json:"serverImage,omitempty" protobuf:"bytes,5,opt,name=serverImage"`
 
 	// Policy for pulling the Backend server image. Possible values are:

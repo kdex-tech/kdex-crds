@@ -202,7 +202,7 @@ spec:
                 - message: '''kind'' must be either KDexScriptLibrary or KDexClusterScriptLibrary'
                   rule: self.kind == "KDexScriptLibrary" || self.kind == "KDexClusterScriptLibrary"
               serverImage:
-                default: kdex-tech/kdex-themeserver:{{.Release}}
+                default: kdex-tech/kdex-themeserver:latest
                 description: |-
                   serverImage is the name of Backend image.
                   More info: https://kubernetes.io/docs/concepts/containers/images
