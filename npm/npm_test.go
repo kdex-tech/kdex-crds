@@ -337,7 +337,7 @@ func TestRegistryImpl_ValidatePackage(t *testing.T) {
 			defer server.Close()
 
 			registry := npm.RegistryImpl{
-				Config: &configuration.RegistryConfiguration{
+				Config: &configuration.Registry{
 					Host:     strings.Split(server.URL, "://")[1],
 					InSecure: true,
 					AuthData: tt.authData,
@@ -367,7 +367,7 @@ func TestNewRegistry(t *testing.T) {
 		{
 			name: "no secret",
 			c: &configuration.NexusConfiguration{
-				DefaultNpmRegistry: configuration.RegistryConfiguration{
+				DefaultNpmRegistry: configuration.Registry{
 					Host: "test",
 				},
 			},
@@ -378,7 +378,7 @@ func TestNewRegistry(t *testing.T) {
 		{
 			name: "secret missing kdex.dev/npm-server-address annotation",
 			c: &configuration.NexusConfiguration{
-				DefaultNpmRegistry: configuration.RegistryConfiguration{
+				DefaultNpmRegistry: configuration.Registry{
 					Host: "test",
 				},
 			},
@@ -391,7 +391,7 @@ func TestNewRegistry(t *testing.T) {
 		{
 			name: "secret with kdex.dev/npm-server-address annotation",
 			c: &configuration.NexusConfiguration{
-				DefaultNpmRegistry: configuration.RegistryConfiguration{
+				DefaultNpmRegistry: configuration.Registry{
 					Host: "test",
 				},
 			},

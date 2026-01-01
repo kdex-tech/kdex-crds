@@ -1,4 +1,4 @@
-hostController:
+hostDefault:
   deployment:
     selector:
       matchLabels:

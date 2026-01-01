@@ -16,7 +16,7 @@ func NewRegistry(
 	secret *corev1.Secret,
 	error func(err error, msg string, keysAndValues ...any),
 ) (Registry, error) {
-	config, err := RegistryConfigurationNew(c, secret)
+	config, err := newRegistry(c, secret)
 
 	if err != nil {
 		return nil, err
@@ -68,10 +68,10 @@ func (p *PackageJSON) HasESModule() error {
 	return fmt.Errorf("package does not contain an ES module")
 }
 
-func RegistryConfigurationNew(
+func newRegistry(
 	c *configuration.NexusConfiguration,
 	secret *corev1.Secret,
-) (*configuration.RegistryConfiguration, error) {
+) (*configuration.Registry, error) {
 	if secret == nil {
 		return &c.DefaultNpmRegistry, nil
 	}
@@ -92,7 +92,7 @@ func RegistryConfigurationNew(
 		insecure = "false"
 	}
 
-	return &configuration.RegistryConfiguration{
+	return &configuration.Registry{
 		AuthData: configuration.AuthData{
 			Password: string(secret.Data["password"]),
 			Token:    string(secret.Data["token"]),

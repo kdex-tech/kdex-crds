@@ -24,7 +24,7 @@ type AuthData struct {
 	Username string `json:"username,omitempty" yaml:"username,omitempty"`
 }
 
-type HostControllerConfiguration struct {
+type HostDefault struct {
 	Deployment appsv1.DeploymentSpec `json:"deployment" yaml:"deployment"`
 	RoleRef    rbacv1.RoleRef        `json:"roleRef" yaml:"roleRef"`
 	Service    corev1.ServiceSpec    `json:"service" yaml:"service"`
@@ -37,13 +37,13 @@ type NexusConfiguration struct {
 	// +kubebuilder:validation:Optional
 	metav1.ObjectMeta `json:"metadata,omitempty,omitzero"`
 
-	DefaultImageRegistry RegistryConfiguration       `json:"defaultImageRegistry" yaml:"defaultImageRegistry"`
-	DefaultNpmRegistry   RegistryConfiguration       `json:"defaultNpmRegistry" yaml:"defaultNpmRegistry"`
-	HostController       HostControllerConfiguration `json:"hostController" yaml:"hostController"`
-	StaticServing        StaticServingConfiguration  `json:"staticServing" yaml:"staticServing"`
+	BackendDefault       BackendDefault `json:"backendDefault" yaml:"backendDefault"`
+	DefaultImageRegistry Registry       `json:"defaultImageRegistry" yaml:"defaultImageRegistry"`
+	DefaultNpmRegistry   Registry       `json:"defaultNpmRegistry" yaml:"defaultNpmRegistry"`
+	HostDefault          HostDefault    `json:"hostDefault" yaml:"hostDefault"`
 }
 
-type RegistryConfiguration struct {
+type Registry struct {
 	// +kubebuilder:validation:Optional
 	AuthData AuthData `json:"authData,omitempty" yaml:"authData,omitempty"`
 	// +required
@@ -52,7 +52,7 @@ type RegistryConfiguration struct {
 	InSecure bool `json:"insecure,omitempty" yaml:"insecure,omitempty"`
 }
 
-func (c *RegistryConfiguration) EncodeAuthorization() string {
+func (c *Registry) EncodeAuthorization() string {
 	if c.AuthData.Token != "" {
 		return "Bearer " + c.AuthData.Token
 	}
@@ -66,7 +66,7 @@ func (c *RegistryConfiguration) EncodeAuthorization() string {
 	return ""
 }
 
-func (c *RegistryConfiguration) GetAddress() string {
+func (c *Registry) GetAddress() string {
 	if c.InSecure {
 		return "http://" + c.Host
 	} else {
@@ -74,16 +74,82 @@ func (c *RegistryConfiguration) GetAddress() string {
 	}
 }
 
-type StaticServingConfiguration struct {
-	Deployment appsv1.DeploymentSpec    `json:"deployment" yaml:"deployment"`
-	HttpRoute  gatewayv1.HTTPRouteSpec  `json:"httpRoute" yaml:"httpRoute"`
-	Ingress    networkingv1.IngressSpec `json:"ingress" yaml:"ingress"`
-	Service    corev1.ServiceSpec       `json:"service" yaml:"service"`
+type BackendDefault struct {
+	Deployment            appsv1.DeploymentSpec    `json:"deployment" yaml:"deployment"`
+	HttpRoute             gatewayv1.HTTPRouteSpec  `json:"httpRoute" yaml:"httpRoute"`
+	Ingress               networkingv1.IngressSpec `json:"ingress" yaml:"ingress"`
+	Service               corev1.ServiceSpec       `json:"service" yaml:"service"`
+	ServerImage           string                   `json:"serverImage" yaml:"serverImage"`
+	ServerImagePullPolicy corev1.PullPolicy        `json:"serverImagePullPolicy" yaml:"serverImagePullPolicy"`
 }
 
 func LoadConfiguration(configFile string, scheme *runtime.Scheme) NexusConfiguration {
 	defaultContent := []byte(`
-hostController:
+backendDefault:
+  deployment:
+    replicas: 1
+    selector:
+      matchLabels: {}
+    template:
+      metadata:
+        annotations: {}
+        labels: {}
+      spec:
+        containers:
+        - env:
+          - name: POD_NAME
+            valueFrom:
+              fieldRef:
+                fieldPath: metadata.name
+          - name: POD_NAMESPACE
+            valueFrom:
+              fieldRef:
+                fieldPath: metadata.namespace
+          - name: POD_IP
+            valueFrom:
+              fieldRef:
+                fieldPath: status.podIP
+          name: server
+          ports:
+          - containerPort: 80
+            name: server
+            protocol: TCP
+          resources:
+            limits:
+              cpu: 1000m
+              memory: 1024Mi
+            requests:
+              cpu: 100m
+              memory: 128Mi
+          volumeMounts:
+          - mountPath: /public
+            name: oci-image
+          - mountPath: /etc/caddy.d
+            name: scratch
+        volumes:
+        - name: oci-image
+          image:
+            reference: oci-image
+        - name: scratch
+          emptyDir:
+            medium: Memory
+            sizeLimit: 16Ki
+  service:
+    selector: {}
+    ports:
+    - name: server
+      port: 80
+      protocol: TCP
+      targetPort: server
+  serverImage: kdex-tech/kdex-themeserver:latest
+  serverImagePullPolicy: Always
+defaultNpmRegistry:
+  host: registry.npmjs.org
+  insecure: false
+defaultImageRegistry:
+  host: docker.io
+  insecure: false
+hostDefault:
   deployment:
     selector:
       matchLabels: {}
@@ -137,84 +203,15 @@ hostController:
         - name: config
           configMap:
             name: controller-manager
-
   roleRef:
     apiGroup: rbac.authorization.k8s.io
     kind: ClusterRole
     name: kdex-nexus-host-controller-role
-
   service:
     selector: {}
     ports:
     - name: server
       port: 8090
-      protocol: TCP
-      targetPort: server
-
-defaultNpmRegistry:
-  host: registry.npmjs.org
-  insecure: false
-
-defaultImageRegistry:
-  host: docker.io
-  insecure: false
-
-staticServing:
-  deployment:
-    replicas: 1
-    selector:
-      matchLabels: {}
-    template:
-      metadata:
-        annotations: {}
-        labels: {}
-      spec:
-        containers:
-        - env:
-          - name: POD_NAME
-            valueFrom:
-              fieldRef:
-                fieldPath: metadata.name
-          - name: POD_NAMESPACE
-            valueFrom:
-              fieldRef:
-                fieldPath: metadata.namespace
-          - name: POD_IP
-            valueFrom:
-              fieldRef:
-                fieldPath: status.podIP
-          image: kdex-tech/kdex-themeserver:latest
-          name: theme
-          ports:
-          - containerPort: 80
-            name: server
-            protocol: TCP
-          resources:
-            limits:
-              cpu: 1000m
-              memory: 1024Mi
-            requests:
-              cpu: 100m
-              memory: 128Mi
-          volumeMounts:
-          - mountPath: /public
-            name: oci-image
-          - mountPath: /etc/caddy.d
-            name: scratch
-        volumes:
-        - name: oci-image
-          image:
-            reference: oci-image
-        - name: scratch
-          emptyDir:
-            medium: Memory
-            sizeLimit: 16Ki
-
-  service:
-    selector: {}
-    ports:
-    - name: server
-      port: 80
       protocol: TCP
       targetPort: server
 `)

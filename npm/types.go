@@ -56,6 +56,6 @@ type Registry interface {
 }
 
 type RegistryImpl struct {
-	Config *configuration.RegistryConfiguration
+	Config *configuration.Registry
 	Error  func(err error, msg string, keysAndValues ...any)
 }
