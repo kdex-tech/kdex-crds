@@ -42,6 +42,11 @@ type Renderer struct {
 	Theme           string
 }
 
+type Host struct {
+	Name      string `json:"name" yaml:"name"`
+	Namespace string `json:"namespace" yaml:"namespace"`
+}
+
 // Fields available when rendering templates.
 type TemplateData struct {
 	BasePath        string                   `json:"basePath" yaml:"basePath"`
@@ -52,6 +57,7 @@ type TemplateData struct {
 	FootScript      template.HTML            `json:"footScript,omitempty" yaml:"footScript,omitempty"`
 	Header          template.HTML            `json:"header,omitempty" yaml:"header,omitempty"`
 	HeadScript      template.HTML            `json:"headScript,omitempty" yaml:"headScript,omitempty"`
+	Host            Host                     `json:"host" yaml:"host"`
 	Language        string                   `json:"language" yaml:"language"`
 	Languages       []string                 `json:"languages" yaml:"languages"`
 	LastModified    time.Time                `json:"lastModified" yaml:"lastModified"`
