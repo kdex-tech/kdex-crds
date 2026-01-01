@@ -27,6 +27,7 @@ type Renderer struct {
 	FootScript      string
 	Header          string
 	HeadScript      string
+	Host            Host
 	Language        string
 	Languages       []string
 	LastModified    time.Time

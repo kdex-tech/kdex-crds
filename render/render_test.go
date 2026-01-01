@@ -39,10 +39,14 @@ func TestRenderAll(t *testing.T) {
 			"main":    "<h1>Welcome</h1>",
 			"sidebar": `<my-app-element id="sidebar" data-date="{{.LastModified.Format "2006-01-02"}}"></my-app-element>`,
 		},
-		Footer:       "Page Footer",
-		FootScript:   "<script>foot</script>",
-		Header:       "Page Header",
-		HeadScript:   "<script>head</script>",
+		Footer:     "Page Footer",
+		FootScript: "<script>foot</script>",
+		Header:     "Page Header",
+		HeadScript: "<script>head</script>",
+		Host: Host{
+			Name:      "test-host",
+			Namespace: "test-namespace",
+		},
 		Language:     "en",
 		LastModified: lastModified,
 		Meta:         `<meta name="description" content="test">`,
@@ -75,6 +79,8 @@ func TestRenderAll(t *testing.T) {
 	<div id="slot-{{$key}}">{{$value}}</div>
 	{{end}}</main>
 	<footer>{{.Footer}}</footer>
+	<span>{{.Host.Name}}</span>
+	<span>{{.Host.Namespace}}</span>
 	{{.FootScript}}
 </body>
 </html>`,
@@ -93,6 +99,8 @@ func TestRenderAll(t *testing.T) {
 	assert.Contains(t, actual, "2025-09-20")
 	assert.Contains(t, actual, "Page Footer")
 	assert.Contains(t, actual, r.FootScript)
+	assert.Contains(t, actual, "<span>test-host</span>")
+	assert.Contains(t, actual, "<span>test-namespace</span>")
 }
 
 func TestRenderAll_InvalidHeaderTemplate(t *testing.T) {

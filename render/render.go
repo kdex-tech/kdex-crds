@@ -38,6 +38,7 @@ func (r *Renderer) TemplateData() (TemplateData, error) {
 		BasePath:        r.BasePath,
 		BrandName:       r.BrandName,
 		DefaultLanguage: r.DefaultLanguage,
+		Host:            r.Host,
 		Language:        r.Language,
 		Languages:       r.Languages,
 		LastModified:    date,
