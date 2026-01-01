@@ -489,7 +489,6 @@ type Backend struct {
 	// More info: https://kubernetes.io/docs/concepts/containers/images
 	// +kubebuilder:validation:Optional
 	// +kubebuilder:validation:MinLength=5
-	// +kubebuilder:default:="kdex-tech/kdex-themeserver:latest"
 	ServerImage string `json:"serverImage,omitempty" protobuf:"bytes,5,opt,name=serverImage"`
 
 	// Policy for pulling the Backend server image. Possible values are:
@@ -503,6 +502,7 @@ type Backend struct {
 	// staticImage is the name of an OCI image that contains static resources that will be served by the Backend. This may not apply if the serverImage is set to a custom implementation.
 	// More info: https://kubernetes.io/docs/concepts/containers/images
 	// +kubebuilder:validation:Optional
+	// +kubebuilder:validation:MinLength=5
 	StaticImage string `json:"staticImage,omitempty" protobuf:"bytes,7,opt,name=staticImage"`
 
 	// Policy for pulling the OCI theme image. Possible values are:

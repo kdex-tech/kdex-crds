@@ -202,7 +202,6 @@ spec:
                 - message: '''kind'' must be either KDexScriptLibrary or KDexClusterScriptLibrary'
                   rule: self.kind == "KDexScriptLibrary" || self.kind == "KDexClusterScriptLibrary"
               serverImage:
-                default: kdex-tech/kdex-themeserver:latest
                 description: |-
                   serverImage is the name of Backend image.
                   More info: https://kubernetes.io/docs/concepts/containers/images
@@ -220,6 +219,7 @@ spec:
                 description: |-
                   staticImage is the name of an OCI image that contains static resources that will be served by the Backend. This may not apply if the serverImage is set to a custom implementation.
                   More info: https://kubernetes.io/docs/concepts/containers/images
+                minLength: 5
                 type: string
               staticImagePullPolicy:
                 description: |-
