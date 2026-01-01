@@ -6,9 +6,6 @@ metadata:
     app.kubernetes.io/managed-by: kustomize
   name: kdexhost-sample
 spec:
-  baseMeta: |
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width" />
   brandName: KDex Sample Site
   defaultLang: en
   defaultThemeRef:
