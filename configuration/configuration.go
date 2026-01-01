@@ -122,14 +122,9 @@ backendDefault:
               cpu: 100m
               memory: 128Mi
           volumeMounts:
-          - mountPath: /public
-            name: oci-image
           - mountPath: /etc/caddy.d
             name: scratch
         volumes:
-        - name: oci-image
-          image:
-            reference: oci-image
         - name: scratch
           emptyDir:
             medium: Memory
