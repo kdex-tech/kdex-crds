@@ -78,6 +78,7 @@ type BackendDefault struct {
 	Deployment            appsv1.DeploymentSpec    `json:"deployment" yaml:"deployment"`
 	HttpRoute             gatewayv1.HTTPRouteSpec  `json:"httpRoute" yaml:"httpRoute"`
 	Ingress               networkingv1.IngressSpec `json:"ingress" yaml:"ingress"`
+	ModulePath            string                   `json:"modulePath" yaml:"modulePath"`
 	Service               corev1.ServiceSpec       `json:"service" yaml:"service"`
 	ServerImage           string                   `json:"serverImage" yaml:"serverImage"`
 	ServerImagePullPolicy corev1.PullPolicy        `json:"serverImagePullPolicy" yaml:"serverImagePullPolicy"`
@@ -129,6 +130,7 @@ backendDefault:
           emptyDir:
             medium: Memory
             sizeLimit: 16Ki
+  modulePath: /_modules
   service:
     selector: {}
     ports:
