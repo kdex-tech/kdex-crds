@@ -39,8 +39,11 @@ func TestRenderAll(t *testing.T) {
 			"main":    "<h1>Welcome</h1>",
 			"sidebar": `<my-app-element id="sidebar" data-date="{{.LastModified.Format "2006-01-02"}}"></my-app-element>`,
 		},
-		Footer:     "Page Footer",
+		Footer:     "FOOTER {{ .Extra.extra }}",
 		FootScript: "<script>foot</script>",
+		Extra: map[string]any{
+			"extra": "extra data",
+		},
 		Header:     "Page Header",
 		HeadScript: "<script>head</script>",
 		Host: Host{
@@ -97,7 +100,7 @@ func TestRenderAll(t *testing.T) {
 	assert.Contains(t, actual, "<h1>Welcome</h1>")
 	assert.Contains(t, actual, "<my-app-element id=\"sidebar\"")
 	assert.Contains(t, actual, "2025-09-20")
-	assert.Contains(t, actual, "Page Footer")
+	assert.Contains(t, actual, "FOOTER extra data")
 	assert.Contains(t, actual, r.FootScript)
 	assert.Contains(t, actual, "<span>test-host</span>")
 	assert.Contains(t, actual, "<span>test-namespace</span>")

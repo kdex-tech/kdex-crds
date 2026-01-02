@@ -23,6 +23,7 @@ type Renderer struct {
 	BrandName       string
 	Contents        map[string]string
 	DefaultLanguage string
+	Extra           map[string]any
 	Footer          string
 	FootScript      string
 	Header          string
@@ -54,6 +55,7 @@ type TemplateData struct {
 	BrandName       string                   `json:"brandName" yaml:"brandName"`
 	Content         map[string]template.HTML `json:"content" yaml:"content"`
 	DefaultLanguage string                   `json:"defaultLanguage" yaml:"defaultLanguage"`
+	Extra           map[string]any
 	Footer          template.HTML            `json:"footer,omitempty" yaml:"footer,omitempty"`
 	FootScript      template.HTML            `json:"footScript,omitempty" yaml:"footScript,omitempty"`
 	Header          template.HTML            `json:"header,omitempty" yaml:"header,omitempty"`
