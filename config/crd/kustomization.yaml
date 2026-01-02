@@ -2,30 +2,34 @@
 # since it depends on service name and namespace that are out of this kustomize package.
 # It should be run by config/default
 resources:
-  - bases/kdex.dev_kdexapps.yaml
-  - bases/kdex.dev_kdexpagearchetypes.yaml
-  - bases/kdex.dev_kdexpagebindings.yaml
-  - bases/kdex.dev_kdexpageheaders.yaml
-  - bases/kdex.dev_kdexpagefooters.yaml
-  - bases/kdex.dev_kdexpagenavigations.yaml
-  - bases/kdex.dev_kdexhosts.yaml
-  - bases/kdex.dev_kdextranslations.yaml
-  - bases/kdex.dev_kdexthemes.yaml
-  - bases/kdex.dev_kdexscriptlibraries.yaml
-  - bases/kdex.dev_kdexinternalhosts.yaml
-  - bases/kdex.dev_kdexinternalpackagereferences.yaml
-  - bases/kdex.dev_kdexclusterapps.yaml
-  - bases/kdex.dev_kdexclusterpagearchetypes.yaml
-  - bases/kdex.dev_kdexclusterpagefooters.yaml
-  - bases/kdex.dev_kdexclusterpageheaders.yaml
-  - bases/kdex.dev_kdexclusterpagenavigations.yaml
-  - bases/kdex.dev_kdexclusterscriptlibraries.yaml
-  - bases/kdex.dev_kdexclusterthemes.yaml
-  - bases/kdex.dev_kdexinternaltranslations.yaml
-  - bases/kdex.dev_kdexinternalpagebindings.yaml
+- bases/kdex.dev_kdexapps.yaml
+- bases/kdex.dev_kdexpagearchetypes.yaml
+- bases/kdex.dev_kdexpagebindings.yaml
+- bases/kdex.dev_kdexpageheaders.yaml
+- bases/kdex.dev_kdexpagefooters.yaml
+- bases/kdex.dev_kdexpagenavigations.yaml
+- bases/kdex.dev_kdexhosts.yaml
+- bases/kdex.dev_kdextranslations.yaml
+- bases/kdex.dev_kdexthemes.yaml
+- bases/kdex.dev_kdexscriptlibraries.yaml
+- bases/kdex.dev_kdexinternalhosts.yaml
+- bases/kdex.dev_kdexinternalpackagereferences.yaml
+- bases/kdex.dev_kdexclusterapps.yaml
+- bases/kdex.dev_kdexclusterpagearchetypes.yaml
+- bases/kdex.dev_kdexclusterpagefooters.yaml
+- bases/kdex.dev_kdexclusterpageheaders.yaml
+- bases/kdex.dev_kdexclusterpagenavigations.yaml
+- bases/kdex.dev_kdexclusterscriptlibraries.yaml
+- bases/kdex.dev_kdexclusterthemes.yaml
+- bases/kdex.dev_kdexinternaltranslations.yaml
+- bases/kdex.dev_kdexinternalpagebindings.yaml
+- bases/kdex.dev_kdexutilitypages.yaml
+- bases/kdex.dev_kdexclusterutilitypages.yaml
+- bases/kdex.dev_kdexinternalutilitypages.yaml
 # +kubebuilder:scaffold:crdkustomizeresource
 
 patches: []
+
 # [WEBHOOK] To enable webhook, uncomment all the sections with [WEBHOOK] prefix.
 # patches here are for enabling the conversion webhook for each CRD
 # +kubebuilder:scaffold:crdkustomizewebhookpatch

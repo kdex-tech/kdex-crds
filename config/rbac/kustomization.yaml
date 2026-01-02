@@ -22,6 +22,15 @@ resources:
 # default, aiding admins in cluster management. Those roles are
 # not used by the kdex-crds itself. You can comment the following lines
 # if you do not want those helpers be installed with your Project.
+- kdexinternalutilitypage_admin_role.yaml
+- kdexinternalutilitypage_editor_role.yaml
+- kdexinternalutilitypage_viewer_role.yaml
+- kdexclusterutilitypage_admin_role.yaml
+- kdexclusterutilitypage_editor_role.yaml
+- kdexclusterutilitypage_viewer_role.yaml
+- kdexutilitypage_admin_role.yaml
+- kdexutilitypage_editor_role.yaml
+- kdexutilitypage_viewer_role.yaml
 - kdexinternalpagebinding_admin_role.yaml
 - kdexinternalpagebinding_editor_role.yaml
 - kdexinternalpagebinding_viewer_role.yaml

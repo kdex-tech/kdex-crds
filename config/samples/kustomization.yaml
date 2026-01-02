@@ -21,4 +21,7 @@ resources:
 - v1alpha1_kdexclustertheme.yaml
 - v1alpha1_kdexinternaltranslation.yaml
 - v1alpha1_kdexinternalpagebinding.yaml
+- v1alpha1_kdexutilitypage.yaml
+- v1alpha1_kdexclusterutilitypage.yaml
+- v1alpha1_kdexinternalutilitypage.yaml
 # +kubebuilder:scaffold:manifestskustomizesamples
