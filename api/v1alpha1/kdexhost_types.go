@@ -97,7 +97,11 @@ type KDexHostSpec struct {
 	// +kubebuilder:validation:XValidation:rule=`self.kind == "KDexScriptLibrary" || self.kind == "KDexClusterScriptLibrary"`,message="'kind' must be either KDexScriptLibrary or KDexClusterScriptLibrary"
 	ScriptLibraryRef *KDexObjectReference `json:"scriptLibraryRef,omitempty" protobuf:"bytes,8,opt,name=scriptLibraryRef"`
 
-	Backend `json:",inline" protobuf:"bytes,9,opt,name=backend"`
+	// utilityPages defines the utility pages (announcement, error, login) for the host.
+	// +kubebuilder:validation:Optional
+	UtilityPages *UtilityPages `json:"utilityPages,omitempty" protobuf:"bytes,9,opt,name=utilityPages"`
+
+	Backend `json:",inline" protobuf:"bytes,10,opt,name=backend"`
 }
 
 func (a *KDexHostSpec) GetResourceImage() string {
@@ -116,6 +120,24 @@ func (a *KDexHostSpec) GetResourceURLs() []string {
 		}
 	}
 	return urls
+}
+
+// UtilityPages defines the utility pages for a host.
+type UtilityPages struct {
+	// announcementRef is a reference to a KDexUtilityPage or KDexClusterUtilityPage that defines the announcement page.
+	// +kubebuilder:validation:Optional
+	// +kubebuilder:validation:XValidation:rule=`self.kind == "KDexUtilityPage" || self.kind == "KDexClusterUtilityPage"`,message="'kind' must be either KDexUtilityPage or KDexClusterUtilityPage"
+	AnnouncementRef *KDexObjectReference `json:"announcementRef,omitempty" protobuf:"bytes,1,opt,name=announcementRef"`
+
+	// errorRef is a reference to a KDexUtilityPage or KDexClusterUtilityPage that defines the error page.
+	// +kubebuilder:validation:Optional
+	// +kubebuilder:validation:XValidation:rule=`self.kind == "KDexUtilityPage" || self.kind == "KDexClusterUtilityPage"`,message="'kind' must be either KDexUtilityPage or KDexClusterUtilityPage"
+	ErrorRef *KDexObjectReference `json:"errorRef,omitempty" protobuf:"bytes,2,opt,name=errorRef"`
+
+	// loginRef is a reference to a KDexUtilityPage or KDexClusterUtilityPage that defines the login page.
+	// +kubebuilder:validation:Optional
+	// +kubebuilder:validation:XValidation:rule=`self.kind == "KDexUtilityPage" || self.kind == "KDexClusterUtilityPage"`,message="'kind' must be either KDexUtilityPage or KDexClusterUtilityPage"
+	LoginRef *KDexObjectReference `json:"loginRef,omitempty" protobuf:"bytes,3,opt,name=loginRef"`
 }
 
 func init() {

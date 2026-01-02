@@ -17,12 +17,25 @@ limitations under the License.
 package v1alpha1
 
 import (
+	corev1 "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
 
 // KDexInternalHostSpec defines the desired state of KDexInternalHost
 type KDexInternalHostSpec struct {
 	KDexHostSpec `json:",inline" protobuf:"bytes,1,req,name=hostSpec"`
+
+	// announcementRef is a reference to the KDexInternalUtilityPage that provides the announcement page.
+	// +kubebuilder:validation:Optional
+	AnnouncementRef *corev1.LocalObjectReference `json:"announcementRef,omitempty" protobuf:"bytes,3,opt,name=announcementRef"`
+
+	// errorRef is a reference to the KDexInternalUtilityPage that provides the error page.
+	// +kubebuilder:validation:Optional
+	ErrorRef *corev1.LocalObjectReference `json:"errorRef,omitempty" protobuf:"bytes,4,opt,name=errorRef"`
+
+	// loginRef is a reference to the KDexInternalUtilityPage that provides the login page.
+	// +kubebuilder:validation:Optional
+	LoginRef *corev1.LocalObjectReference `json:"loginRef,omitempty" protobuf:"bytes,5,opt,name=loginRef"`
 
 	// requiredBackends is a set of references to KDexApp or KDexScriptLibrary resources that specify a backend.
 	// +listType=map

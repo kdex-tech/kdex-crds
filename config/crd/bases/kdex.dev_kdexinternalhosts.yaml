@@ -53,6 +53,21 @@ spec:
           spec:
             description: spec defines the desired state of KDexInternalHost
             properties:
+              announcementRef:
+                description: announcementRef is a reference to the KDexInternalUtilityPage
+                  that provides the announcement page.
+                properties:
+                  name:
+                    default: ""
+                    description: |-
+                      Name of the referent.
+                      This field is effectively required, but due to backwards compatibility is
+                      allowed to be empty. Instances of this type with an empty value here are
+                      almost certainly wrong.
+                      More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#names
+                    type: string
+                type: object
+                x-kubernetes-map-type: atomic
               assets:
                 description: assets is a set of elements that define a host specific
                   HTML instructions (e.g. favicon, site logo, charset).
@@ -96,6 +111,21 @@ spec:
                   See https://developer.mozilla.org/en-US/docs/Glossary/BCP_47_language_tag.
                   When render page paths do not specify a 'lang' path parameter this will be the value used. When not set the default will be 'en'.
                 type: string
+              errorRef:
+                description: errorRef is a reference to the KDexInternalUtilityPage
+                  that provides the error page.
+                properties:
+                  name:
+                    default: ""
+                    description: |-
+                      Name of the referent.
+                      This field is effectively required, but due to backwards compatibility is
+                      allowed to be empty. Instances of this type with an empty value here are
+                      almost certainly wrong.
+                      More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#names
+                    type: string
+                type: object
+                x-kubernetes-map-type: atomic
               imagePullSecrets:
                 description: |-
                   imagePullSecrets is an optional list of references to secrets in the same namespace to use for pulling the referenced images.
@@ -126,6 +156,21 @@ spec:
                   This value is determined by the implementation that embeds the Backend and cannot be changed.
                 pattern: ^/_.+
                 type: string
+              loginRef:
+                description: loginRef is a reference to the KDexInternalUtilityPage
+                  that provides the login page.
+                properties:
+                  name:
+                    default: ""
+                    description: |-
+                      Name of the referent.
+                      This field is effectively required, but due to backwards compatibility is
+                      allowed to be empty. Instances of this type with an empty value here are
+                      almost certainly wrong.
+                      More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#names
+                    type: string
+                type: object
+                x-kubernetes-map-type: atomic
               modulePolicy:
                 default: Strict
                 description: |-
@@ -376,6 +421,89 @@ spec:
                 x-kubernetes-validations:
                 - message: '''kind'' must be either KDexTheme or KDexClusterTheme'
                   rule: self.kind == "KDexTheme" || self.kind == "KDexClusterTheme"
+              utilityPages:
+                description: utilityPages defines the utility pages (announcement,
+                  error, login) for the host.
+                properties:
+                  announcementRef:
+                    description: announcementRef is a reference to a KDexUtilityPage
+                      or KDexClusterUtilityPage that defines the announcement page.
+                    properties:
+                      kind:
+                        description: Kind is the type of resource being referenced
+                        type: string
+                      name:
+                        description: Name of the referent.
+                        type: string
+                      namespace:
+                        description: |-
+                          Namespace, if set, causes the lookup for the namespace scoped Kind of the referent to use the specified
+                          namespace. If not set, the namespace of the resource will be used to lookup the namespace scoped Kind of the
+                          referent.
+                          If the referring resource is cluster scoped, this field is ignored.
+                          Defaulted to nil.
+                        type: string
+                    required:
+                    - kind
+                    - name
+                    type: object
+                    x-kubernetes-map-type: atomic
+                    x-kubernetes-validations:
+                    - message: '''kind'' must be either KDexUtilityPage or KDexClusterUtilityPage'
+                      rule: self.kind == "KDexUtilityPage" || self.kind == "KDexClusterUtilityPage"
+                  errorRef:
+                    description: errorRef is a reference to a KDexUtilityPage or KDexClusterUtilityPage
+                      that defines the error page.
+                    properties:
+                      kind:
+                        description: Kind is the type of resource being referenced
+                        type: string
+                      name:
+                        description: Name of the referent.
+                        type: string
+                      namespace:
+                        description: |-
+                          Namespace, if set, causes the lookup for the namespace scoped Kind of the referent to use the specified
+                          namespace. If not set, the namespace of the resource will be used to lookup the namespace scoped Kind of the
+                          referent.
+                          If the referring resource is cluster scoped, this field is ignored.
+                          Defaulted to nil.
+                        type: string
+                    required:
+                    - kind
+                    - name
+                    type: object
+                    x-kubernetes-map-type: atomic
+                    x-kubernetes-validations:
+                    - message: '''kind'' must be either KDexUtilityPage or KDexClusterUtilityPage'
+                      rule: self.kind == "KDexUtilityPage" || self.kind == "KDexClusterUtilityPage"
+                  loginRef:
+                    description: loginRef is a reference to a KDexUtilityPage or KDexClusterUtilityPage
+                      that defines the login page.
+                    properties:
+                      kind:
+                        description: Kind is the type of resource being referenced
+                        type: string
+                      name:
+                        description: Name of the referent.
+                        type: string
+                      namespace:
+                        description: |-
+                          Namespace, if set, causes the lookup for the namespace scoped Kind of the referent to use the specified
+                          namespace. If not set, the namespace of the resource will be used to lookup the namespace scoped Kind of the
+                          referent.
+                          If the referring resource is cluster scoped, this field is ignored.
+                          Defaulted to nil.
+                        type: string
+                    required:
+                    - kind
+                    - name
+                    type: object
+                    x-kubernetes-map-type: atomic
+                    x-kubernetes-validations:
+                    - message: '''kind'' must be either KDexUtilityPage or KDexClusterUtilityPage'
+                      rule: self.kind == "KDexUtilityPage" || self.kind == "KDexClusterUtilityPage"
+                type: object
             required:
             - brandName
             - organization
