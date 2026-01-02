@@ -25,6 +25,10 @@ Package v1alpha1 contains API Schema definitions for the  v1alpha1 API group.
 - [KDexClusterScriptLibraryList](#kdexclusterscriptlibrarylist)
 - [KDexClusterTheme](#kdexclustertheme)
 - [KDexClusterThemeList](#kdexclusterthemelist)
+- [KDexClusterUtilityPage](#kdexclusterutilitypage)
+- [KDexClusterUtilityPageList](#kdexclusterutilitypagelist)
+- [KDexFunction](#kdexfunction)
+- [KDexFunctionList](#kdexfunctionlist)
 - [KDexHost](#kdexhost)
 - [KDexHostList](#kdexhostlist)
 - [KDexInternalHost](#kdexinternalhost)
@@ -35,6 +39,8 @@ Package v1alpha1 contains API Schema definitions for the  v1alpha1 API group.
 - [KDexInternalPageBindingList](#kdexinternalpagebindinglist)
 - [KDexInternalTranslation](#kdexinternaltranslation)
 - [KDexInternalTranslationList](#kdexinternaltranslationlist)
+- [KDexInternalUtilityPage](#kdexinternalutilitypage)
+- [KDexInternalUtilityPageList](#kdexinternalutilitypagelist)
 - [KDexPageArchetype](#kdexpagearchetype)
 - [KDexPageArchetypeList](#kdexpagearchetypelist)
 - [KDexPageBinding](#kdexpagebinding)
@@ -51,6 +57,8 @@ Package v1alpha1 contains API Schema definitions for the  v1alpha1 API group.
 - [KDexThemeList](#kdexthemelist)
 - [KDexTranslation](#kdextranslation)
 - [KDexTranslationList](#kdextranslationlist)
+- [KDexUtilityPage](#kdexutilitypage)
+- [KDexUtilityPageList](#kdexutilitypagelist)
 
 
 
@@ -105,6 +113,7 @@ Backend defines a deployment for serving resources specific to the refer.
 
 _Appears in:_
 - [KDexAppSpec](#kdexappspec)
+- [KDexFunctionSpec](#kdexfunctionspec)
 - [KDexHostSpec](#kdexhostspec)
 - [KDexInternalHostSpec](#kdexinternalhostspec)
 - [KDexScriptLibrarySpec](#kdexscriptlibraryspec)
@@ -116,9 +125,9 @@ _Appears in:_
 | `ingressPath` _string_ | ingressPath is a prefix beginning with '/_' plus additional characters. This indicates where in the Ingress/HTTPRoute the Backend will be mounted.<br />This value is determined by the implementation that embeds the Backend and cannot be changed. |  | Optional: \{\} <br />Pattern: `^/_.+` <br /> |
 | `replicas` _integer_ | replicas is the number of desired pods. This is a pointer to distinguish between explicit<br />zero and not specified. Defaults to 1. |  | Optional: \{\} <br /> |
 | `resources` _[ResourceRequirements](https://kubernetes.io/docs/reference/generated/kubernetes-api/v/#resourcerequirements-v1-core)_ | resources defines the compute resources required by the container.<br />More info: https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/ |  | Optional: \{\} <br /> |
-| `serverImage` _string_ | serverImage is the name of Backend image.<br />More info: https://kubernetes.io/docs/concepts/containers/images | kdex-tech/kdex-themeserver:\{\{.Release\}\} | MinLength: 5 <br />Optional: \{\} <br /> |
+| `serverImage` _string_ | serverImage is the name of Backend image.<br />More info: https://kubernetes.io/docs/concepts/containers/images |  | MinLength: 5 <br />Optional: \{\} <br /> |
 | `serverImagePullPolicy` _[PullPolicy](https://kubernetes.io/docs/reference/generated/kubernetes-api/v/#pullpolicy-v1-core)_ | Policy for pulling the Backend server image. Possible values are:<br />Always: the kubelet always attempts to pull the reference. Container creation will fail If the pull fails.<br />Never: the kubelet never pulls the reference and only uses a local image or artifact. Container creation will fail if the reference isn't present.<br />IfNotPresent: the kubelet pulls if the reference isn't already present on disk. Container creation will fail if the reference isn't present and the pull fails.<br />Defaults to Always if :latest tag is specified, or IfNotPresent otherwise. |  | Optional: \{\} <br /> |
-| `staticImage` _string_ | staticImage is the name of an OCI image that contains static resources that will be served by the Backend. This may not apply if the serverImage is set to a custom implementation.<br />More info: https://kubernetes.io/docs/concepts/containers/images |  | Optional: \{\} <br /> |
+| `staticImage` _string_ | staticImage is the name of an OCI image that contains static resources that will be served by the Backend. This may not apply if the serverImage is set to a custom implementation.<br />More info: https://kubernetes.io/docs/concepts/containers/images |  | MinLength: 5 <br />Optional: \{\} <br /> |
 | `staticImagePullPolicy` _[PullPolicy](https://kubernetes.io/docs/reference/generated/kubernetes-api/v/#pullpolicy-v1-core)_ | Policy for pulling the OCI theme image. Possible values are:<br />Always: the kubelet always attempts to pull the reference. Container creation will fail If the pull fails.<br />Never: the kubelet never pulls the reference and only uses a local image or artifact. Container creation will fail if the reference isn't present.<br />IfNotPresent: the kubelet pulls if the reference isn't already present on disk. Container creation will fail if the reference isn't present and the pull fails.<br />Defaults to Always if :latest tag is specified, or IfNotPresent otherwise. |  | Optional: \{\} <br /> |
 
 
@@ -138,7 +147,9 @@ _Appears in:_
 
 _Appears in:_
 - [KDexInternalPageBindingSpec](#kdexinternalpagebindingspec)
+- [KDexInternalUtilityPageSpec](#kdexinternalutilitypagespec)
 - [KDexPageBindingSpec](#kdexpagebindingspec)
+- [KDexUtilityPageSpec](#kdexutilitypagespec)
 
 | Field | Description | Default | Validation |
 | --- | --- | --- | --- |
@@ -265,9 +276,9 @@ _Appears in:_
 | `ingressPath` _string_ | ingressPath is a prefix beginning with '/_' plus additional characters. This indicates where in the Ingress/HTTPRoute the Backend will be mounted.<br />This value is determined by the implementation that embeds the Backend and cannot be changed. |  | Optional: \{\} <br />Pattern: `^/_.+` <br /> |
 | `replicas` _integer_ | replicas is the number of desired pods. This is a pointer to distinguish between explicit<br />zero and not specified. Defaults to 1. |  | Optional: \{\} <br /> |
 | `resources` _[ResourceRequirements](https://kubernetes.io/docs/reference/generated/kubernetes-api/v/#resourcerequirements-v1-core)_ | resources defines the compute resources required by the container.<br />More info: https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/ |  | Optional: \{\} <br /> |
-| `serverImage` _string_ | serverImage is the name of Backend image.<br />More info: https://kubernetes.io/docs/concepts/containers/images | kdex-tech/kdex-themeserver:\{\{.Release\}\} | MinLength: 5 <br />Optional: \{\} <br /> |
+| `serverImage` _string_ | serverImage is the name of Backend image.<br />More info: https://kubernetes.io/docs/concepts/containers/images |  | MinLength: 5 <br />Optional: \{\} <br /> |
 | `serverImagePullPolicy` _[PullPolicy](https://kubernetes.io/docs/reference/generated/kubernetes-api/v/#pullpolicy-v1-core)_ | Policy for pulling the Backend server image. Possible values are:<br />Always: the kubelet always attempts to pull the reference. Container creation will fail If the pull fails.<br />Never: the kubelet never pulls the reference and only uses a local image or artifact. Container creation will fail if the reference isn't present.<br />IfNotPresent: the kubelet pulls if the reference isn't already present on disk. Container creation will fail if the reference isn't present and the pull fails.<br />Defaults to Always if :latest tag is specified, or IfNotPresent otherwise. |  | Optional: \{\} <br /> |
-| `staticImage` _string_ | staticImage is the name of an OCI image that contains static resources that will be served by the Backend. This may not apply if the serverImage is set to a custom implementation.<br />More info: https://kubernetes.io/docs/concepts/containers/images |  | Optional: \{\} <br /> |
+| `staticImage` _string_ | staticImage is the name of an OCI image that contains static resources that will be served by the Backend. This may not apply if the serverImage is set to a custom implementation.<br />More info: https://kubernetes.io/docs/concepts/containers/images |  | MinLength: 5 <br />Optional: \{\} <br /> |
 | `staticImagePullPolicy` _[PullPolicy](https://kubernetes.io/docs/reference/generated/kubernetes-api/v/#pullpolicy-v1-core)_ | Policy for pulling the OCI theme image. Possible values are:<br />Always: the kubelet always attempts to pull the reference. Container creation will fail If the pull fails.<br />Never: the kubelet never pulls the reference and only uses a local image or artifact. Container creation will fail if the reference isn't present.<br />IfNotPresent: the kubelet pulls if the reference isn't already present on disk. Container creation will fail if the reference isn't present and the pull fails.<br />Defaults to Always if :latest tag is specified, or IfNotPresent otherwise. |  | Optional: \{\} <br /> |
 
 
@@ -530,6 +541,103 @@ KDexClusterThemeList contains a list of KDexClusterTheme
 | `items` _[KDexClusterTheme](#kdexclustertheme) array_ |  |  |  |
 
 
+#### KDexClusterUtilityPage
+
+
+
+KDexClusterUtilityPage is the Schema for the kdexclusterutilitypages API
+
+A KDexClusterUtilityPage is a cluster-scoped version of KDexUtilityPage. It allows defining default utility pages
+that can be used across multiple hosts if not overridden.
+
+
+
+_Appears in:_
+- [KDexClusterUtilityPageList](#kdexclusterutilitypagelist)
+
+| Field | Description | Default | Validation |
+| --- | --- | --- | --- |
+| `apiVersion` _string_ | `kdex.dev/v1alpha1` | | |
+| `kind` _string_ | `KDexClusterUtilityPage` | | |
+| `metadata` _[ObjectMeta](https://kubernetes.io/docs/reference/generated/kubernetes-api/v/#objectmeta-v1-meta)_ | Refer to Kubernetes API documentation for fields of `metadata`. |  | Optional: \{\} <br /> |
+| `spec` _[KDexUtilityPageSpec](#kdexutilitypagespec)_ | spec defines the desired state of KDexClusterUtilityPage |  | Required: \{\} <br /> |
+
+
+#### KDexClusterUtilityPageList
+
+
+
+KDexClusterUtilityPageList contains a list of KDexClusterUtilityPage
+
+
+
+
+
+| Field | Description | Default | Validation |
+| --- | --- | --- | --- |
+| `apiVersion` _string_ | `kdex.dev/v1alpha1` | | |
+| `kind` _string_ | `KDexClusterUtilityPageList` | | |
+| `metadata` _[ListMeta](https://kubernetes.io/docs/reference/generated/kubernetes-api/v/#listmeta-v1-meta)_ | Refer to Kubernetes API documentation for fields of `metadata`. |  |  |
+| `items` _[KDexClusterUtilityPage](#kdexclusterutilitypage) array_ |  |  |  |
+
+
+#### KDexFunction
+
+
+
+KDexFunction is the Schema for the kdexfunctions API.
+
+KDexFunction is a facility to express a particularly concise unit of logic that scales in isolation.
+Ideally these are utilized via a FaaS layer, but for simplicity, some scenarios are modeled by the
+Backend type using containers (native Kubernetes workloads).
+
+
+
+_Appears in:_
+- [KDexFunctionList](#kdexfunctionlist)
+
+| Field | Description | Default | Validation |
+| --- | --- | --- | --- |
+| `apiVersion` _string_ | `kdex.dev/v1alpha1` | | |
+| `kind` _string_ | `KDexFunction` | | |
+| `metadata` _[ObjectMeta](https://kubernetes.io/docs/reference/generated/kubernetes-api/v/#objectmeta-v1-meta)_ | Refer to Kubernetes API documentation for fields of `metadata`. |  | Optional: \{\} <br /> |
+| `spec` _[KDexFunctionSpec](#kdexfunctionspec)_ | spec defines the desired state of KDexFunction |  | Required: \{\} <br /> |
+
+
+#### KDexFunctionList
+
+
+
+KDexFunctionList contains a list of KDexFunction
+
+
+
+
+
+| Field | Description | Default | Validation |
+| --- | --- | --- | --- |
+| `apiVersion` _string_ | `kdex.dev/v1alpha1` | | |
+| `kind` _string_ | `KDexFunctionList` | | |
+| `metadata` _[ListMeta](https://kubernetes.io/docs/reference/generated/kubernetes-api/v/#listmeta-v1-meta)_ | Refer to Kubernetes API documentation for fields of `metadata`. |  |  |
+| `items` _[KDexFunction](#kdexfunction) array_ |  |  |  |
+
+
+#### KDexFunctionSpec
+
+
+
+KDexFunctionSpec defines the desired state of KDexFunction
+
+
+
+_Appears in:_
+- [KDexFunction](#kdexfunction)
+
+| Field | Description | Default | Validation |
+| --- | --- | --- | --- |
+| `backend` _[Backend](#backend)_ | Backend defines the native Kubernetes workload configuration for this function.<br />When this is specified, the function is deployed as a standard containerized backend<br />rather than through a FaaS runtime. |  | Optional: \{\} <br /> |
+
+
 #### KDexHost
 
 
@@ -594,13 +702,14 @@ _Appears in:_
 | `organization` _string_ | organization is the name of the Organization to which the host belongs. |  | MinLength: 5 <br />Required: \{\} <br /> |
 | `routing` _[Routing](#routing)_ | routing defines the desired routing configuration for the host. |  | Required: \{\} <br /> |
 | `scriptLibraryRef` _[KDexObjectReference](#kdexobjectreference)_ | scriptLibraryRef is an optional reference to a KDexScriptLibrary resource. |  | Optional: \{\} <br /> |
+| `utilityPages` _[UtilityPages](#utilitypages)_ | utilityPages defines the utility pages (announcement, error, login) for the host. |  | Optional: \{\} <br /> |
 | `imagePullSecrets` _[LocalObjectReference](https://kubernetes.io/docs/reference/generated/kubernetes-api/v/#localobjectreference-v1-core) array_ | imagePullSecrets is an optional list of references to secrets in the same namespace to use for pulling the referenced images.<br />More info: https://kubernetes.io/docs/concepts/containers/images#specifying-imagepullsecrets-on-a-pod |  | Optional: \{\} <br /> |
 | `ingressPath` _string_ | ingressPath is a prefix beginning with '/_' plus additional characters. This indicates where in the Ingress/HTTPRoute the Backend will be mounted.<br />This value is determined by the implementation that embeds the Backend and cannot be changed. |  | Optional: \{\} <br />Pattern: `^/_.+` <br /> |
 | `replicas` _integer_ | replicas is the number of desired pods. This is a pointer to distinguish between explicit<br />zero and not specified. Defaults to 1. |  | Optional: \{\} <br /> |
 | `resources` _[ResourceRequirements](https://kubernetes.io/docs/reference/generated/kubernetes-api/v/#resourcerequirements-v1-core)_ | resources defines the compute resources required by the container.<br />More info: https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/ |  | Optional: \{\} <br /> |
-| `serverImage` _string_ | serverImage is the name of Backend image.<br />More info: https://kubernetes.io/docs/concepts/containers/images | kdex-tech/kdex-themeserver:\{\{.Release\}\} | MinLength: 5 <br />Optional: \{\} <br /> |
+| `serverImage` _string_ | serverImage is the name of Backend image.<br />More info: https://kubernetes.io/docs/concepts/containers/images |  | MinLength: 5 <br />Optional: \{\} <br /> |
 | `serverImagePullPolicy` _[PullPolicy](https://kubernetes.io/docs/reference/generated/kubernetes-api/v/#pullpolicy-v1-core)_ | Policy for pulling the Backend server image. Possible values are:<br />Always: the kubelet always attempts to pull the reference. Container creation will fail If the pull fails.<br />Never: the kubelet never pulls the reference and only uses a local image or artifact. Container creation will fail if the reference isn't present.<br />IfNotPresent: the kubelet pulls if the reference isn't already present on disk. Container creation will fail if the reference isn't present and the pull fails.<br />Defaults to Always if :latest tag is specified, or IfNotPresent otherwise. |  | Optional: \{\} <br /> |
-| `staticImage` _string_ | staticImage is the name of an OCI image that contains static resources that will be served by the Backend. This may not apply if the serverImage is set to a custom implementation.<br />More info: https://kubernetes.io/docs/concepts/containers/images |  | Optional: \{\} <br /> |
+| `staticImage` _string_ | staticImage is the name of an OCI image that contains static resources that will be served by the Backend. This may not apply if the serverImage is set to a custom implementation.<br />More info: https://kubernetes.io/docs/concepts/containers/images |  | MinLength: 5 <br />Optional: \{\} <br /> |
 | `staticImagePullPolicy` _[PullPolicy](https://kubernetes.io/docs/reference/generated/kubernetes-api/v/#pullpolicy-v1-core)_ | Policy for pulling the OCI theme image. Possible values are:<br />Always: the kubelet always attempts to pull the reference. Container creation will fail If the pull fails.<br />Never: the kubelet never pulls the reference and only uses a local image or artifact. Container creation will fail if the reference isn't present.<br />IfNotPresent: the kubelet pulls if the reference isn't already present on disk. Container creation will fail if the reference isn't present and the pull fails.<br />Defaults to Always if :latest tag is specified, or IfNotPresent otherwise. |  | Optional: \{\} <br /> |
 
 
@@ -668,14 +777,18 @@ _Appears in:_
 | `organization` _string_ | organization is the name of the Organization to which the host belongs. |  | MinLength: 5 <br />Required: \{\} <br /> |
 | `routing` _[Routing](#routing)_ | routing defines the desired routing configuration for the host. |  | Required: \{\} <br /> |
 | `scriptLibraryRef` _[KDexObjectReference](#kdexobjectreference)_ | scriptLibraryRef is an optional reference to a KDexScriptLibrary resource. |  | Optional: \{\} <br /> |
+| `utilityPages` _[UtilityPages](#utilitypages)_ | utilityPages defines the utility pages (announcement, error, login) for the host. |  | Optional: \{\} <br /> |
 | `imagePullSecrets` _[LocalObjectReference](https://kubernetes.io/docs/reference/generated/kubernetes-api/v/#localobjectreference-v1-core) array_ | imagePullSecrets is an optional list of references to secrets in the same namespace to use for pulling the referenced images.<br />More info: https://kubernetes.io/docs/concepts/containers/images#specifying-imagepullsecrets-on-a-pod |  | Optional: \{\} <br /> |
 | `ingressPath` _string_ | ingressPath is a prefix beginning with '/_' plus additional characters. This indicates where in the Ingress/HTTPRoute the Backend will be mounted.<br />This value is determined by the implementation that embeds the Backend and cannot be changed. |  | Optional: \{\} <br />Pattern: `^/_.+` <br /> |
 | `replicas` _integer_ | replicas is the number of desired pods. This is a pointer to distinguish between explicit<br />zero and not specified. Defaults to 1. |  | Optional: \{\} <br /> |
 | `resources` _[ResourceRequirements](https://kubernetes.io/docs/reference/generated/kubernetes-api/v/#resourcerequirements-v1-core)_ | resources defines the compute resources required by the container.<br />More info: https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/ |  | Optional: \{\} <br /> |
-| `serverImage` _string_ | serverImage is the name of Backend image.<br />More info: https://kubernetes.io/docs/concepts/containers/images | kdex-tech/kdex-themeserver:\{\{.Release\}\} | MinLength: 5 <br />Optional: \{\} <br /> |
+| `serverImage` _string_ | serverImage is the name of Backend image.<br />More info: https://kubernetes.io/docs/concepts/containers/images |  | MinLength: 5 <br />Optional: \{\} <br /> |
 | `serverImagePullPolicy` _[PullPolicy](https://kubernetes.io/docs/reference/generated/kubernetes-api/v/#pullpolicy-v1-core)_ | Policy for pulling the Backend server image. Possible values are:<br />Always: the kubelet always attempts to pull the reference. Container creation will fail If the pull fails.<br />Never: the kubelet never pulls the reference and only uses a local image or artifact. Container creation will fail if the reference isn't present.<br />IfNotPresent: the kubelet pulls if the reference isn't already present on disk. Container creation will fail if the reference isn't present and the pull fails.<br />Defaults to Always if :latest tag is specified, or IfNotPresent otherwise. |  | Optional: \{\} <br /> |
-| `staticImage` _string_ | staticImage is the name of an OCI image that contains static resources that will be served by the Backend. This may not apply if the serverImage is set to a custom implementation.<br />More info: https://kubernetes.io/docs/concepts/containers/images |  | Optional: \{\} <br /> |
+| `staticImage` _string_ | staticImage is the name of an OCI image that contains static resources that will be served by the Backend. This may not apply if the serverImage is set to a custom implementation.<br />More info: https://kubernetes.io/docs/concepts/containers/images |  | MinLength: 5 <br />Optional: \{\} <br /> |
 | `staticImagePullPolicy` _[PullPolicy](https://kubernetes.io/docs/reference/generated/kubernetes-api/v/#pullpolicy-v1-core)_ | Policy for pulling the OCI theme image. Possible values are:<br />Always: the kubelet always attempts to pull the reference. Container creation will fail If the pull fails.<br />Never: the kubelet never pulls the reference and only uses a local image or artifact. Container creation will fail if the reference isn't present.<br />IfNotPresent: the kubelet pulls if the reference isn't already present on disk. Container creation will fail if the reference isn't present and the pull fails.<br />Defaults to Always if :latest tag is specified, or IfNotPresent otherwise. |  | Optional: \{\} <br /> |
+| `announcementRef` _[LocalObjectReference](https://kubernetes.io/docs/reference/generated/kubernetes-api/v/#localobjectreference-v1-core)_ | announcementRef is a reference to the KDexInternalUtilityPage that provides the announcement page. |  | Optional: \{\} <br /> |
+| `errorRef` _[LocalObjectReference](https://kubernetes.io/docs/reference/generated/kubernetes-api/v/#localobjectreference-v1-core)_ | errorRef is a reference to the KDexInternalUtilityPage that provides the error page. |  | Optional: \{\} <br /> |
+| `loginRef` _[LocalObjectReference](https://kubernetes.io/docs/reference/generated/kubernetes-api/v/#localobjectreference-v1-core)_ | loginRef is a reference to the KDexInternalUtilityPage that provides the login page. |  | Optional: \{\} <br /> |
 | `requiredBackends` _[KDexObjectReference](#kdexobjectreference) array_ | requiredBackends is a set of references to KDexApp or KDexScriptLibrary resources that specify a backend. |  | Optional: \{\} <br /> |
 
 
@@ -840,6 +953,70 @@ KDexInternalTranslationList contains a list of KDexInternalTranslation
 | `items` _[KDexInternalTranslation](#kdexinternaltranslation) array_ |  |  |  |
 
 
+#### KDexInternalUtilityPage
+
+
+
+KDexInternalUtilityPage is the Schema for the kdexinternalutilitypages API
+
+A KDexInternalUtilityPage is an internal resource used to instantiate access to a utility page for a specific host.
+It is created by the KDex Host controller based on either a specific KDexUtilityPage/KDexClusterUtilityPage reference
+or a default system-wide utility page.
+
+
+
+_Appears in:_
+- [KDexInternalUtilityPageList](#kdexinternalutilitypagelist)
+
+| Field | Description | Default | Validation |
+| --- | --- | --- | --- |
+| `apiVersion` _string_ | `kdex.dev/v1alpha1` | | |
+| `kind` _string_ | `KDexInternalUtilityPage` | | |
+| `metadata` _[ObjectMeta](https://kubernetes.io/docs/reference/generated/kubernetes-api/v/#objectmeta-v1-meta)_ | Refer to Kubernetes API documentation for fields of `metadata`. |  | Optional: \{\} <br /> |
+| `spec` _[KDexInternalUtilityPageSpec](#kdexinternalutilitypagespec)_ | spec defines the desired state of KDexInternalUtilityPage |  | Required: \{\} <br /> |
+
+
+#### KDexInternalUtilityPageList
+
+
+
+KDexInternalUtilityPageList contains a list of KDexInternalUtilityPage
+
+
+
+
+
+| Field | Description | Default | Validation |
+| --- | --- | --- | --- |
+| `apiVersion` _string_ | `kdex.dev/v1alpha1` | | |
+| `kind` _string_ | `KDexInternalUtilityPageList` | | |
+| `metadata` _[ListMeta](https://kubernetes.io/docs/reference/generated/kubernetes-api/v/#listmeta-v1-meta)_ | Refer to Kubernetes API documentation for fields of `metadata`. |  |  |
+| `items` _[KDexInternalUtilityPage](#kdexinternalutilitypage) array_ |  |  |  |
+
+
+#### KDexInternalUtilityPageSpec
+
+
+
+KDexInternalUtilityPageSpec defines the desired state of KDexInternalUtilityPage
+
+
+
+_Appears in:_
+- [KDexInternalUtilityPage](#kdexinternalutilitypage)
+
+| Field | Description | Default | Validation |
+| --- | --- | --- | --- |
+| `type` _[KDexUtilityPageType](#kdexutilitypagetype)_ | type indicates the purpose of this utility page. |  | Enum: [Announcement Error Login] <br />Required: \{\} <br /> |
+| `contentEntries` _[ContentEntry](#contententry) array_ | contentEntries is a set of content entries to bind to this page. They may be either raw HTML fragments or KDexApp references. |  | MaxItems: 8 <br />MinItems: 1 <br />Required: \{\} <br /> |
+| `overrideFooterRef` _[KDexObjectReference](#kdexobjectreference)_ | overrideFooterRef is an optional reference to a KDexPageFooter resource. If not specified, the footer from the archetype will be used. |  | Optional: \{\} <br /> |
+| `overrideHeaderRef` _[KDexObjectReference](#kdexobjectreference)_ | overrideHeaderRef is an optional reference to a KDexPageHeader resource. If not specified, the header from the archetype will be used. |  | Optional: \{\} <br /> |
+| `overrideMainNavigationRef` _[KDexObjectReference](#kdexobjectreference)_ | overrideMainNavigationRef is an optional reference to a KDexPageNavigation resource. If not specified, the main navigation from the archetype will be used. |  | Optional: \{\} <br /> |
+| `pageArchetypeRef` _[KDexObjectReference](#kdexobjectreference)_ | pageArchetypeRef is a reference to the KDexPageArchetype that this binding is for. |  | Required: \{\} <br /> |
+| `scriptLibraryRef` _[KDexObjectReference](#kdexobjectreference)_ | scriptLibraryRef is an optional reference to a KDexScriptLibrary resource. |  | Optional: \{\} <br /> |
+| `hostRef` _[LocalObjectReference](https://kubernetes.io/docs/reference/generated/kubernetes-api/v/#localobjectreference-v1-core)_ | hostRef is a reference to the KDexInternalHost that this utility page belongs to. |  | Required: \{\} <br /> |
+
+
 
 
 #### KDexObjectReference
@@ -856,12 +1033,15 @@ _Appears in:_
 - [KDexHostSpec](#kdexhostspec)
 - [KDexInternalHostSpec](#kdexinternalhostspec)
 - [KDexInternalPageBindingSpec](#kdexinternalpagebindingspec)
+- [KDexInternalUtilityPageSpec](#kdexinternalutilitypagespec)
 - [KDexPageArchetypeSpec](#kdexpagearchetypespec)
 - [KDexPageBindingSpec](#kdexpagebindingspec)
 - [KDexPageFooterSpec](#kdexpagefooterspec)
 - [KDexPageHeaderSpec](#kdexpageheaderspec)
 - [KDexPageNavigationSpec](#kdexpagenavigationspec)
 - [KDexThemeSpec](#kdexthemespec)
+- [KDexUtilityPageSpec](#kdexutilitypagespec)
+- [UtilityPages](#utilitypages)
 
 | Field | Description | Default | Validation |
 | --- | --- | --- | --- |
@@ -1240,9 +1420,9 @@ _Appears in:_
 | `ingressPath` _string_ | ingressPath is a prefix beginning with '/_' plus additional characters. This indicates where in the Ingress/HTTPRoute the Backend will be mounted.<br />This value is determined by the implementation that embeds the Backend and cannot be changed. |  | Optional: \{\} <br />Pattern: `^/_.+` <br /> |
 | `replicas` _integer_ | replicas is the number of desired pods. This is a pointer to distinguish between explicit<br />zero and not specified. Defaults to 1. |  | Optional: \{\} <br /> |
 | `resources` _[ResourceRequirements](https://kubernetes.io/docs/reference/generated/kubernetes-api/v/#resourcerequirements-v1-core)_ | resources defines the compute resources required by the container.<br />More info: https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/ |  | Optional: \{\} <br /> |
-| `serverImage` _string_ | serverImage is the name of Backend image.<br />More info: https://kubernetes.io/docs/concepts/containers/images | kdex-tech/kdex-themeserver:\{\{.Release\}\} | MinLength: 5 <br />Optional: \{\} <br /> |
+| `serverImage` _string_ | serverImage is the name of Backend image.<br />More info: https://kubernetes.io/docs/concepts/containers/images |  | MinLength: 5 <br />Optional: \{\} <br /> |
 | `serverImagePullPolicy` _[PullPolicy](https://kubernetes.io/docs/reference/generated/kubernetes-api/v/#pullpolicy-v1-core)_ | Policy for pulling the Backend server image. Possible values are:<br />Always: the kubelet always attempts to pull the reference. Container creation will fail If the pull fails.<br />Never: the kubelet never pulls the reference and only uses a local image or artifact. Container creation will fail if the reference isn't present.<br />IfNotPresent: the kubelet pulls if the reference isn't already present on disk. Container creation will fail if the reference isn't present and the pull fails.<br />Defaults to Always if :latest tag is specified, or IfNotPresent otherwise. |  | Optional: \{\} <br /> |
-| `staticImage` _string_ | staticImage is the name of an OCI image that contains static resources that will be served by the Backend. This may not apply if the serverImage is set to a custom implementation.<br />More info: https://kubernetes.io/docs/concepts/containers/images |  | Optional: \{\} <br /> |
+| `staticImage` _string_ | staticImage is the name of an OCI image that contains static resources that will be served by the Backend. This may not apply if the serverImage is set to a custom implementation.<br />More info: https://kubernetes.io/docs/concepts/containers/images |  | MinLength: 5 <br />Optional: \{\} <br /> |
 | `staticImagePullPolicy` _[PullPolicy](https://kubernetes.io/docs/reference/generated/kubernetes-api/v/#pullpolicy-v1-core)_ | Policy for pulling the OCI theme image. Possible values are:<br />Always: the kubelet always attempts to pull the reference. Container creation will fail If the pull fails.<br />Never: the kubelet never pulls the reference and only uses a local image or artifact. Container creation will fail if the reference isn't present.<br />IfNotPresent: the kubelet pulls if the reference isn't already present on disk. Container creation will fail if the reference isn't present and the pull fails.<br />Defaults to Always if :latest tag is specified, or IfNotPresent otherwise. |  | Optional: \{\} <br /> |
 
 
@@ -1306,9 +1486,9 @@ _Appears in:_
 | `ingressPath` _string_ | ingressPath is a prefix beginning with '/_' plus additional characters. This indicates where in the Ingress/HTTPRoute the Backend will be mounted.<br />This value is determined by the implementation that embeds the Backend and cannot be changed. |  | Optional: \{\} <br />Pattern: `^/_.+` <br /> |
 | `replicas` _integer_ | replicas is the number of desired pods. This is a pointer to distinguish between explicit<br />zero and not specified. Defaults to 1. |  | Optional: \{\} <br /> |
 | `resources` _[ResourceRequirements](https://kubernetes.io/docs/reference/generated/kubernetes-api/v/#resourcerequirements-v1-core)_ | resources defines the compute resources required by the container.<br />More info: https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/ |  | Optional: \{\} <br /> |
-| `serverImage` _string_ | serverImage is the name of Backend image.<br />More info: https://kubernetes.io/docs/concepts/containers/images | kdex-tech/kdex-themeserver:\{\{.Release\}\} | MinLength: 5 <br />Optional: \{\} <br /> |
+| `serverImage` _string_ | serverImage is the name of Backend image.<br />More info: https://kubernetes.io/docs/concepts/containers/images |  | MinLength: 5 <br />Optional: \{\} <br /> |
 | `serverImagePullPolicy` _[PullPolicy](https://kubernetes.io/docs/reference/generated/kubernetes-api/v/#pullpolicy-v1-core)_ | Policy for pulling the Backend server image. Possible values are:<br />Always: the kubelet always attempts to pull the reference. Container creation will fail If the pull fails.<br />Never: the kubelet never pulls the reference and only uses a local image or artifact. Container creation will fail if the reference isn't present.<br />IfNotPresent: the kubelet pulls if the reference isn't already present on disk. Container creation will fail if the reference isn't present and the pull fails.<br />Defaults to Always if :latest tag is specified, or IfNotPresent otherwise. |  | Optional: \{\} <br /> |
-| `staticImage` _string_ | staticImage is the name of an OCI image that contains static resources that will be served by the Backend. This may not apply if the serverImage is set to a custom implementation.<br />More info: https://kubernetes.io/docs/concepts/containers/images |  | Optional: \{\} <br /> |
+| `staticImage` _string_ | staticImage is the name of an OCI image that contains static resources that will be served by the Backend. This may not apply if the serverImage is set to a custom implementation.<br />More info: https://kubernetes.io/docs/concepts/containers/images |  | MinLength: 5 <br />Optional: \{\} <br /> |
 | `staticImagePullPolicy` _[PullPolicy](https://kubernetes.io/docs/reference/generated/kubernetes-api/v/#pullpolicy-v1-core)_ | Policy for pulling the OCI theme image. Possible values are:<br />Always: the kubelet always attempts to pull the reference. Container creation will fail If the pull fails.<br />Never: the kubelet never pulls the reference and only uses a local image or artifact. Container creation will fail if the reference isn't present.<br />IfNotPresent: the kubelet pulls if the reference isn't already present on disk. Container creation will fail if the reference isn't present and the pull fails.<br />Defaults to Always if :latest tag is specified, or IfNotPresent otherwise. |  | Optional: \{\} <br /> |
 
 
@@ -1368,6 +1548,91 @@ _Appears in:_
 | --- | --- | --- | --- |
 | `hostRef` _[LocalObjectReference](https://kubernetes.io/docs/reference/generated/kubernetes-api/v/#localobjectreference-v1-core)_ | hostRef is a reference to the KDexHost that this render page is for. |  | Required: \{\} <br /> |
 | `translations` _[Translation](#translation) array_ | translations is an array of objects where each one specifies a language (lang) and a map (keysAndValues) consisting of key/value pairs. If the lang property is not unique in the array and its keysAndValues map contains the same keys, the last one takes precedence. |  | MaxItems: 32 <br />MinItems: 1 <br />Required: \{\} <br /> |
+
+
+#### KDexUtilityPage
+
+
+
+KDexUtilityPage is the Schema for the kdexutilitypages API
+
+A KDexUtilityPage defines a utility page (Announcement, Error, Login) that can be referenced by a KDexHost.
+It shares much of its structure with KDexPageBinding but is specialized for system-level pages that do not
+necessarily sit within the standard site navigation tree.
+
+
+
+_Appears in:_
+- [KDexUtilityPageList](#kdexutilitypagelist)
+
+| Field | Description | Default | Validation |
+| --- | --- | --- | --- |
+| `apiVersion` _string_ | `kdex.dev/v1alpha1` | | |
+| `kind` _string_ | `KDexUtilityPage` | | |
+| `metadata` _[ObjectMeta](https://kubernetes.io/docs/reference/generated/kubernetes-api/v/#objectmeta-v1-meta)_ | Refer to Kubernetes API documentation for fields of `metadata`. |  | Optional: \{\} <br /> |
+| `spec` _[KDexUtilityPageSpec](#kdexutilitypagespec)_ | spec defines the desired state of KDexUtilityPage |  | Required: \{\} <br /> |
+
+
+#### KDexUtilityPageList
+
+
+
+KDexUtilityPageList contains a list of KDexUtilityPage
+
+
+
+
+
+| Field | Description | Default | Validation |
+| --- | --- | --- | --- |
+| `apiVersion` _string_ | `kdex.dev/v1alpha1` | | |
+| `kind` _string_ | `KDexUtilityPageList` | | |
+| `metadata` _[ListMeta](https://kubernetes.io/docs/reference/generated/kubernetes-api/v/#listmeta-v1-meta)_ | Refer to Kubernetes API documentation for fields of `metadata`. |  |  |
+| `items` _[KDexUtilityPage](#kdexutilitypage) array_ |  |  |  |
+
+
+#### KDexUtilityPageSpec
+
+
+
+KDexUtilityPageSpec defines the desired state of KDexUtilityPage
+
+
+
+_Appears in:_
+- [KDexClusterUtilityPage](#kdexclusterutilitypage)
+- [KDexInternalUtilityPageSpec](#kdexinternalutilitypagespec)
+- [KDexUtilityPage](#kdexutilitypage)
+
+| Field | Description | Default | Validation |
+| --- | --- | --- | --- |
+| `type` _[KDexUtilityPageType](#kdexutilitypagetype)_ | type indicates the purpose of this utility page. |  | Enum: [Announcement Error Login] <br />Required: \{\} <br /> |
+| `contentEntries` _[ContentEntry](#contententry) array_ | contentEntries is a set of content entries to bind to this page. They may be either raw HTML fragments or KDexApp references. |  | MaxItems: 8 <br />MinItems: 1 <br />Required: \{\} <br /> |
+| `overrideFooterRef` _[KDexObjectReference](#kdexobjectreference)_ | overrideFooterRef is an optional reference to a KDexPageFooter resource. If not specified, the footer from the archetype will be used. |  | Optional: \{\} <br /> |
+| `overrideHeaderRef` _[KDexObjectReference](#kdexobjectreference)_ | overrideHeaderRef is an optional reference to a KDexPageHeader resource. If not specified, the header from the archetype will be used. |  | Optional: \{\} <br /> |
+| `overrideMainNavigationRef` _[KDexObjectReference](#kdexobjectreference)_ | overrideMainNavigationRef is an optional reference to a KDexPageNavigation resource. If not specified, the main navigation from the archetype will be used. |  | Optional: \{\} <br /> |
+| `pageArchetypeRef` _[KDexObjectReference](#kdexobjectreference)_ | pageArchetypeRef is a reference to the KDexPageArchetype that this binding is for. |  | Required: \{\} <br /> |
+| `scriptLibraryRef` _[KDexObjectReference](#kdexobjectreference)_ | scriptLibraryRef is an optional reference to a KDexScriptLibrary resource. |  | Optional: \{\} <br /> |
+
+
+#### KDexUtilityPageType
+
+_Underlying type:_ _string_
+
+KDexUtilityPageType defines the type of utility page.
+
+_Validation:_
+- Enum: [Announcement Error Login]
+
+_Appears in:_
+- [KDexInternalUtilityPageSpec](#kdexinternalutilitypagespec)
+- [KDexUtilityPageSpec](#kdexutilitypagespec)
+
+| Field | Description |
+| --- | --- |
+| `Announcement` | AnnouncementUtilityPageType represents an announcement page.<br /> |
+| `Error` | ErrorUtilityPageType represents an error page.<br /> |
+| `Login` | LoginUtilityPageType represents a login page.<br /> |
 
 
 #### ModulePolicy
@@ -1543,5 +1808,24 @@ _Appears in:_
 | --- | --- | --- | --- |
 | `lang` _string_ | lang is a string containing a BCP 47 language tag that identifies the set of translations.<br />See https://developer.mozilla.org/en-US/docs/Glossary/BCP_47_language_tag. |  | Required: \{\} <br /> |
 | `keysAndValues` _object (keys:string, values:string)_ | keysAndValues is a map of key=/value pairs where the key is the identifier and the value is the translation of that key in the language specified by the lang property. |  | MinProperties: 1 <br />Required: \{\} <br /> |
+
+
+#### UtilityPages
+
+
+
+UtilityPages defines the utility pages for a host.
+
+
+
+_Appears in:_
+- [KDexHostSpec](#kdexhostspec)
+- [KDexInternalHostSpec](#kdexinternalhostspec)
+
+| Field | Description | Default | Validation |
+| --- | --- | --- | --- |
+| `announcementRef` _[KDexObjectReference](#kdexobjectreference)_ | announcementRef is a reference to a KDexUtilityPage or KDexClusterUtilityPage that defines the announcement page. |  | Optional: \{\} <br /> |
+| `errorRef` _[KDexObjectReference](#kdexobjectreference)_ | errorRef is a reference to a KDexUtilityPage or KDexClusterUtilityPage that defines the error page. |  | Optional: \{\} <br /> |
+| `loginRef` _[KDexObjectReference](#kdexobjectreference)_ | loginRef is a reference to a KDexUtilityPage or KDexClusterUtilityPage that defines the login page. |  | Optional: \{\} <br /> |
 
 
