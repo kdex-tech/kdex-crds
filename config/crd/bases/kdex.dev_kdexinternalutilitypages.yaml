@@ -136,6 +136,9 @@ spec:
                     type: string
                 type: object
                 x-kubernetes-map-type: atomic
+                x-kubernetes-validations:
+                - message: hostRef.name must not be empty
+                  rule: self.name.size() > 0
               overrideFooterRef:
                 description: overrideFooterRef is an optional reference to a KDexPageFooter
                   resource. If not specified, the footer from the archetype will be

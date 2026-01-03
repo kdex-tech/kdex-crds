@@ -21,15 +21,6 @@ import (
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
 
-// KDexInternalUtilityPageSpec defines the desired state of KDexInternalUtilityPage
-type KDexInternalUtilityPageSpec struct {
-	KDexUtilityPageSpec `json:",inline" protobuf:"bytes,1,req,name=utilityPageSpec"`
-
-	// hostRef is a reference to the KDexInternalHost that this utility page belongs to.
-	// +kubebuilder:validation:Required
-	HostRef corev1.LocalObjectReference `json:"hostRef" protobuf:"bytes,2,req,name=hostRef"`
-}
-
 // +kubebuilder:object:root=true
 // +kubebuilder:resource:scope=Namespaced,shortName=kdex-i-up
 // +kubebuilder:subresource:status
@@ -64,6 +55,16 @@ type KDexInternalUtilityPageList struct {
 	metav1.TypeMeta `json:",inline"`
 	metav1.ListMeta `json:"metadata,omitempty"`
 	Items           []KDexInternalUtilityPage `json:"items"`
+}
+
+// KDexInternalUtilityPageSpec defines the desired state of KDexInternalUtilityPage
+type KDexInternalUtilityPageSpec struct {
+	KDexUtilityPageSpec `json:",inline" protobuf:"bytes,1,req,name=utilityPageSpec"`
+
+	// hostRef is a reference to the KDexInternalHost that this utility page belongs to.
+	// +kubebuilder:validation:Required
+	// +kubebuilder:validation:XValidation:rule="self.name.size() > 0",message="hostRef.name must not be empty"
+	HostRef corev1.LocalObjectReference `json:"hostRef" protobuf:"bytes,2,req,name=hostRef"`
 }
 
 func init() {

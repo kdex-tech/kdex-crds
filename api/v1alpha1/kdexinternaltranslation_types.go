@@ -17,6 +17,7 @@ limitations under the License.
 package v1alpha1
 
 import (
+	corev1 "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
 
@@ -36,9 +37,9 @@ type KDexInternalTranslation struct {
 	// +kubebuilder:validation:Optional
 	Status KDexObjectStatus `json:"status,omitempty,omitzero"`
 
-	// spec defines the desired state of KDexTranslation
+	// spec defines the desired state of KDexInternalTranslation
 	// +kubebuilder:validation:Required
-	Spec KDexTranslationSpec `json:"spec"`
+	Spec KDexInternalTranslationSpec `json:"spec"`
 }
 
 // +kubebuilder:object:root=true
@@ -48,6 +49,15 @@ type KDexInternalTranslationList struct {
 	metav1.TypeMeta `json:",inline"`
 	metav1.ListMeta `json:"metadata,omitzero"`
 	Items           []KDexInternalTranslation `json:"items"`
+}
+
+type KDexInternalTranslationSpec struct {
+	KDexTranslationSpec `json:",inline" protobuf:"bytes,1,req,name=translationSpec"`
+
+	// hostRef is a reference to the KDexInternalHost that this translation belongs to.
+	// +kubebuilder:validation:Required
+	// +kubebuilder:validation:XValidation:rule="self.name.size() > 0",message="hostRef.name must not be empty"
+	HostRef corev1.LocalObjectReference `json:"hostRef" protobuf:"bytes,2,req,name=hostRef"`
 }
 
 func init() {

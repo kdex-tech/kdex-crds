@@ -40,8 +40,26 @@ spec:
           metadata:
             type: object
           spec:
-            description: spec defines the desired state of KDexTranslation
+            description: spec defines the desired state of KDexInternalTranslation
             properties:
+              hostRef:
+                description: hostRef is a reference to the KDexInternalHost that this
+                  translation belongs to.
+                properties:
+                  name:
+                    default: ""
+                    description: |-
+                      Name of the referent.
+                      This field is effectively required, but due to backwards compatibility is
+                      allowed to be empty. Instances of this type with an empty value here are
+                      almost certainly wrong.
+                      More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#names
+                    type: string
+                type: object
+                x-kubernetes-map-type: atomic
+                x-kubernetes-validations:
+                - message: hostRef.name must not be empty
+                  rule: self.name.size() > 0
               translations:
                 description: translations is an array of objects where each one specifies
                   a language (lang) and a map (keysAndValues) consisting of key/value
@@ -74,6 +92,7 @@ spec:
                 - lang
                 x-kubernetes-list-type: map
             required:
+            - hostRef
             - translations
             type: object
           status:
