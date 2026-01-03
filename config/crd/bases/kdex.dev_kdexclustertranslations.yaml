@@ -4,16 +4,16 @@ kind: CustomResourceDefinition
 metadata:
   annotations:
     controller-gen.kubebuilder.io/version: v0.20.0
-  name: kdexclusterpagenavigations.kdex.dev
+  name: kdexclustertranslations.kdex.dev
 spec:
   group: kdex.dev
   names:
-    kind: KDexClusterPageNavigation
-    listKind: KDexClusterPageNavigationList
-    plural: kdexclusterpagenavigations
+    kind: KDexClusterTranslation
+    listKind: KDexClusterTranslationList
+    plural: kdexclustertranslations
     shortNames:
-    - kdex-c-pn
-    singular: kdexclusterpagenavigation
+    - kdex-c-tr
+    singular: kdexclustertranslation
   scope: Cluster
   versions:
   - additionalPrinterColumns:
@@ -24,8 +24,11 @@ spec:
     name: v1alpha1
     schema:
       openAPIV3Schema:
-        description: KDexClusterPageNavigation is the Schema for the kdexclusterpagenavigations
-          API
+        description: |-
+          KDexClusterTranslation is the Schema for the kdexclustertranslations API
+
+          KDexClusterTranslations allow resources to be internationalized by making translations available in as many languages
+          as necessary.
         properties:
           apiVersion:
             description: |-
@@ -45,42 +48,41 @@ spec:
           metadata:
             type: object
           spec:
-            description: spec defines the desired state of KDexClusterPageNavigation
+            description: spec defines the desired state of KDexTranslation
             properties:
-              content:
-                description: content is a go string template that defines the content
-                  of an App Server page navigation. Use the `.Navigation["<name>"]`
-                  property to position its content in the template.
-                minLength: 5
-                type: string
-              scriptLibraryRef:
-                description: scriptLibraryRef is an optional reference to a KDexScriptLibrary
-                  resource.
-                properties:
-                  kind:
-                    description: Kind is the type of resource being referenced
-                    type: string
-                  name:
-                    description: Name of the referent.
-                    type: string
-                  namespace:
-                    description: |-
-                      Namespace, if set, causes the lookup for the namespace scoped Kind of the referent to use the specified
-                      namespace. If not set, the namespace of the resource will be used to lookup the namespace scoped Kind of the
-                      referent.
-                      If the referring resource is cluster scoped, this field is ignored.
-                      Defaulted to nil.
-                    type: string
-                required:
-                - kind
-                - name
-                type: object
-                x-kubernetes-map-type: atomic
-                x-kubernetes-validations:
-                - message: '''kind'' must be either KDexScriptLibrary or KDexClusterScriptLibrary'
-                  rule: self.kind == "KDexScriptLibrary" || self.kind == "KDexClusterScriptLibrary"
+              translations:
+                description: translations is an array of objects where each one specifies
+                  a language (lang) and a map (keysAndValues) consisting of key/value
+                  pairs. If the lang property is not unique in the array and its keysAndValues
+                  map contains the same keys, the last one takes precedence.
+                items:
+                  properties:
+                    keysAndValues:
+                      additionalProperties:
+                        type: string
+                      description: keysAndValues is a map of key=/value pairs where
+                        the key is the identifier and the value is the translation
+                        of that key in the language specified by the lang property.
+                      maxProperties: 256
+                      minProperties: 1
+                      type: object
+                    lang:
+                      description: |-
+                        lang is a string containing a BCP 47 language tag that identifies the set of translations.
+                        See https://developer.mozilla.org/en-US/docs/Glossary/BCP_47_language_tag.
+                      type: string
+                  required:
+                  - keysAndValues
+                  - lang
+                  type: object
+                maxItems: 32
+                minItems: 1
+                type: array
+                x-kubernetes-list-map-keys:
+                - lang
+                x-kubernetes-list-type: map
             required:
-            - content
+            - translations
             type: object
           status:
             description: status defines the observed state of KDexApp

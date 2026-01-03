@@ -42,24 +42,6 @@ spec:
           spec:
             description: spec defines the desired state of KDexTranslation
             properties:
-              hostRef:
-                description: hostRef is a reference to the KDexHost that this render
-                  page is for.
-                properties:
-                  name:
-                    default: ""
-                    description: |-
-                      Name of the referent.
-                      This field is effectively required, but due to backwards compatibility is
-                      allowed to be empty. Instances of this type with an empty value here are
-                      almost certainly wrong.
-                      More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#names
-                    type: string
-                type: object
-                x-kubernetes-map-type: atomic
-                x-kubernetes-validations:
-                - message: hostRef.name must not be empty
-                  rule: self.name.size() > 0
               translations:
                 description: translations is an array of objects where each one specifies
                   a language (lang) and a map (keysAndValues) consisting of key/value
@@ -73,6 +55,7 @@ spec:
                       description: keysAndValues is a map of key=/value pairs where
                         the key is the identifier and the value is the translation
                         of that key in the language specified by the lang property.
+                      maxProperties: 256
                       minProperties: 1
                       type: object
                     lang:
@@ -91,7 +74,6 @@ spec:
                 - lang
                 x-kubernetes-list-type: map
             required:
-            - hostRef
             - translations
             type: object
           status:
@@ -101,6 +83,7 @@ spec:
                 additionalProperties:
                   type: string
                 description: attributes hold state of the resource as key/value pairs.
+                maxProperties: 10
                 type: object
               conditions:
                 description: |-

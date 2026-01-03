@@ -78,6 +78,7 @@ spec:
                         type: string
                       description: attributes are key/value pairs that will be added
                         to the element as attributes when rendered.
+                      maxProperties: 10
                       type: object
                     linkHref:
                       description: linkHref is the content of a `<link>` href attribute.
@@ -421,6 +422,39 @@ spec:
                 x-kubernetes-validations:
                 - message: '''kind'' must be either KDexTheme or KDexClusterTheme'
                   rule: self.kind == "KDexTheme" || self.kind == "KDexClusterTheme"
+              translationRefs:
+                description: translationRefs is an array of references to KDexTranslation
+                  or KDexClusterTranslation resources that define the translations
+                  that should apply to this host.
+                items:
+                  properties:
+                    kind:
+                      description: Kind is the type of resource being referenced
+                      type: string
+                    name:
+                      description: Name of the referent.
+                      type: string
+                    namespace:
+                      description: |-
+                        Namespace, if set, causes the lookup for the namespace scoped Kind of the referent to use the specified
+                        namespace. If not set, the namespace of the resource will be used to lookup the namespace scoped Kind of the
+                        referent.
+                        If the referring resource is cluster scoped, this field is ignored.
+                        Defaulted to nil.
+                      type: string
+                  required:
+                  - kind
+                  - name
+                  type: object
+                  x-kubernetes-map-type: atomic
+                type: array
+                x-kubernetes-list-map-keys:
+                - name
+                x-kubernetes-list-type: map
+                x-kubernetes-validations:
+                - message: all translation refs must have kind KDexTranslation or
+                    KDexClusterTranslation
+                  rule: self.all(k, k.kind == 'KDexTranslation' || k.kind == 'KDexClusterTranslation')
               utilityPages:
                 description: utilityPages defines the utility pages (announcement,
                   error, login) for the host.
@@ -516,6 +550,7 @@ spec:
                 additionalProperties:
                   type: string
                 description: attributes hold state of the resource as key/value pairs.
+                maxProperties: 10
                 type: object
               conditions:
                 description: |-

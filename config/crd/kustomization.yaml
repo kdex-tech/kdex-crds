@@ -26,6 +26,7 @@ resources:
 - bases/kdex.dev_kdexutilitypages.yaml
 - bases/kdex.dev_kdexclusterutilitypages.yaml
 - bases/kdex.dev_kdexinternalutilitypages.yaml
+- bases/kdex.dev_kdexclustertranslations.yaml
 # +kubebuilder:scaffold:crdkustomizeresource
 
 patches: []

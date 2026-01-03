@@ -21,21 +21,21 @@ import (
 )
 
 // +kubebuilder:object:root=true
-// +kubebuilder:resource:scope=Namespaced,shortName=kdex-tr
+// +kubebuilder:resource:scope=Cluster,shortName=kdex-c-tr
 // +kubebuilder:subresource:status
 
-// KDexTranslation is the Schema for the kdextranslations API
+// KDexClusterTranslation is the Schema for the kdexclustertranslations API
 //
-// KDexTranslations allow KDexPageBindings to be internationalized by making translations available in as many languages
+// KDexClusterTranslations allow resources to be internationalized by making translations available in as many languages
 // as necessary.
 //
 // +kubebuilder:printcolumn:name="Ready",type=string,JSONPath=`.status.conditions[?(@.type=="Ready")].status`,description="The state of the Ready condition"
-type KDexTranslation struct {
+type KDexClusterTranslation struct {
 	metav1.TypeMeta `json:",inline"`
 
 	// metadata is a standard object metadata
-	// +kubebuilder:validation:Optional
-	metav1.ObjectMeta `json:"metadata,omitempty,omitzero"`
+	// +optional
+	metav1.ObjectMeta `json:"metadata,omitzero"`
 
 	// status defines the observed state of KDexApp
 	// +kubebuilder:validation:Optional
@@ -48,24 +48,13 @@ type KDexTranslation struct {
 
 // +kubebuilder:object:root=true
 
-// KDexTranslationList contains a list of KDexTranslation
-type KDexTranslationList struct {
+// KDexClusterTranslationList contains a list of KDexClusterTranslation
+type KDexClusterTranslationList struct {
 	metav1.TypeMeta `json:",inline"`
-	metav1.ListMeta `json:"metadata,omitempty"`
-	Items           []KDexTranslation `json:"items"`
-}
-
-// KDexTranslationSpec defines the desired state of KDexTranslation
-type KDexTranslationSpec struct {
-	// translations is an array of objects where each one specifies a language (lang) and a map (keysAndValues) consisting of key/value pairs. If the lang property is not unique in the array and its keysAndValues map contains the same keys, the last one takes precedence.
-	// +listType=map
-	// +listMapKey=lang
-	// +kubebuilder:validation:MaxItems=32
-	// +kubebuilder:validation:MinItems=1
-	// +kubebuilder:validation:Required
-	Translations []Translation `json:"translations" protobuf:"bytes,2,rep,name=translations"`
+	metav1.ListMeta `json:"metadata,omitzero"`
+	Items           []KDexClusterTranslation `json:"items"`
 }
 
 func init() {
-	SchemeBuilder.Register(&KDexTranslation{}, &KDexTranslationList{})
+	SchemeBuilder.Register(&KDexClusterTranslation{}, &KDexClusterTranslationList{})
 }

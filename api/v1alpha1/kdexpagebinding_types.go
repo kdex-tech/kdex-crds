@@ -33,6 +33,8 @@ import (
 //
 // +kubebuilder:printcolumn:name="Ready",type=string,JSONPath=`.status.conditions[?(@.type=="Ready")].status`,description="The state of the Ready condition"
 type KDexPageBinding struct {
+	// TODO: Rename KDexPageBinding to KDexPage
+
 	metav1.TypeMeta `json:",inline"`
 
 	// metadata is a standard object metadata
@@ -62,7 +64,7 @@ type KDexPageBindingSpec struct {
 	// contentEntries is a set of content entries to bind to this page. They may be either raw HTML fragments or KDexApp references.
 	// +listType=map
 	// +listMapKey=slot
-	// +kubebuilder:validation:MaxItems=8
+	// +kubebuilder:validation:MaxItems=32
 	// +kubebuilder:validation:MinItems=1
 	// +kubebuilder:validation:Required
 	// +kubebuilder:validation:XValidation:rule="self.exists(x, x.slot == 'main')",message="slot 'main' must be specified"
@@ -92,6 +94,9 @@ type KDexPageBindingSpec struct {
 	// +kubebuilder:validation:Optional
 	// +kubebuilder:validation:XValidation:rule=`self.kind == "KDexPageHeader" || self.kind == "KDexClusterPageHeader"`,message="'kind' must be either KDexPageHeader or KDexClusterPageHeader"
 	OverrideHeaderRef *KDexObjectReference `json:"overrideHeaderRef,omitempty" protobuf:"bytes,6,opt,name=overrideHeaderRef"`
+
+	// TODO: turn OverrideMainNavigationRef into a map with a required "main" key allowing for multiple navigation resources to be specified.
+	// This map will be overlayed onto the navigation from the archetype.
 
 	// overrideMainNavigationRef is an optional reference to a KDexPageNavigation resource. If not specified, the main navigation from the archetype will be used.
 	// +kubebuilder:validation:Optional

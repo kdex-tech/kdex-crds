@@ -95,6 +95,7 @@ spec:
                         type: string
                       description: attributes are key/value pairs that will be added
                         to the custom element as attributes when rendered.
+                      maxProperties: 10
                       type: object
                     customElementName:
                       description: customElementName is the name of the KDexApp custom
@@ -119,7 +120,7 @@ spec:
                       set
                     rule: '[has(self.appRef),has(self.rawHTML)].filter(x,x==true).size()
                       == 1'
-                maxItems: 8
+                maxItems: 32
                 minItems: 1
                 type: array
                 x-kubernetes-list-map-keys:
@@ -345,6 +346,7 @@ spec:
                 additionalProperties:
                   type: string
                 description: attributes hold state of the resource as key/value pairs.
+                maxProperties: 10
                 type: object
               conditions:
                 description: |-

@@ -22,6 +22,9 @@ resources:
 # default, aiding admins in cluster management. Those roles are
 # not used by the kdex-crds itself. You can comment the following lines
 # if you do not want those helpers be installed with your Project.
+- kdexclustertranslation_admin_role.yaml
+- kdexclustertranslation_editor_role.yaml
+- kdexclustertranslation_viewer_role.yaml
 - kdexinternalutilitypage_admin_role.yaml
 - kdexinternalutilitypage_editor_role.yaml
 - kdexinternalutilitypage_viewer_role.yaml

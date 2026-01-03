@@ -87,6 +87,7 @@ spec:
                         type: string
                       description: attributes are key/value pairs that will be added
                         to the custom element as attributes when rendered.
+                      maxProperties: 10
                       type: object
                     customElementName:
                       description: customElementName is the name of the KDexApp custom
@@ -274,6 +275,7 @@ spec:
                 additionalProperties:
                   type: string
                 description: attributes hold state of the resource as key/value pairs.
+                maxProperties: 10
                 type: object
               conditions:
                 description: |-

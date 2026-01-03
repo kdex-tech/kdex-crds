@@ -18,6 +18,7 @@ const (
 // +kubebuilder:validation:ExactlyOneOf=linkHref;metaId;style
 type Asset struct {
 	// attributes are key/value pairs that will be added to the element as attributes when rendered.
+	// +kubebuilder:validation:MaxProperties=10
 	// +kubebuilder:validation:Optional
 	Attributes map[string]string `json:"attributes,omitempty" protobuf:"bytes,1,rep,name=attributes"`
 
@@ -111,6 +112,7 @@ type ContentEntryApp struct {
 	CustomElementName string `json:"customElementName,omitempty" protobuf:"bytes,2,opt,name=customElementName"`
 
 	// attributes are key/value pairs that will be added to the custom element as attributes when rendered.
+	// +kubebuilder:validation:MaxProperties=10
 	// +kubebuilder:validation:Optional
 	Attributes map[string]string `json:"attributes,omitempty" protobuf:"bytes,3,rep,name=attributes"`
 }
@@ -182,6 +184,7 @@ type KDexObjectStatus struct {
 	Conditions []metav1.Condition `json:"conditions,omitempty" patchStrategy:"merge" patchMergeKey:"type" protobuf:"bytes,2,rep,name=conditions"`
 
 	// attributes hold state of the resource as key/value pairs.
+	// +kubebuilder:validation:MaxProperties=10
 	// +kubebuilder:validation:Optional
 	Attributes map[string]string `json:"attributes,omitempty" protobuf:"bytes,3,rep,name=attributes"`
 }
@@ -341,6 +344,7 @@ type ScriptDef struct {
 	FootScript bool `json:"footScript,omitempty" protobuf:"varint,3,opt,name=footScript"`
 
 	// attributes are key/value pairs that will be added to the element when rendered.
+	// +kubebuilder:validation:MaxProperties=10
 	// +kubebuilder:validation:Optional
 	Attributes map[string]string `json:"attributes,omitempty" protobuf:"bytes,4,rep,name=attributes"`
 }
@@ -405,6 +409,7 @@ type StyleDef struct {
 	Style string `json:"style,omitempty" protobuf:"bytes,1,opt,name=style"`
 
 	// attributes are key/value pairs that will be added to the element as attributes when rendered.
+	// +kubebuilder:validation:MaxProperties=10
 	// +kubebuilder:validation:Optional
 	Attributes map[string]string `json:"attributes,omitempty" protobuf:"bytes,2,rep,name=attributes"`
 }
@@ -453,6 +458,7 @@ type Translation struct {
 	Lang string `json:"lang" protobuf:"bytes,1,req,name=lang"`
 
 	// keysAndValues is a map of key=/value pairs where the key is the identifier and the value is the translation of that key in the language specified by the lang property.
+	// +kubebuilder:validation:MaxProperties=256
 	// +kubebuilder:validation:MinProperties=1
 	// +kubebuilder:validation:Required
 	KeysAndValues map[string]string `json:"keysAndValues" protobuf:"bytes,2,rep,name=keysAndValues"`

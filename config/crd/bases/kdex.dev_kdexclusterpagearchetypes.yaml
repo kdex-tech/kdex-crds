@@ -159,10 +159,15 @@ spec:
                 description: extraNavigations is an optional map of named navigation
                   object references. Use `.Navigation.<name>` to position the named
                   navigation's content in the template.
+                maxProperties: 10
                 type: object
                 x-kubernetes-validations:
                 - message: '''main'' is a reserved name for an extra navigation'
                   rule: '!has(self.main)'
+                - message: all navigation kinds must be either KDexPageNavigation
+                    or KDexClusterPageNavigation
+                  rule: self.all(k, self[k].kind == 'KDexPageNavigation' || self[k].kind
+                    == 'KDexClusterPageNavigation')
               scriptLibraryRef:
                 description: scriptLibraryRef is an optional reference to a KDexScriptLibrary
                   resource.
@@ -199,6 +204,7 @@ spec:
                 additionalProperties:
                   type: string
                 description: attributes hold state of the resource as key/value pairs.
+                maxProperties: 10
                 type: object
               conditions:
                 description: |-
