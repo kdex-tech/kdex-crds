@@ -27,21 +27,27 @@ type KDexInternalHostSpec struct {
 
 	// announcementRef is a reference to the KDexInternalUtilityPage that provides the announcement page.
 	// +kubebuilder:validation:Optional
-	AnnouncementRef *corev1.LocalObjectReference `json:"announcementRef,omitempty" protobuf:"bytes,3,opt,name=announcementRef"`
+	AnnouncementRef *corev1.LocalObjectReference `json:"announcementRef,omitempty" protobuf:"bytes,2,opt,name=announcementRef"`
 
 	// errorRef is a reference to the KDexInternalUtilityPage that provides the error page.
 	// +kubebuilder:validation:Optional
-	ErrorRef *corev1.LocalObjectReference `json:"errorRef,omitempty" protobuf:"bytes,4,opt,name=errorRef"`
+	ErrorRef *corev1.LocalObjectReference `json:"errorRef,omitempty" protobuf:"bytes,3,opt,name=errorRef"`
 
 	// loginRef is a reference to the KDexInternalUtilityPage that provides the login page.
 	// +kubebuilder:validation:Optional
-	LoginRef *corev1.LocalObjectReference `json:"loginRef,omitempty" protobuf:"bytes,5,opt,name=loginRef"`
+	LoginRef *corev1.LocalObjectReference `json:"loginRef,omitempty" protobuf:"bytes,4,opt,name=loginRef"`
 
 	// requiredBackends is a set of references to KDexApp or KDexScriptLibrary resources that specify a backend.
 	// +listType=map
 	// +listMapKey=name
 	// +kubebuilder:validation:Optional
-	RequiredBackends []KDexObjectReference `json:"requiredBackends,omitempty" protobuf:"bytes,2,rep,name=requiredBackends"`
+	RequiredBackends []KDexObjectReference `json:"requiredBackends,omitempty" protobuf:"bytes,5,rep,name=requiredBackends"`
+
+	// internalTranslationRefs is a set of references to KDexInternalTranslation resources that specify a translation.
+	// +listType=map
+	// +listMapKey=name
+	// +kubebuilder:validation:Optional
+	InternalTranslationRefs []corev1.LocalObjectReference `json:"internalTranslationRefs,omitempty" protobuf:"bytes,6,rep,name=internalTranslationRefs"`
 }
 
 // +kubebuilder:object:root=true
