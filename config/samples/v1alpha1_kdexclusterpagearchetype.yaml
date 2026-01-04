@@ -6,4 +6,39 @@ metadata:
     app.kubernetes.io/managed-by: kustomize
   name: kdexclusterpagearchetype-sample
 spec:
-  # TODO(user): Add fields here
+  content: |
+    <!DOCTYPE html>
+    <html lang="{{ .Language }}">
+      <head>
+        {{ .Meta }}
+        <title>{{ .Title }}<title>
+        {{ .Theme }}
+        {{ .HeadScript }}
+      </head>
+      <body>
+        <header>
+          {{ .Header }}
+        </header>
+        <nav>
+          {{ .Navigation.main }}
+        </nav>
+        <main>
+          {{ .Content.main }}
+        </main>
+        <footer>
+          {{ .Footer }}
+        </footer>
+        {{ .FootScript }}
+      </body>
+    </html>
+  defaultFooterRef:
+    kind: KDexPageFooter
+    name: kdexpagefooter-sample
+  defaultHeaderRef:
+    kind: KDexPageHeader
+    name: kdexpageheader-sample
+  defaultMainNavigationRef:
+    kind: KDexPageNavigation
+    name: kdexpagenavigation-sample
+  defaultThemeRef:
+    name: kdextheme-sample

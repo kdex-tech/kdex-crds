@@ -6,4 +6,12 @@ metadata:
     app.kubernetes.io/managed-by: kustomize
   name: kdexclusterscriptlibrary-sample
 spec:
-  # TODO(user): Add fields here
+  scripts:
+  - attributes:
+      type: text/javascript
+    footScript: true
+    script: |
+      console.log('hello');
+  - attributes:
+      type: module
+    scriptSrc: /my-script.js

@@ -6,4 +6,21 @@ metadata:
     app.kubernetes.io/managed-by: kustomize
   name: kdexclusterpagenavigation-sample
 spec:
-  # TODO(user): Add fields here
+  content: |
+    {{- define "menu" -}}
+      <ul>
+        {{- range $label, $value := . }}
+          <li>
+            {{- if ($value.Path != "") -}}
+              <a href="{{ $value.Path }}">{{ $label }}</a>
+            {{- else -}}
+              <span>{{ $label }}</span>
+            {{- end -}}
+            {{- if ($value.Children != nil) -}}
+              {{- template "menu" $value.Children -}}
+            {{- end -}}
+          </li>
+        {{- end -}}
+      </ul>
+    {{- end -}}
+    {{- template "menu" .MenuEntries -}}

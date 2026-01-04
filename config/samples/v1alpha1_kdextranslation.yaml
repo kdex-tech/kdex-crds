@@ -6,12 +6,10 @@ metadata:
     app.kubernetes.io/managed-by: kustomize
   name: kdextranslation-sample
 spec:
-  hostRef:
-    name: sample-host
   translations:
-    - keysAndValues:
-        name: Name
-      lang: en
-    - keysAndValues:
-        name: Nom
-      lang: fr
+  - keysAndValues:
+      name: Name
+    lang: en
+  - keysAndValues:
+      name: Nom
+    lang: fr

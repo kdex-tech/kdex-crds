@@ -6,4 +6,20 @@ metadata:
     app.kubernetes.io/managed-by: kustomize
   name: kdexclusterutilitypage-sample
 spec:
-  # TODO(user): Add fields here
+  contentEntries:
+  - rawHTML: |
+      <div class="container">
+          <h1>{{ l10n "error.title" .BrandName }}</h1>
+
+          <strong>{{ .Extra.ErrorCode }}</strong>
+          <p class="message">{{l10n "error.message" .Extra.ErrorCode}}</p>
+
+          <div class="footer">
+              <p>{{l10n "announcement.organization" .Organization}}</p>
+          </div>
+      </div>
+    slot: main
+  pageArchetypeRef:
+    kind: KDexClusterPageArchetype
+    name: kdexclusterpagearchetype-sample
+  type: Error
