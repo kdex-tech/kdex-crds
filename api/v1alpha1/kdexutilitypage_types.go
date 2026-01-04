@@ -96,10 +96,12 @@ type KDexUtilityPageSpec struct {
 	// +kubebuilder:validation:XValidation:rule=`self.kind == "KDexPageHeader" || self.kind == "KDexClusterPageHeader"`,message="'kind' must be either KDexPageHeader or KDexClusterPageHeader"
 	OverrideHeaderRef *KDexObjectReference `json:"overrideHeaderRef,omitempty" protobuf:"bytes,6,opt,name=overrideHeaderRef"`
 
-	// overrideMainNavigationRef is an optional reference to a KDexPageNavigation resource. If not specified, the main navigation from the archetype will be used.
+	// overrideNavigationRefs is an optional map of keyed navigation object references. When not empty, the 'main' key must be specified. These navigations will be merged with the navigations from the archetype.
+	// +kubebuilder:validation:MaxProperties=10
 	// +kubebuilder:validation:Optional
-	// +kubebuilder:validation:XValidation:rule=`self.kind == "KDexPageNavigation" || self.kind == "KDexClusterPageNavigation"`,message="'kind' must be either KDexPageNavigation or KDexClusterPageNavigation"
-	OverrideMainNavigationRef *KDexObjectReference `json:"overrideMainNavigationRef,omitempty" protobuf:"bytes,7,opt,name=overrideMainNavigationRef"`
+	// +kubebuilder:validation:XValidation:rule="size(self) == 0 || has(self.main)",message="'main' navigation must be specified if any navigations are provided"
+	// +kubebuilder:validation:XValidation:rule="self.all(k, self[k].kind == 'KDexPageNavigation' || self[k].kind == 'KDexClusterPageNavigation')",message="all navigation kinds must be either KDexPageNavigation or KDexClusterPageNavigation"
+	OverrideNavigationRefs map[string]*KDexObjectReference `json:"overrideNavigationRefs,omitempty" protobuf:"bytes,7,rep,name=overrideNavigationRefs"`
 
 	// pageArchetypeRef is a reference to the KDexPageArchetype that this binding is for.
 	// +kubebuilder:validation:Required
