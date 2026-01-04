@@ -30,6 +30,8 @@ import (
 // visual aspects of KDexPageBindings decoupling appearance from structure and content.
 //
 // +kubebuilder:printcolumn:name="Ready",type=string,JSONPath=`.status.conditions[?(@.type=="Ready")].status`,description="The state of the Ready condition"
+// +kubebuilder:printcolumn:name="Gen",type="string",JSONPath=".metadata.generation",priority=1
+// +kubebuilder:printcolumn:name="Status Attributes",type="string",JSONPath=".status.attributes",priority=1
 type KDexTheme struct {
 	metav1.TypeMeta `json:",inline"`
 

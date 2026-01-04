@@ -63,6 +63,8 @@ type KDexInternalHostSpec struct {
 // and not meant for end users.
 //
 // +kubebuilder:printcolumn:name="Ready",type=string,JSONPath=`.status.conditions[?(@.type=="Ready")].status`,description="The state of the Ready condition"
+// +kubebuilder:printcolumn:name="Gen",type="string",JSONPath=".metadata.generation",priority=1
+// +kubebuilder:printcolumn:name="Status Attributes",type="string",JSONPath=".status.attributes",priority=1
 type KDexInternalHost struct {
 	metav1.TypeMeta `json:",inline"`
 

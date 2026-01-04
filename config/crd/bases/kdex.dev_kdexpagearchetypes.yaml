@@ -21,6 +21,14 @@ spec:
       jsonPath: .status.conditions[?(@.type=="Ready")].status
       name: Ready
       type: string
+    - jsonPath: .metadata.generation
+      name: Gen
+      priority: 1
+      type: string
+    - jsonPath: .status.attributes
+      name: Status Attributes
+      priority: 1
+      type: string
     name: v1alpha1
     schema:
       openAPIV3Schema:
