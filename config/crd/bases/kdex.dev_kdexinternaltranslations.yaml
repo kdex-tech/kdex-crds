@@ -16,7 +16,20 @@ spec:
     singular: kdexinternaltranslation
   scope: Namespaced
   versions:
-  - name: v1alpha1
+  - additionalPrinterColumns:
+    - description: The state of the Ready condition
+      jsonPath: .status.conditions[?(@.type=="Ready")].status
+      name: Ready
+      type: string
+    - jsonPath: .metadata.generation
+      name: Gen
+      priority: 1
+      type: string
+    - jsonPath: .status.attributes
+      name: Status Attributes
+      priority: 1
+      type: string
+    name: v1alpha1
     schema:
       openAPIV3Schema:
         description: KDexInternalTranslation is the Schema for the kdexinternaltranslations
