@@ -203,6 +203,25 @@ func TestRenderer_RenderOne(t *testing.T) {
 			want:    "Home,About",
 			wantErr: false,
 		},
+		{
+			name:            "pop",
+			templateName:    "test",
+			templateContent: `{{ (pop .PageMap "home").Label }}--{{ .PageMap | values | sortBy "Weight" true | extract "Label" | join "," }}`,
+			data: TemplateData{
+				PageMap: map[string]any{
+					"home": PageEntry{
+						Label:  "Home",
+						Weight: resource.MustParse("0m"),
+					},
+					"about": PageEntry{
+						Label:  "About",
+						Weight: resource.MustParse("1m"),
+					},
+				},
+			},
+			want:    "Home--About",
+			wantErr: false,
+		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {

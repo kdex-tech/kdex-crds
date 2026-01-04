@@ -151,6 +151,13 @@ func (r *Renderer) RenderOne(
 		}
 		return r.MessagePrinter.Sprintf(key, args...)
 	}
+	funcs["pop"] = func(v map[string]any, key string) any {
+		if val, ok := v[key]; ok {
+			delete(v, key)
+			return val
+		}
+		return ""
+	}
 	funcs["sortBy"] = func(field string, ascending bool, v any) ([]any, error) {
 		tp := reflect.TypeOf(v).Kind()
 		switch tp {
