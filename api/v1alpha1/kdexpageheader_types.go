@@ -30,6 +30,8 @@ import (
 // an associated KDexScriptLibrary for driving imperative logic that might be necessary to implement the header.
 //
 // +kubebuilder:printcolumn:name="Ready",type=string,JSONPath=`.status.conditions[?(@.type=="Ready")].status`,description="The state of the Ready condition"
+// +kubebuilder:printcolumn:name="Gen",type="string",JSONPath=".metadata.generation",priority=1
+// +kubebuilder:printcolumn:name="Status Attributes",type="string",JSONPath=".status.attributes",priority=1
 type KDexPageHeader struct {
 	metav1.TypeMeta `json:",inline"`
 
