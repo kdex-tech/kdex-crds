@@ -75,24 +75,17 @@ type KDexPageArchetypeSpec struct {
 	// +kubebuilder:validation:XValidation:rule=`self.kind == "KDexPageHeader" || self.kind == "KDexClusterPageHeader"`,message="'kind' must be either KDexPageHeader or KDexClusterPageHeader"
 	DefaultHeaderRef *KDexObjectReference `json:"defaultHeaderRef,omitempty" protobuf:"bytes,3,opt,name=defaultHeaderRef"`
 
-	// TODO: flatten DefaultMainNavigationRef and ExtraNavigations into a single map with a required "main" key
-
-	// defaultMainNavigationRef is an optional reference to a KDexPageNavigation resource. If not specified, no navigation will be displayed. Use the `.Navigation.main` property to position its content in the template.
-	// +kubebuilder:validation:Optional
-	// +kubebuilder:validation:XValidation:rule=`self.kind == "KDexPageNavigation" || self.kind == "KDexClusterPageNavigation"`,message="'kind' must be either KDexPageNavigation or KDexClusterPageNavigation"
-	DefaultMainNavigationRef *KDexObjectReference `json:"defaultMainNavigationRef,omitempty" protobuf:"bytes,4,opt,name=defaultMainNavigationRef"`
-
-	// extraNavigations is an optional map of named navigation object references. Use `.Navigation.<name>` to position the named navigation's content in the template.
+	// defaultNavigationRefs is an optional map of keyed navigation object references. Use `.Navigation.<key>` to position the navigation's content in the template. When not empty, the 'main' key must be specified.
 	// +kubebuilder:validation:MaxProperties=10
 	// +kubebuilder:validation:Optional
-	// +kubebuilder:validation:XValidation:rule="!has(self.main)",message="'main' is a reserved name for an extra navigation"
+	// +kubebuilder:validation:XValidation:rule="size(self) == 0 || has(self.main)",message="'main' navigation must be specified if any navigations are provided"
 	// +kubebuilder:validation:XValidation:rule="self.all(k, self[k].kind == 'KDexPageNavigation' || self[k].kind == 'KDexClusterPageNavigation')",message="all navigation kinds must be either KDexPageNavigation or KDexClusterPageNavigation"
-	ExtraNavigations map[string]*KDexObjectReference `json:"extraNavigations,omitempty" protobuf:"bytes,5,rep,name=extraNavigations"`
+	DefaultNavigationRefs map[string]*KDexObjectReference `json:"defaultNavigationRefs,omitempty" protobuf:"bytes,4,rep,name=defaultNavigationRefs"`
 
 	// scriptLibraryRef is an optional reference to a KDexScriptLibrary resource.
 	// +kubebuilder:validation:Optional
 	// +kubebuilder:validation:XValidation:rule=`self.kind == "KDexScriptLibrary" || self.kind == "KDexClusterScriptLibrary"`,message="'kind' must be either KDexScriptLibrary or KDexClusterScriptLibrary"
-	ScriptLibraryRef *KDexObjectReference `json:"scriptLibraryRef,omitempty" protobuf:"bytes,6,opt,name=scriptLibraryRef"`
+	ScriptLibraryRef *KDexObjectReference `json:"scriptLibraryRef,omitempty" protobuf:"bytes,5,opt,name=scriptLibraryRef"`
 }
 
 func init() {

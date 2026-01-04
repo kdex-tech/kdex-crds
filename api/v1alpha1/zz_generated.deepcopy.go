@@ -1546,13 +1546,8 @@ func (in *KDexPageArchetypeSpec) DeepCopyInto(out *KDexPageArchetypeSpec) {
 		*out = new(KDexObjectReference)
 		**out = **in
 	}
-	if in.DefaultMainNavigationRef != nil {
-		in, out := &in.DefaultMainNavigationRef, &out.DefaultMainNavigationRef
-		*out = new(KDexObjectReference)
-		**out = **in
-	}
-	if in.ExtraNavigations != nil {
-		in, out := &in.ExtraNavigations, &out.ExtraNavigations
+	if in.DefaultNavigationRefs != nil {
+		in, out := &in.DefaultNavigationRefs, &out.DefaultNavigationRefs
 		*out = make(map[string]*KDexObjectReference, len(*in))
 		for key, val := range *in {
 			var outVal *KDexObjectReference
@@ -1669,10 +1664,21 @@ func (in *KDexPageBindingSpec) DeepCopyInto(out *KDexPageBindingSpec) {
 		*out = new(KDexObjectReference)
 		**out = **in
 	}
-	if in.OverrideMainNavigationRef != nil {
-		in, out := &in.OverrideMainNavigationRef, &out.OverrideMainNavigationRef
-		*out = new(KDexObjectReference)
-		**out = **in
+	if in.OverrideNavigationRefs != nil {
+		in, out := &in.OverrideNavigationRefs, &out.OverrideNavigationRefs
+		*out = make(map[string]*KDexObjectReference, len(*in))
+		for key, val := range *in {
+			var outVal *KDexObjectReference
+			if val == nil {
+				(*out)[key] = nil
+			} else {
+				inVal := (*in)[key]
+				in, out := &inVal, &outVal
+				*out = new(KDexObjectReference)
+				**out = **in
+			}
+			(*out)[key] = outVal
+		}
 	}
 	out.PageArchetypeRef = in.PageArchetypeRef
 	if in.ParentPageRef != nil {

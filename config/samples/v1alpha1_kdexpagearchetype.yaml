@@ -37,8 +37,7 @@ spec:
   defaultHeaderRef:
     kind: KDexPageHeader
     name: kdexpageheader-sample
-  defaultMainNavigationRef:
-    kind: KDexPageNavigation
-    name: kdexpagenavigation-sample
-  defaultThemeRef:
-    name: kdextheme-sample
+  navigationRefs:
+    main:
+      kind: KDexPageNavigation
+      name: kdexpagenavigation-sample

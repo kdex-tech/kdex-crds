@@ -8,14 +8,14 @@ metadata:
 spec:
   basePath: /my-app-page
   contentEntries:
-    - appRef:
-        kind: KDexApp
-        name: my-app
-      customElementName: my-element
-      slot: main
-    - rawHTML: |
-        <p>Hello world!</p>
-      slot: column-2
+  - appRef:
+      kind: KDexApp
+      name: my-app
+    customElementName: my-element
+    slot: main
+  - rawHTML: |
+      <p>Hello world!</p>
+    slot: column-2
   hostRef:
     name: sample-host
   label: My Page
@@ -27,9 +27,10 @@ spec:
   overrideHeaderRef:
     kind: KDexPageHeader
     name: generic-header
-  overrideMainNavigationRef:
-    kind: KDexPageNavigation
-    name: generic-navigation
+  overrideNavigationRefs:
+    main:
+      kind: KDexPageNavigation
+      name: generic-navigation
   pageArchetypeRef:
     kind: KDexPageArchetype
     name: generic-page

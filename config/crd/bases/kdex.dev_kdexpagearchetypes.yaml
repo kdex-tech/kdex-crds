@@ -118,35 +118,7 @@ spec:
                 x-kubernetes-validations:
                 - message: '''kind'' must be either KDexPageHeader or KDexClusterPageHeader'
                   rule: self.kind == "KDexPageHeader" || self.kind == "KDexClusterPageHeader"
-              defaultMainNavigationRef:
-                description: defaultMainNavigationRef is an optional reference to
-                  a KDexPageNavigation resource. If not specified, no navigation will
-                  be displayed. Use the `.Navigation.main` property to position its
-                  content in the template.
-                properties:
-                  kind:
-                    description: Kind is the type of resource being referenced
-                    type: string
-                  name:
-                    description: Name of the referent.
-                    type: string
-                  namespace:
-                    description: |-
-                      Namespace, if set, causes the lookup for the namespace scoped Kind of the referent to use the specified
-                      namespace. If not set, the namespace of the resource will be used to lookup the namespace scoped Kind of the
-                      referent.
-                      If the referring resource is cluster scoped, this field is ignored.
-                      Defaulted to nil.
-                    type: string
-                required:
-                - kind
-                - name
-                type: object
-                x-kubernetes-map-type: atomic
-                x-kubernetes-validations:
-                - message: '''kind'' must be either KDexPageNavigation or KDexClusterPageNavigation'
-                  rule: self.kind == "KDexPageNavigation" || self.kind == "KDexClusterPageNavigation"
-              extraNavigations:
+              defaultNavigationRefs:
                 additionalProperties:
                   properties:
                     kind:
@@ -168,14 +140,16 @@ spec:
                   - name
                   type: object
                   x-kubernetes-map-type: atomic
-                description: extraNavigations is an optional map of named navigation
-                  object references. Use `.Navigation.<name>` to position the named
-                  navigation's content in the template.
+                description: defaultNavigationRefs is an optional map of keyed navigation
+                  object references. Use `.Navigation.<key>` to position the navigation's
+                  content in the template. When not empty, the 'main' key must be
+                  specified.
                 maxProperties: 10
                 type: object
                 x-kubernetes-validations:
-                - message: '''main'' is a reserved name for an extra navigation'
-                  rule: '!has(self.main)'
+                - message: '''main'' navigation must be specified if any navigations
+                    are provided'
+                  rule: size(self) == 0 || has(self.main)
                 - message: all navigation kinds must be either KDexPageNavigation
                     or KDexClusterPageNavigation
                   rule: self.all(k, self[k].kind == 'KDexPageNavigation' || self[k].kind
