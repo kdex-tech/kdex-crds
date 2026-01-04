@@ -127,11 +127,15 @@ func (r *Renderer) RenderOne(
 	data TemplateData,
 ) (string, error) {
 	funcs := sprig.FuncMap()
-	funcs["extract"] = func(key string, v []any) ([]any, error) {
+	funcs["extract"] = func(key string, v any) ([]any, error) {
+		rv := reflect.ValueOf(v)
+		if rv.Kind() != reflect.Slice && rv.Kind() != reflect.Array {
+			return nil, fmt.Errorf("value is not a slice or array")
+		}
 		res := []any{}
-		for _, item := range v {
-			itemValue := reflect.ValueOf(item)
-			if itemValue.Kind() == reflect.Ptr {
+		for i := 0; i < rv.Len(); i++ {
+			itemValue := rv.Index(i)
+			for itemValue.Kind() == reflect.Interface || itemValue.Kind() == reflect.Ptr {
 				itemValue = itemValue.Elem()
 			}
 			if itemValue.Kind() != reflect.Struct {
@@ -151,14 +155,23 @@ func (r *Renderer) RenderOne(
 		}
 		return r.MessagePrinter.Sprintf(key, args...)
 	}
-	funcs["pop"] = func(v map[string]any, key string) any {
-		if val, ok := v[key]; ok {
-			delete(v, key)
-			return val
+	funcs["pop"] = func(v any, key string) any {
+		rv := reflect.ValueOf(v)
+		if rv.Kind() != reflect.Map || rv.IsNil() {
+			return ""
+		}
+		rk := reflect.ValueOf(key)
+		val := rv.MapIndex(rk)
+		if val.IsValid() {
+			rv.SetMapIndex(rk, reflect.Value{})
+			return val.Interface()
 		}
 		return ""
 	}
 	funcs["sortBy"] = func(field string, ascending bool, v any) ([]any, error) {
+		if v == nil {
+			return nil, nil
+		}
 		tp := reflect.TypeOf(v).Kind()
 		switch tp {
 		case reflect.Slice, reflect.Array:

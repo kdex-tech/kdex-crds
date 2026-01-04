@@ -1,6 +1,7 @@
 package render
 
 import (
+	"html/template"
 	"testing"
 	"time"
 
@@ -220,6 +221,18 @@ func TestRenderer_RenderOne(t *testing.T) {
 				},
 			},
 			want:    "Home--About",
+			wantErr: false,
+		},
+		{
+			name:            "pop template.HTML",
+			templateName:    "test",
+			templateContent: `{{ pop .Navigation "main" }}--{{ index .Navigation "main" }}`,
+			data: TemplateData{
+				Navigation: map[string]template.HTML{
+					"main": "MAIN",
+				},
+			},
+			want:    "MAIN--",
 			wantErr: false,
 		},
 	}
