@@ -25,10 +25,15 @@ func init() {
 
 	templateData = TemplateData{
 		DefaultLanguage: "en",
-		Footer:          `<p>footer</p>`,
-		FootScript:      `<script type="text/javascript"></script>`,
-		Header:          `<p>header</p>`,
-		HeadScript:      `<script type="text/javascript"></script>`,
+		Extra: map[string]any{
+			"ErrorCode":       "404",
+			"ErrorCodeString": "Not Found",
+			"ErrorMessage":    "The page you are looking for does not exist.",
+		},
+		Footer:     `<p>footer</p>`,
+		FootScript: `<script type="text/javascript"></script>`,
+		Header:     `<p>header</p>`,
+		HeadScript: `<script type="text/javascript"></script>`,
 		Host: Host{
 			Name:      "localhost",
 			Namespace: "default",
