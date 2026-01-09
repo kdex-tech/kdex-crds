@@ -150,6 +150,22 @@ func TestNew(t *testing.T) {
 			},
 			wantErr: true,
 		},
+		{
+			name:         "use the most specific level",
+			category:     "foo.bar.baz",
+			defaultLevel: "error",
+			levelMap: map[string]string{
+				"foo":         "2",
+				"foo.bar":     "debug",
+				"foo.bar.baz": "info",
+			},
+			message: message{
+				level:         0,
+				msg:           "test",
+				keysAndValues: nil,
+			},
+			want: "INFO\tfoo.bar.baz\ttest\n",
+		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {

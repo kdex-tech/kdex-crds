@@ -66,7 +66,6 @@ func (c LevelEnablerByName) Check(entry zapcore.Entry, ce *zapcore.CheckedEntry)
 		if loggerName == prefix ||
 			(len(loggerName) > len(prefix) && loggerName[:len(prefix)] == prefix && loggerName[len(prefix)] == '.') {
 			minLevel = level
-			break
 		}
 	}
 
