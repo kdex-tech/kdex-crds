@@ -22,7 +22,6 @@ resources:
 - bases/kdex.dev_kdexclusterscriptlibraries.yaml
 - bases/kdex.dev_kdexclusterthemes.yaml
 - bases/kdex.dev_kdexinternaltranslations.yaml
-- bases/kdex.dev_kdexinternalpagebindings.yaml
 - bases/kdex.dev_kdexutilitypages.yaml
 - bases/kdex.dev_kdexclusterutilitypages.yaml
 - bases/kdex.dev_kdexinternalutilitypages.yaml

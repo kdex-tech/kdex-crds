@@ -146,13 +146,6 @@ resources:
     crdVersion: v1
     namespaced: true
   domain: kdex.dev
-  kind: KDexInternalPageBinding
-  path: kdex.dev/crds/api/v1alpha1
-  version: v1alpha1
-- api:
-    crdVersion: v1
-    namespaced: true
-  domain: kdex.dev
   kind: KDexUtilityPage
   path: kdex.dev/crds/api/v1alpha1
   version: v1alpha1

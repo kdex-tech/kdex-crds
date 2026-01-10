@@ -1,8 +1,20 @@
 ## Append samples of your project ##
 resources:
 - v1alpha1_kdexapp.yaml
+- v1alpha1_kdexclusterapp.yaml
+- v1alpha1_kdexclusterpagearchetype.yaml
+- v1alpha1_kdexclusterpagefooter.yaml
+- v1alpha1_kdexclusterpageheader.yaml
+- v1alpha1_kdexclusterpagenavigation.yaml
+- v1alpha1_kdexclusterscriptlibrary.yaml
+- v1alpha1_kdexclustertheme.yaml
+- v1alpha1_kdexclustertranslation.yaml
+- v1alpha1_kdexclusterutilitypage.yaml
 - v1alpha1_kdexhost.yaml
 - v1alpha1_kdexhostcontroller.yaml
+- v1alpha1_kdexhostpackagereferences.yaml
+- v1alpha1_kdexinternaltranslation.yaml
+- v1alpha1_kdexinternalutilitypage.yaml
 - v1alpha1_kdexpagearchetype.yaml
 - v1alpha1_kdexpagebinding.yaml
 - v1alpha1_kdexpagefooter.yaml
@@ -11,18 +23,6 @@ resources:
 - v1alpha1_kdexscriptlibrary.yaml
 - v1alpha1_kdextheme.yaml
 - v1alpha1_kdextranslation.yaml
-- v1alpha1_kdexhostpackagereferences.yaml
-- v1alpha1_kdexclusterapp.yaml
-- v1alpha1_kdexclusterpagearchetype.yaml
-- v1alpha1_kdexclusterpagefooter.yaml
-- v1alpha1_kdexclusterpageheader.yaml
-- v1alpha1_kdexclusterpagenavigation.yaml
-- v1alpha1_kdexclusterscriptlibrary.yaml
-- v1alpha1_kdexclustertheme.yaml
-- v1alpha1_kdexinternaltranslation.yaml
-- v1alpha1_kdexinternalpagebinding.yaml
 - v1alpha1_kdexutilitypage.yaml
-- v1alpha1_kdexclusterutilitypage.yaml
-- v1alpha1_kdexinternalutilitypage.yaml
-- v1alpha1_kdexclustertranslation.yaml
+
 # +kubebuilder:scaffold:manifestskustomizesamples

@@ -34,9 +34,6 @@ resources:
 - kdexutilitypage_admin_role.yaml
 - kdexutilitypage_editor_role.yaml
 - kdexutilitypage_viewer_role.yaml
-- kdexinternalpagebinding_admin_role.yaml
-- kdexinternalpagebinding_editor_role.yaml
-- kdexinternalpagebinding_viewer_role.yaml
 - kdexinternaltranslation_admin_role.yaml
 - kdexinternaltranslation_editor_role.yaml
 - kdexinternaltranslation_viewer_role.yaml
@@ -97,4 +94,3 @@ resources:
 - kdextranslation_admin_role.yaml
 - kdextranslation_editor_role.yaml
 - kdextranslation_viewer_role.yaml
-
