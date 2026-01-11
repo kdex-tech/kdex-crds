@@ -10,36 +10,39 @@ erDiagram
         string packageReference
     }
 
-    KDexHost ||--o{ KDexInternalPageBinding : "hosts"
+    KDexHost ||--o{ KDexPageBinding : "hosts"
     KDexHost ||--o{ KDexScriptLibrary : "script library"
     KDexHost ||--o{ KDexTheme : "default theme"
     KDexHost ||--o{ KDexTranslation : "hosts"
     KDexHost {
-        string appPolicy
-        string baseMeta
+        string modulePolicy
+        string assets
         string defaultLang
         string domains
         string organization
     }
 
-    KDexPageArchetype ||--o{ KDexInternalPageBinding : "archetype"
+
+    KDexFunction {
+        string backend
+    }
+
+    KDexPageArchetype ||--o{ KDexPageBinding : "archetype"
     KDexPageArchetype ||--o{ KDexPageFooter : "default footer"
     KDexPageArchetype ||--o{ KDexPageHeader : "default header"
-    KDexPageArchetype ||--o{ KDexPageNavigation : "default navigation"
-    KDexPageArchetype ||--o{ KDexPageNavigation : "extra navigations"
+    KDexPageArchetype ||--o{ KDexPageNavigation : "default navigations"
     KDexPageArchetype ||--o{ KDexScriptLibrary : "script library"
-    KDexPageArchetype ||--o{ KDexTheme : "override theme"
     KDexPageArchetype {
         string content
     }
 
-    KDexInternalPageBinding ||--o{ KDexApp : "uses"
-    KDexInternalPageBinding ||--o{ KDexInternalPageBinding : "parent page"
-    KDexInternalPageBinding ||--o{ KDexPageFooter : "override footer"
-    KDexInternalPageBinding ||--o{ KDexPageHeader : "override header"
-    KDexInternalPageBinding ||--o{ KDexPageNavigation : "override navigation"
-    KDexInternalPageBinding ||--o{ KDexScriptLibrary : "script library"
-    KDexInternalPageBinding {
+    KDexPageBinding ||--o{ KDexApp : "uses"
+    KDexPageBinding ||--o{ KDexPageBinding : "parent page"
+    KDexPageBinding ||--o{ KDexPageFooter : "override footer"
+    KDexPageBinding ||--o{ KDexPageHeader : "override header"
+    KDexPageBinding ||--o{ KDexPageNavigation : "override navigations"
+    KDexPageBinding ||--o{ KDexScriptLibrary : "script library"
+    KDexPageBinding {
         string label
         string path
     }
@@ -66,7 +69,7 @@ erDiagram
 
     KDexTheme ||--o{ KDexScriptLibrary : "script library"
     KDexTheme {
-        string styleItems
+        string assets
     }
 
     KDexTranslation {
