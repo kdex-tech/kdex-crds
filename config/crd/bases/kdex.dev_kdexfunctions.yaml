@@ -117,10 +117,25 @@ spec:
                           createdAt:
                             type: string
                 properties:
+                  connect: {}
+                  delete: {}
+                  description:
+                    type: string
+                  get: {}
+                  head: {}
+                  options: {}
+                  parameters: {}
+                  patch: {}
                   path:
                     description: Path is the base URL path for the function (e.g.,
                       /api/v1/users/{id}).
                     type: string
+                  post: {}
+                  put: {}
+                  schemas: {}
+                  summary:
+                    type: string
+                  trace: {}
                 required:
                 - path
                 type: object
