@@ -133,9 +133,13 @@ type KDexFunctionAPI struct {
 
 // KDexFunctionExec defines the FaaS execution environment.
 type KDexFunctionExec struct {
+	// Language is the programming language of the function (e.g., go, python, nodejs).
+	// +kubebuilder:validation:Optional
+	Language string `json:"language,omitempty" protobuf:"bytes,1,opt,name=language"`
+
 	// Environment is the FaaS environment name (e.g., go-env, python-env).
 	// +kubebuilder:validation:Optional
-	Environment string `json:"environment,omitempty" protobuf:"bytes,1,opt,name=environment"`
+	Environment string `json:"environment,omitempty" protobuf:"bytes,2,opt,name=environment"`
 
 	// CodePackage is a reference to the compiled code artifact or source package.
 	// +kubebuilder:validation:Optional

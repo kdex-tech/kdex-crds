@@ -236,6 +236,10 @@ spec:
                     description: Environment is the FaaS environment name (e.g., go-env,
                       python-env).
                     type: string
+                  language:
+                    description: Language is the programming language of the function
+                      (e.g., go, python, nodejs).
+                    type: string
                   scaling:
                     description: Scaling allows configuration for min/max replicas
                       and autoscaler type.
