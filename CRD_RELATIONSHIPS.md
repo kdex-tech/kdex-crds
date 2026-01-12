@@ -5,6 +5,9 @@ See [CRD_REFERENCE.md](CRD_REFERENCE.md) for reference documentation.
 ```mermaid
 erDiagram
     KDexFunction {
+        string metadata
+        string api
+        string function
         string backend
     }
 
