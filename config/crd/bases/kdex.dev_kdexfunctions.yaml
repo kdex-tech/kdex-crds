@@ -15,7 +15,7 @@ spec:
     listKind: KDexFunctionList
     plural: kdexfunctions
     shortNames:
-    - kdex-func
+    - kdex-fn
     singular: kdexfunction
   scope: Namespaced
   versions:
@@ -321,6 +321,24 @@ spec:
                         type: integer
                     type: object
                 type: object
+              hostRef:
+                description: hostRef is a reference to the KDexHost that this translation
+                  belongs to.
+                properties:
+                  name:
+                    default: ""
+                    description: |-
+                      Name of the referent.
+                      This field is effectively required, but due to backwards compatibility is
+                      allowed to be empty. Instances of this type with an empty value here are
+                      almost certainly wrong.
+                      More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#names
+                    type: string
+                type: object
+                x-kubernetes-map-type: atomic
+                x-kubernetes-validations:
+                - message: hostRef.name must not be empty
+                  rule: self.name.size() > 0
               metadata:
                 description: Metadata defines the metadata for the function for cataloging
                   and discovery purposes.
@@ -352,6 +370,7 @@ spec:
                 type: object
             required:
             - api
+            - hostRef
             type: object
           status:
             description: status defines the observed state of KDexFunction

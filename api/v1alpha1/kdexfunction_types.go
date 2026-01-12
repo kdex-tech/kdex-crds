@@ -18,11 +18,12 @@ package v1alpha1
 
 import (
 	openapi "github.com/getkin/kin-openapi/openapi3"
+	corev1 "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
 
 // +kubebuilder:object:root=true
-// +kubebuilder:resource:scope=Namespaced,shortName=kdex-func,categories=all;kdex
+// +kubebuilder:resource:scope=Namespaced,shortName=kdex-fn,categories=all;kdex
 // +kubebuilder:subresource:status
 
 // KDexFunction is the Schema for the kdexfunctions API.
@@ -61,6 +62,11 @@ type KDexFunctionList struct {
 
 // KDexFunctionSpec defines the desired state of KDexFunction
 type KDexFunctionSpec struct {
+	// hostRef is a reference to the KDexHost that this translation belongs to.
+	// +kubebuilder:validation:Required
+	// +kubebuilder:validation:XValidation:rule="self.name.size() > 0",message="hostRef.name must not be empty"
+	HostRef corev1.LocalObjectReference `json:"hostRef" protobuf:"bytes,2,req,name=hostRef"`
+
 	// Metadata defines the metadata for the function for cataloging and discovery purposes.
 	// +kubebuilder:validation:Optional
 	Metadata KDexFunctionMetadata `json:"metadata,omitempty" protobuf:"bytes,1,opt,name=metadata"`
