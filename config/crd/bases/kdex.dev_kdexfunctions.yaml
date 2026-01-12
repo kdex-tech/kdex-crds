@@ -60,35 +60,71 @@ spec:
             description: spec defines the desired state of KDexFunction
             properties:
               api:
-                description: API defines the OpenAPI contract for the function.
+                description: |-
+                  API defines the OpenAPI contract for the function.
+                  See https://github.com/OAI/OpenAPI-Specification/blob/main/versions/3.0.3.md#path-item-object
+                  See https://github.com/OAI/OpenAPI-Specification/blob/main/versions/3.0.3.md#schema-object
+                  The supported fields from 'path item object' are: summary, description, get, put, post, delete, options, head, patch, trace, parameters, and responses.
+                  The field 'schemas' of type map[string]schema whose values are defined by 'schema object' is supported and can be referenced in the get, put, post, delete, options, head, patch, trace operations like `$ref: "#/components/schemas/<key>"`.
+
+                  api:
+                    summary: "User API"
+                    description: "User API"
+                    get:
+                      summary: "Get a user"
+                      description: "Returns a user by ID"
+                      parameters:
+                        - name: id
+                          in: query
+                          required: true
+                          schema:
+                            type: string
+                      responses:
+                        "200":
+                          description: "Successful response"
+                          content:
+                            application/json:
+                              schema:
+                                $ref: "#/components/schemas/User"
+                        "400":
+                          description: "Bad request"
+                        "404":
+                          description: "Not found"
+                        "500":
+                          description: "Internal server error"
+                    schemas:
+                      User:
+                        type: object
+                        properties:
+                          id:
+                            type: string
+                            description: "The ID of the user"
+                            example: "123"
+                          name:
+                            type: string
+                            description: "The name of the user"
+                            example: "John Doe"
+                          age:
+                            type: integer
+                            description: "The age of the user"
+                            minimum: 0
+                            maximum: 100
+                            example: 30
+                          email:
+                            type: string
+                            description: "The email of the user"
+                            example: "john.doe@example.com"
+                          createdAt:
+                            type: string
                 properties:
-                  method:
-                    description: Method is the HTTP method (e.g., GET, POST, PUT,
-                      DELETE).
-                    enum:
-                    - GET
-                    - POST
-                    - PUT
-                    - DELETE
-                    - PATCH
-                    - HEAD
-                    - OPTIONS
-                    - TRACE
-                    - CONNECT
-                    type: string
-                  openAPIDefinition:
-                    description: OpenAPIDefinition is the OpenAPI Path Item Object
-                      structure.
-                    type: object
-                    x-kubernetes-preserve-unknown-fields: true
                   path:
                     description: Path is the base URL path for the function (e.g.,
                       /api/v1/users/{id}).
                     type: string
                 required:
-                - method
                 - path
                 type: object
+                x-kubernetes-preserve-unknown-fields: true
               backend:
                 description: |-
                   Backend defines the native Kubernetes workload configuration for this function.
@@ -275,10 +311,6 @@ spec:
                         description: Name of the contact.
                         type: string
                     type: object
-                  description:
-                    description: Description is a human-readable description of the
-                      function's purpose.
-                    type: string
                   sourceRepository:
                     description: SourceRepository is the Git repository URL where
                       the stub code resides.
@@ -289,6 +321,8 @@ spec:
                       type: string
                     type: array
                 type: object
+            required:
+            - api
             type: object
           status:
             description: status defines the observed state of KDexFunction

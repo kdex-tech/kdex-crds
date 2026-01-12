@@ -66,8 +66,64 @@ type KDexFunctionSpec struct {
 	Metadata KDexFunctionMetadata `json:"metadata,omitempty" protobuf:"bytes,1,opt,name=metadata"`
 
 	// API defines the OpenAPI contract for the function.
-	// +kubebuilder:validation:Optional
-	API KDexFunctionAPI `json:"api,omitempty" protobuf:"bytes,2,opt,name=api"`
+	// See https://github.com/OAI/OpenAPI-Specification/blob/main/versions/3.0.3.md#path-item-object
+	// See https://github.com/OAI/OpenAPI-Specification/blob/main/versions/3.0.3.md#schema-object
+	// The supported fields from 'path item object' are: summary, description, get, put, post, delete, options, head, patch, trace, parameters, and responses.
+	// The field 'schemas' of type map[string]schema whose values are defined by 'schema object' is supported and can be referenced in the get, put, post, delete, options, head, patch, trace operations like `$ref: "#/components/schemas/<key>"`.
+	// +kubebuilder:validation:Required
+	// +kubebuilder:pruning:PreserveUnknownFields
+	// +kubebuilder:example:
+	//
+	// api:
+	//   summary: "User API"
+	//   description: "User API"
+	//   get:
+	//     summary: "Get a user"
+	//     description: "Returns a user by ID"
+	//     parameters:
+	//       - name: id
+	//         in: query
+	//         required: true
+	//         schema:
+	//           type: string
+	//     responses:
+	//       "200":
+	//         description: "Successful response"
+	//         content:
+	//           application/json:
+	//             schema:
+	//               $ref: "#/components/schemas/User"
+	//       "400":
+	//         description: "Bad request"
+	//       "404":
+	//         description: "Not found"
+	//       "500":
+	//         description: "Internal server error"
+	//   schemas:
+	//     User:
+	//       type: object
+	//       properties:
+	//         id:
+	//           type: string
+	//           description: "The ID of the user"
+	//           example: "123"
+	//         name:
+	//           type: string
+	//           description: "The name of the user"
+	//           example: "John Doe"
+	//         age:
+	//           type: integer
+	//           description: "The age of the user"
+	//           minimum: 0
+	//           maximum: 100
+	//           example: 30
+	//         email:
+	//           type: string
+	//           description: "The email of the user"
+	//           example: "john.doe@example.com"
+	//         createdAt:
+	//           type: string
+	API KDexOpenAPI `json:"api" protobuf:"bytes,2,req,name=api"`
 
 	// Function defines the FaaS execution details.
 	// +kubebuilder:validation:Optional
@@ -82,10 +138,6 @@ type KDexFunctionSpec struct {
 
 // KDexFunctionMetadata defines the metadata for the function.
 type KDexFunctionMetadata struct {
-	// Description is a human-readable description of the function's purpose.
-	// +kubebuilder:validation:Optional
-	Description string `json:"description,omitempty" protobuf:"bytes,1,opt,name=description"`
-
 	// Tags are used for grouping and searching functions.
 	// +kubebuilder:validation:Optional
 	Tags []string `json:"tags,omitempty" protobuf:"bytes,2,rep,name=tags"`
@@ -114,21 +166,12 @@ type ContactInfo struct {
 	Email string `json:"email,omitempty" protobuf:"bytes,2,opt,name=email"`
 }
 
-// KDexFunctionAPI defines the OpenAPI contract.
-type KDexFunctionAPI struct {
+type KDexOpenAPI struct {
 	// Path is the base URL path for the function (e.g., /api/v1/users/{id}).
 	// +kubebuilder:validation:Required
 	Path string `json:"path" protobuf:"bytes,1,req,name=path"`
 
-	// Method is the HTTP method (e.g., GET, POST, PUT, DELETE).
-	// +kubebuilder:validation:Required
-	// +kubebuilder:validation:Enum=GET;POST;PUT;DELETE;PATCH;HEAD;OPTIONS;TRACE;CONNECT
-	Method string `json:"method" protobuf:"bytes,2,req,name=method"`
-
-	// OpenAPIDefinition is the OpenAPI Path Item Object structure.
-	// +kubebuilder:validation:Optional
-	// +kubebuilder:pruning:PreserveUnknownFields
-	OpenAPIDefinition *k8sruntime.RawExtension `json:"openAPIDefinition,omitempty" protobuf:"bytes,3,opt,name=openAPIDefinition"`
+	k8sruntime.RawExtension `json:",inline" protobuf:"bytes,2,opt,name=api"`
 }
 
 // KDexFunctionExec defines the FaaS execution environment.
