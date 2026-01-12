@@ -21,7 +21,7 @@ import (
 )
 
 // +kubebuilder:object:root=true
-// +kubebuilder:resource:scope=Namespaced,shortName=kdex-a
+// +kubebuilder:resource:scope=Namespaced,shortName=kdex-a,categories=all;kdex
 // +kubebuilder:subresource:status
 
 // KDexApp is the Schema for the kdexapps API.

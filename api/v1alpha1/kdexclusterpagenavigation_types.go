@@ -21,7 +21,7 @@ import (
 )
 
 // +kubebuilder:object:root=true
-// +kubebuilder:resource:scope=Cluster,shortName=kdex-c-pn
+// +kubebuilder:resource:scope=Cluster,shortName=kdex-c-pn,categories=kdex-c
 // +kubebuilder:subresource:status
 
 // KDexClusterPageNavigation is the Schema for the kdexclusterpagenavigations API

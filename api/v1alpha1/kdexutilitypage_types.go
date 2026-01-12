@@ -34,7 +34,7 @@ const (
 )
 
 // +kubebuilder:object:root=true
-// +kubebuilder:resource:scope=Namespaced,shortName=kdex-up
+// +kubebuilder:resource:scope=Namespaced,shortName=kdex-up,categories=all;kdex
 // +kubebuilder:subresource:status
 
 // KDexUtilityPage is the Schema for the kdexutilitypages API

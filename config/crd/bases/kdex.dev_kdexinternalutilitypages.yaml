@@ -8,6 +8,8 @@ metadata:
 spec:
   group: kdex.dev
   names:
+    categories:
+    - kdex-i
     kind: KDexInternalUtilityPage
     listKind: KDexInternalUtilityPageList
     plural: kdexinternalutilitypages

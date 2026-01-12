@@ -22,7 +22,7 @@ import (
 )
 
 // +kubebuilder:object:root=true
-// +kubebuilder:resource:scope=Namespaced,shortName=kdex-i-t
+// +kubebuilder:resource:scope=Namespaced,shortName=kdex-i-t,categories=kdex-i
 // +kubebuilder:subresource:status
 
 // KDexInternalTranslation is the Schema for the kdexinternaltranslations API

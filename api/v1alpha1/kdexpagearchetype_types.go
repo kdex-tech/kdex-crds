@@ -21,7 +21,7 @@ import (
 )
 
 // +kubebuilder:object:root=true
-// +kubebuilder:resource:scope=Namespaced,shortName=kdex-pa
+// +kubebuilder:resource:scope=Namespaced,shortName=kdex-pa,categories=all;kdex
 // +kubebuilder:subresource:status
 
 // KDexPageArchetype is the Schema for the kdexpagearchetypes API

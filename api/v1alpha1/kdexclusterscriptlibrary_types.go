@@ -21,7 +21,7 @@ import (
 )
 
 // +kubebuilder:object:root=true
-// +kubebuilder:resource:scope=Cluster,shortName=kdex-c-sl
+// +kubebuilder:resource:scope=Cluster,shortName=kdex-c-sl,categories=kdex-c
 // +kubebuilder:subresource:status
 
 // KDexClusterScriptLibrary is the Schema for the kdexclusterscriptlibraries API

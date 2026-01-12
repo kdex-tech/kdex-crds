@@ -21,7 +21,7 @@ import (
 )
 
 // +kubebuilder:object:root=true
-// +kubebuilder:resource:scope=Cluster,shortName=kdex-c-ph
+// +kubebuilder:resource:scope=Cluster,shortName=kdex-c-ph,categories=kdex-c
 // +kubebuilder:subresource:status
 
 // KDexClusterPageHeader is the Schema for the kdexclusterpageheaders API

@@ -21,7 +21,7 @@ import (
 )
 
 // +kubebuilder:object:root=true
-// +kubebuilder:resource:scope=Cluster,shortName=kdex-c-a
+// +kubebuilder:resource:scope=Cluster,shortName=kdex-c-a,categories=kdex-c
 // +kubebuilder:subresource:status
 
 // KDexClusterApp is the Schema for the kdexclusterapps API

@@ -21,7 +21,7 @@ import (
 )
 
 // +kubebuilder:object:root=true
-// +kubebuilder:resource:scope=Cluster,shortName=kdex-c-tr
+// +kubebuilder:resource:scope=Cluster,shortName=kdex-c-tr,categories=kdex-c
 // +kubebuilder:subresource:status
 
 // KDexClusterTranslation is the Schema for the kdexclustertranslations API

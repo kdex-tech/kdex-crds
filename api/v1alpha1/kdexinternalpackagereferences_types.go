@@ -21,7 +21,7 @@ import (
 )
 
 // +kubebuilder:object:root=true
-// +kubebuilder:resource:scope=Namespaced,shortName=kdex-i-pr
+// +kubebuilder:resource:scope=Namespaced,shortName=kdex-i-pr,categories=kdex-i
 // +kubebuilder:subresource:status
 
 // KDexInternalPackageReferences is the Schema for the kdexinternalpackagereferences API

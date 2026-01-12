@@ -22,7 +22,7 @@ import (
 )
 
 // +kubebuilder:object:root=true
-// +kubebuilder:resource:scope=Namespaced,shortName=kdex-func
+// +kubebuilder:resource:scope=Namespaced,shortName=kdex-func,categories=all;kdex
 // +kubebuilder:subresource:status
 
 // KDexFunction is the Schema for the kdexfunctions API.

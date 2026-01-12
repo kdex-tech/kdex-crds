@@ -21,7 +21,7 @@ import (
 )
 
 // +kubebuilder:object:root=true
-// +kubebuilder:resource:scope=Namespaced,shortName=kdex-pn
+// +kubebuilder:resource:scope=Namespaced,shortName=kdex-pn,categories=all;kdex
 // +kubebuilder:subresource:status
 
 // KDexPageNavigation is the Schema for the kdexpagenavigations API

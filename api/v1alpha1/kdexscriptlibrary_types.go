@@ -27,7 +27,7 @@ const (
 )
 
 // +kubebuilder:object:root=true
-// +kubebuilder:resource:scope=Namespaced,shortName=kdex-sl
+// +kubebuilder:resource:scope=Namespaced,shortName=kdex-sl,categories=all;kdex
 // +kubebuilder:subresource:status
 
 // KDexScriptLibrary is the Schema for the kdexscriptlibraries API

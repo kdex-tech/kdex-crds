@@ -21,7 +21,7 @@ import (
 )
 
 // +kubebuilder:object:root=true
-// +kubebuilder:resource:scope=Namespaced,shortName=kdex-h
+// +kubebuilder:resource:scope=Namespaced,shortName=kdex-h,categories=all;kdex
 // +kubebuilder:subresource:status
 
 // KDexHost is the Schema for the kdexhosts API

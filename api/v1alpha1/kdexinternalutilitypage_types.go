@@ -22,7 +22,7 @@ import (
 )
 
 // +kubebuilder:object:root=true
-// +kubebuilder:resource:scope=Namespaced,shortName=kdex-i-up
+// +kubebuilder:resource:scope=Namespaced,shortName=kdex-i-up,categories=kdex-i
 // +kubebuilder:subresource:status
 
 // KDexInternalUtilityPage is the Schema for the kdexinternalutilitypages API

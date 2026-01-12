@@ -21,7 +21,7 @@ import (
 )
 
 // +kubebuilder:object:root=true
-// +kubebuilder:resource:scope=Cluster,shortName=kdex-c-pf
+// +kubebuilder:resource:scope=Cluster,shortName=kdex-c-pf,categories=kdex-c
 // +kubebuilder:subresource:status
 
 // KDexClusterPageFooter is the Schema for the kdexclusterpagefooters API

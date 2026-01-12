@@ -8,6 +8,8 @@ metadata:
 spec:
   group: kdex.dev
   names:
+    categories:
+    - kdex-i
     kind: KDexInternalTranslation
     listKind: KDexInternalTranslationList
     plural: kdexinternaltranslations

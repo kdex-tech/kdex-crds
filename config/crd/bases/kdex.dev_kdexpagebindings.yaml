@@ -8,6 +8,9 @@ metadata:
 spec:
   group: kdex.dev
   names:
+    categories:
+    - all
+    - kdex
     kind: KDexPageBinding
     listKind: KDexPageBindingList
     plural: kdexpagebindings

@@ -21,7 +21,7 @@ import (
 )
 
 // +kubebuilder:object:root=true
-// +kubebuilder:resource:scope=Cluster,shortName=kdex-c-th
+// +kubebuilder:resource:scope=Cluster,shortName=kdex-c-th,categories=kdex-c
 // +kubebuilder:subresource:status
 
 // KDexClusterTheme is the Schema for the kdexclusterthemes API

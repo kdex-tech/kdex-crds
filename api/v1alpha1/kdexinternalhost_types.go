@@ -51,7 +51,7 @@ type KDexInternalHostSpec struct {
 }
 
 // +kubebuilder:object:root=true
-// +kubebuilder:resource:scope=Namespaced,shortName=kdex-i-h
+// +kubebuilder:resource:scope=Namespaced,shortName=kdex-i-h,categories=kdex-i
 // +kubebuilder:subresource:status
 
 // KDexInternalHost is the Schema for the kdexinternalhosts API

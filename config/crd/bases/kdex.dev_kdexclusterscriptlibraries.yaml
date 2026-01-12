@@ -8,6 +8,8 @@ metadata:
 spec:
   group: kdex.dev
   names:
+    categories:
+    - kdex-c
     kind: KDexClusterScriptLibrary
     listKind: KDexClusterScriptLibraryList
     plural: kdexclusterscriptlibraries

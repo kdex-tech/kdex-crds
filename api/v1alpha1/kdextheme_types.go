@@ -21,7 +21,7 @@ import (
 )
 
 // +kubebuilder:object:root=true
-// +kubebuilder:resource:scope=Namespaced,shortName=kdex-th
+// +kubebuilder:resource:scope=Namespaced,shortName=kdex-th,categories=all;kdex
 // +kubebuilder:subresource:status
 
 // KDexTheme is the Schema for the kdexthemes API

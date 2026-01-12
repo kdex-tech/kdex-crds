@@ -22,7 +22,7 @@ import (
 )
 
 // +kubebuilder:object:root=true
-// +kubebuilder:resource:scope=Namespaced,shortName=kdex-pb
+// +kubebuilder:resource:scope=Namespaced,shortName=kdex-pb,categories=all;kdex
 // +kubebuilder:subresource:status
 
 // KDexPageBinding is the Schema for the kdexpagebindings API

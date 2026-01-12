@@ -21,7 +21,7 @@ import (
 )
 
 // +kubebuilder:object:root=true
-// +kubebuilder:resource:scope=Cluster,shortName=kdex-c-up
+// +kubebuilder:resource:scope=Cluster,shortName=kdex-c-up,categories=kdex-c
 // +kubebuilder:subresource:status
 
 // KDexClusterUtilityPage is the Schema for the kdexclusterutilitypages API

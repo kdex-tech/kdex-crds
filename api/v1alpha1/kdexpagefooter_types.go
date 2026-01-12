@@ -21,7 +21,7 @@ import (
 )
 
 // +kubebuilder:object:root=true
-// +kubebuilder:resource:scope=Namespaced,shortName=kdex-pf
+// +kubebuilder:resource:scope=Namespaced,shortName=kdex-pf,categories=all;kdex
 // +kubebuilder:subresource:status
 
 // KDexPageFooter is the Schema for the kdexpagefooters API

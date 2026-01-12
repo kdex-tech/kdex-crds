@@ -21,7 +21,7 @@ import (
 )
 
 // +kubebuilder:object:root=true
-// +kubebuilder:resource:scope=Cluster,shortName=kdex-c-pa
+// +kubebuilder:resource:scope=Cluster,shortName=kdex-c-pa,categories=kdex-c
 // +kubebuilder:subresource:status
 
 // KDexClusterPageArchetype is the Schema for the kdexclusterpagearchetypes API
