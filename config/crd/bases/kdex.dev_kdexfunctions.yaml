@@ -117,25 +117,36 @@ spec:
                           createdAt:
                             type: string
                 properties:
-                  connect: {}
-                  delete: {}
+                  connect:
+                    type: object
+                  delete:
+                    type: object
                   description:
                     type: string
-                  get: {}
-                  head: {}
-                  options: {}
-                  parameters: {}
-                  patch: {}
+                  get:
+                    type: object
+                  head:
+                    type: object
+                  options:
+                    type: object
+                  parameters:
+                    x-kubernetes-preserve-unknown-fields: true
+                  patch:
+                    type: object
                   path:
                     description: Path is the base URL path for the function (e.g.,
                       /api/v1/users/{id}).
                     type: string
-                  post: {}
-                  put: {}
-                  schemas: {}
+                  post:
+                    type: object
+                  put:
+                    type: object
+                  schemas:
+                    type: object
                   summary:
                     type: string
-                  trace: {}
+                  trace:
+                    type: object
                 required:
                 - path
                 type: object
