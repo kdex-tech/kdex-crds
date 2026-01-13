@@ -157,6 +157,14 @@ type Backend struct {
 	StaticImagePullPolicy corev1.PullPolicy `json:"staticImagePullPolicy,omitempty" protobuf:"bytes,8,opt,name=staticImagePullPolicy,casttype=PullPolicy"`
 }
 
+func (b *Backend) IsConfigured(defaultServerImage string) bool {
+	if b.StaticImage != "" || (b.ServerImage != "" && b.ServerImage != defaultServerImage) {
+		return true
+	}
+
+	return false
+}
+
 type ContentEntryApp struct {
 	// appRef is a reference to the KDexApp to include in this binding.
 	// +kubebuilder:validation:Optional
