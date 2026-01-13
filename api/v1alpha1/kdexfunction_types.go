@@ -134,12 +134,6 @@ type KDexFunctionSpec struct {
 	// Function defines the FaaS execution details.
 	// +kubebuilder:validation:Optional
 	Function KDexFunctionExec `json:"function,omitempty" protobuf:"bytes,3,opt,name=function"`
-
-	// Backend defines the native Kubernetes workload configuration for this function.
-	// When this is specified, the function is deployed as a standard containerized backend
-	// rather than through a FaaS runtime.
-	// +kubebuilder:validation:Optional
-	Backend *Backend `json:"backend,omitempty" protobuf:"bytes,4,opt,name=backend"`
 }
 
 // KDexFunctionMetadata defines the metadata for the function.
