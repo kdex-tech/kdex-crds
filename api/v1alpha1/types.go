@@ -101,6 +101,62 @@ func (a *Assets) String() string {
 	return buffer.String()
 }
 
+// Backend defines a deployment for serving resources specific to the refer.
+type Backend struct {
+	// imagePullSecrets is an optional list of references to secrets in the same namespace to use for pulling the referenced images.
+	// More info: https://kubernetes.io/docs/concepts/containers/images#specifying-imagepullsecrets-on-a-pod
+	// +kubebuilder:validation:Optional
+	// +patchMergeKey=name
+	// +patchStrategy=merge
+	// +listType=map
+	// +listMapKey=name
+	ImagePullSecrets []corev1.LocalObjectReference `json:"imagePullSecrets,omitempty" patchStrategy:"merge" patchMergeKey:"name" protobuf:"bytes,1,rep,name=imagePullSecrets"`
+
+	// ingressPath is a prefix beginning with '/_' plus additional characters. This indicates where in the Ingress/HTTPRoute the Backend will be mounted.
+	// This value is determined by the implementation that embeds the Backend and cannot be changed.
+	// +kubebuilder:validation:Optional
+	// +kubebuilder:validation:Pattern=`^/_.+`
+	IngressPath string `json:"ingressPath,omitempty" protobuf:"bytes,2,opt,name=ingressPath"`
+
+	// replicas is the number of desired pods. This is a pointer to distinguish between explicit
+	// zero and not specified. Defaults to 1.
+	// +kubebuilder:validation:Optional
+	Replicas *int32 `json:"replicas,omitempty" protobuf:"varint,3,opt,name=replicas"`
+
+	// resources defines the compute resources required by the container.
+	// More info: https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/
+	// +kubebuilder:validation:Optional
+	Resources corev1.ResourceRequirements `json:"resources,omitempty" protobuf:"bytes,4,opt,name=resources"`
+
+	// serverImage is the name of Backend image.
+	// More info: https://kubernetes.io/docs/concepts/containers/images
+	// +kubebuilder:validation:Optional
+	// +kubebuilder:validation:MinLength=5
+	ServerImage string `json:"serverImage,omitempty" protobuf:"bytes,5,opt,name=serverImage"`
+
+	// Policy for pulling the Backend server image. Possible values are:
+	// Always: the kubelet always attempts to pull the reference. Container creation will fail If the pull fails.
+	// Never: the kubelet never pulls the reference and only uses a local image or artifact. Container creation will fail if the reference isn't present.
+	// IfNotPresent: the kubelet pulls if the reference isn't already present on disk. Container creation will fail if the reference isn't present and the pull fails.
+	// Defaults to Always if :latest tag is specified, or IfNotPresent otherwise.
+	// +kubebuilder:validation:Optional
+	ServerImagePullPolicy corev1.PullPolicy `json:"serverImagePullPolicy,omitempty" protobuf:"bytes,6,opt,name=serverImagePullPolicy,casttype=PullPolicy"`
+
+	// staticImage is the name of an OCI image that contains static resources that will be served by the Backend. This may not apply if the serverImage is set to a custom implementation.
+	// More info: https://kubernetes.io/docs/concepts/containers/images
+	// +kubebuilder:validation:Optional
+	// +kubebuilder:validation:MinLength=5
+	StaticImage string `json:"staticImage,omitempty" protobuf:"bytes,7,opt,name=staticImage"`
+
+	// Policy for pulling the OCI theme image. Possible values are:
+	// Always: the kubelet always attempts to pull the reference. Container creation will fail If the pull fails.
+	// Never: the kubelet never pulls the reference and only uses a local image or artifact. Container creation will fail if the reference isn't present.
+	// IfNotPresent: the kubelet pulls if the reference isn't already present on disk. Container creation will fail if the reference isn't present and the pull fails.
+	// Defaults to Always if :latest tag is specified, or IfNotPresent otherwise.
+	// +kubebuilder:validation:Optional
+	StaticImagePullPolicy corev1.PullPolicy `json:"staticImagePullPolicy,omitempty" protobuf:"bytes,8,opt,name=staticImagePullPolicy,casttype=PullPolicy"`
+}
+
 type ContentEntryApp struct {
 	// appRef is a reference to the KDexApp to include in this binding.
 	// +kubebuilder:validation:Optional
@@ -462,60 +518,4 @@ type Translation struct {
 	// +kubebuilder:validation:MinProperties=1
 	// +kubebuilder:validation:Required
 	KeysAndValues map[string]string `json:"keysAndValues" protobuf:"bytes,2,rep,name=keysAndValues"`
-}
-
-// Backend defines a deployment for serving resources specific to the refer.
-type Backend struct {
-	// imagePullSecrets is an optional list of references to secrets in the same namespace to use for pulling the referenced images.
-	// More info: https://kubernetes.io/docs/concepts/containers/images#specifying-imagepullsecrets-on-a-pod
-	// +kubebuilder:validation:Optional
-	// +patchMergeKey=name
-	// +patchStrategy=merge
-	// +listType=map
-	// +listMapKey=name
-	ImagePullSecrets []corev1.LocalObjectReference `json:"imagePullSecrets,omitempty" patchStrategy:"merge" patchMergeKey:"name" protobuf:"bytes,1,rep,name=imagePullSecrets"`
-
-	// ingressPath is a prefix beginning with '/_' plus additional characters. This indicates where in the Ingress/HTTPRoute the Backend will be mounted.
-	// This value is determined by the implementation that embeds the Backend and cannot be changed.
-	// +kubebuilder:validation:Optional
-	// +kubebuilder:validation:Pattern=`^/_.+`
-	IngressPath string `json:"ingressPath,omitempty" protobuf:"bytes,2,opt,name=ingressPath"`
-
-	// replicas is the number of desired pods. This is a pointer to distinguish between explicit
-	// zero and not specified. Defaults to 1.
-	// +kubebuilder:validation:Optional
-	Replicas *int32 `json:"replicas,omitempty" protobuf:"varint,3,opt,name=replicas"`
-
-	// resources defines the compute resources required by the container.
-	// More info: https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/
-	// +kubebuilder:validation:Optional
-	Resources corev1.ResourceRequirements `json:"resources,omitempty" protobuf:"bytes,4,opt,name=resources"`
-
-	// serverImage is the name of Backend image.
-	// More info: https://kubernetes.io/docs/concepts/containers/images
-	// +kubebuilder:validation:Optional
-	// +kubebuilder:validation:MinLength=5
-	ServerImage string `json:"serverImage,omitempty" protobuf:"bytes,5,opt,name=serverImage"`
-
-	// Policy for pulling the Backend server image. Possible values are:
-	// Always: the kubelet always attempts to pull the reference. Container creation will fail If the pull fails.
-	// Never: the kubelet never pulls the reference and only uses a local image or artifact. Container creation will fail if the reference isn't present.
-	// IfNotPresent: the kubelet pulls if the reference isn't already present on disk. Container creation will fail if the reference isn't present and the pull fails.
-	// Defaults to Always if :latest tag is specified, or IfNotPresent otherwise.
-	// +kubebuilder:validation:Optional
-	ServerImagePullPolicy corev1.PullPolicy `json:"serverImagePullPolicy,omitempty" protobuf:"bytes,6,opt,name=serverImagePullPolicy,casttype=PullPolicy"`
-
-	// staticImage is the name of an OCI image that contains static resources that will be served by the Backend. This may not apply if the serverImage is set to a custom implementation.
-	// More info: https://kubernetes.io/docs/concepts/containers/images
-	// +kubebuilder:validation:Optional
-	// +kubebuilder:validation:MinLength=5
-	StaticImage string `json:"staticImage,omitempty" protobuf:"bytes,7,opt,name=staticImage"`
-
-	// Policy for pulling the OCI theme image. Possible values are:
-	// Always: the kubelet always attempts to pull the reference. Container creation will fail If the pull fails.
-	// Never: the kubelet never pulls the reference and only uses a local image or artifact. Container creation will fail if the reference isn't present.
-	// IfNotPresent: the kubelet pulls if the reference isn't already present on disk. Container creation will fail if the reference isn't present and the pull fails.
-	// Defaults to Always if :latest tag is specified, or IfNotPresent otherwise.
-	// +kubebuilder:validation:Optional
-	StaticImagePullPolicy corev1.PullPolicy `json:"staticImagePullPolicy,omitempty" protobuf:"bytes,8,opt,name=staticImagePullPolicy,casttype=PullPolicy"`
 }
