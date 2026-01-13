@@ -74,6 +74,10 @@ type KDexHostSpec struct {
 	// +kubebuilder:validation:Optional
 	DefaultLang string `json:"defaultLang,omitempty" protobuf:"bytes,3,opt,name=defaultLang"`
 
+	// devMode is a boolean that enables development features like the Request Sniffer.
+	// +kubebuilder:validation:Optional
+	DevMode bool `json:"devMode,omitempty" protobuf:"varint,12,opt,name=devMode"`
+
 	// modulePolicy defines the policy for JavaScript references in KDexApp, KDexTheme and KDexScriptLibrary resources. When not specified the policy is Strict
 	// A Host must not accept JavaScript references which do not comply with the specified policy.
 	// +kubebuilder:validation:Optional

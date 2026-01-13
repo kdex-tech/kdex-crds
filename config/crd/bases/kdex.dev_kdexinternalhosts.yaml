@@ -122,6 +122,10 @@ spec:
                   See https://developer.mozilla.org/en-US/docs/Glossary/BCP_47_language_tag.
                   When render page paths do not specify a 'lang' path parameter this will be the value used. When not set the default will be 'en'.
                 type: string
+              devMode:
+                description: devMode is a boolean that enables development features
+                  like the Request Sniffer.
+                type: boolean
               errorRef:
                 description: errorRef is a reference to the KDexInternalUtilityPage
                   that provides the error page.
