@@ -35,34 +35,39 @@ import (
 // +kubebuilder:printcolumn:name="Gen",type="string",JSONPath=".metadata.generation",priority=1
 // +kubebuilder:printcolumn:name="Status Attributes",type="string",JSONPath=".status.attributes",priority=1
 type KDexHost struct {
-	metav1.TypeMeta `json:",inline"`
-
 	// metadata is a standard object metadata
 	// +kubebuilder:validation:Optional
 	metav1.ObjectMeta `json:"metadata,omitempty,omitzero"`
+
+	// spec defines the desired state of KDexHost
+	// +kubebuilder:validation:Required
+	Spec KDexHostSpec `json:"spec"`
 
 	// status defines the observed state of KDexApp
 	// +kubebuilder:validation:Optional
 	Status KDexObjectStatus `json:"status,omitempty,omitzero"`
 
-	// spec defines the desired state of KDexHost
-	// +kubebuilder:validation:Required
-	Spec KDexHostSpec `json:"spec"`
+	metav1.TypeMeta `json:",inline"`
 }
 
 // +kubebuilder:object:root=true
 
 // KDexHostList contains a list of KDexHost
 type KDexHostList struct {
-	metav1.TypeMeta `json:",inline"`
+	// items contains a list of KDexHost
+	Items []KDexHost `json:"items"`
+
 	metav1.ListMeta `json:"metadata,omitempty"`
-	Items           []KDexHost `json:"items"`
+
+	metav1.TypeMeta `json:",inline"`
 }
 
 // KDexHostSpec defines the desired state of KDexHost
 type KDexHostSpec struct {
 	// assets is a set of elements that define a host specific HTML instructions (e.g. favicon, site logo, charset).
 	Assets Assets `json:"assets,omitempty" protobuf:"bytes,1,rep,name=assets"`
+
+	Backend `json:",inline" protobuf:"bytes,11,opt,name=backend"`
 
 	// brandName is the name used when rendering pages belonging to the host. For example, it may be used as alt text for the logo displayed in the page header.
 	// +kubebuilder:validation:Required
@@ -113,8 +118,6 @@ type KDexHostSpec struct {
 	// utilityPages defines the utility pages (announcement, error, login) for the host.
 	// +kubebuilder:validation:Optional
 	UtilityPages *UtilityPages `json:"utilityPages,omitempty" protobuf:"bytes,10,opt,name=utilityPages"`
-
-	Backend `json:",inline" protobuf:"bytes,11,opt,name=backend"`
 }
 
 func (a *KDexHostSpec) GetResourceImage() string {
