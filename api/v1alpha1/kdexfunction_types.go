@@ -75,7 +75,7 @@ type KDexFunctionSpec struct {
 	// See https://github.com/OAI/OpenAPI-Specification/blob/main/versions/3.0.3.md#path-item-object
 	// See https://github.com/OAI/OpenAPI-Specification/blob/main/versions/3.0.3.md#schema-object
 	// The supported fields from 'path item object' are: summary, description, get, put, post, delete, options, head, patch, trace, parameters, and responses.
-	// The field 'schemas' of type map[string]schema whose values are defined by 'schema object' is supported and can be referenced in the get, put, post, delete, options, head, patch, trace operations like `$ref: "#/components/schemas/<key>"`.
+	// The field 'schemas' of type map[string]schema whose values are defined by 'schema object' is supported and can be referenced throughout operation definitions. References must be in the form "#/components/schemas/<name>".
 	// +kubebuilder:validation:Required
 	// +kubebuilder:pruning:PreserveUnknownFields
 	// +kubebuilder:example:
@@ -106,7 +106,7 @@ type KDexFunctionSpec struct {
 	//       "500":
 	//         description: "Internal server error"
 	//   schemas:
-	//     User:
+	//     "#/components/schemas/User":
 	//       type: object
 	//       properties:
 	//         id:
@@ -235,6 +235,7 @@ type KDexOpenAPIInternal struct {
 	// +kubebuilder:validation:Optional
 	// +kubebuilder:validation:Schemaless
 	// +kubebuilder:validation:Type=object
+	// +kubebuilder:validation:XValidation:rule=`self.all(k, k.matches("^#/components/schemas/[A-Za-z]+[A-Za-z0-9_]*$"))`,message="keys must match ^#/components/schemas/[A-Za-z]+[A-Za-z0-9_]*$"
 	Schemas map[string]openapi.Schema `json:"schemas,omitempty"`
 }
 
