@@ -145,9 +145,6 @@ spec:
                   put:
                     type: object
                   schemas:
-                    description: // +kubebuilder:validation:XValidation:rule=`self.all(k,
-                      k.matches("^#/components/schemas/[A-Za-z]+[A-Za-z0-9_]*$"))`,message="keys
-                      must match ^#/components/schemas/[A-Za-z]+[A-Za-z0-9_]*$"
                     type: object
                   summary:
                     type: string
