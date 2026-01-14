@@ -111,6 +111,12 @@ spec:
                 description: devMode is a boolean that enables development features
                   like the Request Sniffer.
                 type: boolean
+              faviconSVGTemplate:
+                description: faviconSVGTemplate contains SVG code marked up with go
+                  string template to which will be passed the render.TemplateData
+                  holding other host details. The rendered output will be cached and
+                  served at "/favicon.ico" as "image/svg+xml".
+                type: string
               imagePullSecrets:
                 description: |-
                   imagePullSecrets is an optional list of references to secrets in the same namespace to use for pulling the referenced images.

@@ -67,57 +67,61 @@ type KDexHostSpec struct {
 	// assets is a set of elements that define a host specific HTML instructions (e.g. favicon, site logo, charset).
 	Assets Assets `json:"assets,omitempty" protobuf:"bytes,1,rep,name=assets"`
 
-	Backend `json:",inline" protobuf:"bytes,11,opt,name=backend"`
+	Backend `json:",inline" protobuf:"bytes,2,opt,name=backend"`
 
 	// brandName is the name used when rendering pages belonging to the host. For example, it may be used as alt text for the logo displayed in the page header.
 	// +kubebuilder:validation:Required
-	BrandName string `json:"brandName" protobuf:"bytes,2,req,name=brandName"`
+	BrandName string `json:"brandName" protobuf:"bytes,3,req,name=brandName"`
 
 	// defaultLang is a string containing a BCP 47 language tag.
 	// See https://developer.mozilla.org/en-US/docs/Glossary/BCP_47_language_tag.
 	// When render page paths do not specify a 'lang' path parameter this will be the value used. When not set the default will be 'en'.
 	// +kubebuilder:validation:Optional
-	DefaultLang string `json:"defaultLang,omitempty" protobuf:"bytes,3,opt,name=defaultLang"`
+	DefaultLang string `json:"defaultLang,omitempty" protobuf:"bytes,4,opt,name=defaultLang"`
 
 	// devMode is a boolean that enables development features like the Request Sniffer.
 	// +kubebuilder:validation:Optional
-	DevMode bool `json:"devMode,omitempty" protobuf:"varint,12,opt,name=devMode"`
+	DevMode bool `json:"devMode,omitempty" protobuf:"varint,5,opt,name=devMode"`
+
+	// faviconSVGTemplate contains SVG code marked up with go string template to which will be passed the render.TemplateData holding other host details. The rendered output will be cached and served at "/favicon.ico" as "image/svg+xml".
+	// +kubebuilder:validation:Optional
+	FaviconSVGTemplate string `json:"faviconSVGTemplate,omitempty" protobuf:"bytes,6,opt,name=faviconSVGTemplate"`
 
 	// modulePolicy defines the policy for JavaScript references in KDexApp, KDexTheme and KDexScriptLibrary resources. When not specified the policy is Strict
 	// A Host must not accept JavaScript references which do not comply with the specified policy.
 	// +kubebuilder:validation:Optional
 	// +kubebuilder:default:="Strict"
-	ModulePolicy ModulePolicy `json:"modulePolicy" protobuf:"bytes,4,opt,name=modulePolicy,casttype=ModulePolicy"`
+	ModulePolicy ModulePolicy `json:"modulePolicy" protobuf:"bytes,7,opt,name=modulePolicy,casttype=ModulePolicy"`
 
 	// organization is the name of the Organization to which the host belongs.
 	// +kubebuilder:validation:Required
 	// +kubebuilder:validation:MinLength=5
-	Organization string `json:"organization" protobuf:"bytes,5,req,name=organization"`
+	Organization string `json:"organization" protobuf:"bytes,8,req,name=organization"`
 
 	// routing defines the desired routing configuration for the host.
 	// +kubebuilder:validation:Required
-	Routing Routing `json:"routing" protobuf:"bytes,6,req,name=routing"`
+	Routing Routing `json:"routing" protobuf:"bytes,9,req,name=routing"`
 
 	// scriptLibraryRef is an optional reference to a KDexScriptLibrary resource.
 	// +kubebuilder:validation:Optional
 	// +kubebuilder:validation:XValidation:rule=`self.kind == "KDexScriptLibrary" || self.kind == "KDexClusterScriptLibrary"`,message="'kind' must be either KDexScriptLibrary or KDexClusterScriptLibrary"
-	ScriptLibraryRef *KDexObjectReference `json:"scriptLibraryRef,omitempty" protobuf:"bytes,7,opt,name=scriptLibraryRef"`
+	ScriptLibraryRef *KDexObjectReference `json:"scriptLibraryRef,omitempty" protobuf:"bytes,10,opt,name=scriptLibraryRef"`
 
 	// themeRef is a reference to the theme that should apply to all pages bound to this host.
 	// +kubebuilder:validation:Optional
 	// +kubebuilder:validation:XValidation:rule=`self.kind == "KDexTheme" || self.kind == "KDexClusterTheme"`,message="'kind' must be either KDexTheme or KDexClusterTheme"
-	ThemeRef *KDexObjectReference `json:"themeRef,omitempty" protobuf:"bytes,8,opt,name=themeRef"`
+	ThemeRef *KDexObjectReference `json:"themeRef,omitempty" protobuf:"bytes,11,opt,name=themeRef"`
 
 	// translationRefs is an array of references to KDexTranslation or KDexClusterTranslation resources that define the translations that should apply to this host.
 	// +listType=map
 	// +listMapKey=name
 	// +kubebuilder:validation:Optional
 	// +kubebuilder:validation:XValidation:rule="self.all(k, k.kind == 'KDexTranslation' || k.kind == 'KDexClusterTranslation')",message="all translation refs must have kind KDexTranslation or KDexClusterTranslation"
-	TranslationRefs []KDexObjectReference `json:"translationRefs,omitempty" protobuf:"bytes,9,rep,name=translationRefs"`
+	TranslationRefs []KDexObjectReference `json:"translationRefs,omitempty" protobuf:"bytes,12,rep,name=translationRefs"`
 
 	// utilityPages defines the utility pages (announcement, error, login) for the host.
 	// +kubebuilder:validation:Optional
-	UtilityPages *UtilityPages `json:"utilityPages,omitempty" protobuf:"bytes,10,opt,name=utilityPages"`
+	UtilityPages *UtilityPages `json:"utilityPages,omitempty" protobuf:"bytes,13,opt,name=utilityPages"`
 }
 
 func (a *KDexHostSpec) GetResourceImage() string {
