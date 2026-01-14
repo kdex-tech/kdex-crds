@@ -235,7 +235,7 @@ type KDexOpenAPIInternal struct {
 	// +kubebuilder:validation:Optional
 	// +kubebuilder:validation:Schemaless
 	// +kubebuilder:validation:Type=object
-	// +kubebuilder:validation:XValidation:rule=`self.all(k, k.matches("^#/components/schemas/[A-Za-z]+[A-Za-z0-9_]*$"))`,message="keys must match ^#/components/schemas/[A-Za-z]+[A-Za-z0-9_]*$"
+	//// +kubebuilder:validation:XValidation:rule=`self.all(k, k.matches("^#/components/schemas/[A-Za-z]+[A-Za-z0-9_]*$"))`,message="keys must match ^#/components/schemas/[A-Za-z]+[A-Za-z0-9_]*$"
 	Schemas map[string]openapi.Schema `json:"schemas,omitempty"`
 }
 
