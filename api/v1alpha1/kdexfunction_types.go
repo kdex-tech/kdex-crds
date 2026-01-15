@@ -180,6 +180,30 @@ type KDexOpenAPI struct {
 	KDexOpenAPIInternal `json:",inline"`
 }
 
+func (api *KDexOpenAPI) GetOp(method string) *openapi.Operation {
+	switch method {
+	case "CONNECT":
+		return api.Connect
+	case "DELETE":
+		return api.Delete
+	case "GET":
+		return api.Get
+	case "HEAD":
+		return api.Head
+	case "OPTIONS":
+		return api.Options
+	case "PATCH":
+		return api.Patch
+	case "POST":
+		return api.Post
+	case "PUT":
+		return api.Put
+	case "TRACE":
+		return api.Trace
+	}
+	return nil
+}
+
 // +kubebuilder:object:generate=false
 type KDexOpenAPIInternal struct {
 	// +kubebuilder:validation:Optional
