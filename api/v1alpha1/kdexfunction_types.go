@@ -189,56 +189,67 @@ func (api *KDexOpenAPI) GetOp(method string) *openapi.Operation {
 
 // +kubebuilder:object:generate=false
 type KDexOpenAPIInternal struct {
+	// +kubebuilder:pruning:PreserveUnknownFields
 	// +kubebuilder:validation:Optional
 	// +kubebuilder:validation:Schemaless
 	// +kubebuilder:validation:Type=object
 	Connect *openapi.Operation `json:"connect,omitempty" yaml:"connect,omitempty"`
 
+	// +kubebuilder:pruning:PreserveUnknownFields
 	// +kubebuilder:validation:Optional
 	// +kubebuilder:validation:Schemaless
 	// +kubebuilder:validation:Type=object
 	Delete *openapi.Operation `json:"delete,omitempty" yaml:"delete,omitempty"`
 
+	// +kubebuilder:pruning:PreserveUnknownFields
 	// +kubebuilder:validation:Optional
 	// +kubebuilder:validation:Schemaless
 	// +kubebuilder:validation:Type=object
 	Get *openapi.Operation `json:"get,omitempty" yaml:"get,omitempty"`
 
+	// +kubebuilder:pruning:PreserveUnknownFields
 	// +kubebuilder:validation:Optional
 	// +kubebuilder:validation:Schemaless
 	// +kubebuilder:validation:Type=object
 	Head *openapi.Operation `json:"head,omitempty" yaml:"head,omitempty"`
 
+	// +kubebuilder:pruning:PreserveUnknownFields
 	// +kubebuilder:validation:Optional
 	// +kubebuilder:validation:Schemaless
 	// +kubebuilder:validation:Type=object
 	Options *openapi.Operation `json:"options,omitempty" yaml:"options,omitempty"`
 
+	// +kubebuilder:pruning:PreserveUnknownFields
 	// +kubebuilder:validation:Optional
 	// +kubebuilder:validation:Schemaless
 	// +kubebuilder:validation:Type=object
 	Patch *openapi.Operation `json:"patch,omitempty" yaml:"patch,omitempty"`
 
+	// +kubebuilder:pruning:PreserveUnknownFields
 	// +kubebuilder:validation:Optional
 	// +kubebuilder:validation:Schemaless
 	// +kubebuilder:validation:Type=object
 	Post *openapi.Operation `json:"post,omitempty" yaml:"post,omitempty"`
 
+	// +kubebuilder:pruning:PreserveUnknownFields
 	// +kubebuilder:validation:Optional
 	// +kubebuilder:validation:Schemaless
 	// +kubebuilder:validation:Type=object
 	Put *openapi.Operation `json:"put,omitempty" yaml:"put,omitempty"`
 
+	// +kubebuilder:pruning:PreserveUnknownFields
 	// +kubebuilder:validation:Optional
 	// +kubebuilder:validation:Schemaless
 	// +kubebuilder:validation:Type=object
 	Trace *openapi.Operation `json:"trace,omitempty" yaml:"trace,omitempty"`
 
+	// +kubebuilder:pruning:PreserveUnknownFields
 	// +kubebuilder:validation:Optional
 	// +kubebuilder:pruning:PreserveUnknownFields
 	// +kubebuilder:validation:Schemaless
 	Parameters []openapi.Parameter `json:"parameters,omitempty" yaml:"parameters,omitempty"`
 
+	// +kubebuilder:pruning:PreserveUnknownFields
 	// +kubebuilder:validation:Optional
 	// +kubebuilder:validation:Schemaless
 	// +kubebuilder:validation:Type=object

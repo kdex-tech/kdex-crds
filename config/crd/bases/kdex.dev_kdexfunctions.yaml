@@ -122,34 +122,44 @@ spec:
                 properties:
                   connect:
                     type: object
+                    x-kubernetes-preserve-unknown-fields: true
                   delete:
                     type: object
+                    x-kubernetes-preserve-unknown-fields: true
                   description:
                     type: string
                   get:
                     type: object
+                    x-kubernetes-preserve-unknown-fields: true
                   head:
                     type: object
+                    x-kubernetes-preserve-unknown-fields: true
                   options:
                     type: object
+                    x-kubernetes-preserve-unknown-fields: true
                   parameters:
                     x-kubernetes-preserve-unknown-fields: true
                   patch:
                     type: object
+                    x-kubernetes-preserve-unknown-fields: true
                   path:
                     description: Path is the base URL path for the function (e.g.,
                       /api/v1/users/{id}).
                     type: string
                   post:
                     type: object
+                    x-kubernetes-preserve-unknown-fields: true
                   put:
                     type: object
+                    x-kubernetes-preserve-unknown-fields: true
                   schemas:
                     type: object
+                    x-kubernetes-preserve-unknown-fields: true
                   summary:
                     type: string
                   trace:
                     type: object
+                    x-kubernetes-preserve-unknown-fields: true
                 required:
                 - path
                 type: object
