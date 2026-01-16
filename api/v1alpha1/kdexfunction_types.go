@@ -267,54 +267,81 @@ type KDexOpenAPIInternal struct {
 }
 
 func (in *KDexOpenAPIInternal) GetConnect() *openapi.Operation {
+	if in.Connect == nil {
+		return nil
+	}
 	var op openapi.Operation
 	_ = op.UnmarshalJSON(in.Connect.Raw)
 	return &op
 }
 
 func (in *KDexOpenAPIInternal) GetDelete() *openapi.Operation {
+	if in.Delete == nil {
+		return nil
+	}
 	var op openapi.Operation
 	_ = op.UnmarshalJSON(in.Delete.Raw)
 	return &op
 }
 
 func (in *KDexOpenAPIInternal) GetGet() *openapi.Operation {
+	if in.Get == nil {
+		return nil
+	}
 	var op openapi.Operation
 	_ = op.UnmarshalJSON(in.Get.Raw)
 	return &op
 }
 
 func (in *KDexOpenAPIInternal) GetHead() *openapi.Operation {
+	if in.Head == nil {
+		return nil
+	}
 	var op openapi.Operation
 	_ = op.UnmarshalJSON(in.Head.Raw)
 	return &op
 }
 
 func (in *KDexOpenAPIInternal) GetOptions() *openapi.Operation {
+	if in.Options == nil {
+		return nil
+	}
 	var op openapi.Operation
 	_ = op.UnmarshalJSON(in.Options.Raw)
 	return &op
 }
 
 func (in *KDexOpenAPIInternal) GetPatch() *openapi.Operation {
+	if in.Patch == nil {
+		return nil
+	}
 	var op openapi.Operation
 	_ = op.UnmarshalJSON(in.Patch.Raw)
 	return &op
 }
 
 func (in *KDexOpenAPIInternal) GetPost() *openapi.Operation {
+	if in.Post == nil {
+		return nil
+	}
 	var op openapi.Operation
 	_ = op.UnmarshalJSON(in.Post.Raw)
 	return &op
 }
 
 func (in *KDexOpenAPIInternal) GetPut() *openapi.Operation {
+	if in.Put == nil {
+		return nil
+	}
 	var op openapi.Operation
 	_ = op.UnmarshalJSON(in.Put.Raw)
 	return &op
 }
 
 func (in *KDexOpenAPIInternal) GetTrace() *openapi.Operation {
+	if in.Trace == nil {
+		return nil
+	}
 	var op openapi.Operation
 	_ = op.UnmarshalJSON(in.Trace.Raw)
 	return &op
@@ -341,51 +368,81 @@ func (in *KDexOpenAPIInternal) GetSchemas() map[string]openapi.Schema {
 }
 
 func (in *KDexOpenAPIInternal) SetConnect(op *openapi.Operation) {
+	if op == nil {
+		return
+	}
 	raw, _ := op.MarshalJSON()
 	in.Connect = &runtime.RawExtension{Raw: raw}
 }
 
 func (in *KDexOpenAPIInternal) SetDelete(op *openapi.Operation) {
+	if op == nil {
+		return
+	}
 	raw, _ := op.MarshalJSON()
 	in.Delete = &runtime.RawExtension{Raw: raw}
 }
 
 func (in *KDexOpenAPIInternal) SetGet(op *openapi.Operation) {
+	if op == nil {
+		return
+	}
 	raw, _ := op.MarshalJSON()
 	in.Get = &runtime.RawExtension{Raw: raw}
 }
 
 func (in *KDexOpenAPIInternal) SetHead(op *openapi.Operation) {
+	if op == nil {
+		return
+	}
 	raw, _ := op.MarshalJSON()
 	in.Head = &runtime.RawExtension{Raw: raw}
 }
 
 func (in *KDexOpenAPIInternal) SetOptions(op *openapi.Operation) {
+	if op == nil {
+		return
+	}
 	raw, _ := op.MarshalJSON()
 	in.Options = &runtime.RawExtension{Raw: raw}
 }
 
 func (in *KDexOpenAPIInternal) SetPatch(op *openapi.Operation) {
+	if op == nil {
+		return
+	}
 	raw, _ := op.MarshalJSON()
 	in.Patch = &runtime.RawExtension{Raw: raw}
 }
 
 func (in *KDexOpenAPIInternal) SetPost(op *openapi.Operation) {
+	if op == nil {
+		return
+	}
 	raw, _ := op.MarshalJSON()
 	in.Post = &runtime.RawExtension{Raw: raw}
 }
 
 func (in *KDexOpenAPIInternal) SetPut(op *openapi.Operation) {
+	if op == nil {
+		return
+	}
 	raw, _ := op.MarshalJSON()
 	in.Put = &runtime.RawExtension{Raw: raw}
 }
 
 func (in *KDexOpenAPIInternal) SetTrace(op *openapi.Operation) {
+	if op == nil {
+		return
+	}
 	raw, _ := op.MarshalJSON()
 	in.Trace = &runtime.RawExtension{Raw: raw}
 }
 
 func (in *KDexOpenAPIInternal) SetParameters(ps []openapi.Parameter) {
+	if len(ps) == 0 {
+		return
+	}
 	_raw := []runtime.RawExtension{}
 	for _, p := range ps {
 		raw, _ := p.MarshalJSON()
@@ -395,6 +452,9 @@ func (in *KDexOpenAPIInternal) SetParameters(ps []openapi.Parameter) {
 }
 
 func (in *KDexOpenAPIInternal) SetSchemas(sm map[string]openapi.Schema) {
+	if len(sm) == 0 {
+		return
+	}
 	_raw := map[string]runtime.RawExtension{}
 	for k, s := range sm {
 		raw, _ := s.MarshalJSON()
