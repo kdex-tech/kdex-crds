@@ -173,7 +173,7 @@ func (api *KDexOpenAPI) GetOp(method string) *openapi.Operation {
 	case "GET":
 		return api.GetGet()
 	case "HEAD":
-		return api.GetGet()
+		return api.GetHead()
 	case "OPTIONS":
 		return api.GetOptions()
 	case "PATCH":
@@ -197,7 +197,7 @@ func (api *KDexOpenAPI) SetOp(method string, op *openapi.Operation) {
 	case "GET":
 		api.SetGet(op)
 	case "HEAD":
-		api.SetGet(op)
+		api.SetHead(op)
 	case "OPTIONS":
 		api.SetOptions(op)
 	case "PATCH":
