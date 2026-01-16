@@ -20,6 +20,7 @@ import (
 	openapi "github.com/getkin/kin-openapi/openapi3"
 	corev1 "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
+	runtime "k8s.io/apimachinery/pkg/runtime"
 )
 
 // +kubebuilder:object:root=true
@@ -166,148 +167,240 @@ type KDexOpenAPI struct {
 func (api *KDexOpenAPI) GetOp(method string) *openapi.Operation {
 	switch method {
 	case "CONNECT":
-		return api.Connect
+		return api.GetConnect()
 	case "DELETE":
-		return api.Delete
+		return api.GetDelete()
 	case "GET":
-		return api.Get
+		return api.GetGet()
 	case "HEAD":
-		return api.Head
+		return api.GetGet()
 	case "OPTIONS":
-		return api.Options
+		return api.GetOptions()
 	case "PATCH":
-		return api.Patch
+		return api.GetPatch()
 	case "POST":
-		return api.Post
+		return api.GetPost()
 	case "PUT":
-		return api.Put
+		return api.GetPut()
 	case "TRACE":
-		return api.Trace
+		return api.GetTrace()
 	}
 	return nil
 }
 
-// +kubebuilder:object:generate=false
+func (api *KDexOpenAPI) SetOp(method string, op *openapi.Operation) {
+	switch method {
+	case "CONNECT":
+		api.SetConnect(op)
+	case "DELETE":
+		api.SetDelete(op)
+	case "GET":
+		api.SetGet(op)
+	case "HEAD":
+		api.SetGet(op)
+	case "OPTIONS":
+		api.SetOptions(op)
+	case "PATCH":
+		api.SetPatch(op)
+	case "POST":
+		api.SetPost(op)
+	case "PUT":
+		api.SetPut(op)
+	case "TRACE":
+		api.SetTrace(op)
+	}
+}
+
 type KDexOpenAPIInternal struct {
 	// +kubebuilder:pruning:PreserveUnknownFields
 	// +kubebuilder:validation:Optional
-	// +kubebuilder:validation:Schemaless
 	// +kubebuilder:validation:Type=object
-	Connect *openapi.Operation `json:"connect,omitempty" yaml:"connect,omitempty"`
+	Connect *runtime.RawExtension `json:"connect,omitempty" yaml:"connect,omitempty"`
 
 	// +kubebuilder:pruning:PreserveUnknownFields
 	// +kubebuilder:validation:Optional
-	// +kubebuilder:validation:Schemaless
 	// +kubebuilder:validation:Type=object
-	Delete *openapi.Operation `json:"delete,omitempty" yaml:"delete,omitempty"`
+	Delete *runtime.RawExtension `json:"delete,omitempty" yaml:"delete,omitempty"`
 
 	// +kubebuilder:pruning:PreserveUnknownFields
 	// +kubebuilder:validation:Optional
-	// +kubebuilder:validation:Schemaless
 	// +kubebuilder:validation:Type=object
-	Get *openapi.Operation `json:"get,omitempty" yaml:"get,omitempty"`
+	Get *runtime.RawExtension `json:"get,omitempty" yaml:"get,omitempty"`
 
 	// +kubebuilder:pruning:PreserveUnknownFields
 	// +kubebuilder:validation:Optional
-	// +kubebuilder:validation:Schemaless
 	// +kubebuilder:validation:Type=object
-	Head *openapi.Operation `json:"head,omitempty" yaml:"head,omitempty"`
+	Head *runtime.RawExtension `json:"head,omitempty" yaml:"head,omitempty"`
 
 	// +kubebuilder:pruning:PreserveUnknownFields
 	// +kubebuilder:validation:Optional
-	// +kubebuilder:validation:Schemaless
 	// +kubebuilder:validation:Type=object
-	Options *openapi.Operation `json:"options,omitempty" yaml:"options,omitempty"`
+	Options *runtime.RawExtension `json:"options,omitempty" yaml:"options,omitempty"`
 
 	// +kubebuilder:pruning:PreserveUnknownFields
 	// +kubebuilder:validation:Optional
-	// +kubebuilder:validation:Schemaless
 	// +kubebuilder:validation:Type=object
-	Patch *openapi.Operation `json:"patch,omitempty" yaml:"patch,omitempty"`
+	Patch *runtime.RawExtension `json:"patch,omitempty" yaml:"patch,omitempty"`
 
 	// +kubebuilder:pruning:PreserveUnknownFields
 	// +kubebuilder:validation:Optional
-	// +kubebuilder:validation:Schemaless
 	// +kubebuilder:validation:Type=object
-	Post *openapi.Operation `json:"post,omitempty" yaml:"post,omitempty"`
+	Post *runtime.RawExtension `json:"post,omitempty" yaml:"post,omitempty"`
 
 	// +kubebuilder:pruning:PreserveUnknownFields
 	// +kubebuilder:validation:Optional
-	// +kubebuilder:validation:Schemaless
 	// +kubebuilder:validation:Type=object
-	Put *openapi.Operation `json:"put,omitempty" yaml:"put,omitempty"`
+	Put *runtime.RawExtension `json:"put,omitempty" yaml:"put,omitempty"`
 
 	// +kubebuilder:pruning:PreserveUnknownFields
 	// +kubebuilder:validation:Optional
-	// +kubebuilder:validation:Schemaless
 	// +kubebuilder:validation:Type=object
-	Trace *openapi.Operation `json:"trace,omitempty" yaml:"trace,omitempty"`
+	Trace *runtime.RawExtension `json:"trace,omitempty" yaml:"trace,omitempty"`
 
 	// +kubebuilder:pruning:PreserveUnknownFields
 	// +kubebuilder:validation:Optional
-	// +kubebuilder:pruning:PreserveUnknownFields
-	// +kubebuilder:validation:Schemaless
-	Parameters []openapi.Parameter `json:"parameters,omitempty" yaml:"parameters,omitempty"`
+	Parameters []runtime.RawExtension `json:"parameters,omitempty" yaml:"parameters,omitempty"`
 
 	// +kubebuilder:pruning:PreserveUnknownFields
 	// +kubebuilder:validation:Optional
-	// +kubebuilder:validation:Schemaless
-	// +kubebuilder:validation:Type=object
-	Schemas map[string]openapi.Schema `json:"schemas,omitempty"`
+	Schemas map[string]runtime.RawExtension `json:"schemas,omitempty"`
 }
 
-// DeepCopyInto is an autogenerated deepcopy function, copying the receiver, writing into out. in must be non-nil.
-func (in *KDexOpenAPIInternal) DeepCopyInto(out *KDexOpenAPIInternal) {
-	*out = *in
-	out.Connect = DeepCopyOperation(in.Connect)
-	out.Delete = DeepCopyOperation(in.Delete)
-	out.Get = DeepCopyOperation(in.Get)
-	out.Head = DeepCopyOperation(in.Head)
-	out.Options = DeepCopyOperation(in.Options)
-	out.Patch = DeepCopyOperation(in.Patch)
-	out.Post = DeepCopyOperation(in.Post)
-	out.Put = DeepCopyOperation(in.Put)
-	out.Trace = DeepCopyOperation(in.Trace)
-	out.Parameters = DeepCopyParameters(in.Parameters)
-	out.Schemas = DeepCopySchemas(in.Schemas)
+func (in *KDexOpenAPIInternal) GetConnect() *openapi.Operation {
+	var op openapi.Operation
+	_ = op.UnmarshalJSON(in.Connect.Raw)
+	return &op
 }
 
-func DeepCopyOperation(in *openapi.Operation) *openapi.Operation {
-	if in == nil {
-		return nil
-	}
-	bytes, _ := in.MarshalJSON()
-	out := new(openapi.Operation)
-	_ = out.UnmarshalJSON(bytes)
-	return out
+func (in *KDexOpenAPIInternal) GetDelete() *openapi.Operation {
+	var op openapi.Operation
+	_ = op.UnmarshalJSON(in.Delete.Raw)
+	return &op
 }
 
-func DeepCopyParameters(in []openapi.Parameter) []openapi.Parameter {
-	if in == nil {
-		return nil
-	}
-	out := make([]openapi.Parameter, len(in))
-	for i, v := range in {
-		bytes, _ := v.MarshalJSON()
-		var p openapi.Parameter
-		_ = p.UnmarshalJSON(bytes)
-		out[i] = p
-	}
-	return out
+func (in *KDexOpenAPIInternal) GetGet() *openapi.Operation {
+	var op openapi.Operation
+	_ = op.UnmarshalJSON(in.Get.Raw)
+	return &op
 }
 
-func DeepCopySchemas(in map[string]openapi.Schema) map[string]openapi.Schema {
-	if in == nil {
-		return nil
+func (in *KDexOpenAPIInternal) GetHead() *openapi.Operation {
+	var op openapi.Operation
+	_ = op.UnmarshalJSON(in.Head.Raw)
+	return &op
+}
+
+func (in *KDexOpenAPIInternal) GetOptions() *openapi.Operation {
+	var op openapi.Operation
+	_ = op.UnmarshalJSON(in.Options.Raw)
+	return &op
+}
+
+func (in *KDexOpenAPIInternal) GetPatch() *openapi.Operation {
+	var op openapi.Operation
+	_ = op.UnmarshalJSON(in.Patch.Raw)
+	return &op
+}
+
+func (in *KDexOpenAPIInternal) GetPost() *openapi.Operation {
+	var op openapi.Operation
+	_ = op.UnmarshalJSON(in.Post.Raw)
+	return &op
+}
+
+func (in *KDexOpenAPIInternal) GetPut() *openapi.Operation {
+	var op openapi.Operation
+	_ = op.UnmarshalJSON(in.Put.Raw)
+	return &op
+}
+
+func (in *KDexOpenAPIInternal) GetTrace() *openapi.Operation {
+	var op openapi.Operation
+	_ = op.UnmarshalJSON(in.Trace.Raw)
+	return &op
+}
+
+func (in *KDexOpenAPIInternal) GetParameters() []openapi.Parameter {
+	ps := []openapi.Parameter{}
+	for _, _raw := range in.Parameters {
+		var p = openapi.Parameter{}
+		_ = p.UnmarshalJSON(_raw.Raw)
+		ps = append(ps, p)
 	}
-	out := make(map[string]openapi.Schema, len(in))
-	for k, v := range in {
-		bytes, _ := v.MarshalJSON()
-		var s openapi.Schema
-		_ = s.UnmarshalJSON(bytes)
-		out[k] = s
+	return ps
+}
+
+func (in *KDexOpenAPIInternal) GetSchemas() map[string]openapi.Schema {
+	sm := map[string]openapi.Schema{}
+	for k, _raw := range in.Schemas {
+		var s = openapi.Schema{}
+		_ = s.UnmarshalJSON(_raw.Raw)
+		sm[k] = s
 	}
-	return out
+	return sm
+}
+
+func (in *KDexOpenAPIInternal) SetConnect(op *openapi.Operation) {
+	raw, _ := op.MarshalJSON()
+	in.Connect = &runtime.RawExtension{Raw: raw}
+}
+
+func (in *KDexOpenAPIInternal) SetDelete(op *openapi.Operation) {
+	raw, _ := op.MarshalJSON()
+	in.Delete = &runtime.RawExtension{Raw: raw}
+}
+
+func (in *KDexOpenAPIInternal) SetGet(op *openapi.Operation) {
+	raw, _ := op.MarshalJSON()
+	in.Get = &runtime.RawExtension{Raw: raw}
+}
+
+func (in *KDexOpenAPIInternal) SetHead(op *openapi.Operation) {
+	raw, _ := op.MarshalJSON()
+	in.Head = &runtime.RawExtension{Raw: raw}
+}
+
+func (in *KDexOpenAPIInternal) SetOptions(op *openapi.Operation) {
+	raw, _ := op.MarshalJSON()
+	in.Options = &runtime.RawExtension{Raw: raw}
+}
+
+func (in *KDexOpenAPIInternal) SetPatch(op *openapi.Operation) {
+	raw, _ := op.MarshalJSON()
+	in.Patch = &runtime.RawExtension{Raw: raw}
+}
+
+func (in *KDexOpenAPIInternal) SetPost(op *openapi.Operation) {
+	raw, _ := op.MarshalJSON()
+	in.Post = &runtime.RawExtension{Raw: raw}
+}
+
+func (in *KDexOpenAPIInternal) SetPut(op *openapi.Operation) {
+	raw, _ := op.MarshalJSON()
+	in.Put = &runtime.RawExtension{Raw: raw}
+}
+
+func (in *KDexOpenAPIInternal) SetTrace(op *openapi.Operation) {
+	raw, _ := op.MarshalJSON()
+	in.Trace = &runtime.RawExtension{Raw: raw}
+}
+
+func (in *KDexOpenAPIInternal) SetParameters(ps []openapi.Parameter) {
+	_raw := []runtime.RawExtension{}
+	for _, p := range ps {
+		raw, _ := p.MarshalJSON()
+		_raw = append(_raw, runtime.RawExtension{Raw: raw})
+	}
+	in.Parameters = _raw
+}
+
+func (in *KDexOpenAPIInternal) SetSchemas(sm map[string]openapi.Schema) {
+	_raw := map[string]runtime.RawExtension{}
+	for k, s := range sm {
+		raw, _ := s.MarshalJSON()
+		_raw[k] = runtime.RawExtension{Raw: raw}
+	}
+	in.Schemas = _raw
 }
 
 // KDexFunctionExec defines the FaaS execution environment.

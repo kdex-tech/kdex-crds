@@ -138,6 +138,10 @@ spec:
                     type: object
                     x-kubernetes-preserve-unknown-fields: true
                   parameters:
+                    items:
+                      type: object
+                      x-kubernetes-preserve-unknown-fields: true
+                    type: array
                     x-kubernetes-preserve-unknown-fields: true
                   patch:
                     type: object
@@ -153,6 +157,9 @@ spec:
                     type: object
                     x-kubernetes-preserve-unknown-fields: true
                   schemas:
+                    additionalProperties:
+                      type: object
+                      x-kubernetes-preserve-unknown-fields: true
                     type: object
                     x-kubernetes-preserve-unknown-fields: true
                   summary:
