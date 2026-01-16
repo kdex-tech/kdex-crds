@@ -70,6 +70,17 @@ spec:
                   a non-default language.
                 pattern: ^/
                 type: string
+              contact:
+                description: Contact provides contact information for the function's
+                  owner.
+                properties:
+                  email:
+                    description: Email of the contact.
+                    type: string
+                  name:
+                    description: Name of the contact.
+                    type: string
+                type: object
               contentEntries:
                 description: contentEntries is a set of content entries to bind to
                   this page. They may be either raw HTML fragments or KDexApp references.
@@ -348,6 +359,11 @@ spec:
                 x-kubernetes-validations:
                 - message: '''kind'' must be either KDexScriptLibrary or KDexClusterScriptLibrary'
                   rule: self.kind == "KDexScriptLibrary" || self.kind == "KDexClusterScriptLibrary"
+              tags:
+                description: Tags are used for grouping and searching functions.
+                items:
+                  type: string
+                type: array
             required:
             - basePath
             - contentEntries

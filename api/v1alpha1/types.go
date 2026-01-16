@@ -165,6 +165,17 @@ func (b *Backend) IsConfigured(defaultServerImage string) bool {
 	return false
 }
 
+// ContactInfo defines contact details.
+type ContactInfo struct {
+	// Name of the contact.
+	// +kubebuilder:validation:Optional
+	Name string `json:"name,omitempty" protobuf:"bytes,1,opt,name=name"`
+
+	// Email of the contact.
+	// +kubebuilder:validation:Optional
+	Email string `json:"email,omitempty" protobuf:"bytes,2,opt,name=email"`
+}
+
 type ContentEntryApp struct {
 	// appRef is a reference to the KDexApp to include in this binding.
 	// +kubebuilder:validation:Optional
@@ -270,6 +281,17 @@ type KDexObjectReference struct {
 	// Defaulted to nil.
 	// +kubebuilder:validation:Optional
 	Namespace string `json:"namespace,omitempty" protobuf:"bytes,3,opt,name=namespace"`
+}
+
+// KDexFunctionMetadata defines the metadata for the function.
+type Metadata struct {
+	// Tags are used for grouping and searching functions.
+	// +kubebuilder:validation:Optional
+	Tags []string `json:"tags,omitempty" protobuf:"bytes,1,rep,name=tags"`
+
+	// Contact provides contact information for the function's owner.
+	// +kubebuilder:validation:Optional
+	Contact ContactInfo `json:"contact,omitempty" protobuf:"bytes,2,opt,name=contact"`
 }
 
 // ModulePolicy defines the policy for the use of JavaScript Modules.
