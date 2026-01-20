@@ -130,6 +130,8 @@ type KDexFunctionSpec struct {
 	//           example: "john.doe@example.com"
 	//         createdAt:
 	//           type: string
+	//
+	// TODO: introduce support for multiple paths (below a common base) each with it's own set of operations
 	API KDexOpenAPI `json:"api" protobuf:"bytes,2,req,name=api"`
 
 	// Function defines the FaaS execution details.
