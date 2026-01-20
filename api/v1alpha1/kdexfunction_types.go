@@ -79,59 +79,6 @@ type KDexFunctionSpec struct {
 	// The field 'schemas' of type map[string]schema whose values are defined by 'schema object' is supported and can be referenced throughout operation definitions. References must be in the form "#/components/schemas/<name>".
 	// +kubebuilder:validation:Required
 	// +kubebuilder:pruning:PreserveUnknownFields
-	// +kubebuilder:example:
-	//
-	// api:
-	//   summary: "User API"
-	//   description: "User API"
-	//   get:
-	//     summary: "Get a user"
-	//     description: "Returns a user by ID"
-	//     parameters:
-	//       - name: id
-	//         in: query
-	//         required: true
-	//         schema:
-	//           type: string
-	//     responses:
-	//       "200":
-	//         description: "Successful response"
-	//         content:
-	//           application/json:
-	//             schema:
-	//               $ref: "#/components/schemas/User"
-	//       "400":
-	//         description: "Bad request"
-	//       "404":
-	//         description: "Not found"
-	//       "500":
-	//         description: "Internal server error"
-	//   schemas:
-	//     "#/components/schemas/User":
-	//       type: object
-	//       properties:
-	//         id:
-	//           type: string
-	//           description: "The ID of the user"
-	//           example: "123"
-	//         name:
-	//           type: string
-	//           description: "The name of the user"
-	//           example: "John Doe"
-	//         age:
-	//           type: integer
-	//           description: "The age of the user"
-	//           minimum: 0
-	//           maximum: 100
-	//           example: 30
-	//         email:
-	//           type: string
-	//           description: "The email of the user"
-	//           example: "john.doe@example.com"
-	//         createdAt:
-	//           type: string
-	//
-	// TODO: introduce support for multiple paths (below a common base) each with it's own set of operations
 	API KDexOpenAPI `json:"api" protobuf:"bytes,2,req,name=api"`
 
 	// Function defines the FaaS execution details.
@@ -152,11 +99,21 @@ type KDexFunctionMetadata struct {
 	SourceRepository string `json:"sourceRepository,omitempty" protobuf:"bytes,5,opt,name=sourceRepository"`
 }
 
+// +kubebuilder:validation:XValidation:rule="self.paths.all(k, k.startsWith(self.basePath))",message="all keys of .spec.api.paths must be prefixed by .spec.api.basePath"
 type KDexOpenAPI struct {
-	// Path is the base URL path for the function (e.g., /api/v1/users/{id}).
+	// basePath is the base URL path for the function (e.g., /api/v1/users).
 	// +kubebuilder:validation:Required
-	Path string `json:"path" protobuf:"bytes,1,req,name=path"`
+	// +kubebuilder:validation:Pattern=`^/.+`
+	BasePath string `json:"basePath" protobuf:"bytes,1,req,name=basePath"`
 
+	// paths is a map of paths that exist below the basePath. All keys of the map must be prefixed by basePath.
+	// +kubebuilder:validation:MinProperties=1
+	// +kubebuilder:validation:MaxProperties=16
+	// +kubebuilder:validation:Required
+	Paths map[string]PathItem `json:"paths" protobuf:"bytes,2,req,name=paths"`
+}
+
+type PathItem struct {
 	// +kubebuilder:validation:Optional
 	Summary string `json:"summary,omitempty" yaml:"summary,omitempty"`
 
@@ -166,7 +123,7 @@ type KDexOpenAPI struct {
 	KDexOpenAPIInternal `json:",inline"`
 }
 
-func (api *KDexOpenAPI) GetOp(method string) *openapi.Operation {
+func (api *PathItem) GetOp(method string) *openapi.Operation {
 	switch method {
 	case "CONNECT":
 		return api.GetConnect()
@@ -190,7 +147,7 @@ func (api *KDexOpenAPI) GetOp(method string) *openapi.Operation {
 	return nil
 }
 
-func (api *KDexOpenAPI) SetOp(method string, op *openapi.Operation) {
+func (api *PathItem) SetOp(method string, op *openapi.Operation) {
 	switch method {
 	case "CONNECT":
 		api.SetConnect(op)

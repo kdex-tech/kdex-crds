@@ -69,108 +69,72 @@ spec:
                   See https://github.com/OAI/OpenAPI-Specification/blob/main/versions/3.0.3.md#schema-object
                   The supported fields from 'path item object' are: summary, description, get, put, post, delete, options, head, patch, trace, parameters, and responses.
                   The field 'schemas' of type map[string]schema whose values are defined by 'schema object' is supported and can be referenced throughout operation definitions. References must be in the form "#/components/schemas/<name>".
-
-                  api:
-                    summary: "User API"
-                    description: "User API"
-                    get:
-                      summary: "Get a user"
-                      description: "Returns a user by ID"
-                      parameters:
-                        - name: id
-                          in: query
-                          required: true
-                          schema:
-                            type: string
-                      responses:
-                        "200":
-                          description: "Successful response"
-                          content:
-                            application/json:
-                              schema:
-                                $ref: "#/components/schemas/User"
-                        "400":
-                          description: "Bad request"
-                        "404":
-                          description: "Not found"
-                        "500":
-                          description: "Internal server error"
-                    schemas:
-                      "#/components/schemas/User":
-                        type: object
-                        properties:
-                          id:
-                            type: string
-                            description: "The ID of the user"
-                            example: "123"
-                          name:
-                            type: string
-                            description: "The name of the user"
-                            example: "John Doe"
-                          age:
-                            type: integer
-                            description: "The age of the user"
-                            minimum: 0
-                            maximum: 100
-                            example: 30
-                          email:
-                            type: string
-                            description: "The email of the user"
-                            example: "john.doe@example.com"
-                          createdAt:
-                            type: string
                 properties:
-                  connect:
-                    type: object
-                    x-kubernetes-preserve-unknown-fields: true
-                  delete:
-                    type: object
-                    x-kubernetes-preserve-unknown-fields: true
-                  description:
+                  basePath:
+                    description: basePath is the base URL path for the function (e.g.,
+                      /api/v1/users).
+                    pattern: ^/.+
                     type: string
-                  get:
-                    type: object
-                    x-kubernetes-preserve-unknown-fields: true
-                  head:
-                    type: object
-                    x-kubernetes-preserve-unknown-fields: true
-                  options:
-                    type: object
-                    x-kubernetes-preserve-unknown-fields: true
-                  parameters:
-                    items:
-                      type: object
-                      x-kubernetes-preserve-unknown-fields: true
-                    type: array
-                    x-kubernetes-preserve-unknown-fields: true
-                  patch:
-                    type: object
-                    x-kubernetes-preserve-unknown-fields: true
-                  path:
-                    description: Path is the base URL path for the function (e.g.,
-                      /api/v1/users/{id}).
-                    type: string
-                  post:
-                    type: object
-                    x-kubernetes-preserve-unknown-fields: true
-                  put:
-                    type: object
-                    x-kubernetes-preserve-unknown-fields: true
-                  schemas:
+                  paths:
                     additionalProperties:
+                      properties:
+                        connect:
+                          type: object
+                          x-kubernetes-preserve-unknown-fields: true
+                        delete:
+                          type: object
+                          x-kubernetes-preserve-unknown-fields: true
+                        description:
+                          type: string
+                        get:
+                          type: object
+                          x-kubernetes-preserve-unknown-fields: true
+                        head:
+                          type: object
+                          x-kubernetes-preserve-unknown-fields: true
+                        options:
+                          type: object
+                          x-kubernetes-preserve-unknown-fields: true
+                        parameters:
+                          items:
+                            type: object
+                            x-kubernetes-preserve-unknown-fields: true
+                          type: array
+                          x-kubernetes-preserve-unknown-fields: true
+                        patch:
+                          type: object
+                          x-kubernetes-preserve-unknown-fields: true
+                        post:
+                          type: object
+                          x-kubernetes-preserve-unknown-fields: true
+                        put:
+                          type: object
+                          x-kubernetes-preserve-unknown-fields: true
+                        schemas:
+                          additionalProperties:
+                            type: object
+                            x-kubernetes-preserve-unknown-fields: true
+                          type: object
+                          x-kubernetes-preserve-unknown-fields: true
+                        summary:
+                          type: string
+                        trace:
+                          type: object
+                          x-kubernetes-preserve-unknown-fields: true
                       type: object
-                      x-kubernetes-preserve-unknown-fields: true
+                    description: paths is a map of paths that exist below the basePath.
+                      All keys of the map must be prefixed by basePath.
+                    maxProperties: 16
+                    minProperties: 1
                     type: object
-                    x-kubernetes-preserve-unknown-fields: true
-                  summary:
-                    type: string
-                  trace:
-                    type: object
-                    x-kubernetes-preserve-unknown-fields: true
                 required:
-                - path
+                - basePath
+                - paths
                 type: object
                 x-kubernetes-preserve-unknown-fields: true
+                x-kubernetes-validations:
+                - message: all keys of .spec.api.paths must be prefixed by .spec.api.basePath
+                  rule: self.paths.all(k, k.startsWith(self.basePath))
               function:
                 description: Function defines the FaaS execution details.
                 properties:
