@@ -357,10 +357,10 @@ func (in *KDexOpenAPIInternal) GetParameters() []openapi.Parameter {
 	return ps
 }
 
-func (in *KDexOpenAPIInternal) GetSchemas() map[string]openapi.Schema {
-	sm := map[string]openapi.Schema{}
+func (in *KDexOpenAPIInternal) GetSchemas() map[string]*openapi.SchemaRef {
+	sm := map[string]*openapi.SchemaRef{}
 	for k, _raw := range in.Schemas {
-		var s = openapi.Schema{}
+		var s = &openapi.SchemaRef{}
 		_ = s.UnmarshalJSON(_raw.Raw)
 		sm[k] = s
 	}
@@ -451,7 +451,7 @@ func (in *KDexOpenAPIInternal) SetParameters(ps []openapi.Parameter) {
 	in.Parameters = _raw
 }
 
-func (in *KDexOpenAPIInternal) SetSchemas(sm map[string]openapi.Schema) {
+func (in *KDexOpenAPIInternal) SetSchemas(sm map[string]*openapi.SchemaRef) {
 	if len(sm) == 0 {
 		return
 	}
