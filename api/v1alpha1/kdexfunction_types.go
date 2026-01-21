@@ -79,7 +79,7 @@ type KDexFunctionSpec struct {
 	// The field 'schemas' of type map[string]schema whose values are defined by 'schema object' is supported and can be referenced throughout operation definitions. References must be in the form "#/components/schemas/<name>".
 	// +kubebuilder:validation:Required
 	// +kubebuilder:pruning:PreserveUnknownFields
-	API KDexOpenAPI `json:"api" protobuf:"bytes,2,req,name=api"`
+	API API `json:"api" protobuf:"bytes,2,req,name=api"`
 
 	// Function defines the FaaS execution details.
 	// +kubebuilder:validation:Optional
@@ -100,8 +100,8 @@ type KDexFunctionMetadata struct {
 }
 
 // +kubebuilder:validation:XValidation:rule="self.paths.all(k, k.startsWith(self.basePath))",message="all keys of .spec.api.paths must be prefixed by .spec.api.basePath"
-type KDexOpenAPI struct {
-	// basePath is the base URL path for the function (e.g., /api/v1/users).
+type API struct {
+	// basePath is the base URL path for the function (e.g., /v1/users).
 	// +kubebuilder:validation:Required
 	// +kubebuilder:validation:Pattern=`^/.+`
 	BasePath string `json:"basePath" protobuf:"bytes,1,req,name=basePath"`
@@ -118,7 +118,7 @@ type KDexOpenAPI struct {
 	Schemas map[string]runtime.RawExtension `json:"schemas,omitempty" protobuf:"bytes,3,req,name=schemas"`
 }
 
-func (in *KDexOpenAPI) GetSchemas() map[string]*openapi.SchemaRef {
+func (in *API) GetSchemas() map[string]*openapi.SchemaRef {
 	sm := map[string]*openapi.SchemaRef{}
 	for k, _raw := range in.Schemas {
 		var s = &openapi.SchemaRef{}
@@ -128,7 +128,7 @@ func (in *KDexOpenAPI) GetSchemas() map[string]*openapi.SchemaRef {
 	return sm
 }
 
-func (in *KDexOpenAPI) SetSchemas(sm map[string]*openapi.SchemaRef) {
+func (in *API) SetSchemas(sm map[string]*openapi.SchemaRef) {
 	if len(sm) == 0 {
 		return
 	}
@@ -141,63 +141,6 @@ func (in *KDexOpenAPI) SetSchemas(sm map[string]*openapi.SchemaRef) {
 }
 
 type PathItem struct {
-	// +kubebuilder:validation:Optional
-	Summary string `json:"summary,omitempty" yaml:"summary,omitempty"`
-
-	// +kubebuilder:validation:Optional
-	Description string `json:"description,omitempty" yaml:"description,omitempty"`
-
-	KDexOpenAPIInternal `json:",inline"`
-}
-
-func (api *PathItem) GetOp(method string) *openapi.Operation {
-	switch method {
-	case "CONNECT":
-		return api.GetConnect()
-	case "DELETE":
-		return api.GetDelete()
-	case "GET":
-		return api.GetGet()
-	case "HEAD":
-		return api.GetHead()
-	case "OPTIONS":
-		return api.GetOptions()
-	case "PATCH":
-		return api.GetPatch()
-	case "POST":
-		return api.GetPost()
-	case "PUT":
-		return api.GetPut()
-	case "TRACE":
-		return api.GetTrace()
-	}
-	return nil
-}
-
-func (api *PathItem) SetOp(method string, op *openapi.Operation) {
-	switch method {
-	case "CONNECT":
-		api.SetConnect(op)
-	case "DELETE":
-		api.SetDelete(op)
-	case "GET":
-		api.SetGet(op)
-	case "HEAD":
-		api.SetHead(op)
-	case "OPTIONS":
-		api.SetOptions(op)
-	case "PATCH":
-		api.SetPatch(op)
-	case "POST":
-		api.SetPost(op)
-	case "PUT":
-		api.SetPut(op)
-	case "TRACE":
-		api.SetTrace(op)
-	}
-}
-
-type KDexOpenAPIInternal struct {
 	// +kubebuilder:pruning:PreserveUnknownFields
 	// +kubebuilder:validation:Optional
 	// +kubebuilder:validation:Type=object
@@ -207,6 +150,9 @@ type KDexOpenAPIInternal struct {
 	// +kubebuilder:validation:Optional
 	// +kubebuilder:validation:Type=object
 	Delete *runtime.RawExtension `json:"delete,omitempty" yaml:"delete,omitempty"`
+
+	// +kubebuilder:validation:Optional
+	Description string `json:"description,omitempty" yaml:"description,omitempty"`
 
 	// +kubebuilder:pruning:PreserveUnknownFields
 	// +kubebuilder:validation:Optional
@@ -225,6 +171,10 @@ type KDexOpenAPIInternal struct {
 
 	// +kubebuilder:pruning:PreserveUnknownFields
 	// +kubebuilder:validation:Optional
+	Parameters []runtime.RawExtension `json:"parameters,omitempty" yaml:"parameters,omitempty"`
+
+	// +kubebuilder:pruning:PreserveUnknownFields
+	// +kubebuilder:validation:Optional
 	// +kubebuilder:validation:Type=object
 	Patch *runtime.RawExtension `json:"patch,omitempty" yaml:"patch,omitempty"`
 
@@ -238,100 +188,146 @@ type KDexOpenAPIInternal struct {
 	// +kubebuilder:validation:Type=object
 	Put *runtime.RawExtension `json:"put,omitempty" yaml:"put,omitempty"`
 
+	// +kubebuilder:validation:Optional
+	Summary string `json:"summary,omitempty" yaml:"summary,omitempty"`
+
 	// +kubebuilder:pruning:PreserveUnknownFields
 	// +kubebuilder:validation:Optional
 	// +kubebuilder:validation:Type=object
 	Trace *runtime.RawExtension `json:"trace,omitempty" yaml:"trace,omitempty"`
-
-	// +kubebuilder:pruning:PreserveUnknownFields
-	// +kubebuilder:validation:Optional
-	Parameters []runtime.RawExtension `json:"parameters,omitempty" yaml:"parameters,omitempty"`
 }
 
-func (in *KDexOpenAPIInternal) GetConnect() *openapi.Operation {
-	if in.Connect == nil {
+func (pi *PathItem) GetOp(method string) *openapi.Operation {
+	switch method {
+	case "CONNECT":
+		return pi.GetConnect()
+	case "DELETE":
+		return pi.GetDelete()
+	case "GET":
+		return pi.GetGet()
+	case "HEAD":
+		return pi.GetHead()
+	case "OPTIONS":
+		return pi.GetOptions()
+	case "PATCH":
+		return pi.GetPatch()
+	case "POST":
+		return pi.GetPost()
+	case "PUT":
+		return pi.GetPut()
+	case "TRACE":
+		return pi.GetTrace()
+	}
+	return nil
+}
+
+func (pi *PathItem) SetOp(method string, op *openapi.Operation) {
+	switch method {
+	case "CONNECT":
+		pi.SetConnect(op)
+	case "DELETE":
+		pi.SetDelete(op)
+	case "GET":
+		pi.SetGet(op)
+	case "HEAD":
+		pi.SetHead(op)
+	case "OPTIONS":
+		pi.SetOptions(op)
+	case "PATCH":
+		pi.SetPatch(op)
+	case "POST":
+		pi.SetPost(op)
+	case "PUT":
+		pi.SetPut(op)
+	case "TRACE":
+		pi.SetTrace(op)
+	}
+}
+
+func (pi *PathItem) GetConnect() *openapi.Operation {
+	if pi.Connect == nil {
 		return nil
 	}
 	var op openapi.Operation
-	_ = op.UnmarshalJSON(in.Connect.Raw)
+	_ = op.UnmarshalJSON(pi.Connect.Raw)
 	return &op
 }
 
-func (in *KDexOpenAPIInternal) GetDelete() *openapi.Operation {
-	if in.Delete == nil {
+func (pi *PathItem) GetDelete() *openapi.Operation {
+	if pi.Delete == nil {
 		return nil
 	}
 	var op openapi.Operation
-	_ = op.UnmarshalJSON(in.Delete.Raw)
+	_ = op.UnmarshalJSON(pi.Delete.Raw)
 	return &op
 }
 
-func (in *KDexOpenAPIInternal) GetGet() *openapi.Operation {
-	if in.Get == nil {
+func (pi *PathItem) GetGet() *openapi.Operation {
+	if pi.Get == nil {
 		return nil
 	}
 	var op openapi.Operation
-	_ = op.UnmarshalJSON(in.Get.Raw)
+	_ = op.UnmarshalJSON(pi.Get.Raw)
 	return &op
 }
 
-func (in *KDexOpenAPIInternal) GetHead() *openapi.Operation {
-	if in.Head == nil {
+func (pi *PathItem) GetHead() *openapi.Operation {
+	if pi.Head == nil {
 		return nil
 	}
 	var op openapi.Operation
-	_ = op.UnmarshalJSON(in.Head.Raw)
+	_ = op.UnmarshalJSON(pi.Head.Raw)
 	return &op
 }
 
-func (in *KDexOpenAPIInternal) GetOptions() *openapi.Operation {
-	if in.Options == nil {
+func (pi *PathItem) GetOptions() *openapi.Operation {
+	if pi.Options == nil {
 		return nil
 	}
 	var op openapi.Operation
-	_ = op.UnmarshalJSON(in.Options.Raw)
+	_ = op.UnmarshalJSON(pi.Options.Raw)
 	return &op
 }
 
-func (in *KDexOpenAPIInternal) GetPatch() *openapi.Operation {
-	if in.Patch == nil {
+func (pi *PathItem) GetPatch() *openapi.Operation {
+	if pi.Patch == nil {
 		return nil
 	}
 	var op openapi.Operation
-	_ = op.UnmarshalJSON(in.Patch.Raw)
+	_ = op.UnmarshalJSON(pi.Patch.Raw)
 	return &op
 }
 
-func (in *KDexOpenAPIInternal) GetPost() *openapi.Operation {
-	if in.Post == nil {
+func (pi *PathItem) GetPost() *openapi.Operation {
+	if pi.Post == nil {
 		return nil
 	}
 	var op openapi.Operation
-	_ = op.UnmarshalJSON(in.Post.Raw)
+	_ = op.UnmarshalJSON(pi.Post.Raw)
 	return &op
 }
 
-func (in *KDexOpenAPIInternal) GetPut() *openapi.Operation {
-	if in.Put == nil {
+func (pi *PathItem) GetPut() *openapi.Operation {
+	if pi.Put == nil {
 		return nil
 	}
 	var op openapi.Operation
-	_ = op.UnmarshalJSON(in.Put.Raw)
+	_ = op.UnmarshalJSON(pi.Put.Raw)
 	return &op
 }
 
-func (in *KDexOpenAPIInternal) GetTrace() *openapi.Operation {
-	if in.Trace == nil {
+func (pi *PathItem) GetTrace() *openapi.Operation {
+	if pi.Trace == nil {
 		return nil
 	}
 	var op openapi.Operation
-	_ = op.UnmarshalJSON(in.Trace.Raw)
+	_ = op.UnmarshalJSON(pi.Trace.Raw)
 	return &op
 }
 
-func (in *KDexOpenAPIInternal) GetParameters() []openapi.Parameter {
+func (pi *PathItem) GetParameters() []openapi.Parameter {
 	ps := []openapi.Parameter{}
-	for _, _raw := range in.Parameters {
+	for _, _raw := range pi.Parameters {
 		var p = openapi.Parameter{}
 		_ = p.UnmarshalJSON(_raw.Raw)
 		ps = append(ps, p)
@@ -339,79 +335,79 @@ func (in *KDexOpenAPIInternal) GetParameters() []openapi.Parameter {
 	return ps
 }
 
-func (in *KDexOpenAPIInternal) SetConnect(op *openapi.Operation) {
+func (pi *PathItem) SetConnect(op *openapi.Operation) {
 	if op == nil {
 		return
 	}
 	raw, _ := op.MarshalJSON()
-	in.Connect = &runtime.RawExtension{Raw: raw}
+	pi.Connect = &runtime.RawExtension{Raw: raw}
 }
 
-func (in *KDexOpenAPIInternal) SetDelete(op *openapi.Operation) {
+func (pi *PathItem) SetDelete(op *openapi.Operation) {
 	if op == nil {
 		return
 	}
 	raw, _ := op.MarshalJSON()
-	in.Delete = &runtime.RawExtension{Raw: raw}
+	pi.Delete = &runtime.RawExtension{Raw: raw}
 }
 
-func (in *KDexOpenAPIInternal) SetGet(op *openapi.Operation) {
+func (pi *PathItem) SetGet(op *openapi.Operation) {
 	if op == nil {
 		return
 	}
 	raw, _ := op.MarshalJSON()
-	in.Get = &runtime.RawExtension{Raw: raw}
+	pi.Get = &runtime.RawExtension{Raw: raw}
 }
 
-func (in *KDexOpenAPIInternal) SetHead(op *openapi.Operation) {
+func (pi *PathItem) SetHead(op *openapi.Operation) {
 	if op == nil {
 		return
 	}
 	raw, _ := op.MarshalJSON()
-	in.Head = &runtime.RawExtension{Raw: raw}
+	pi.Head = &runtime.RawExtension{Raw: raw}
 }
 
-func (in *KDexOpenAPIInternal) SetOptions(op *openapi.Operation) {
+func (pi *PathItem) SetOptions(op *openapi.Operation) {
 	if op == nil {
 		return
 	}
 	raw, _ := op.MarshalJSON()
-	in.Options = &runtime.RawExtension{Raw: raw}
+	pi.Options = &runtime.RawExtension{Raw: raw}
 }
 
-func (in *KDexOpenAPIInternal) SetPatch(op *openapi.Operation) {
+func (pi *PathItem) SetPatch(op *openapi.Operation) {
 	if op == nil {
 		return
 	}
 	raw, _ := op.MarshalJSON()
-	in.Patch = &runtime.RawExtension{Raw: raw}
+	pi.Patch = &runtime.RawExtension{Raw: raw}
 }
 
-func (in *KDexOpenAPIInternal) SetPost(op *openapi.Operation) {
+func (pi *PathItem) SetPost(op *openapi.Operation) {
 	if op == nil {
 		return
 	}
 	raw, _ := op.MarshalJSON()
-	in.Post = &runtime.RawExtension{Raw: raw}
+	pi.Post = &runtime.RawExtension{Raw: raw}
 }
 
-func (in *KDexOpenAPIInternal) SetPut(op *openapi.Operation) {
+func (pi *PathItem) SetPut(op *openapi.Operation) {
 	if op == nil {
 		return
 	}
 	raw, _ := op.MarshalJSON()
-	in.Put = &runtime.RawExtension{Raw: raw}
+	pi.Put = &runtime.RawExtension{Raw: raw}
 }
 
-func (in *KDexOpenAPIInternal) SetTrace(op *openapi.Operation) {
+func (pi *PathItem) SetTrace(op *openapi.Operation) {
 	if op == nil {
 		return
 	}
 	raw, _ := op.MarshalJSON()
-	in.Trace = &runtime.RawExtension{Raw: raw}
+	pi.Trace = &runtime.RawExtension{Raw: raw}
 }
 
-func (in *KDexOpenAPIInternal) SetParameters(ps []openapi.Parameter) {
+func (pi *PathItem) SetParameters(ps []openapi.Parameter) {
 	if len(ps) == 0 {
 		return
 	}
@@ -420,7 +416,7 @@ func (in *KDexOpenAPIInternal) SetParameters(ps []openapi.Parameter) {
 		raw, _ := p.MarshalJSON()
 		_raw = append(_raw, runtime.RawExtension{Raw: raw})
 	}
-	in.Parameters = _raw
+	pi.Parameters = _raw
 }
 
 // KDexFunctionExec defines the FaaS execution environment.
