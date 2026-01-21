@@ -733,7 +733,7 @@ _Appears in:_
 | --- | --- | --- | --- |
 | `hostRef` _[LocalObjectReference](https://kubernetes.io/docs/reference/generated/kubernetes-api/v/#localobjectreference-v1-core)_ | hostRef is a reference to the KDexHost that this translation belongs to. |  | Required: \{\} <br /> |
 | `metadata` _[KDexFunctionMetadata](#kdexfunctionmetadata)_ | Refer to Kubernetes API documentation for fields of `metadata`. |  | Optional: \{\} <br /> |
-| `api` _[KDexOpenAPI](#kdexopenapi)_ | API defines the OpenAPI contract for the function.<br />See https://github.com/OAI/OpenAPI-Specification/blob/main/versions/3.0.3.md#path-item-object<br />See https://github.com/OAI/OpenAPI-Specification/blob/main/versions/3.0.3.md#schema-object<br />The supported fields from 'path item object' are: summary, description, get, put, post, delete, options, head, patch, trace, parameters, and responses.<br />The field 'schemas' of type map[string]schema whose values are defined by 'schema object' is supported and can be referenced throughout operation definitions. References must be in the form "#/components/schemas/<name>".<br />api:<br />  summary: "User API"<br />  description: "User API"<br />  get:<br />    summary: "Get a user"<br />    description: "Returns a user by ID"<br />    parameters:<br />      - name: id<br />        in: query<br />        required: true<br />        schema:<br />          type: string<br />    responses:<br />      "200":<br />        description: "Successful response"<br />        content:<br />          application/json:<br />            schema:<br />              $ref: "#/components/schemas/User"<br />      "400":<br />        description: "Bad request"<br />      "404":<br />        description: "Not found"<br />      "500":<br />        description: "Internal server error"<br />  schemas:<br />    "#/components/schemas/User":<br />      type: object<br />      properties:<br />        id:<br />          type: string<br />          description: "The ID of the user"<br />          example: "123"<br />        name:<br />          type: string<br />          description: "The name of the user"<br />          example: "John Doe"<br />        age:<br />          type: integer<br />          description: "The age of the user"<br />          minimum: 0<br />          maximum: 100<br />          example: 30<br />        email:<br />          type: string<br />          description: "The email of the user"<br />          example: "john.doe@example.com"<br />        createdAt:<br />          type: string |  | Required: \{\} <br /> |
+| `api` _[KDexOpenAPI](#kdexopenapi)_ | API defines the OpenAPI contract for the function.<br />See https://github.com/OAI/OpenAPI-Specification/blob/main/versions/3.0.3.md#path-item-object<br />See https://github.com/OAI/OpenAPI-Specification/blob/main/versions/3.0.3.md#schema-object<br />The supported fields from 'path item object' are: summary, description, get, put, post, delete, options, head, patch, trace, parameters, and responses.<br />The field 'schemas' of type map[string]schema whose values are defined by 'schema object' is supported and can be referenced throughout operation definitions. References must be in the form "#/components/schemas/<name>". |  | Required: \{\} <br /> |
 | `function` _[KDexFunctionExec](#kdexfunctionexec)_ | Function defines the FaaS execution details. |  | Optional: \{\} <br /> |
 
 
@@ -1138,20 +1138,9 @@ _Appears in:_
 
 | Field | Description | Default | Validation |
 | --- | --- | --- | --- |
-| `path` _string_ | Path is the base URL path for the function (e.g., /api/v1/users/\{id\}). |  | Required: \{\} <br /> |
-| `summary` _string_ |  |  | Optional: \{\} <br /> |
-| `description` _string_ |  |  | Optional: \{\} <br /> |
-| `connect` _[RawExtension](https://kubernetes.io/docs/reference/generated/kubernetes-api/v/#rawextension-runtime-pkg)_ |  |  | Optional: \{\} <br />Type: object <br /> |
-| `delete` _[RawExtension](https://kubernetes.io/docs/reference/generated/kubernetes-api/v/#rawextension-runtime-pkg)_ |  |  | Optional: \{\} <br />Type: object <br /> |
-| `get` _[RawExtension](https://kubernetes.io/docs/reference/generated/kubernetes-api/v/#rawextension-runtime-pkg)_ |  |  | Optional: \{\} <br />Type: object <br /> |
-| `head` _[RawExtension](https://kubernetes.io/docs/reference/generated/kubernetes-api/v/#rawextension-runtime-pkg)_ |  |  | Optional: \{\} <br />Type: object <br /> |
-| `options` _[RawExtension](https://kubernetes.io/docs/reference/generated/kubernetes-api/v/#rawextension-runtime-pkg)_ |  |  | Optional: \{\} <br />Type: object <br /> |
-| `patch` _[RawExtension](https://kubernetes.io/docs/reference/generated/kubernetes-api/v/#rawextension-runtime-pkg)_ |  |  | Optional: \{\} <br />Type: object <br /> |
-| `post` _[RawExtension](https://kubernetes.io/docs/reference/generated/kubernetes-api/v/#rawextension-runtime-pkg)_ |  |  | Optional: \{\} <br />Type: object <br /> |
-| `put` _[RawExtension](https://kubernetes.io/docs/reference/generated/kubernetes-api/v/#rawextension-runtime-pkg)_ |  |  | Optional: \{\} <br />Type: object <br /> |
-| `trace` _[RawExtension](https://kubernetes.io/docs/reference/generated/kubernetes-api/v/#rawextension-runtime-pkg)_ |  |  | Optional: \{\} <br />Type: object <br /> |
-| `parameters` _[RawExtension](https://kubernetes.io/docs/reference/generated/kubernetes-api/v/#rawextension-runtime-pkg) array_ |  |  | Optional: \{\} <br /> |
-| `schemas` _object (keys:string, values:[RawExtension](https://kubernetes.io/docs/reference/generated/kubernetes-api/v/#rawextension-runtime-pkg))_ |  |  | Optional: \{\} <br /> |
+| `basePath` _string_ | basePath is the base URL path for the function (e.g., /api/v1/users). |  | Pattern: `^/.+` <br />Required: \{\} <br /> |
+| `paths` _object (keys:string, values:[PathItem](#pathitem))_ | paths is a map of paths that exist below the basePath. All keys of the map must be prefixed by basePath. |  | MaxProperties: 16 <br />MinProperties: 1 <br />Required: \{\} <br /> |
+| `schemas` _object (keys:string, values:[RawExtension](https://kubernetes.io/docs/reference/generated/kubernetes-api/v/#rawextension-runtime-pkg))_ |  |  | MaxProperties: 6 <br />Optional: \{\} <br /> |
 
 
 #### KDexOpenAPIInternal
@@ -1163,7 +1152,7 @@ _Appears in:_
 
 
 _Appears in:_
-- [KDexOpenAPI](#kdexopenapi)
+- [PathItem](#pathitem)
 
 | Field | Description | Default | Validation |
 | --- | --- | --- | --- |
@@ -1177,7 +1166,6 @@ _Appears in:_
 | `put` _[RawExtension](https://kubernetes.io/docs/reference/generated/kubernetes-api/v/#rawextension-runtime-pkg)_ |  |  | Optional: \{\} <br />Type: object <br /> |
 | `trace` _[RawExtension](https://kubernetes.io/docs/reference/generated/kubernetes-api/v/#rawextension-runtime-pkg)_ |  |  | Optional: \{\} <br />Type: object <br /> |
 | `parameters` _[RawExtension](https://kubernetes.io/docs/reference/generated/kubernetes-api/v/#rawextension-runtime-pkg) array_ |  |  | Optional: \{\} <br /> |
-| `schemas` _object (keys:string, values:[RawExtension](https://kubernetes.io/docs/reference/generated/kubernetes-api/v/#rawextension-runtime-pkg))_ |  |  | Optional: \{\} <br /> |
 
 
 #### KDexPageArchetype
@@ -1840,6 +1828,33 @@ _Appears in:_
 | `version` _string_ | version contains a specific npm package version. |  | Required: \{\} <br /> |
 | `exportMapping` _string_ | exportMapping is a mapping of the module's exports that will be used when the module import is written. e.g. `import [exportMapping] from [module_name];`. If exportMapping is not provided the module will be written as `import [module_name];` |  | Optional: \{\} <br /> |
 | `secretRef` _[LocalObjectReference](https://kubernetes.io/docs/reference/generated/kubernetes-api/v/#localobjectreference-v1-core)_ | secretRef is a reference to a secret containing authentication credentials for the NPM registry that holds the package. |  | Optional: \{\} <br /> |
+
+
+#### PathItem
+
+
+
+
+
+
+
+_Appears in:_
+- [KDexOpenAPI](#kdexopenapi)
+
+| Field | Description | Default | Validation |
+| --- | --- | --- | --- |
+| `summary` _string_ |  |  | Optional: \{\} <br /> |
+| `description` _string_ |  |  | Optional: \{\} <br /> |
+| `connect` _[RawExtension](https://kubernetes.io/docs/reference/generated/kubernetes-api/v/#rawextension-runtime-pkg)_ |  |  | Optional: \{\} <br />Type: object <br /> |
+| `delete` _[RawExtension](https://kubernetes.io/docs/reference/generated/kubernetes-api/v/#rawextension-runtime-pkg)_ |  |  | Optional: \{\} <br />Type: object <br /> |
+| `get` _[RawExtension](https://kubernetes.io/docs/reference/generated/kubernetes-api/v/#rawextension-runtime-pkg)_ |  |  | Optional: \{\} <br />Type: object <br /> |
+| `head` _[RawExtension](https://kubernetes.io/docs/reference/generated/kubernetes-api/v/#rawextension-runtime-pkg)_ |  |  | Optional: \{\} <br />Type: object <br /> |
+| `options` _[RawExtension](https://kubernetes.io/docs/reference/generated/kubernetes-api/v/#rawextension-runtime-pkg)_ |  |  | Optional: \{\} <br />Type: object <br /> |
+| `patch` _[RawExtension](https://kubernetes.io/docs/reference/generated/kubernetes-api/v/#rawextension-runtime-pkg)_ |  |  | Optional: \{\} <br />Type: object <br /> |
+| `post` _[RawExtension](https://kubernetes.io/docs/reference/generated/kubernetes-api/v/#rawextension-runtime-pkg)_ |  |  | Optional: \{\} <br />Type: object <br /> |
+| `put` _[RawExtension](https://kubernetes.io/docs/reference/generated/kubernetes-api/v/#rawextension-runtime-pkg)_ |  |  | Optional: \{\} <br />Type: object <br /> |
+| `trace` _[RawExtension](https://kubernetes.io/docs/reference/generated/kubernetes-api/v/#rawextension-runtime-pkg)_ |  |  | Optional: \{\} <br />Type: object <br /> |
+| `parameters` _[RawExtension](https://kubernetes.io/docs/reference/generated/kubernetes-api/v/#rawextension-runtime-pkg) array_ |  |  | Optional: \{\} <br /> |
 
 
 #### Paths

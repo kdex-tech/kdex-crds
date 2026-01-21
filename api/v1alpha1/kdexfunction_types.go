@@ -111,6 +111,33 @@ type KDexOpenAPI struct {
 	// +kubebuilder:validation:MaxProperties=16
 	// +kubebuilder:validation:Required
 	Paths map[string]PathItem `json:"paths" protobuf:"bytes,2,req,name=paths"`
+
+	// +kubebuilder:pruning:PreserveUnknownFields
+	// +kubebuilder:validation:MaxProperties=6
+	// +kubebuilder:validation:Optional
+	Schemas map[string]runtime.RawExtension `json:"schemas,omitempty" protobuf:"bytes,3,req,name=schemas"`
+}
+
+func (in *KDexOpenAPI) GetSchemas() map[string]*openapi.SchemaRef {
+	sm := map[string]*openapi.SchemaRef{}
+	for k, _raw := range in.Schemas {
+		var s = &openapi.SchemaRef{}
+		_ = s.UnmarshalJSON(_raw.Raw)
+		sm[k] = s
+	}
+	return sm
+}
+
+func (in *KDexOpenAPI) SetSchemas(sm map[string]*openapi.SchemaRef) {
+	if len(sm) == 0 {
+		return
+	}
+	_raw := map[string]runtime.RawExtension{}
+	for k, s := range sm {
+		raw, _ := s.MarshalJSON()
+		_raw[k] = runtime.RawExtension{Raw: raw}
+	}
+	in.Schemas = _raw
 }
 
 type PathItem struct {
@@ -219,10 +246,6 @@ type KDexOpenAPIInternal struct {
 	// +kubebuilder:pruning:PreserveUnknownFields
 	// +kubebuilder:validation:Optional
 	Parameters []runtime.RawExtension `json:"parameters,omitempty" yaml:"parameters,omitempty"`
-
-	// +kubebuilder:pruning:PreserveUnknownFields
-	// +kubebuilder:validation:Optional
-	Schemas map[string]runtime.RawExtension `json:"schemas,omitempty"`
 }
 
 func (in *KDexOpenAPIInternal) GetConnect() *openapi.Operation {
@@ -316,16 +339,6 @@ func (in *KDexOpenAPIInternal) GetParameters() []openapi.Parameter {
 	return ps
 }
 
-func (in *KDexOpenAPIInternal) GetSchemas() map[string]*openapi.SchemaRef {
-	sm := map[string]*openapi.SchemaRef{}
-	for k, _raw := range in.Schemas {
-		var s = &openapi.SchemaRef{}
-		_ = s.UnmarshalJSON(_raw.Raw)
-		sm[k] = s
-	}
-	return sm
-}
-
 func (in *KDexOpenAPIInternal) SetConnect(op *openapi.Operation) {
 	if op == nil {
 		return
@@ -408,18 +421,6 @@ func (in *KDexOpenAPIInternal) SetParameters(ps []openapi.Parameter) {
 		_raw = append(_raw, runtime.RawExtension{Raw: raw})
 	}
 	in.Parameters = _raw
-}
-
-func (in *KDexOpenAPIInternal) SetSchemas(sm map[string]*openapi.SchemaRef) {
-	if len(sm) == 0 {
-		return
-	}
-	_raw := map[string]runtime.RawExtension{}
-	for k, s := range sm {
-		raw, _ := s.MarshalJSON()
-		_raw[k] = runtime.RawExtension{Raw: raw}
-	}
-	in.Schemas = _raw
 }
 
 // KDexFunctionExec defines the FaaS execution environment.

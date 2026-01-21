@@ -110,12 +110,6 @@ spec:
                         put:
                           type: object
                           x-kubernetes-preserve-unknown-fields: true
-                        schemas:
-                          additionalProperties:
-                            type: object
-                            x-kubernetes-preserve-unknown-fields: true
-                          type: object
-                          x-kubernetes-preserve-unknown-fields: true
                         summary:
                           type: string
                         trace:
@@ -127,6 +121,13 @@ spec:
                     maxProperties: 16
                     minProperties: 1
                     type: object
+                  schemas:
+                    additionalProperties:
+                      type: object
+                      x-kubernetes-preserve-unknown-fields: true
+                    maxProperties: 6
+                    type: object
+                    x-kubernetes-preserve-unknown-fields: true
                 required:
                 - basePath
                 - paths
