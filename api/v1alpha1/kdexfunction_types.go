@@ -17,6 +17,8 @@ limitations under the License.
 package v1alpha1
 
 import (
+	"regexp"
+
 	openapi "github.com/getkin/kin-openapi/openapi3"
 	corev1 "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
@@ -101,12 +103,12 @@ type KDexFunctionMetadata struct {
 
 // +kubebuilder:validation:XValidation:rule="self.paths.all(k, k.startsWith(self.basePath))",message="all keys of .spec.api.paths must be prefixed by .spec.api.basePath"
 type API struct {
-	// basePath is the base URL path for the function (e.g., /v1/users).
+	// basePath is the base URL path for the function. It must match the regex ^/\w+/\w+ (e.g., /v1/users).
 	// +kubebuilder:validation:Required
-	// +kubebuilder:validation:Pattern=`^/.+`
+	// +kubebuilder:validation:Pattern=`^/\w+/\w+`
 	BasePath string `json:"basePath" protobuf:"bytes,1,req,name=basePath"`
 
-	// paths is a map of paths that exist below the basePath. All keys of the map must be prefixed by basePath.
+	// paths is a map of paths that exist below the basePath. All keys of the map must be paths prefixed by .spec.api.basePath.
 	// +kubebuilder:validation:MinProperties=1
 	// +kubebuilder:validation:MaxProperties=16
 	// +kubebuilder:validation:Required
@@ -116,6 +118,17 @@ type API struct {
 	// +kubebuilder:validation:MaxProperties=6
 	// +kubebuilder:validation:Optional
 	Schemas map[string]runtime.RawExtension `json:"schemas,omitempty" protobuf:"bytes,3,req,name=schemas"`
+}
+
+var basePathRegex regexp.Regexp = *regexp.MustCompile(`^(?<basePath>/\w+/\w+)`)
+var pathItemPathRegex regexp.Regexp = *regexp.MustCompile(`^(?<basePath>/\w+/\w+)(/.*)?`)
+
+func (a *API) BasePathRegex() regexp.Regexp {
+	return basePathRegex
+}
+
+func (a *API) ItemPathRegex() regexp.Regexp {
+	return pathItemPathRegex
 }
 
 func (in *API) GetSchemas() map[string]*openapi.SchemaRef {

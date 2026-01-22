@@ -71,9 +71,9 @@ spec:
                   The field 'schemas' of type map[string]schema whose values are defined by 'schema object' is supported and can be referenced throughout operation definitions. References must be in the form "#/components/schemas/<name>".
                 properties:
                   basePath:
-                    description: basePath is the base URL path for the function (e.g.,
-                      /v1/users).
-                    pattern: ^/.+
+                    description: basePath is the base URL path for the function. It
+                      must match the regex ^/\w+/\w+ (e.g., /v1/users).
+                    pattern: ^/\w+/\w+
                     type: string
                   paths:
                     additionalProperties:
@@ -117,7 +117,7 @@ spec:
                           x-kubernetes-preserve-unknown-fields: true
                       type: object
                     description: paths is a map of paths that exist below the basePath.
-                      All keys of the map must be prefixed by basePath.
+                      All keys of the map must be paths prefixed by .spec.api.basePath.
                     maxProperties: 16
                     minProperties: 1
                     type: object
