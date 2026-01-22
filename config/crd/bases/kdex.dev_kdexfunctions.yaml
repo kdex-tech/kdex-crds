@@ -208,9 +208,9 @@ spec:
                         description: Name of the contact.
                         type: string
                     type: object
-                  sourceRepository:
-                    description: SourceRepository is the Git repository URL where
-                      the stub code resides.
+                  sourceImage:
+                    description: SourceImage is the OCI artifact reference where the
+                      stub code was pushed.
                     type: string
                   tags:
                     description: Tags are used for grouping and searching functions.
@@ -311,6 +311,17 @@ spec:
                   document.
                 type: string
               state:
+                allOf:
+                - enum:
+                  - Building
+                  - Pending
+                  - Ready
+                  - StubGenerated
+                - enum:
+                  - Building
+                  - Pending
+                  - Ready
+                  - StubGenerated
                 description: State reflects the current state (e.g., Ready, Building,
                   StubGenerated).
                 type: string
