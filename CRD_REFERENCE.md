@@ -1959,6 +1959,7 @@ _Appears in:_
 | --- | --- | --- | --- |
 | `filePath` _string_ | FilePath is the path to the generated function file. |  | Optional: \{\} <br /> |
 | `language` _string_ | Language is the programming language of the stub. |  | Optional: \{\} <br /> |
+| `sourceImage` _string_ | SourceImage is the OCI artifact reference where the stub code was pushed. |  | Optional: \{\} <br /> |
 
 
 

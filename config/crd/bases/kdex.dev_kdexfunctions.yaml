@@ -322,8 +322,8 @@ spec:
                   - Pending
                   - Ready
                   - StubGenerated
-                description: State reflects the current state (e.g., Ready, Building,
-                  StubGenerated).
+                description: State reflects the current state (e.g., Building, Pending,
+                  Ready, StubGenerated).
                 type: string
               stubDetails:
                 description: StubDetails contains information about the generated
@@ -334,6 +334,10 @@ spec:
                     type: string
                   language:
                     description: Language is the programming language of the stub.
+                    type: string
+                  sourceImage:
+                    description: SourceImage is the OCI artifact reference where the
+                      stub code was pushed.
                     type: string
                 type: object
               url:

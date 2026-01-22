@@ -198,7 +198,7 @@ type KDexFunctionStatus struct {
 	// +kubebuilder:validation:Optional
 	OpenAPISchemaURL string `json:"openAPISchemaURL,omitempty" protobuf:"bytes,3,opt,name=openAPISchemaURL"`
 
-	// State reflects the current state (e.g., Ready, Building, StubGenerated).
+	// State reflects the current state (e.g., Building, Pending, Ready, StubGenerated).
 	// +kubebuilder:validation:Optional
 	// +kubebuilder:validation:Enum=Building;Pending;Ready;StubGenerated
 	State KDexFunctionState `json:"state,omitempty" protobuf:"bytes,1,opt,name=state"`
@@ -513,6 +513,10 @@ type StubDetails struct {
 	// Language is the programming language of the stub.
 	// +kubebuilder:validation:Optional
 	Language string `json:"language,omitempty" protobuf:"bytes,2,opt,name=language"`
+
+	// SourceImage is the OCI artifact reference where the stub code was pushed.
+	// +kubebuilder:validation:Optional
+	SourceImage string `json:"sourceImage,omitempty" protobuf:"bytes,3,opt,name=sourceImage"`
 }
 
 var basePathRegex regexp.Regexp = *regexp.MustCompile(`^(?<basePath>/\w+/\w+)`)
