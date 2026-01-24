@@ -51,6 +51,10 @@ Package v1alpha1 contains API Schema definitions for the  v1alpha1 API group.
 - [KDexPageHeaderList](#kdexpageheaderlist)
 - [KDexPageNavigation](#kdexpagenavigation)
 - [KDexPageNavigationList](#kdexpagenavigationlist)
+- [KDexScope](#kdexscope)
+- [KDexScopeBinding](#kdexscopebinding)
+- [KDexScopeBindingList](#kdexscopebindinglist)
+- [KDexScopeList](#kdexscopelist)
 - [KDexScriptLibrary](#kdexscriptlibrary)
 - [KDexScriptLibraryList](#kdexscriptlibrarylist)
 - [KDexTheme](#kdextheme)
@@ -1470,6 +1474,115 @@ _Appears in:_
 | `scriptLibraryRef` _[KDexObjectReference](#kdexobjectreference)_ | scriptLibraryRef is an optional reference to a KDexScriptLibrary resource. |  | Optional: \{\} <br /> |
 
 
+#### KDexScope
+
+
+
+KDexScope is the Schema for the kdexscopes API
+
+
+
+_Appears in:_
+- [KDexScopeList](#kdexscopelist)
+
+| Field | Description | Default | Validation |
+| --- | --- | --- | --- |
+| `apiVersion` _string_ | `kdex.dev/v1alpha1` | | |
+| `kind` _string_ | `KDexScope` | | |
+| `metadata` _[ObjectMeta](https://kubernetes.io/docs/reference/generated/kubernetes-api/v/#objectmeta-v1-meta)_ | Refer to Kubernetes API documentation for fields of `metadata`. |  |  |
+| `spec` _[KDexScopeSpec](#kdexscopespec)_ | spec defines the desired state of KDexScope |  |  |
+
+
+#### KDexScopeBinding
+
+
+
+KDexScopeBinding is the Schema for the kdexscopebindings API
+
+
+
+_Appears in:_
+- [KDexScopeBindingList](#kdexscopebindinglist)
+
+| Field | Description | Default | Validation |
+| --- | --- | --- | --- |
+| `apiVersion` _string_ | `kdex.dev/v1alpha1` | | |
+| `kind` _string_ | `KDexScopeBinding` | | |
+| `metadata` _[ObjectMeta](https://kubernetes.io/docs/reference/generated/kubernetes-api/v/#objectmeta-v1-meta)_ | Refer to Kubernetes API documentation for fields of `metadata`. |  |  |
+| `spec` _[KDexScopeBindingSpec](#kdexscopebindingspec)_ | spec defines the desired state of KDexScopeBinding |  |  |
+
+
+#### KDexScopeBindingList
+
+
+
+KDexScopeBindingList contains a list of KDexScopeBinding
+
+
+
+
+
+| Field | Description | Default | Validation |
+| --- | --- | --- | --- |
+| `apiVersion` _string_ | `kdex.dev/v1alpha1` | | |
+| `kind` _string_ | `KDexScopeBindingList` | | |
+| `metadata` _[ListMeta](https://kubernetes.io/docs/reference/generated/kubernetes-api/v/#listmeta-v1-meta)_ | Refer to Kubernetes API documentation for fields of `metadata`. |  |  |
+| `items` _[KDexScopeBinding](#kdexscopebinding) array_ |  |  |  |
+
+
+#### KDexScopeBindingSpec
+
+
+
+KDexScopeBindingSpec defines the desired state of KDexScopeBinding
+
+
+
+_Appears in:_
+- [KDexScopeBinding](#kdexscopebinding)
+
+| Field | Description | Default | Validation |
+| --- | --- | --- | --- |
+| `email` _string_ | email is the email address of the subject, used for local fallback lookup or metadata. |  | Optional: \{\} <br /> |
+| `scopes` _string array_ | scopes is a list of internal scopes bound to this subject. |  | MinItems: 1 <br />Required: \{\} <br /> |
+| `secretRef` _[LocalObjectReference](https://kubernetes.io/docs/reference/generated/kubernetes-api/v/#localobjectreference-v1-core)_ | secretRef is an optional reference to a secret that contains keys that map to subject and<br />the value is the password. As such the secret can be mapped to multiple KDexScopeBinding.<br />This simple fallback is not intended for large scale production use. Thought it may be used for administration. |  | Optional: \{\} <br /> |
+| `subject` _string_ | subject is the subject identifier. It should be from the OIDC provider (e.g. Google).<br />However, if the secretRef is set then it contains a local identity managed<br />through the Secret. |  | MinLength: 5 <br />Required: \{\} <br /> |
+
+
+#### KDexScopeList
+
+
+
+KDexScopeList contains a list of KDexScope
+
+
+
+
+
+| Field | Description | Default | Validation |
+| --- | --- | --- | --- |
+| `apiVersion` _string_ | `kdex.dev/v1alpha1` | | |
+| `kind` _string_ | `KDexScopeList` | | |
+| `metadata` _[ListMeta](https://kubernetes.io/docs/reference/generated/kubernetes-api/v/#listmeta-v1-meta)_ | Refer to Kubernetes API documentation for fields of `metadata`. |  |  |
+| `items` _[KDexScope](#kdexscope) array_ |  |  |  |
+
+
+#### KDexScopeSpec
+
+
+
+KDexScopeSpec defines the desired state of KDexScope
+
+
+
+_Appears in:_
+- [KDexScope](#kdexscope)
+
+| Field | Description | Default | Validation |
+| --- | --- | --- | --- |
+| `rules` _[PolicyRule](#policyrule) array_ | Rules holds all the PolicyRules for this KDexScope |  | MinItems: 1 <br />Required: \{\} <br /> |
+
+
 #### KDexScriptLibrary
 
 
@@ -1867,6 +1980,26 @@ _Appears in:_
 | --- | --- | --- | --- |
 | `basePath` _string_ | basePath is the shortest path by which the page may be accessed. It must not contain path parameters. This path will be used in site navigation. This path is subject to being prefixed for localization by `/\{l10n\}` and will be when the user selects a non-default language. |  | Pattern: `^/` <br />Required: \{\} <br /> |
 | `patternPath` _string_ | patternPath, which must be prefixed by BasePath, is an extension of basePath that adds pattern matching as defined by https://pkg.go.dev/net/http#hdr-Patterns-ServeMux. This path is subject to being prefixed for localization by `/\{l10n\}` such as when the user selects a non-default language. |  | Optional: \{\} <br /> |
+
+
+#### PolicyRule
+
+
+
+PolicyRule holds information that describes a policy rule, but does not
+contain information about who the rule applies to or which namespace the
+rule applies to.
+
+
+
+_Appears in:_
+- [KDexScopeSpec](#kdexscopespec)
+
+| Field | Description | Default | Validation |
+| --- | --- | --- | --- |
+| `resourceNames` _string array_ | resourceNames is an optional allow list of names that the rule applies to. An empty set means that everything is allowed. |  |  |
+| `resources` _string array_ | resources is a list of resources this rule applies to. '*' represents all resources. |  | MinItems: 1 <br />Required: \{\} <br /> |
+| `verbs` _string array_ | verbs is a list of verbs that apply to ALL the resources contained in this rule. '*' represents all verbs. |  | MinItems: 1 <br />Required: \{\} <br /> |
 
 
 #### Routing
