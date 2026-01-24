@@ -854,6 +854,7 @@ _Appears in:_
 | `organization` _string_ | organization is the name of the Organization to which the host belongs. |  | MinLength: 5 <br />Required: \{\} <br /> |
 | `routing` _[Routing](#routing)_ | routing defines the desired routing configuration for the host. |  | Required: \{\} <br /> |
 | `scriptLibraryRef` _[KDexObjectReference](#kdexobjectreference)_ | scriptLibraryRef is an optional reference to a KDexScriptLibrary resource. |  | Optional: \{\} <br /> |
+| `security` _[SecurityRequirement](#securityrequirement)_ | Optional top level security requirements. |  |  |
 | `themeRef` _[KDexObjectReference](#kdexobjectreference)_ | themeRef is a reference to the theme that should apply to all pages bound to this host. |  | Optional: \{\} <br /> |
 | `translationRefs` _[KDexObjectReference](#kdexobjectreference) array_ | translationRefs is an array of references to KDexTranslation or KDexClusterTranslation resources that define the translations that should apply to this host. |  | Optional: \{\} <br /> |
 | `utilityPages` _[UtilityPages](#utilitypages)_ | utilityPages defines the utility pages (announcement, error, login) for the host. |  | Optional: \{\} <br /> |
@@ -932,6 +933,7 @@ _Appears in:_
 | `organization` _string_ | organization is the name of the Organization to which the host belongs. |  | MinLength: 5 <br />Required: \{\} <br /> |
 | `routing` _[Routing](#routing)_ | routing defines the desired routing configuration for the host. |  | Required: \{\} <br /> |
 | `scriptLibraryRef` _[KDexObjectReference](#kdexobjectreference)_ | scriptLibraryRef is an optional reference to a KDexScriptLibrary resource. |  | Optional: \{\} <br /> |
+| `security` _[SecurityRequirement](#securityrequirement)_ | Optional top level security requirements. |  |  |
 | `themeRef` _[KDexObjectReference](#kdexobjectreference)_ | themeRef is a reference to the theme that should apply to all pages bound to this host. |  | Optional: \{\} <br /> |
 | `translationRefs` _[KDexObjectReference](#kdexobjectreference) array_ | translationRefs is an array of references to KDexTranslation or KDexClusterTranslation resources that define the translations that should apply to this host. |  | Optional: \{\} <br /> |
 | `utilityPages` _[UtilityPages](#utilitypages)_ | utilityPages defines the utility pages (announcement, error, login) for the host. |  | Optional: \{\} <br /> |
@@ -1297,6 +1299,7 @@ _Appears in:_
 | `basePath` _string_ | basePath is the shortest path by which the page may be accessed. It must not contain path parameters. This path will be used in site navigation. This path is subject to being prefixed for localization by `/\{l10n\}` and will be when the user selects a non-default language. |  | Pattern: `^/` <br />Required: \{\} <br /> |
 | `patternPath` _string_ | patternPath, which must be prefixed by BasePath, is an extension of basePath that adds pattern matching as defined by https://pkg.go.dev/net/http#hdr-Patterns-ServeMux. This path is subject to being prefixed for localization by `/\{l10n\}` such as when the user selects a non-default language. |  | Optional: \{\} <br /> |
 | `scriptLibraryRef` _[KDexObjectReference](#kdexobjectreference)_ | scriptLibraryRef is an optional reference to a KDexScriptLibrary resource. |  | Optional: \{\} <br /> |
+| `security` _[SecurityRequirement](#securityrequirement)_ | Optional security requirements that override top-level security. |  |  |
 
 
 #### KDexPageFooter
@@ -2075,6 +2078,24 @@ _Appears in:_
 | `scriptSrc` _string_ | scriptSrc is a value for a `<script>` `src` attribute. It must be either and absolute URL with a protocol and host<br />or it must be relative to the `ingressPath` field of the specified Backend. |  | Optional: \{\} <br /> |
 | `footScript` _boolean_ | footScript is a flag for script or scriptSrc that indicates if the tag should be added in the head of the page or at the foot. The default is false (add to head). To add the script to the foot of the page set footScript to true. | false | Optional: \{\} <br /> |
 | `attributes` _object (keys:string, values:string)_ | attributes are key/value pairs that will be added to the element when rendered. |  | MaxProperties: 10 <br />Optional: \{\} <br /> |
+
+
+#### SecurityRequirement
+
+_Underlying type:_ _object_
+
+
+
+
+
+_Appears in:_
+- [KDexHostSpec](#kdexhostspec)
+- [KDexInternalHostSpec](#kdexinternalhostspec)
+- [KDexPageBindingSpec](#kdexpagebindingspec)
+- [SecurityRequirements](#securityrequirements)
+
+
+
 
 
 #### StubDetails

@@ -359,6 +359,16 @@ spec:
                 x-kubernetes-validations:
                 - message: '''kind'' must be either KDexScriptLibrary or KDexClusterScriptLibrary'
                   rule: self.kind == "KDexScriptLibrary" || self.kind == "KDexClusterScriptLibrary"
+              security:
+                description: Optional security requirements that override top-level
+                  security.
+                items:
+                  additionalProperties:
+                    items:
+                      type: string
+                    type: array
+                  type: object
+                type: array
               tags:
                 description: Tags are used for grouping and searching functions.
                 items:

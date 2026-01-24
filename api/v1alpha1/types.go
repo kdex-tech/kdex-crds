@@ -489,6 +489,8 @@ func (s *ScriptDef) ToTag() string {
 	return buffer.String()
 }
 
+type SecurityRequirement map[string][]string
+
 type StyleDef struct {
 	// style is the text content to be added into a `<style>` element when rendered.
 	// +kubebuilder:validation:Optional

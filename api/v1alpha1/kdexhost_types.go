@@ -107,21 +107,24 @@ type KDexHostSpec struct {
 	// +kubebuilder:validation:XValidation:rule=`self.kind == "KDexScriptLibrary" || self.kind == "KDexClusterScriptLibrary"`,message="'kind' must be either KDexScriptLibrary or KDexClusterScriptLibrary"
 	ScriptLibraryRef *KDexObjectReference `json:"scriptLibraryRef,omitempty" protobuf:"bytes,10,opt,name=scriptLibraryRef"`
 
+	// Optional top level security requirements.
+	Security *[]SecurityRequirement `json:"security,omitempty" yaml:"security,omitempty" protobuf:"bytes,11,rep,name=security"`
+
 	// themeRef is a reference to the theme that should apply to all pages bound to this host.
 	// +kubebuilder:validation:Optional
 	// +kubebuilder:validation:XValidation:rule=`self.kind == "KDexTheme" || self.kind == "KDexClusterTheme"`,message="'kind' must be either KDexTheme or KDexClusterTheme"
-	ThemeRef *KDexObjectReference `json:"themeRef,omitempty" protobuf:"bytes,11,opt,name=themeRef"`
+	ThemeRef *KDexObjectReference `json:"themeRef,omitempty" protobuf:"bytes,12,opt,name=themeRef"`
 
 	// translationRefs is an array of references to KDexTranslation or KDexClusterTranslation resources that define the translations that should apply to this host.
 	// +listType=map
 	// +listMapKey=name
 	// +kubebuilder:validation:Optional
 	// +kubebuilder:validation:XValidation:rule="self.all(k, k.kind == 'KDexTranslation' || k.kind == 'KDexClusterTranslation')",message="all translation refs must have kind KDexTranslation or KDexClusterTranslation"
-	TranslationRefs []KDexObjectReference `json:"translationRefs,omitempty" protobuf:"bytes,12,rep,name=translationRefs"`
+	TranslationRefs []KDexObjectReference `json:"translationRefs,omitempty" protobuf:"bytes,13,rep,name=translationRefs"`
 
 	// utilityPages defines the utility pages (announcement, error, login) for the host.
 	// +kubebuilder:validation:Optional
-	UtilityPages *UtilityPages `json:"utilityPages,omitempty" protobuf:"bytes,13,opt,name=utilityPages"`
+	UtilityPages *UtilityPages `json:"utilityPages,omitempty" protobuf:"bytes,14,opt,name=utilityPages"`
 }
 
 func (a *KDexHostSpec) GetResourceImage() string {

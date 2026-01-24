@@ -315,6 +315,15 @@ spec:
                 x-kubernetes-validations:
                 - message: '''kind'' must be either KDexScriptLibrary or KDexClusterScriptLibrary'
                   rule: self.kind == "KDexScriptLibrary" || self.kind == "KDexClusterScriptLibrary"
+              security:
+                description: Optional top level security requirements.
+                items:
+                  additionalProperties:
+                    items:
+                      type: string
+                    type: array
+                  type: object
+                type: array
               serverImage:
                 description: |-
                   serverImage is the name of Backend image.

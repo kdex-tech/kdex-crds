@@ -122,6 +122,9 @@ type KDexPageBindingSpec struct {
 	// +kubebuilder:validation:Optional
 	// +kubebuilder:validation:XValidation:rule=`self.kind == "KDexScriptLibrary" || self.kind == "KDexClusterScriptLibrary"`,message="'kind' must be either KDexScriptLibrary or KDexClusterScriptLibrary"
 	ScriptLibraryRef *KDexObjectReference `json:"scriptLibraryRef,omitempty" protobuf:"bytes,12,opt,name=scriptLibraryRef"`
+
+	// Optional security requirements that override top-level security.
+	Security *[]SecurityRequirement `json:"security,omitempty" yaml:"security,omitempty" protobuf:"bytes,13,rep,name=security"`
 }
 
 func init() {
