@@ -215,6 +215,12 @@ spec:
                                 of claims from the OIDC token.
                               example: oidc.groups.filter(g, g.startsWith('app_'))
                               type: string
+                            required:
+                              default: false
+                              description: required indicates that if the rule fails
+                                to produce a value token generation should fail as
+                                well
+                              type: boolean
                             target:
                               description: target is a nested property path to where
                                 the result will be attached to the claims structure
@@ -230,6 +236,12 @@ spec:
                         description: oidcProviderURL is the well known URL of the
                           OIDC provider.
                         type: string
+                      scopes:
+                        description: scopes is an array of additional scopes that
+                          will be requested from the provider.
+                        items:
+                          type: string
+                        type: array
                     required:
                     - clientID
                     - clientSecretRef

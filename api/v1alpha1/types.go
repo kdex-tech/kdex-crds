@@ -321,6 +321,11 @@ type LocalSecretWithKeyReference struct {
 }
 
 type MappingRule struct {
+	// required indicates that if the rule fails to produce a value token generation should fail as well
+	// +kubebuilder:validation:Optional
+	// +kubebuilder:default:=false
+	Required bool `json:"required"`
+
 	// expession is CEL program to compute a transformation of claims from the OIDC token.
 	// +kubebuilder:validation:Required
 	// +kubebuilder:example:=`oidc.groups.filter(g, g.startsWith('app_'))`
@@ -385,6 +390,10 @@ type OIDCProvider struct {
 	// oidcProviderURL is the well known URL of the OIDC provider.
 	// +kubebuilder:validation:Required
 	OIDCProviderURL string `json:"oidcProviderURL" protobuf:"bytes,4,req,name=oidcProviderURL"`
+
+	// scopes is an array of additional scopes that will be requested from the provider.
+	// +kubebuilder:validation:Optional
+	Scopes []string `json:"scopes" protobuf:"bytes,5,rep,name=scopes"`
 }
 
 // PackageReference specifies the name and version of an NPM package. Prefereably the package should be available from

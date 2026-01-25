@@ -1932,6 +1932,7 @@ _Appears in:_
 
 | Field | Description | Default | Validation |
 | --- | --- | --- | --- |
+| `required` _boolean_ | required indicates that if the rule fails to produce a value token generation should fail as well | false | Optional: \{\} <br /> |
 | `expession` _string_ | expession is CEL program to compute a transformation of claims from the OIDC token. |  | Required: \{\} <br /> |
 | `target` _string_ | target is a nested property path to where the result will be attached to the claims structure |  | Required: \{\} <br /> |
 
@@ -2009,6 +2010,7 @@ _Appears in:_
 | `clientSecretRef` _[LocalSecretWithKeyReference](#localsecretwithkeyreference)_ | clientSecretRef is a reference to a secret in the host's namespace that holds the client_secret assigned to this application by the OIDC provider. |  | Required: \{\} <br /> |
 | `mappers` _[MappingRule](#mappingrule) array_ | mappers is an array of CEL expressions for extracting custom claims from the OIDC token and adding the results to the local token. |  | MaxItems: 16 <br />Optional: \{\} <br /> |
 | `oidcProviderURL` _string_ | oidcProviderURL is the well known URL of the OIDC provider. |  | Required: \{\} <br /> |
+| `scopes` _string array_ | scopes is an array of additional scopes that will be requested from the provider. |  | Optional: \{\} <br /> |
 
 
 #### PackageReference
