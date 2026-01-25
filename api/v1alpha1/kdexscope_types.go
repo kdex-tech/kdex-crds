@@ -23,6 +23,11 @@ import (
 
 // KDexScopeSpec defines the desired state of KDexScope
 type KDexScopeSpec struct {
+	// hostRef is a reference to the KDexHost that this binding is for.
+	// +kubebuilder:validation:Required
+	// +kubebuilder:validation:XValidation:rule="self.name.size() > 0",message="hostRef.name must not be empty"
+	HostRef corev1.LocalObjectReference `json:"hostRef" protobuf:"bytes,1,req,name=hostRef"`
+
 	// Rules holds all the PolicyRules for this KDexScope
 	// +kubebuilder:validation:Required
 	// +kubebuilder:validation:MinItems=1
@@ -63,23 +68,18 @@ type KDexScopeList struct {
 // contain information about who the rule applies to or which namespace the
 // rule applies to.
 type PolicyRule struct {
-	// hostRef is a reference to the KDexHost that this binding is for.
-	// +kubebuilder:validation:Required
-	// +kubebuilder:validation:XValidation:rule="self.name.size() > 0",message="hostRef.name must not be empty"
-	HostRef corev1.LocalObjectReference `json:"hostRef" protobuf:"bytes,1,req,name=hostRef"`
-
 	// resourceNames is an optional allow list of names that the rule applies to. An empty set means that everything is allowed.
-	ResourceNames []string `json:"resourceNames" protobuf:"bytes,2,rep,name=resourceNames"`
+	ResourceNames []string `json:"resourceNames" protobuf:"bytes,1,rep,name=resourceNames"`
 
 	// resources is a list of resources this rule applies to. '*' represents all resources.
 	// +kubebuilder:validation:Required
 	// +kubebuilder:validation:MinItems=1
-	Resources []string `json:"resources" protobuf:"bytes,3,rep,name=resources"`
+	Resources []string `json:"resources" protobuf:"bytes,2,rep,name=resources"`
 
 	// verbs is a list of verbs that apply to ALL the resources contained in this rule. '*' represents all verbs.
 	// +kubebuilder:validation:Required
 	// +kubebuilder:validation:MinItems=1
-	Verbs []string `json:"verbs" protobuf:"bytes,4,rep,name=verbs"`
+	Verbs []string `json:"verbs" protobuf:"bytes,3,rep,name=verbs"`
 }
 
 func init() {

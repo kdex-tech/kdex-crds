@@ -1622,6 +1622,7 @@ _Appears in:_
 
 | Field | Description | Default | Validation |
 | --- | --- | --- | --- |
+| `hostRef` _[LocalObjectReference](https://kubernetes.io/docs/reference/generated/kubernetes-api/v/#localobjectreference-v1-core)_ | hostRef is a reference to the KDexHost that this binding is for. |  | Required: \{\} <br /> |
 | `rules` _[PolicyRule](#policyrule) array_ | Rules holds all the PolicyRules for this KDexScope |  | MinItems: 1 <br />Required: \{\} <br /> |
 
 
@@ -2095,7 +2096,6 @@ _Appears in:_
 
 | Field | Description | Default | Validation |
 | --- | --- | --- | --- |
-| `hostRef` _[LocalObjectReference](https://kubernetes.io/docs/reference/generated/kubernetes-api/v/#localobjectreference-v1-core)_ | hostRef is a reference to the KDexHost that this binding is for. |  | Required: \{\} <br /> |
 | `resourceNames` _string array_ | resourceNames is an optional allow list of names that the rule applies to. An empty set means that everything is allowed. |  |  |
 | `resources` _string array_ | resources is a list of resources this rule applies to. '*' represents all resources. |  | MinItems: 1 <br />Required: \{\} <br /> |
 | `verbs` _string array_ | verbs is a list of verbs that apply to ALL the resources contained in this rule. '*' represents all verbs. |  | MinItems: 1 <br />Required: \{\} <br /> |
