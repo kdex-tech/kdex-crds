@@ -283,6 +283,7 @@ _Appears in:_
 | --- | --- | --- | --- |
 | `activeKey` _string_ | activeKey contains the name of the secret that holds the currently active key. This can be omitted when there is only a single key specified. |  | Optional: \{\} <br /> |
 | `jwtKeysSecrets` _[LocalSecretWithKeyReference](#localsecretwithkeyreference) array_ | jwtKeysSecrets is an optional list of references to secrets in the same namespace that hold private PEM encoded signing keys. |  | Optional: \{\} <br /> |
+| `tokenTTL` _string_ | tokenTTL is the length of time for which the token is valid | 1h | Optional: \{\} <br /> |
 
 
 #### KDexApp
