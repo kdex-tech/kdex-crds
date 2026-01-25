@@ -140,6 +140,11 @@ spec:
                           - secretRef
                           type: object
                         type: array
+                      tokenTTL:
+                        default: 1h
+                        description: tokenTTL is the length of time for which the
+                          token is valid
+                        type: string
                     type: object
                     x-kubernetes-validations:
                     - message: activeKey must be set if jwtKeysSecrets has more than

@@ -240,6 +240,11 @@ type JWT struct {
 	// jwtKeysSecrets is an optional list of references to secrets in the same namespace that hold private PEM encoded signing keys.
 	// +kubebuilder:validation:Optional
 	JWTKeysSecrets []LocalSecretWithKeyReference `json:"jwtKeysSecrets,omitempty" protobuf:"bytes,2,rep,name=jwtKeysSecrets"`
+
+	// tokenTTL is the length of time for which the token is valid
+	// +kubebuilder:validation:Optional
+	// +kubebuilder:default:="1h"
+	TokenTTL string `json:"tokenTTL" protobuf:"bytes,5,req,name=tokenTTL"`
 }
 
 type KDexObject struct {
