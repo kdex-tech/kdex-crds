@@ -125,6 +125,24 @@ _Appears in:_
 | `style` _string_ | style is the text content to be added into a `<style>` element when rendered. |  | Optional: \{\} <br /> |
 
 
+#### Auth
+
+
+
+
+
+
+
+_Appears in:_
+- [KDexHostSpec](#kdexhostspec)
+- [KDexInternalHostSpec](#kdexinternalhostspec)
+
+| Field | Description | Default | Validation |
+| --- | --- | --- | --- |
+| `jwtKeysSecrets` _[LocalSecretWithKeyReference](#localsecretwithkeyreference) array_ | jwtKeysSecrets is an optional list of references to secrets in the same namespace that hold private PEM encoded signing keys. |  | Optional: \{\} <br /> |
+| `oidcProvider` _[OIDCProvider](#oidcprovider)_ | oidcProvider is the configuration for an optional OIDC provider. |  | Optional: \{\} <br /> |
+
+
 #### Backend
 
 
@@ -838,6 +856,7 @@ _Appears in:_
 | Field | Description | Default | Validation |
 | --- | --- | --- | --- |
 | `assets` _[Assets](#assets)_ | assets is a set of elements that define a host specific HTML instructions (e.g. favicon, site logo, charset). |  | MaxItems: 32 <br /> |
+| `auth` _[Auth](#auth)_ | auth holds the host's authentication configuration. |  | Optional: \{\} <br /> |
 | `imagePullSecrets` _[LocalObjectReference](https://kubernetes.io/docs/reference/generated/kubernetes-api/v/#localobjectreference-v1-core) array_ | imagePullSecrets is an optional list of references to secrets in the same namespace to use for pulling the referenced images.<br />More info: https://kubernetes.io/docs/concepts/containers/images#specifying-imagepullsecrets-on-a-pod |  | Optional: \{\} <br /> |
 | `ingressPath` _string_ | ingressPath is a prefix beginning with '/_' plus additional characters. This indicates where in the Ingress/HTTPRoute the Backend will be mounted.<br />This value is determined by the implementation that embeds the Backend and cannot be changed. |  | Optional: \{\} <br />Pattern: `^/_.+` <br /> |
 | `replicas` _integer_ | replicas is the number of desired pods. This is a pointer to distinguish between explicit<br />zero and not specified. Defaults to 1. |  | Optional: \{\} <br /> |
@@ -917,6 +936,7 @@ _Appears in:_
 | Field | Description | Default | Validation |
 | --- | --- | --- | --- |
 | `assets` _[Assets](#assets)_ | assets is a set of elements that define a host specific HTML instructions (e.g. favicon, site logo, charset). |  | MaxItems: 32 <br /> |
+| `auth` _[Auth](#auth)_ | auth holds the host's authentication configuration. |  | Optional: \{\} <br /> |
 | `imagePullSecrets` _[LocalObjectReference](https://kubernetes.io/docs/reference/generated/kubernetes-api/v/#localobjectreference-v1-core) array_ | imagePullSecrets is an optional list of references to secrets in the same namespace to use for pulling the referenced images.<br />More info: https://kubernetes.io/docs/concepts/containers/images#specifying-imagepullsecrets-on-a-pod |  | Optional: \{\} <br /> |
 | `ingressPath` _string_ | ingressPath is a prefix beginning with '/_' plus additional characters. This indicates where in the Ingress/HTTPRoute the Backend will be mounted.<br />This value is determined by the implementation that embeds the Backend and cannot be changed. |  | Optional: \{\} <br />Pattern: `^/_.+` <br /> |
 | `replicas` _integer_ | replicas is the number of desired pods. This is a pointer to distinguish between explicit<br />zero and not specified. Defaults to 1. |  | Optional: \{\} <br /> |
@@ -1862,6 +1882,24 @@ _Appears in:_
 | `Login` | LoginUtilityPageType represents a login page.<br /> |
 
 
+#### LocalSecretWithKeyReference
+
+
+
+
+
+
+
+_Appears in:_
+- [Auth](#auth)
+- [OIDCProvider](#oidcprovider)
+
+| Field | Description | Default | Validation |
+| --- | --- | --- | --- |
+| `keyProperty` _string_ | keyProperty is the property from which to extract a value from the secret |  | Required: \{\} <br /> |
+| `secretRef` _[LocalObjectReference](https://kubernetes.io/docs/reference/generated/kubernetes-api/v/#localobjectreference-v1-core)_ | secretRef is a reference to a secret in the same namespace as the referrer. |  | Required: \{\} <br /> |
+
+
 #### Metadata
 
 
@@ -1916,6 +1954,24 @@ _Appears in:_
 | --- | --- | --- | --- |
 | `icon` _string_ | icon is the name of the icon to display next to the menu entry for this page. |  | Optional: \{\} <br /> |
 | `weight` _[Quantity](https://kubernetes.io/docs/reference/generated/kubernetes-api/v/#quantity-resource-api)_ | weight is a property that influences the position of the page menu entry. Items at each level are sorted first by ascending weight and then ascending lexicographically. |  | Optional: \{\} <br /> |
+
+
+#### OIDCProvider
+
+
+
+
+
+
+
+_Appears in:_
+- [Auth](#auth)
+
+| Field | Description | Default | Validation |
+| --- | --- | --- | --- |
+| `clientID` _string_ | clientID is the id assigned by the provider to this application. |  | Required: \{\} <br /> |
+| `clientSecretRef` _[LocalSecretWithKeyReference](#localsecretwithkeyreference)_ | clientSecretRef is a reference to a secret in the host's namespace that holds the client_secret assigned to this application by the OIDC provider. |  | Required: \{\} <br /> |
+| `oidcProviderURL` _string_ | oidcProviderURL is the well known URL of the OIDC provider. |  | Required: \{\} <br /> |
 
 
 #### PackageReference

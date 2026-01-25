@@ -101,6 +101,16 @@ func (a *Assets) String() string {
 	return buffer.String()
 }
 
+type Auth struct {
+	// jwtKeysSecrets is an optional list of references to secrets in the same namespace that hold private PEM encoded signing keys.
+	// +kubebuilder:validation:Optional
+	JWTKeysSecrets []LocalSecretWithKeyReference `json:"jwtKeysSecrets,omitempty" protobuf:"bytes,1,rep,name=jwtKeysSecrets"`
+
+	// oidcProvider is the configuration for an optional OIDC provider.
+	// +kubebuilder:validation:Optional
+	OIDCProvider *OIDCProvider `json:"oidcProvider,omitempty" protobuf:"bytes,2,opt,name=oidcProvider"`
+}
+
 // Backend defines a deployment for serving resources specific to the refer.
 type Backend struct {
 	// imagePullSecrets is an optional list of references to secrets in the same namespace to use for pulling the referenced images.
@@ -283,6 +293,17 @@ type KDexObjectReference struct {
 	Namespace string `json:"namespace,omitempty" protobuf:"bytes,3,opt,name=namespace"`
 }
 
+type LocalSecretWithKeyReference struct {
+	// keyProperty is the property from which to extract a value from the secret
+	// +kubebuilder:validation:Required
+	KeyProperty string `json:"keyProperty" protobuf:"bytes,1,req,name=keyProperty"`
+
+	// secretRef is a reference to a secret in the same namespace as the referrer.
+	// +kubebuilder:validation:Required
+	// +kubebuilder:validation:XValidation:rule="self.name.size() > 0",message="secretRef.name must not be empty"
+	SecretRef corev1.LocalObjectReference `json:"secretRef" protobuf:"bytes,2,req,name=secretRef"`
+}
+
 // KDexFunctionMetadata defines the metadata for the function.
 type Metadata struct {
 	// Tags are used for grouping and searching functions.
@@ -317,6 +338,22 @@ type NavigationHints struct {
 	// weight is a property that influences the position of the page menu entry. Items at each level are sorted first by ascending weight and then ascending lexicographically.
 	// +kubebuilder:validation:Optional
 	Weight resource.Quantity `json:"weight,omitempty" protobuf:"bytes,2,opt,name=weight"`
+}
+
+type OIDCProvider struct {
+	// clientID is the id assigned by the provider to this application.
+	// +kubebuilder:validation:Required
+	ClientID string `json:"clientID" protobuf:"bytes,1,req,name=clientID"`
+
+	// clientSecretRef is a reference to a secret in the host's namespace that holds the client_secret assigned to this application by the OIDC provider.
+	// +kubebuilder:validation:Required
+	ClientSecretRef LocalSecretWithKeyReference `json:"clientSecretRef,omitempty" protobuf:"bytes,2,req,name=clientSecretRef"`
+
+	// TODO: add optional mapping rules that enable grants from the OIDC token to be mapped to the local JWT token (perhaps CEL expression)
+
+	// oidcProviderURL is the well known URL of the OIDC provider.
+	// +kubebuilder:validation:Required
+	OIDCProviderURL string `json:"oidcProviderURL" protobuf:"bytes,3,req,name=oidcProviderURL"`
 }
 
 // PackageReference specifies the name and version of an NPM package. Prefereably the package should be available from

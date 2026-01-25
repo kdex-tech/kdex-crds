@@ -96,6 +96,91 @@ spec:
                       == 1'
                 maxItems: 32
                 type: array
+              auth:
+                description: auth holds the host's authentication configuration.
+                properties:
+                  jwtKeysSecrets:
+                    description: jwtKeysSecrets is an optional list of references
+                      to secrets in the same namespace that hold private PEM encoded
+                      signing keys.
+                    items:
+                      properties:
+                        keyProperty:
+                          description: keyProperty is the property from which to extract
+                            a value from the secret
+                          type: string
+                        secretRef:
+                          description: secretRef is a reference to a secret in the
+                            same namespace as the referrer.
+                          properties:
+                            name:
+                              default: ""
+                              description: |-
+                                Name of the referent.
+                                This field is effectively required, but due to backwards compatibility is
+                                allowed to be empty. Instances of this type with an empty value here are
+                                almost certainly wrong.
+                                More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#names
+                              type: string
+                          type: object
+                          x-kubernetes-map-type: atomic
+                          x-kubernetes-validations:
+                          - message: secretRef.name must not be empty
+                            rule: self.name.size() > 0
+                      required:
+                      - keyProperty
+                      - secretRef
+                      type: object
+                    type: array
+                  oidcProvider:
+                    description: oidcProvider is the configuration for an optional
+                      OIDC provider.
+                    properties:
+                      clientID:
+                        description: clientID is the id assigned by the provider to
+                          this application.
+                        type: string
+                      clientSecretRef:
+                        description: clientSecretRef is a reference to a secret in
+                          the host's namespace that holds the client_secret assigned
+                          to this application by the OIDC provider.
+                        properties:
+                          keyProperty:
+                            description: keyProperty is the property from which to
+                              extract a value from the secret
+                            type: string
+                          secretRef:
+                            description: secretRef is a reference to a secret in the
+                              same namespace as the referrer.
+                            properties:
+                              name:
+                                default: ""
+                                description: |-
+                                  Name of the referent.
+                                  This field is effectively required, but due to backwards compatibility is
+                                  allowed to be empty. Instances of this type with an empty value here are
+                                  almost certainly wrong.
+                                  More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#names
+                                type: string
+                            type: object
+                            x-kubernetes-map-type: atomic
+                            x-kubernetes-validations:
+                            - message: secretRef.name must not be empty
+                              rule: self.name.size() > 0
+                        required:
+                        - keyProperty
+                        - secretRef
+                        type: object
+                      oidcProviderURL:
+                        description: oidcProviderURL is the well known URL of the
+                          OIDC provider.
+                        type: string
+                    required:
+                    - clientID
+                    - clientSecretRef
+                    - oidcProviderURL
+                    type: object
+                type: object
               brandName:
                 description: brandName is the name used when rendering pages belonging
                   to the host. For example, it may be used as alt text for the logo
