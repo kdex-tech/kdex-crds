@@ -315,6 +315,18 @@ type LocalSecretWithKeyReference struct {
 	SecretRef corev1.LocalObjectReference `json:"secretRef" protobuf:"bytes,2,req,name=secretRef"`
 }
 
+type MappingRule struct {
+	// expession is CEL program to compute a transformation of claims from the OIDC token.
+	// +kubebuilder:validation:Required
+	// +kubebuilder:example:=`oidc.groups.filter(g, g.startsWith('app_'))`
+	SourceExpression string `json:"expession"`
+
+	// target is a nested property path to where the result will be attached to the claims structure
+	// +kubebuilder:validation:Required
+	// +kubebuilder:example:=`auth.internal_groups`
+	TargetPropPath string `json:"target"`
+}
+
 // KDexFunctionMetadata defines the metadata for the function.
 type Metadata struct {
 	// Tags are used for grouping and searching functions.
@@ -360,11 +372,14 @@ type OIDCProvider struct {
 	// +kubebuilder:validation:Required
 	ClientSecretRef LocalSecretWithKeyReference `json:"clientSecretRef,omitempty" protobuf:"bytes,2,req,name=clientSecretRef"`
 
-	// TODO: add optional mapping rules that enable grants from the OIDC token to be mapped to the local JWT token (perhaps CEL expression)
+	// mappers is an array of CEL expressions for extracting custom claims from the OIDC token and adding the results to the local token.
+	// +kubebuilder:validation:Optional
+	// +kubebuilder:validation:MaxItems=16
+	Mappers []MappingRule `json:"mappers,omitempty" protobuf:"bytes,3,rep,name=mappers"`
 
 	// oidcProviderURL is the well known URL of the OIDC provider.
 	// +kubebuilder:validation:Required
-	OIDCProviderURL string `json:"oidcProviderURL" protobuf:"bytes,3,req,name=oidcProviderURL"`
+	OIDCProviderURL string `json:"oidcProviderURL" protobuf:"bytes,4,req,name=oidcProviderURL"`
 }
 
 // PackageReference specifies the name and version of an NPM package. Prefereably the package should be available from

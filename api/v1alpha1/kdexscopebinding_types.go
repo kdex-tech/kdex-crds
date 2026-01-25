@@ -27,23 +27,28 @@ type KDexScopeBindingSpec struct {
 	// +kubebuilder:validation:Optional
 	Email string `json:"email,omitempty" protobuf:"bytes,1,opt,name=email"`
 
+	// hostRef is a reference to the KDexHost that this binding is for.
+	// +kubebuilder:validation:Required
+	// +kubebuilder:validation:XValidation:rule="self.name.size() > 0",message="hostRef.name must not be empty"
+	HostRef corev1.LocalObjectReference `json:"hostRef" protobuf:"bytes,2,req,name=hostRef"`
+
 	// scopes is a list of internal scopes bound to this subject.
 	// +kubebuilder:validation:Required
 	// +kubebuilder:validation:MinItems=1
-	Scopes []string `json:"scopes" protobuf:"bytes,2,rep,name=scopes"`
+	Scopes []string `json:"scopes" protobuf:"bytes,3,rep,name=scopes"`
 
 	// secretRef is an optional reference to a secret that contains keys that map to subject and
 	// the value is the password. As such the secret can be mapped to multiple KDexScopeBinding.
 	// This simple fallback is not intended for large scale production use. Thought it may be used for administration.
 	// +kubebuilder:validation:Optional
-	SecretRef *corev1.LocalObjectReference `json:"secretRef" protobuf:"bytes,3,opt,name=secretRef"`
+	SecretRef *corev1.LocalObjectReference `json:"secretRef" protobuf:"bytes,4,opt,name=secretRef"`
 
 	// subject is the subject identifier. It should be from the OIDC provider (e.g. Google).
 	// However, if the secretRef is set then it contains a local identity managed
 	// through the Secret.
 	// +kubebuilder:validation:Required
 	// +kubebuilder:validation:MinLength=5
-	Subject string `json:"subject" protobuf:"bytes,4,req,name=subject"`
+	Subject string `json:"subject" protobuf:"bytes,5,req,name=subject"`
 }
 
 // +kubebuilder:object:root=true

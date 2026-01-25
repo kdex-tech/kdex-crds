@@ -199,6 +199,28 @@ spec:
                         - keyProperty
                         - secretRef
                         type: object
+                      mappers:
+                        description: mappers is an array of CEL expressions for extracting
+                          custom claims from the OIDC token and adding the results
+                          to the local token.
+                        items:
+                          properties:
+                            expession:
+                              description: expession is CEL program to compute a transformation
+                                of claims from the OIDC token.
+                              example: oidc.groups.filter(g, g.startsWith('app_'))
+                              type: string
+                            target:
+                              description: target is a nested property path to where
+                                the result will be attached to the claims structure
+                              example: auth.internal_groups
+                              type: string
+                          required:
+                          - expession
+                          - target
+                          type: object
+                        maxItems: 16
+                        type: array
                       oidcProviderURL:
                         description: oidcProviderURL is the well known URL of the
                           OIDC provider.

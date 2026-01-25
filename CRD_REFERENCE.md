@@ -1584,6 +1584,7 @@ _Appears in:_
 | Field | Description | Default | Validation |
 | --- | --- | --- | --- |
 | `email` _string_ | email is the email address of the subject, used for local fallback lookup or metadata. |  | Optional: \{\} <br /> |
+| `hostRef` _[LocalObjectReference](https://kubernetes.io/docs/reference/generated/kubernetes-api/v/#localobjectreference-v1-core)_ | hostRef is a reference to the KDexHost that this binding is for. |  | Required: \{\} <br /> |
 | `scopes` _string array_ | scopes is a list of internal scopes bound to this subject. |  | MinItems: 1 <br />Required: \{\} <br /> |
 | `secretRef` _[LocalObjectReference](https://kubernetes.io/docs/reference/generated/kubernetes-api/v/#localobjectreference-v1-core)_ | secretRef is an optional reference to a secret that contains keys that map to subject and<br />the value is the password. As such the secret can be mapped to multiple KDexScopeBinding.<br />This simple fallback is not intended for large scale production use. Thought it may be used for administration. |  | Optional: \{\} <br /> |
 | `subject` _string_ | subject is the subject identifier. It should be from the OIDC provider (e.g. Google).<br />However, if the secretRef is set then it contains a local identity managed<br />through the Secret. |  | MinLength: 5 <br />Required: \{\} <br /> |
@@ -1917,6 +1918,23 @@ _Appears in:_
 | `secretRef` _[LocalObjectReference](https://kubernetes.io/docs/reference/generated/kubernetes-api/v/#localobjectreference-v1-core)_ | secretRef is a reference to a secret in the same namespace as the referrer. |  | Required: \{\} <br /> |
 
 
+#### MappingRule
+
+
+
+
+
+
+
+_Appears in:_
+- [OIDCProvider](#oidcprovider)
+
+| Field | Description | Default | Validation |
+| --- | --- | --- | --- |
+| `expession` _string_ | expession is CEL program to compute a transformation of claims from the OIDC token. |  | Required: \{\} <br /> |
+| `target` _string_ | target is a nested property path to where the result will be attached to the claims structure |  | Required: \{\} <br /> |
+
+
 #### Metadata
 
 
@@ -1988,6 +2006,7 @@ _Appears in:_
 | --- | --- | --- | --- |
 | `clientID` _string_ | clientID is the id assigned by the provider to this application. |  | Required: \{\} <br /> |
 | `clientSecretRef` _[LocalSecretWithKeyReference](#localsecretwithkeyreference)_ | clientSecretRef is a reference to a secret in the host's namespace that holds the client_secret assigned to this application by the OIDC provider. |  | Required: \{\} <br /> |
+| `mappers` _[MappingRule](#mappingrule) array_ | mappers is an array of CEL expressions for extracting custom claims from the OIDC token and adding the results to the local token. |  | MaxItems: 16 <br />Optional: \{\} <br /> |
 | `oidcProviderURL` _string_ | oidcProviderURL is the well known URL of the OIDC provider. |  | Required: \{\} <br /> |
 
 
@@ -2073,6 +2092,7 @@ _Appears in:_
 
 | Field | Description | Default | Validation |
 | --- | --- | --- | --- |
+| `hostRef` _[LocalObjectReference](https://kubernetes.io/docs/reference/generated/kubernetes-api/v/#localobjectreference-v1-core)_ | hostRef is a reference to the KDexHost that this binding is for. |  | Required: \{\} <br /> |
 | `resourceNames` _string array_ | resourceNames is an optional allow list of names that the rule applies to. An empty set means that everything is allowed. |  |  |
 | `resources` _string array_ | resources is a list of resources this rule applies to. '*' represents all resources. |  | MinItems: 1 <br />Required: \{\} <br /> |
 | `verbs` _string array_ | verbs is a list of verbs that apply to ALL the resources contained in this rule. '*' represents all verbs. |  | MinItems: 1 <br />Required: \{\} <br /> |
