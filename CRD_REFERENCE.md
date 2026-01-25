@@ -139,7 +139,7 @@ _Appears in:_
 
 | Field | Description | Default | Validation |
 | --- | --- | --- | --- |
-| `jwtKeysSecrets` _[LocalSecretWithKeyReference](#localsecretwithkeyreference) array_ | jwtKeysSecrets is an optional list of references to secrets in the same namespace that hold private PEM encoded signing keys. |  | Optional: \{\} <br /> |
+| `jwt` _[JWT](#jwt)_ | jwt is the configuation for JWT token support. |  | Optional: \{\} <br /> |
 | `oidcProvider` _[OIDCProvider](#oidcprovider)_ | oidcProvider is the configuration for an optional OIDC provider. |  | Optional: \{\} <br /> |
 
 
@@ -266,6 +266,23 @@ _Appears in:_
 | --- | --- | --- | --- |
 | `name` _string_ | name of the custom element. |  | Required: \{\} <br /> |
 | `description` _string_ | description of the custom element. |  | Optional: \{\} <br /> |
+
+
+#### JWT
+
+
+
+
+
+
+
+_Appears in:_
+- [Auth](#auth)
+
+| Field | Description | Default | Validation |
+| --- | --- | --- | --- |
+| `activeKey` _string_ | activeKey contains the name of the secret that holds the currently active key. This can be omitted when there is only a single key specified. |  | Optional: \{\} <br /> |
+| `jwtKeysSecrets` _[LocalSecretWithKeyReference](#localsecretwithkeyreference) array_ | jwtKeysSecrets is an optional list of references to secrets in the same namespace that hold private PEM encoded signing keys. |  | Optional: \{\} <br /> |
 
 
 #### KDexApp
@@ -1891,7 +1908,7 @@ _Appears in:_
 
 
 _Appears in:_
-- [Auth](#auth)
+- [JWT](#jwt)
 - [OIDCProvider](#oidcprovider)
 
 | Field | Description | Default | Validation |

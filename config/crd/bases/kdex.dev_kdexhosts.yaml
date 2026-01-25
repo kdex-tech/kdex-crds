@@ -99,39 +99,52 @@ spec:
               auth:
                 description: auth holds the host's authentication configuration.
                 properties:
-                  jwtKeysSecrets:
-                    description: jwtKeysSecrets is an optional list of references
-                      to secrets in the same namespace that hold private PEM encoded
-                      signing keys.
-                    items:
-                      properties:
-                        keyProperty:
-                          description: keyProperty is the property from which to extract
-                            a value from the secret
-                          type: string
-                        secretRef:
-                          description: secretRef is a reference to a secret in the
-                            same namespace as the referrer.
+                  jwt:
+                    description: jwt is the configuation for JWT token support.
+                    properties:
+                      activeKey:
+                        description: activeKey contains the name of the secret that
+                          holds the currently active key. This can be omitted when
+                          there is only a single key specified.
+                        type: string
+                      jwtKeysSecrets:
+                        description: jwtKeysSecrets is an optional list of references
+                          to secrets in the same namespace that hold private PEM encoded
+                          signing keys.
+                        items:
                           properties:
-                            name:
-                              default: ""
-                              description: |-
-                                Name of the referent.
-                                This field is effectively required, but due to backwards compatibility is
-                                allowed to be empty. Instances of this type with an empty value here are
-                                almost certainly wrong.
-                                More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#names
+                            keyProperty:
+                              description: keyProperty is the property from which
+                                to extract a value from the secret
                               type: string
+                            secretRef:
+                              description: secretRef is a reference to a secret in
+                                the same namespace as the referrer.
+                              properties:
+                                name:
+                                  default: ""
+                                  description: |-
+                                    Name of the referent.
+                                    This field is effectively required, but due to backwards compatibility is
+                                    allowed to be empty. Instances of this type with an empty value here are
+                                    almost certainly wrong.
+                                    More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#names
+                                  type: string
+                              type: object
+                              x-kubernetes-map-type: atomic
+                              x-kubernetes-validations:
+                              - message: secretRef.name must not be empty
+                                rule: self.name.size() > 0
+                          required:
+                          - keyProperty
+                          - secretRef
                           type: object
-                          x-kubernetes-map-type: atomic
-                          x-kubernetes-validations:
-                          - message: secretRef.name must not be empty
-                            rule: self.name.size() > 0
-                      required:
-                      - keyProperty
-                      - secretRef
-                      type: object
-                    type: array
+                        type: array
+                    type: object
+                    x-kubernetes-validations:
+                    - message: activeKey must be set if jwtKeysSecrets has more than
+                        1 reference
+                      rule: self.jwtKeysSecrets.size() > 1 && self.activeKey != ""
                   oidcProvider:
                     description: oidcProvider is the configuration for an optional
                       OIDC provider.

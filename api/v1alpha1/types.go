@@ -102,9 +102,9 @@ func (a *Assets) String() string {
 }
 
 type Auth struct {
-	// jwtKeysSecrets is an optional list of references to secrets in the same namespace that hold private PEM encoded signing keys.
+	// jwt is the configuation for JWT token support.
 	// +kubebuilder:validation:Optional
-	JWTKeysSecrets []LocalSecretWithKeyReference `json:"jwtKeysSecrets,omitempty" protobuf:"bytes,1,rep,name=jwtKeysSecrets"`
+	JWT JWT `json:"jwt,omitempty" protobuf:"bytes,1,rep,name=jwt"`
 
 	// oidcProvider is the configuration for an optional OIDC provider.
 	// +kubebuilder:validation:Optional
@@ -229,6 +229,17 @@ type CustomElement struct {
 	// description of the custom element.
 	// +kubebuilder:validation:Optional
 	Description string `json:"description,omitempty" protobuf:"bytes,2,opt,name=description"`
+}
+
+// +kubebuilder:validation:XValidation:rule=`self.jwtKeysSecrets.size() > 1 && self.activeKey != ""`,message="activeKey must be set if jwtKeysSecrets has more than 1 reference"
+type JWT struct {
+	// activeKey contains the name of the secret that holds the currently active key. This can be omitted when there is only a single key specified.
+	// +kubebuilder:validation:Optional
+	ActiveKey string `json:"activeKey" protobuf:"bytes,1,opt,name=activeKey"`
+
+	// jwtKeysSecrets is an optional list of references to secrets in the same namespace that hold private PEM encoded signing keys.
+	// +kubebuilder:validation:Optional
+	JWTKeysSecrets []LocalSecretWithKeyReference `json:"jwtKeysSecrets,omitempty" protobuf:"bytes,2,rep,name=jwtKeysSecrets"`
 }
 
 type KDexObject struct {
