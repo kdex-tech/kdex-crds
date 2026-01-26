@@ -64,36 +64,28 @@ spec:
             description: spec defines the desired state of KDexHost
             properties:
               assets:
-                description: assets is a set of elements that define a host specific
-                  HTML instructions (e.g. favicon, site logo, charset).
+                description: assets is a set of elements that define a host specific HTML instructions (e.g. favicon, site logo, charset).
                 items:
                   properties:
                     attributes:
                       additionalProperties:
                         type: string
-                      description: attributes are key/value pairs that will be added
-                        to the element as attributes when rendered.
+                      description: attributes are key/value pairs that will be added to the element as attributes when rendered.
                       maxProperties: 10
                       type: object
                     linkHref:
-                      description: linkHref is the content of a `<link>` href attribute.
-                        The URL may be absolute with protocol and host or it must
-                        be prefixed by the IngressPath of the Backend.
+                      description: linkHref is the content of a `<link>` href attribute. The URL may be absolute with protocol and host or it must be prefixed by the IngressPath of the Backend.
                       type: string
                     metaId:
-                      description: metaId is required just for semantics of CRD field
-                        validation.
+                      description: metaId is required just for semantics of CRD field validation.
                       type: string
                     style:
-                      description: style is the text content to be added into a `<style>`
-                        element when rendered.
+                      description: style is the text content to be added into a `<style>` element when rendered.
                       type: string
                   type: object
                   x-kubernetes-validations:
-                  - message: exactly one of the fields in [linkHref metaId style]
-                      must be set
-                    rule: '[has(self.linkHref),has(self.metaId),has(self.style)].filter(x,x==true).size()
-                      == 1'
+                  - message: exactly one of the fields in [linkHref metaId style] must be set
+                    rule: '[has(self.linkHref),has(self.metaId),has(self.style)].filter(x,x==true).size() == 1'
                 maxItems: 32
                 type: array
               auth:
@@ -103,23 +95,17 @@ spec:
                     description: jwt is the configuation for JWT token support.
                     properties:
                       activeKey:
-                        description: activeKey contains the name of the secret that
-                          holds the currently active key. This can be omitted when
-                          there is only a single key specified.
+                        description: activeKey contains the name of the secret that holds the currently active key. This can be omitted when there is only a single key specified.
                         type: string
                       jwtKeysSecrets:
-                        description: jwtKeysSecrets is an optional list of references
-                          to secrets in the same namespace that hold private PEM encoded
-                          signing keys.
+                        description: jwtKeysSecrets is an optional list of references to secrets in the same namespace that hold private PEM encoded signing keys.
                         items:
                           properties:
                             keyProperty:
-                              description: keyProperty is the property from which
-                                to extract a value from the secret
+                              description: keyProperty is the property from which to extract a value from the secret
                               type: string
                             secretRef:
-                              description: secretRef is a reference to a secret in
-                                the same namespace as the referrer.
+                              description: secretRef is a reference to a secret in the same namespace as the referrer.
                               properties:
                                 name:
                                   default: ""
@@ -142,34 +128,26 @@ spec:
                         type: array
                       tokenTTL:
                         default: 1h
-                        description: tokenTTL is the length of time for which the
-                          token is valid
+                        description: tokenTTL is the length of time for which the token is valid
                         type: string
                     type: object
                     x-kubernetes-validations:
-                    - message: activeKey must be set if jwtKeysSecrets has more than
-                        1 reference
+                    - message: activeKey must be set if jwtKeysSecrets has more than 1 reference
                       rule: self.jwtKeysSecrets.size() > 1 && self.activeKey != ""
                   oidcProvider:
-                    description: oidcProvider is the configuration for an optional
-                      OIDC provider.
+                    description: oidcProvider is the configuration for an optional OIDC provider.
                     properties:
                       clientID:
-                        description: clientID is the id assigned by the provider to
-                          this application.
+                        description: clientID is the id assigned by the provider to this application.
                         type: string
                       clientSecretRef:
-                        description: clientSecretRef is a reference to a secret in
-                          the host's namespace that holds the client_secret assigned
-                          to this application by the OIDC provider.
+                        description: clientSecretRef is a reference to a secret in the host's namespace that holds the client_secret assigned to this application by the OIDC provider.
                         properties:
                           keyProperty:
-                            description: keyProperty is the property from which to
-                              extract a value from the secret
+                            description: keyProperty is the property from which to extract a value from the secret
                             type: string
                           secretRef:
-                            description: secretRef is a reference to a secret in the
-                              same namespace as the referrer.
+                            description: secretRef is a reference to a secret in the same namespace as the referrer.
                             properties:
                               name:
                                 default: ""
@@ -190,25 +168,19 @@ spec:
                         - secretRef
                         type: object
                       mappers:
-                        description: mappers is an array of CEL expressions for extracting
-                          custom claims from the OIDC token and adding the results
-                          to the local token.
+                        description: mappers is an array of CEL expressions for extracting custom claims from the OIDC token and adding the results to the local token.
                         items:
                           properties:
                             expession:
-                              description: expession is CEL program to compute a transformation
-                                of claims from the OIDC token.
+                              description: expession is CEL program to compute a transformation of claims from the OIDC token.
                               example: oidc.groups.filter(g, g.startsWith('app_'))
                               type: string
                             required:
                               default: false
-                              description: required indicates that if the rule fails
-                                to produce a value token generation should fail as
-                                well
+                              description: required indicates that if the rule fails to produce a value token generation should fail as well
                               type: boolean
                             target:
-                              description: target is a nested property path to where
-                                the result will be attached to the claims structure
+                              description: target is a nested property path to where the result will be attached to the claims structure
                               example: auth.internal_groups
                               type: string
                           required:
@@ -218,12 +190,10 @@ spec:
                         maxItems: 16
                         type: array
                       oidcProviderURL:
-                        description: oidcProviderURL is the well known URL of the
-                          OIDC provider.
+                        description: oidcProviderURL is the well known URL of the OIDC provider.
                         type: string
-                      scopes:
-                        description: scopes is an array of additional scopes that
-                          will be requested from the provider.
+                      roles:
+                        description: roles is an array of additional roles that will be requested from the provider.
                         items:
                           type: string
                         type: array
@@ -234,9 +204,7 @@ spec:
                     type: object
                 type: object
               brandName:
-                description: brandName is the name used when rendering pages belonging
-                  to the host. For example, it may be used as alt text for the logo
-                  displayed in the page header.
+                description: brandName is the name used when rendering pages belonging to the host. For example, it may be used as alt text for the logo displayed in the page header.
                 type: string
               defaultLang:
                 description: |-
@@ -245,14 +213,10 @@ spec:
                   When render page paths do not specify a 'lang' path parameter this will be the value used. When not set the default will be 'en'.
                 type: string
               devMode:
-                description: devMode is a boolean that enables development features
-                  like the Request Sniffer.
+                description: devMode is a boolean that enables development features like the Request Sniffer.
                 type: boolean
               faviconSVGTemplate:
-                description: faviconSVGTemplate contains SVG code marked up with go
-                  string template to which will be passed the render.TemplateData
-                  holding other host details. The rendered output will be cached and
-                  served at "/favicon.ico" as "image/svg+xml".
+                description: faviconSVGTemplate contains SVG code marked up with go string template to which will be passed the render.TemplateData holding other host details. The rendered output will be cached and served at "/favicon.ico" as "image/svg+xml".
                 type: string
               imagePullSecrets:
                 description: |-
@@ -296,8 +260,7 @@ spec:
                 - Strict
                 type: string
               organization:
-                description: organization is the name of the Organization to which
-                  the host belongs.
+                description: organization is the name of the Organization to which the host belongs.
                 minLength: 5
                 type: string
               replicas:
@@ -368,14 +331,10 @@ spec:
                     type: object
                 type: object
               routing:
-                description: routing defines the desired routing configuration for
-                  the host.
+                description: routing defines the desired routing configuration for the host.
                 properties:
                   domains:
-                    description: domains are the names by which this host is addressed.
-                      The first domain listed is the preferred domain. The domains
-                      may contain wildcard prefix in the form '*.'. Longest match
-                      always wins.
+                    description: domains are the names by which this host is addressed. The first domain listed is the preferred domain. The domains may contain wildcard prefix in the form '*.'. Longest match always wins.
                     items:
                       type: string
                     minItems: 1
@@ -395,8 +354,7 @@ spec:
                     type: string
                   strategy:
                     default: Ingress
-                    description: strategy is the routing strategy to use. If not specified
-                      Ingress is assumed.
+                    description: strategy is the routing strategy to use. If not specified Ingress is assumed.
                     enum:
                     - Ingress
                     - HTTPRoute
@@ -405,9 +363,7 @@ spec:
                     description: tls is the TLS configuration for the host.
                     properties:
                       secretRef:
-                        description: secretRef is a reference to a secret containing
-                          a TLS certificate and key for the domains specified on the
-                          host.
+                        description: secretRef is a reference to a secret containing a TLS certificate and key for the domains specified on the host.
                         properties:
                           name:
                             default: ""
@@ -427,8 +383,7 @@ spec:
                 - domains
                 type: object
               scriptLibraryRef:
-                description: scriptLibraryRef is an optional reference to a KDexScriptLibrary
-                  resource.
+                description: scriptLibraryRef is an optional reference to a KDexScriptLibrary resource.
                 properties:
                   kind:
                     description: Kind is the type of resource being referenced
@@ -490,8 +445,7 @@ spec:
                   Defaults to Always if :latest tag is specified, or IfNotPresent otherwise.
                 type: string
               themeRef:
-                description: themeRef is a reference to the theme that should apply
-                  to all pages bound to this host.
+                description: themeRef is a reference to the theme that should apply to all pages bound to this host.
                 properties:
                   kind:
                     description: Kind is the type of resource being referenced
@@ -516,9 +470,7 @@ spec:
                 - message: '''kind'' must be either KDexTheme or KDexClusterTheme'
                   rule: self.kind == "KDexTheme" || self.kind == "KDexClusterTheme"
               translationRefs:
-                description: translationRefs is an array of references to KDexTranslation
-                  or KDexClusterTranslation resources that define the translations
-                  that should apply to this host.
+                description: translationRefs is an array of references to KDexTranslation or KDexClusterTranslation resources that define the translations that should apply to this host.
                 items:
                   properties:
                     kind:
@@ -545,16 +497,13 @@ spec:
                 - name
                 x-kubernetes-list-type: map
                 x-kubernetes-validations:
-                - message: all translation refs must have kind KDexTranslation or
-                    KDexClusterTranslation
+                - message: all translation refs must have kind KDexTranslation or KDexClusterTranslation
                   rule: self.all(k, k.kind == 'KDexTranslation' || k.kind == 'KDexClusterTranslation')
               utilityPages:
-                description: utilityPages defines the utility pages (announcement,
-                  error, login) for the host.
+                description: utilityPages defines the utility pages (announcement, error, login) for the host.
                 properties:
                   announcementRef:
-                    description: announcementRef is a reference to a KDexUtilityPage
-                      or KDexClusterUtilityPage that defines the announcement page.
+                    description: announcementRef is a reference to a KDexUtilityPage or KDexClusterUtilityPage that defines the announcement page.
                     properties:
                       kind:
                         description: Kind is the type of resource being referenced
@@ -579,8 +528,7 @@ spec:
                     - message: '''kind'' must be either KDexUtilityPage or KDexClusterUtilityPage'
                       rule: self.kind == "KDexUtilityPage" || self.kind == "KDexClusterUtilityPage"
                   errorRef:
-                    description: errorRef is a reference to a KDexUtilityPage or KDexClusterUtilityPage
-                      that defines the error page.
+                    description: errorRef is a reference to a KDexUtilityPage or KDexClusterUtilityPage that defines the error page.
                     properties:
                       kind:
                         description: Kind is the type of resource being referenced
@@ -605,8 +553,7 @@ spec:
                     - message: '''kind'' must be either KDexUtilityPage or KDexClusterUtilityPage'
                       rule: self.kind == "KDexUtilityPage" || self.kind == "KDexClusterUtilityPage"
                   loginRef:
-                    description: loginRef is a reference to a KDexUtilityPage or KDexClusterUtilityPage
-                      that defines the login page.
+                    description: loginRef is a reference to a KDexUtilityPage or KDexClusterUtilityPage that defines the login page.
                     properties:
                       kind:
                         description: Kind is the type of resource being referenced
@@ -657,8 +604,7 @@ spec:
 
                   The status of each condition is one of True, False, or Unknown.
                 items:
-                  description: Condition contains details for one aspect of the current
-                    state of this API Resource.
+                  description: Condition contains details for one aspect of the current state of this API Resource.
                   properties:
                     lastTransitionTime:
                       description: |-

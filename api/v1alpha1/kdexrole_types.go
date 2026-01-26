@@ -21,14 +21,14 @@ import (
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
 
-// KDexScopeSpec defines the desired state of KDexScope
-type KDexScopeSpec struct {
+// KDexRoleSpec defines the desired state of KDexRole
+type KDexRoleSpec struct {
 	// hostRef is a reference to the KDexHost that this binding is for.
 	// +kubebuilder:validation:Required
 	// +kubebuilder:validation:XValidation:rule="self.name.size() > 0",message="hostRef.name must not be empty"
 	HostRef corev1.LocalObjectReference `json:"hostRef" protobuf:"bytes,1,req,name=hostRef"`
 
-	// Rules holds all the PolicyRules for this KDexScope
+	// Rules holds all the PolicyRules for this KDexRole
 	// +kubebuilder:validation:Required
 	// +kubebuilder:validation:MinItems=1
 	Rules []PolicyRule `json:"rules" protobuf:"bytes,1,rep,name=rules"`
@@ -38,17 +38,17 @@ type KDexScopeSpec struct {
 // +kubebuilder:resource:scope=Namespaced,shortName=kdex-s,categories=all;kdex
 // +kubebuilder:subresource:status
 
-// KDexScope is the Schema for the kdexscopes API
-type KDexScope struct {
+// KDexRole is the Schema for the kdexroles API
+type KDexRole struct {
 	metav1.TypeMeta `json:",inline"`
 
 	// metadata is a standard object metadata
 	// +optional
 	metav1.ObjectMeta `json:"metadata,omitzero"`
 
-	// spec defines the desired state of KDexScope
+	// spec defines the desired state of KDexRole
 	// +required
-	Spec KDexScopeSpec `json:"spec"`
+	Spec KDexRoleSpec `json:"spec"`
 
 	// status defines the observed state of KDexApp
 	// +kubebuilder:validation:Optional
@@ -57,11 +57,11 @@ type KDexScope struct {
 
 // +kubebuilder:object:root=true
 
-// KDexScopeList contains a list of KDexScope
-type KDexScopeList struct {
+// KDexRoleList contains a list of KDexRole
+type KDexRoleList struct {
 	metav1.TypeMeta `json:",inline"`
 	metav1.ListMeta `json:"metadata,omitzero"`
-	Items           []KDexScope `json:"items"`
+	Items           []KDexRole `json:"items"`
 }
 
 // PolicyRule holds information that describes a policy rule, but does not
@@ -83,5 +83,5 @@ type PolicyRule struct {
 }
 
 func init() {
-	SchemeBuilder.Register(&KDexScope{}, &KDexScopeList{})
+	SchemeBuilder.Register(&KDexRole{}, &KDexRoleList{})
 }

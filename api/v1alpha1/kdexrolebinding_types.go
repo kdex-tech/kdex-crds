@@ -21,8 +21,8 @@ import (
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
 
-// KDexScopeBindingSpec defines the desired state of KDexScopeBinding
-type KDexScopeBindingSpec struct {
+// KDexRoleBindingSpec defines the desired state of KDexRoleBinding
+type KDexRoleBindingSpec struct {
 	// email is the email address of the subject, used for local fallback lookup or metadata.
 	// +kubebuilder:validation:Optional
 	Email string `json:"email,omitempty" protobuf:"bytes,1,opt,name=email"`
@@ -32,13 +32,13 @@ type KDexScopeBindingSpec struct {
 	// +kubebuilder:validation:XValidation:rule="self.name.size() > 0",message="hostRef.name must not be empty"
 	HostRef corev1.LocalObjectReference `json:"hostRef" protobuf:"bytes,2,req,name=hostRef"`
 
-	// scopes is a list of internal scopes bound to this subject.
+	// roles is a list of internal roles bound to this subject.
 	// +kubebuilder:validation:Required
 	// +kubebuilder:validation:MinItems=1
-	Scopes []string `json:"scopes" protobuf:"bytes,3,rep,name=scopes"`
+	Roles []string `json:"roles" protobuf:"bytes,3,rep,name=roles"`
 
 	// secretRef is an optional reference to a secret that contains keys that map to subject and
-	// the value is the password. As such the secret can be mapped to multiple KDexScopeBinding.
+	// the value is the password. As such the secret can be mapped to multiple KDexRoleBinding.
 	// This simple fallback is not intended for large scale production use. Thought it may be used for administration.
 	// +kubebuilder:validation:Optional
 	SecretRef *corev1.LocalObjectReference `json:"secretRef" protobuf:"bytes,4,opt,name=secretRef"`
@@ -55,17 +55,17 @@ type KDexScopeBindingSpec struct {
 // +kubebuilder:resource:scope=Namespaced,shortName=kdex-sb,categories=all;kdex
 // +kubebuilder:subresource:status
 
-// KDexScopeBinding is the Schema for the kdexscopebindings API
-type KDexScopeBinding struct {
+// KDexRoleBinding is the Schema for the kdexrolebindings API
+type KDexRoleBinding struct {
 	metav1.TypeMeta `json:",inline"`
 
 	// metadata is a standard object metadata
 	// +optional
 	metav1.ObjectMeta `json:"metadata,omitzero"`
 
-	// spec defines the desired state of KDexScopeBinding
+	// spec defines the desired state of KDexRoleBinding
 	// +required
-	Spec KDexScopeBindingSpec `json:"spec"`
+	Spec KDexRoleBindingSpec `json:"spec"`
 
 	// status defines the observed state of KDexApp
 	// +kubebuilder:validation:Optional
@@ -74,13 +74,13 @@ type KDexScopeBinding struct {
 
 // +kubebuilder:object:root=true
 
-// KDexScopeBindingList contains a list of KDexScopeBinding
-type KDexScopeBindingList struct {
+// KDexRoleBindingList contains a list of KDexRoleBinding
+type KDexRoleBindingList struct {
 	metav1.TypeMeta `json:",inline"`
 	metav1.ListMeta `json:"metadata,omitzero"`
-	Items           []KDexScopeBinding `json:"items"`
+	Items           []KDexRoleBinding `json:"items"`
 }
 
 func init() {
-	SchemeBuilder.Register(&KDexScopeBinding{}, &KDexScopeBindingList{})
+	SchemeBuilder.Register(&KDexRoleBinding{}, &KDexRoleBindingList{})
 }

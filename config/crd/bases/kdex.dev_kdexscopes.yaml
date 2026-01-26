@@ -4,25 +4,25 @@ kind: CustomResourceDefinition
 metadata:
   annotations:
     controller-gen.kubebuilder.io/version: v0.20.0
-  name: kdexscopes.kdex.dev
+  name: kdexroles.kdex.dev
 spec:
   group: kdex.dev
   names:
     categories:
     - all
     - kdex
-    kind: KDexScope
-    listKind: KDexScopeList
-    plural: kdexscopes
+    kind: KDexRole
+    listKind: KDexRoleList
+    plural: kdexroles
     shortNames:
     - kdex-s
-    singular: kdexscope
+    singular: kdexrole
   scope: Namespaced
   versions:
   - name: v1alpha1
     schema:
       openAPIV3Schema:
-        description: KDexScope is the Schema for the kdexscopes API
+        description: KDexRole is the Schema for the kdexroles API
         properties:
           apiVersion:
             description: |-
@@ -42,11 +42,10 @@ spec:
           metadata:
             type: object
           spec:
-            description: spec defines the desired state of KDexScope
+            description: spec defines the desired state of KDexRole
             properties:
               hostRef:
-                description: hostRef is a reference to the KDexHost that this binding
-                  is for.
+                description: hostRef is a reference to the KDexHost that this binding is for.
                 properties:
                   name:
                     default: ""
@@ -63,7 +62,7 @@ spec:
                 - message: hostRef.name must not be empty
                   rule: self.name.size() > 0
               rules:
-                description: Rules holds all the PolicyRules for this KDexScope
+                description: Rules holds all the PolicyRules for this KDexRole
                 items:
                   description: |-
                     PolicyRule holds information that describes a policy rule, but does not
@@ -71,22 +70,18 @@ spec:
                     rule applies to.
                   properties:
                     resourceNames:
-                      description: resourceNames is an optional allow list of names
-                        that the rule applies to. An empty set means that everything
-                        is allowed.
+                      description: resourceNames is an optional allow list of names that the rule applies to. An empty set means that everything is allowed.
                       items:
                         type: string
                       type: array
                     resources:
-                      description: resources is a list of resources this rule applies
-                        to. '*' represents all resources.
+                      description: resources is a list of resources this rule applies to. '*' represents all resources.
                       items:
                         type: string
                       minItems: 1
                       type: array
                     verbs:
-                      description: verbs is a list of verbs that apply to ALL the
-                        resources contained in this rule. '*' represents all verbs.
+                      description: verbs is a list of verbs that apply to ALL the resources contained in this rule. '*' represents all verbs.
                       items:
                         type: string
                       minItems: 1
@@ -123,8 +118,7 @@ spec:
 
                   The status of each condition is one of True, False, or Unknown.
                 items:
-                  description: Condition contains details for one aspect of the current
-                    state of this API Resource.
+                  description: Condition contains details for one aspect of the current state of this API Resource.
                   properties:
                     lastTransitionTime:
                       description: |-

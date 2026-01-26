@@ -11,12 +11,12 @@ metadata:
   labels:
     app.kubernetes.io/name: kdex-crds
     app.kubernetes.io/managed-by: kustomize
-  name: kdexscopebinding-editor-role
+  name: kdexrole-editor-role
 rules:
 - apiGroups:
   - kdex.dev
   resources:
-  - kdexscopebindings
+  - kdexroles
   verbs:
   - create
   - delete
@@ -28,6 +28,6 @@ rules:
 - apiGroups:
   - kdex.dev
   resources:
-  - kdexscopebindings/status
+  - kdexroles/status
   verbs:
   - get

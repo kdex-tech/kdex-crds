@@ -4,25 +4,25 @@ kind: CustomResourceDefinition
 metadata:
   annotations:
     controller-gen.kubebuilder.io/version: v0.20.0
-  name: kdexrolebindings.kdex.dev
+  name: kdexroles.kdex.dev
 spec:
   group: kdex.dev
   names:
     categories:
     - all
     - kdex
-    kind: KDexRoleBinding
-    listKind: KDexRoleBindingList
-    plural: kdexrolebindings
+    kind: KDexRole
+    listKind: KDexRoleList
+    plural: kdexroles
     shortNames:
-    - kdex-sb
-    singular: kdexrolebinding
+    - kdex-s
+    singular: kdexrole
   scope: Namespaced
   versions:
   - name: v1alpha1
     schema:
       openAPIV3Schema:
-        description: KDexRoleBinding is the Schema for the kdexrolebindings API
+        description: KDexRole is the Schema for the kdexroles API
         properties:
           apiVersion:
             description: |-
@@ -42,13 +42,11 @@ spec:
           metadata:
             type: object
           spec:
-            description: spec defines the desired state of KDexRoleBinding
+            description: spec defines the desired state of KDexRole
             properties:
-              email:
-                description: email is the email address of the subject, used for local fallback lookup or metadata.
-                type: string
               hostRef:
-                description: hostRef is a reference to the KDexHost that this binding is for.
+                description: hostRef is a reference to the KDexHost that this binding
+                  is for.
                 properties:
                   name:
                     default: ""
@@ -64,40 +62,45 @@ spec:
                 x-kubernetes-validations:
                 - message: hostRef.name must not be empty
                   rule: self.name.size() > 0
-              roles:
-                description: roles is a list of internal roles bound to this subject.
+              rules:
+                description: Rules holds all the PolicyRules for this KDexRole
                 items:
-                  type: string
+                  description: |-
+                    PolicyRule holds information that describes a policy rule, but does not
+                    contain information about who the rule applies to or which namespace the
+                    rule applies to.
+                  properties:
+                    resourceNames:
+                      description: resourceNames is an optional allow list of names
+                        that the rule applies to. An empty set means that everything
+                        is allowed.
+                      items:
+                        type: string
+                      type: array
+                    resources:
+                      description: resources is a list of resources this rule applies
+                        to. '*' represents all resources.
+                      items:
+                        type: string
+                      minItems: 1
+                      type: array
+                    verbs:
+                      description: verbs is a list of verbs that apply to ALL the
+                        resources contained in this rule. '*' represents all verbs.
+                      items:
+                        type: string
+                      minItems: 1
+                      type: array
+                  required:
+                  - resourceNames
+                  - resources
+                  - verbs
+                  type: object
                 minItems: 1
                 type: array
-              secretRef:
-                description: |-
-                  secretRef is an optional reference to a secret that contains keys that map to subject and
-                  the value is the password. As such the secret can be mapped to multiple KDexRoleBinding.
-                  This simple fallback is not intended for large scale production use. Thought it may be used for administration.
-                properties:
-                  name:
-                    default: ""
-                    description: |-
-                      Name of the referent.
-                      This field is effectively required, but due to backwards compatibility is
-                      allowed to be empty. Instances of this type with an empty value here are
-                      almost certainly wrong.
-                      More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#names
-                    type: string
-                type: object
-                x-kubernetes-map-type: atomic
-              subject:
-                description: |-
-                  subject is the subject identifier. It should be from the OIDC provider (e.g. Google).
-                  However, if the secretRef is set then it contains a local identity managed
-                  through the Secret.
-                minLength: 5
-                type: string
             required:
             - hostRef
-            - roles
-            - subject
+            - rules
             type: object
           status:
             description: status defines the observed state of KDexApp
@@ -120,7 +123,8 @@ spec:
 
                   The status of each condition is one of True, False, or Unknown.
                 items:
-                  description: Condition contains details for one aspect of the current state of this API Resource.
+                  description: Condition contains details for one aspect of the current
+                    state of this API Resource.
                   properties:
                     lastTransitionTime:
                       description: |-

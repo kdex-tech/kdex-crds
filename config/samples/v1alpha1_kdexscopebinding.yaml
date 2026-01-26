@@ -1,9 +1,8 @@
 apiVersion: kdex.dev/v1alpha1
-kind: KDexScopeBinding
+kind: KDexRoleBinding
 metadata:
   labels:
     app.kubernetes.io/name: kdex-crds
     app.kubernetes.io/managed-by: kustomize
-  name: kdexscopebinding-sample
-spec:
-  # TODO(user): Add fields here
+  name: kdexrolebinding-sample
+spec: # TODO(user): Add fields here

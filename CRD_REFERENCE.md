@@ -51,10 +51,10 @@ Package v1alpha1 contains API Schema definitions for the  v1alpha1 API group.
 - [KDexPageHeaderList](#kdexpageheaderlist)
 - [KDexPageNavigation](#kdexpagenavigation)
 - [KDexPageNavigationList](#kdexpagenavigationlist)
-- [KDexScope](#kdexscope)
-- [KDexScopeBinding](#kdexscopebinding)
-- [KDexScopeBindingList](#kdexscopebindinglist)
-- [KDexScopeList](#kdexscopelist)
+- [KDexRole](#kdexrole)
+- [KDexRoleBinding](#kdexrolebinding)
+- [KDexRoleBindingList](#kdexrolebindinglist)
+- [KDexRoleList](#kdexrolelist)
 - [KDexScriptLibrary](#kdexscriptlibrary)
 - [KDexScriptLibraryList](#kdexscriptlibrarylist)
 - [KDexTheme](#kdextheme)
@@ -1515,49 +1515,49 @@ _Appears in:_
 | `scriptLibraryRef` _[KDexObjectReference](#kdexobjectreference)_ | scriptLibraryRef is an optional reference to a KDexScriptLibrary resource. |  | Optional: \{\} <br /> |
 
 
-#### KDexScope
+#### KDexRole
 
 
 
-KDexScope is the Schema for the kdexscopes API
-
-
-
-_Appears in:_
-- [KDexScopeList](#kdexscopelist)
-
-| Field | Description | Default | Validation |
-| --- | --- | --- | --- |
-| `apiVersion` _string_ | `kdex.dev/v1alpha1` | | |
-| `kind` _string_ | `KDexScope` | | |
-| `metadata` _[ObjectMeta](https://kubernetes.io/docs/reference/generated/kubernetes-api/v/#objectmeta-v1-meta)_ | Refer to Kubernetes API documentation for fields of `metadata`. |  |  |
-| `spec` _[KDexScopeSpec](#kdexscopespec)_ | spec defines the desired state of KDexScope |  |  |
-
-
-#### KDexScopeBinding
-
-
-
-KDexScopeBinding is the Schema for the kdexscopebindings API
+KDexRole is the Schema for the kdexroles API
 
 
 
 _Appears in:_
-- [KDexScopeBindingList](#kdexscopebindinglist)
+- [KDexRoleList](#kdexrolelist)
 
 | Field | Description | Default | Validation |
 | --- | --- | --- | --- |
 | `apiVersion` _string_ | `kdex.dev/v1alpha1` | | |
-| `kind` _string_ | `KDexScopeBinding` | | |
+| `kind` _string_ | `KDexRole` | | |
 | `metadata` _[ObjectMeta](https://kubernetes.io/docs/reference/generated/kubernetes-api/v/#objectmeta-v1-meta)_ | Refer to Kubernetes API documentation for fields of `metadata`. |  |  |
-| `spec` _[KDexScopeBindingSpec](#kdexscopebindingspec)_ | spec defines the desired state of KDexScopeBinding |  |  |
+| `spec` _[KDexRoleSpec](#kdexrolespec)_ | spec defines the desired state of KDexRole |  |  |
 
 
-#### KDexScopeBindingList
+#### KDexRoleBinding
 
 
 
-KDexScopeBindingList contains a list of KDexScopeBinding
+KDexRoleBinding is the Schema for the kdexrolebindings API
+
+
+
+_Appears in:_
+- [KDexRoleBindingList](#kdexrolebindinglist)
+
+| Field | Description | Default | Validation |
+| --- | --- | --- | --- |
+| `apiVersion` _string_ | `kdex.dev/v1alpha1` | | |
+| `kind` _string_ | `KDexRoleBinding` | | |
+| `metadata` _[ObjectMeta](https://kubernetes.io/docs/reference/generated/kubernetes-api/v/#objectmeta-v1-meta)_ | Refer to Kubernetes API documentation for fields of `metadata`. |  |  |
+| `spec` _[KDexRoleBindingSpec](#kdexrolebindingspec)_ | spec defines the desired state of KDexRoleBinding |  |  |
+
+
+#### KDexRoleBindingList
+
+
+
+KDexRoleBindingList contains a list of KDexRoleBinding
 
 
 
@@ -1566,36 +1566,36 @@ KDexScopeBindingList contains a list of KDexScopeBinding
 | Field | Description | Default | Validation |
 | --- | --- | --- | --- |
 | `apiVersion` _string_ | `kdex.dev/v1alpha1` | | |
-| `kind` _string_ | `KDexScopeBindingList` | | |
+| `kind` _string_ | `KDexRoleBindingList` | | |
 | `metadata` _[ListMeta](https://kubernetes.io/docs/reference/generated/kubernetes-api/v/#listmeta-v1-meta)_ | Refer to Kubernetes API documentation for fields of `metadata`. |  |  |
-| `items` _[KDexScopeBinding](#kdexscopebinding) array_ |  |  |  |
+| `items` _[KDexRoleBinding](#kdexrolebinding) array_ |  |  |  |
 
 
-#### KDexScopeBindingSpec
+#### KDexRoleBindingSpec
 
 
 
-KDexScopeBindingSpec defines the desired state of KDexScopeBinding
+KDexRoleBindingSpec defines the desired state of KDexRoleBinding
 
 
 
 _Appears in:_
-- [KDexScopeBinding](#kdexscopebinding)
+- [KDexRoleBinding](#kdexrolebinding)
 
 | Field | Description | Default | Validation |
 | --- | --- | --- | --- |
 | `email` _string_ | email is the email address of the subject, used for local fallback lookup or metadata. |  | Optional: \{\} <br /> |
 | `hostRef` _[LocalObjectReference](https://kubernetes.io/docs/reference/generated/kubernetes-api/v/#localobjectreference-v1-core)_ | hostRef is a reference to the KDexHost that this binding is for. |  | Required: \{\} <br /> |
-| `scopes` _string array_ | scopes is a list of internal scopes bound to this subject. |  | MinItems: 1 <br />Required: \{\} <br /> |
-| `secretRef` _[LocalObjectReference](https://kubernetes.io/docs/reference/generated/kubernetes-api/v/#localobjectreference-v1-core)_ | secretRef is an optional reference to a secret that contains keys that map to subject and<br />the value is the password. As such the secret can be mapped to multiple KDexScopeBinding.<br />This simple fallback is not intended for large scale production use. Thought it may be used for administration. |  | Optional: \{\} <br /> |
+| `roles` _string array_ | roles is a list of internal roles bound to this subject. |  | MinItems: 1 <br />Required: \{\} <br /> |
+| `secretRef` _[LocalObjectReference](https://kubernetes.io/docs/reference/generated/kubernetes-api/v/#localobjectreference-v1-core)_ | secretRef is an optional reference to a secret that contains keys that map to subject and<br />the value is the password. As such the secret can be mapped to multiple KDexRoleBinding.<br />This simple fallback is not intended for large scale production use. Thought it may be used for administration. |  | Optional: \{\} <br /> |
 | `subject` _string_ | subject is the subject identifier. It should be from the OIDC provider (e.g. Google).<br />However, if the secretRef is set then it contains a local identity managed<br />through the Secret. |  | MinLength: 5 <br />Required: \{\} <br /> |
 
 
-#### KDexScopeList
+#### KDexRoleList
 
 
 
-KDexScopeList contains a list of KDexScope
+KDexRoleList contains a list of KDexRole
 
 
 
@@ -1604,26 +1604,26 @@ KDexScopeList contains a list of KDexScope
 | Field | Description | Default | Validation |
 | --- | --- | --- | --- |
 | `apiVersion` _string_ | `kdex.dev/v1alpha1` | | |
-| `kind` _string_ | `KDexScopeList` | | |
+| `kind` _string_ | `KDexRoleList` | | |
 | `metadata` _[ListMeta](https://kubernetes.io/docs/reference/generated/kubernetes-api/v/#listmeta-v1-meta)_ | Refer to Kubernetes API documentation for fields of `metadata`. |  |  |
-| `items` _[KDexScope](#kdexscope) array_ |  |  |  |
+| `items` _[KDexRole](#kdexrole) array_ |  |  |  |
 
 
-#### KDexScopeSpec
+#### KDexRoleSpec
 
 
 
-KDexScopeSpec defines the desired state of KDexScope
+KDexRoleSpec defines the desired state of KDexRole
 
 
 
 _Appears in:_
-- [KDexScope](#kdexscope)
+- [KDexRole](#kdexrole)
 
 | Field | Description | Default | Validation |
 | --- | --- | --- | --- |
 | `hostRef` _[LocalObjectReference](https://kubernetes.io/docs/reference/generated/kubernetes-api/v/#localobjectreference-v1-core)_ | hostRef is a reference to the KDexHost that this binding is for. |  | Required: \{\} <br /> |
-| `rules` _[PolicyRule](#policyrule) array_ | Rules holds all the PolicyRules for this KDexScope |  | MinItems: 1 <br />Required: \{\} <br /> |
+| `rules` _[PolicyRule](#policyrule) array_ | Rules holds all the PolicyRules for this KDexRole |  | MinItems: 1 <br />Required: \{\} <br /> |
 
 
 #### KDexScriptLibrary
@@ -2011,7 +2011,7 @@ _Appears in:_
 | `clientSecretRef` _[LocalSecretWithKeyReference](#localsecretwithkeyreference)_ | clientSecretRef is a reference to a secret in the host's namespace that holds the client_secret assigned to this application by the OIDC provider. |  | Required: \{\} <br /> |
 | `mappers` _[MappingRule](#mappingrule) array_ | mappers is an array of CEL expressions for extracting custom claims from the OIDC token and adding the results to the local token. |  | MaxItems: 16 <br />Optional: \{\} <br /> |
 | `oidcProviderURL` _string_ | oidcProviderURL is the well known URL of the OIDC provider. |  | Required: \{\} <br /> |
-| `scopes` _string array_ | scopes is an array of additional scopes that will be requested from the provider. |  | Optional: \{\} <br /> |
+| `roles` _string array_ | roles is an array of additional roles that will be requested from the provider. |  | Optional: \{\} <br /> |
 
 
 #### PackageReference
@@ -2092,7 +2092,7 @@ rule applies to.
 
 
 _Appears in:_
-- [KDexScopeSpec](#kdexscopespec)
+- [KDexRoleSpec](#kdexrolespec)
 
 | Field | Description | Default | Validation |
 | --- | --- | --- | --- |

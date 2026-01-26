@@ -11,17 +11,17 @@ metadata:
   labels:
     app.kubernetes.io/name: kdex-crds
     app.kubernetes.io/managed-by: kustomize
-  name: kdexscopebinding-admin-role
+  name: kdexrolebinding-admin-role
 rules:
 - apiGroups:
   - kdex.dev
   resources:
-  - kdexscopebindings
+  - kdexrolebindings
   verbs:
   - '*'
 - apiGroups:
   - kdex.dev
   resources:
-  - kdexscopebindings/status
+  - kdexrolebindings/status
   verbs:
   - get

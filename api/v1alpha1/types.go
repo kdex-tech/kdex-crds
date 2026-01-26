@@ -391,9 +391,9 @@ type OIDCProvider struct {
 	// +kubebuilder:validation:Required
 	OIDCProviderURL string `json:"oidcProviderURL" protobuf:"bytes,4,req,name=oidcProviderURL"`
 
-	// scopes is an array of additional scopes that will be requested from the provider.
+	// roles is an array of additional roles that will be requested from the provider.
 	// +kubebuilder:validation:Optional
-	Scopes []string `json:"scopes" protobuf:"bytes,5,rep,name=scopes"`
+	Scopes []string `json:"roles" protobuf:"bytes,5,rep,name=roles"`
 }
 
 // PackageReference specifies the name and version of an NPM package. Prefereably the package should be available from

@@ -25,6 +25,7 @@ resources:
 - v1alpha1_kdextranslation.yaml
 - v1alpha1_kdexutilitypage.yaml
 
-- v1alpha1_kdexscopebinding.yaml
-- v1alpha1_kdexscope.yaml
+- v1alpha1_kdexrolebinding.yaml
+- v1alpha1_kdexrole.yaml
+
 # +kubebuilder:scaffold:manifestskustomizesamples
