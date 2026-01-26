@@ -122,6 +122,11 @@ spec:
                           holds the currently active key. This can be omitted when
                           there is only a single key specified.
                         type: string
+                      cookieName:
+                        default: auth_token
+                        description: cookieName is the name of the Cookie in which
+                          the JWT token will be stored. (default is "auth_token")
+                        type: string
                       jwtKeysSecrets:
                         description: jwtKeysSecrets is an optional list of references
                           to secrets in the same namespace that hold private PEM encoded

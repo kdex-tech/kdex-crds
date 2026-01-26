@@ -237,14 +237,19 @@ type JWT struct {
 	// +kubebuilder:validation:Optional
 	ActiveKey string `json:"activeKey" protobuf:"bytes,1,opt,name=activeKey"`
 
+	// cookieName is the name of the Cookie in which the JWT token will be stored. (default is "auth_token")
+	// +kubebuilder:validation:Optional
+	// +kubebuilder:default:="auth_token"
+	CookieName string `json:"cookieName" protobuf:"bytes,2,opt,name=cookieName"`
+
 	// jwtKeysSecrets is an optional list of references to secrets in the same namespace that hold private PEM encoded signing keys.
 	// +kubebuilder:validation:Optional
-	JWTKeysSecrets []LocalSecretWithKeyReference `json:"jwtKeysSecrets,omitempty" protobuf:"bytes,2,rep,name=jwtKeysSecrets"`
+	JWTKeysSecrets []LocalSecretWithKeyReference `json:"jwtKeysSecrets,omitempty" protobuf:"bytes,3,rep,name=jwtKeysSecrets"`
 
 	// tokenTTL is the length of time for which the token is valid
 	// +kubebuilder:validation:Optional
 	// +kubebuilder:default:="1h"
-	TokenTTL string `json:"tokenTTL" protobuf:"bytes,5,req,name=tokenTTL"`
+	TokenTTL string `json:"tokenTTL" protobuf:"bytes,4,req,name=tokenTTL"`
 }
 
 type KDexObject struct {
