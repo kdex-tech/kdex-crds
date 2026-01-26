@@ -45,10 +45,12 @@ spec:
             description: spec defines the desired state of KDexRoleBinding
             properties:
               email:
-                description: email is the email address of the subject, used for local fallback lookup or metadata.
+                description: email is the email address of the subject, used for local
+                  fallback lookup or metadata.
                 type: string
               hostRef:
-                description: hostRef is a reference to the KDexHost that this binding is for.
+                description: hostRef is a reference to the KDexHost that this binding
+                  is for.
                 properties:
                   name:
                     default: ""
@@ -65,7 +67,7 @@ spec:
                 - message: hostRef.name must not be empty
                   rule: self.name.size() > 0
               roles:
-                description: roles is a list of internal roles bound to this subject.
+                description: roles is a list of KDexRole names bound to this subject.
                 items:
                   type: string
                 minItems: 1
@@ -120,7 +122,8 @@ spec:
 
                   The status of each condition is one of True, False, or Unknown.
                 items:
-                  description: Condition contains details for one aspect of the current state of this API Resource.
+                  description: Condition contains details for one aspect of the current
+                    state of this API Resource.
                   properties:
                     lastTransitionTime:
                       description: |-

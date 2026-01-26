@@ -1586,7 +1586,7 @@ _Appears in:_
 | --- | --- | --- | --- |
 | `email` _string_ | email is the email address of the subject, used for local fallback lookup or metadata. |  | Optional: \{\} <br /> |
 | `hostRef` _[LocalObjectReference](https://kubernetes.io/docs/reference/generated/kubernetes-api/v/#localobjectreference-v1-core)_ | hostRef is a reference to the KDexHost that this binding is for. |  | Required: \{\} <br /> |
-| `roles` _string array_ | roles is a list of internal roles bound to this subject. |  | MinItems: 1 <br />Required: \{\} <br /> |
+| `roles` _string array_ | roles is a list of KDexRole names bound to this subject. |  | MinItems: 1 <br />Required: \{\} <br /> |
 | `secretRef` _[LocalObjectReference](https://kubernetes.io/docs/reference/generated/kubernetes-api/v/#localobjectreference-v1-core)_ | secretRef is an optional reference to a secret that contains keys that map to subject and<br />the value is the password. As such the secret can be mapped to multiple KDexRoleBinding.<br />This simple fallback is not intended for large scale production use. Thought it may be used for administration. |  | Optional: \{\} <br /> |
 | `subject` _string_ | subject is the subject identifier. It should be from the OIDC provider (e.g. Google).<br />However, if the secretRef is set then it contains a local identity managed<br />through the Secret. |  | MinLength: 5 <br />Required: \{\} <br /> |
 
