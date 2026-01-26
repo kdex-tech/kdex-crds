@@ -32,7 +32,7 @@ type KDexRoleBindingSpec struct {
 	// +kubebuilder:validation:XValidation:rule="self.name.size() > 0",message="hostRef.name must not be empty"
 	HostRef corev1.LocalObjectReference `json:"hostRef" protobuf:"bytes,2,req,name=hostRef"`
 
-	// roles is a list of internal roles bound to this subject.
+	// roles is a list of KDexRole names bound to this subject.
 	// +kubebuilder:validation:Required
 	// +kubebuilder:validation:MinItems=1
 	Roles []string `json:"roles" protobuf:"bytes,3,rep,name=roles"`
