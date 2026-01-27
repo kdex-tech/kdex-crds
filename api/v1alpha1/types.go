@@ -106,6 +106,14 @@ type Auth struct {
 	// +kubebuilder:validation:Optional
 	JWT JWT `json:"jwt,omitempty" protobuf:"bytes,1,rep,name=jwt"`
 
+	// mappers is an array of CEL expressions for extracting custom claims from identity sources and mapping the results
+	// onto the local token.
+	// Generally this is used to map OIDC claims. However, it can also be used with external data models such as LDAP
+	// or others forms via identity integration.
+	// +kubebuilder:validation:Optional
+	// +kubebuilder:validation:MaxItems=16
+	Mappers []MappingRule `json:"mappers,omitempty" protobuf:"bytes,3,rep,name=mappers"`
+
 	// oidcProvider is the configuration for an optional OIDC provider.
 	// +kubebuilder:validation:Optional
 	OIDCProvider *OIDCProvider `json:"oidcProvider,omitempty" protobuf:"bytes,2,opt,name=oidcProvider"`
@@ -386,11 +394,6 @@ type OIDCProvider struct {
 	// clientSecretRef is a reference to a secret in the host's namespace that holds the client_secret assigned to this application by the OIDC provider.
 	// +kubebuilder:validation:Required
 	ClientSecretRef LocalSecretWithKeyReference `json:"clientSecretRef,omitempty" protobuf:"bytes,2,req,name=clientSecretRef"`
-
-	// mappers is an array of CEL expressions for extracting custom claims from the OIDC token and adding the results to the local token.
-	// +kubebuilder:validation:Optional
-	// +kubebuilder:validation:MaxItems=16
-	Mappers []MappingRule `json:"mappers,omitempty" protobuf:"bytes,3,rep,name=mappers"`
 
 	// oidcProviderURL is the well known URL of the OIDC provider.
 	// +kubebuilder:validation:Required

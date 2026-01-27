@@ -140,6 +140,7 @@ _Appears in:_
 | Field | Description | Default | Validation |
 | --- | --- | --- | --- |
 | `jwt` _[JWT](#jwt)_ | jwt is the configuation for JWT token support. |  | Optional: \{\} <br /> |
+| `mappers` _[MappingRule](#mappingrule) array_ | mappers is an array of CEL expressions for extracting custom claims from identity sources and mapping the results<br />onto the local token.<br />Generally this is used to map OIDC claims. However, it can also be used with external data models such as LDAP<br />or others forms via identity integration. |  | MaxItems: 16 <br />Optional: \{\} <br /> |
 | `oidcProvider` _[OIDCProvider](#oidcprovider)_ | oidcProvider is the configuration for an optional OIDC provider. |  | Optional: \{\} <br /> |
 
 
@@ -1930,7 +1931,7 @@ _Appears in:_
 
 
 _Appears in:_
-- [OIDCProvider](#oidcprovider)
+- [Auth](#auth)
 
 | Field | Description | Default | Validation |
 | --- | --- | --- | --- |
@@ -2010,7 +2011,6 @@ _Appears in:_
 | --- | --- | --- | --- |
 | `clientID` _string_ | clientID is the id assigned by the provider to this application. |  | Required: \{\} <br /> |
 | `clientSecretRef` _[LocalSecretWithKeyReference](#localsecretwithkeyreference)_ | clientSecretRef is a reference to a secret in the host's namespace that holds the client_secret assigned to this application by the OIDC provider. |  | Required: \{\} <br /> |
-| `mappers` _[MappingRule](#mappingrule) array_ | mappers is an array of CEL expressions for extracting custom claims from the OIDC token and adding the results to the local token. |  | MaxItems: 16 <br />Optional: \{\} <br /> |
 | `oidcProviderURL` _string_ | oidcProviderURL is the well known URL of the OIDC provider. |  | Required: \{\} <br /> |
 | `roles` _string array_ | roles is an array of additional roles that will be requested from the provider. |  | Optional: \{\} <br /> |
 

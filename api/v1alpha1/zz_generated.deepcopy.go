@@ -102,6 +102,11 @@ func (in Assets) DeepCopy() Assets {
 func (in *Auth) DeepCopyInto(out *Auth) {
 	*out = *in
 	in.JWT.DeepCopyInto(&out.JWT)
+	if in.Mappers != nil {
+		in, out := &in.Mappers, &out.Mappers
+		*out = make([]MappingRule, len(*in))
+		copy(*out, *in)
+	}
 	if in.OIDCProvider != nil {
 		in, out := &in.OIDCProvider, &out.OIDCProvider
 		*out = new(OIDCProvider)
@@ -2653,11 +2658,6 @@ func (in *NavigationHints) DeepCopy() *NavigationHints {
 func (in *OIDCProvider) DeepCopyInto(out *OIDCProvider) {
 	*out = *in
 	out.ClientSecretRef = in.ClientSecretRef
-	if in.Mappers != nil {
-		in, out := &in.Mappers, &out.Mappers
-		*out = make([]MappingRule, len(*in))
-		copy(*out, *in)
-	}
 	if in.Scopes != nil {
 		in, out := &in.Scopes, &out.Scopes
 		*out = make([]string, len(*in))
