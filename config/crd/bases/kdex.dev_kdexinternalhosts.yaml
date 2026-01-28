@@ -114,6 +114,14 @@ spec:
               auth:
                 description: auth holds the host's authentication configuration.
                 properties:
+                  anonymousGrants:
+                    description: |-
+                      anonymousGrants is an array of scopes granted in anonymous (not logged in) access scenarios.
+                      In the spirit of least privilage security security no scopes are granted by default. However, in order to make
+                      a host's pages generally accessible the scope `page:read` should be granted.
+                    items:
+                      type: string
+                    type: array
                   jwt:
                     description: jwt is the configuation for JWT token support.
                     properties:
