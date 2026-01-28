@@ -393,6 +393,11 @@ type NavigationHints struct {
 }
 
 type OIDCProvider struct {
+	// blockKeySecretRef is a reference to a Secret that contains the specified key whose valie is a 32-byte blockKey used to encrypt OIDC tokens.
+	// If none is provided one will be generated in memory. However, an in memory key is not viable for production systems.
+	// +kubebuilder:validation:Optional
+	BlockKeySecretRef *LocalSecretWithKeyReference `json:"blockKeySecretRef,omitempty" protobuf:"bytes,2,req,name=blockKeySecretRef"`
+
 	// clientID is the id assigned by the provider to this application.
 	// +kubebuilder:validation:Required
 	ClientID string `json:"clientID" protobuf:"bytes,1,req,name=clientID"`

@@ -2010,6 +2010,7 @@ _Appears in:_
 
 | Field | Description | Default | Validation |
 | --- | --- | --- | --- |
+| `blockKeySecretRef` _[LocalSecretWithKeyReference](#localsecretwithkeyreference)_ | blockKeySecretRef is a reference to a Secret that contains the specified key whose valie is a 32-byte blockKey used to encrypt OIDC tokens.<br />If none is provided one will be generated in memory. However, an in memory key is not viable for production systems. |  | Optional: \{\} <br /> |
 | `clientID` _string_ | clientID is the id assigned by the provider to this application. |  | Required: \{\} <br /> |
 | `clientSecretRef` _[LocalSecretWithKeyReference](#localsecretwithkeyreference)_ | clientSecretRef is a reference to a secret in the host's namespace that holds the client_secret assigned to this application by the OIDC provider. |  | Required: \{\} <br /> |
 | `oidcProviderURL` _string_ | oidcProviderURL is the well known URL of the OIDC provider. |  | Required: \{\} <br /> |
