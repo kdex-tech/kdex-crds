@@ -154,7 +154,9 @@ spec:
                     x-kubernetes-validations:
                     - message: activeKey must be set if jwtKeysSecrets has more than
                         1 reference
-                      rule: self.jwtKeysSecrets.size() > 1 && self.activeKey != ""
+                      rule: '!has(self.jwtKeysSecrets) || (self.jwtKeysSecrets.size()
+                        <= 1) || (self.jwtKeysSecrets.size() > 1 && self.activeKey
+                        != "")'
                   mappers:
                     description: |-
                       mappers is an array of CEL expressions for extracting custom claims from identity sources and mapping the results

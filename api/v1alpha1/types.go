@@ -239,7 +239,7 @@ type CustomElement struct {
 	Description string `json:"description,omitempty" protobuf:"bytes,2,opt,name=description"`
 }
 
-// +kubebuilder:validation:XValidation:rule=`self.jwtKeysSecrets.size() > 1 && self.activeKey != ""`,message="activeKey must be set if jwtKeysSecrets has more than 1 reference"
+// +kubebuilder:validation:XValidation:rule=`!has(self.jwtKeysSecrets) || (self.jwtKeysSecrets.size() <= 1) || (self.jwtKeysSecrets.size() > 1 && self.activeKey != "")`,message="activeKey must be set if jwtKeysSecrets has more than 1 reference"
 type JWT struct {
 	// activeKey contains the name of the secret that holds the currently active key. This can be omitted when there is only a single key specified.
 	// +kubebuilder:validation:Optional
