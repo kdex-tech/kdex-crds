@@ -103,7 +103,7 @@ func (a *Assets) String() string {
 
 type Auth struct {
 	// anonymousGrants is an array of scopes granted in anonymous (not logged in) access scenarios.
-	// In the spirit of least privilage security security no scopes are granted by default. However, in order to make
+	// In the spirit of least privilage security no scopes are granted by default. However, in order to make
 	// a host's pages generally accessible the scope `page:read` should be granted.
 	// +kubebuilder:validation:Optional
 	AnonymousGrants []string `json:"anonymousGrants,omitempty" protobuf:"bytes,1,rep,name=anonymousGrants"`
