@@ -15,7 +15,7 @@ spec:
     listKind: KDexRoleList
     plural: kdexroles
     shortNames:
-    - kdex-s
+    - kdex-r
     singular: kdexrole
   scope: Namespaced
   versions:

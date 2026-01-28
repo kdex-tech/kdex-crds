@@ -52,7 +52,7 @@ type KDexRoleBindingSpec struct {
 }
 
 // +kubebuilder:object:root=true
-// +kubebuilder:resource:scope=Namespaced,shortName=kdex-sb,categories=all;kdex
+// +kubebuilder:resource:scope=Namespaced,shortName=kdex-rb,categories=all;kdex
 // +kubebuilder:subresource:status
 
 // KDexRoleBinding is the Schema for the kdexrolebindings API

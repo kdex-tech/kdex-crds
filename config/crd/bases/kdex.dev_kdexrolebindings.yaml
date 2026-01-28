@@ -15,7 +15,7 @@ spec:
     listKind: KDexRoleBindingList
     plural: kdexrolebindings
     shortNames:
-    - kdex-sb
+    - kdex-rb
     singular: kdexrolebinding
   scope: Namespaced
   versions:

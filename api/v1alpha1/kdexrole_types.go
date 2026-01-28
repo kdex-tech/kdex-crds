@@ -35,7 +35,7 @@ type KDexRoleSpec struct {
 }
 
 // +kubebuilder:object:root=true
-// +kubebuilder:resource:scope=Namespaced,shortName=kdex-s,categories=all;kdex
+// +kubebuilder:resource:scope=Namespaced,shortName=kdex-r,categories=all;kdex
 // +kubebuilder:subresource:status
 
 // KDexRole is the Schema for the kdexroles API
