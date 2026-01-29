@@ -68,8 +68,9 @@ type KDexRoleList struct {
 // contain information about who the rule applies to or which namespace the
 // rule applies to.
 type PolicyRule struct {
-	// resourceNames is an optional allow list of names that the rule applies to. An empty set means that everything is allowed.
-	ResourceNames []string `json:"resourceNames" protobuf:"bytes,1,rep,name=resourceNames"`
+	// resourceNames is an optional allow list of names that the rule applies to. An empty set means the rule applies to all instances of the resources.
+	// +kubebuilder:validation:Optional
+	ResourceNames []string `json:"resourceNames,omitempty" protobuf:"bytes,1,rep,name=resourceNames"`
 
 	// resources is a list of resources this rule applies to. '*' represents all resources.
 	// +kubebuilder:validation:Required

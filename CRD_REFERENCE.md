@@ -2099,7 +2099,7 @@ _Appears in:_
 
 | Field | Description | Default | Validation |
 | --- | --- | --- | --- |
-| `resourceNames` _string array_ | resourceNames is an optional allow list of names that the rule applies to. An empty set means that everything is allowed. |  |  |
+| `resourceNames` _string array_ | resourceNames is an optional allow list of names that the rule applies to. An empty set means the rule applies to all instances of the resources. |  | Optional: \{\} <br /> |
 | `resources` _string array_ | resources is a list of resources this rule applies to. '*' represents all resources. |  | MinItems: 1 <br />Required: \{\} <br /> |
 | `verbs` _string array_ | verbs is a list of verbs that apply to ALL the resources contained in this rule. '*' represents all verbs. |  | MinItems: 1 <br />Required: \{\} <br /> |
 
