@@ -130,7 +130,7 @@ backendDefault:
           emptyDir:
             medium: Memory
             sizeLimit: 16Ki
-  modulePath: /~/modules
+  modulePath: /-/modules
   service:
     selector: {}
     ports:

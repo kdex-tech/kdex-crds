@@ -104,9 +104,9 @@ spec:
                 x-kubernetes-list-type: map
               ingressPath:
                 description: |-
-                  ingressPath is a prefix beginning with '/_' plus additional characters. This indicates where in the Ingress/HTTPRoute the Backend will be mounted.
+                  ingressPath is a prefix beginning with '/-/' plus additional characters. This indicates where in the Ingress/HTTPRoute the Backend will be mounted.
                   This value is determined by the implementation that embeds the Backend and cannot be changed.
-                pattern: ^/_.+
+                pattern: ^/-/.+
                 type: string
               packageReference:
                 description: packageReference specifies the name and version of an

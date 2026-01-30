@@ -136,10 +136,10 @@ type Backend struct {
 	// +listMapKey=name
 	ImagePullSecrets []corev1.LocalObjectReference `json:"imagePullSecrets,omitempty" patchStrategy:"merge" patchMergeKey:"name" protobuf:"bytes,1,rep,name=imagePullSecrets"`
 
-	// ingressPath is a prefix beginning with '/_' plus additional characters. This indicates where in the Ingress/HTTPRoute the Backend will be mounted.
+	// ingressPath is a prefix beginning with '/-/' plus additional characters. This indicates where in the Ingress/HTTPRoute the Backend will be mounted.
 	// This value is determined by the implementation that embeds the Backend and cannot be changed.
 	// +kubebuilder:validation:Optional
-	// +kubebuilder:validation:Pattern=`^/_.+`
+	// +kubebuilder:validation:Pattern=`^/-/.+`
 	IngressPath string `json:"ingressPath,omitempty" protobuf:"bytes,2,opt,name=ingressPath"`
 
 	// replicas is the number of desired pods. This is a pointer to distinguish between explicit
