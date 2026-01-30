@@ -260,6 +260,8 @@ type JWT struct {
 	// +kubebuilder:validation:Optional
 	JWTKeysSecrets []LocalSecretWithKeyReference `json:"jwtKeysSecrets,omitempty" protobuf:"bytes,3,rep,name=jwtKeysSecrets"`
 
+	// TODO: add "sliding window" token re-issue (as alternative to refresh tokens so that KDex remains stateless)
+
 	// tokenTTL is the length of time for which the token is valid
 	// +kubebuilder:validation:Optional
 	// +kubebuilder:default:="1h"
