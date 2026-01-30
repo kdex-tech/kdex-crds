@@ -139,7 +139,7 @@ _Appears in:_
 
 | Field | Description | Default | Validation |
 | --- | --- | --- | --- |
-| `anonymousGrants` _string array_ | anonymousGrants is an array of scopes granted in anonymous (not logged in) access scenarios.<br />In the spirit of least privilage security no scopes are granted by default. However, in order to make<br />a host's pages generally accessible the scope `page:read` should be granted. |  | Optional: \{\} <br /> |
+| `anonymousGrants` _string array_ | anonymousGrants is an array of scopes granted in anonymous (not logged in) access scenarios.<br />In the spirit of least privilege security no scopes are granted by default. However, in order to make<br />a host's pages generally accessible the scope `page:read` should be granted. |  | Optional: \{\} <br /> |
 | `jwt` _[JWT](#jwt)_ | jwt is the configuation for JWT token support. |  | Optional: \{\} <br /> |
 | `mappers` _[MappingRule](#mappingrule) array_ | mappers is an array of CEL expressions for extracting custom claims from identity sources and mapping the results<br />onto the local token.<br />Generally this is used to map OIDC claims. However, it can also be used with external data models such as LDAP<br />or others forms via identity integration. |  | MaxItems: 16 <br />Optional: \{\} <br /> |
 | `oidcProvider` _[OIDCProvider](#oidcprovider)_ | oidcProvider is the configuration for an optional OIDC provider. |  | Optional: \{\} <br /> |
@@ -2033,7 +2033,7 @@ _Appears in:_
 
 | Field | Description | Default | Validation |
 | --- | --- | --- | --- |
-| `typesToInclude` _[TypeToInclude](#typetoinclude) array_ | typesToInclude specifies which route types will be outputed to the OpenAPI endpoint. | [BACKEND FUNCTION PAGE SYSTEM] | Enum: [BACKEND FUNCTION PAGE SYSTEM] <br /> |
+| `typesToInclude` _[TypeToInclude](#typetoinclude) array_ | typesToInclude specifies which route types will be outputted to the OpenAPI endpoint. | [BACKEND FUNCTION PAGE SYSTEM] | Enum: [BACKEND FUNCTION PAGE SYSTEM] <br /> |
 
 
 #### PackageReference

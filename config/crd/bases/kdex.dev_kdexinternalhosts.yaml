@@ -117,7 +117,7 @@ spec:
                   anonymousGrants:
                     description: |-
                       anonymousGrants is an array of scopes granted in anonymous (not logged in) access scenarios.
-                      In the spirit of least privilage security no scopes are granted by default. However, in order to make
+                      In the spirit of least privilege security no scopes are granted by default. However, in order to make
                       a host's pages generally accessible the scope `page:read` should be granted.
                     items:
                       type: string
@@ -421,7 +421,7 @@ spec:
                     - PAGE
                     - SYSTEM
                     description: typesToInclude specifies which route types will be
-                      outputed to the OpenAPI endpoint.
+                      outputted to the OpenAPI endpoint.
                     items:
                       enum:
                       - BACKEND

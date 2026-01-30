@@ -103,7 +103,7 @@ func (a *Assets) String() string {
 
 type Auth struct {
 	// anonymousGrants is an array of scopes granted in anonymous (not logged in) access scenarios.
-	// In the spirit of least privilage security no scopes are granted by default. However, in order to make
+	// In the spirit of least privilege security no scopes are granted by default. However, in order to make
 	// a host's pages generally accessible the scope `page:read` should be granted.
 	// +kubebuilder:validation:Optional
 	AnonymousGrants []string `json:"anonymousGrants,omitempty" protobuf:"bytes,1,rep,name=anonymousGrants"`
@@ -429,7 +429,7 @@ const (
 
 // OpenAPI holds the configuration for the host's OpenAPI support.
 type OpenAPI struct {
-	// typesToInclude specifies which route types will be outputed to the OpenAPI endpoint.
+	// typesToInclude specifies which route types will be outputted to the OpenAPI endpoint.
 	// +kubebuilder:default:={"BACKEND","FUNCTION","PAGE","SYSTEM"}
 	TypesToInclude []TypeToInclude `json:"typesToInclude" protobuf:"bytes,5,rep,name=typesToInclude"`
 }
