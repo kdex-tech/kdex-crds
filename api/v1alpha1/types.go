@@ -415,6 +415,23 @@ type OIDCProvider struct {
 	Scopes []string `json:"roles" protobuf:"bytes,5,rep,name=roles"`
 }
 
+// +kubebuilder:validation:Enum=BACKEND;FUNCTION;PAGE;SYSTEM
+type TypeToInclude string
+
+const (
+	TypeBACKEND  TypeToInclude = "BACKEND"
+	TypeFUNCTION TypeToInclude = "FUNCTION"
+	TypePAGE     TypeToInclude = "PAGE"
+	TypeSYSTEM   TypeToInclude = "SYSTEM"
+)
+
+// OpenAPI holds the configuration for the host's OpenAPI support.
+type OpenAPI struct {
+	// typesToInclude specifies which route types will be outputed to the OpenAPI endpoint.
+	// +kubebuilder:default:={"BACKEND","FUNCTION","PAGE","SYSTEM"}
+	TypesToInclude []TypeToInclude `json:"typesToInclude" protobuf:"bytes,5,rep,name=typesToInclude"`
+}
+
 // PackageReference specifies the name and version of an NPM package. Prefereably the package should be available from
 // the public npm registry. If the package is not available from the public npm registry, a secretRef should be provided
 // to authenticate to the npm registry. That package must contain an ES module for use in the browser.

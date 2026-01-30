@@ -891,6 +891,7 @@ _Appears in:_
 | `devMode` _boolean_ | devMode is a boolean that enables development features like the Request Sniffer. |  | Optional: \{\} <br /> |
 | `faviconSVGTemplate` _string_ | faviconSVGTemplate contains SVG code marked up with go string template to which will be passed the render.TemplateData holding other host details. The rendered output will be cached and served at "/favicon.ico" as "image/svg+xml". |  | Optional: \{\} <br /> |
 | `modulePolicy` _[ModulePolicy](#modulepolicy)_ | modulePolicy defines the policy for JavaScript references in KDexApp, KDexTheme and KDexScriptLibrary resources. When not specified the policy is Strict<br />A Host must not accept JavaScript references which do not comply with the specified policy. | Strict | Enum: [ExternalDependencies Loose ModulesRequired Strict] <br />Optional: \{\} <br /> |
+| `openapi` _[OpenAPI](#openapi)_ | openapi holds the configuration for the host's OpenAPI support. |  | Optional: \{\} <br /> |
 | `organization` _string_ | organization is the name of the Organization to which the host belongs. |  | MinLength: 5 <br />Required: \{\} <br /> |
 | `routing` _[Routing](#routing)_ | routing defines the desired routing configuration for the host. |  | Required: \{\} <br /> |
 | `scriptLibraryRef` _[KDexObjectReference](#kdexobjectreference)_ | scriptLibraryRef is an optional reference to a KDexScriptLibrary resource. |  | Optional: \{\} <br /> |
@@ -971,6 +972,7 @@ _Appears in:_
 | `devMode` _boolean_ | devMode is a boolean that enables development features like the Request Sniffer. |  | Optional: \{\} <br /> |
 | `faviconSVGTemplate` _string_ | faviconSVGTemplate contains SVG code marked up with go string template to which will be passed the render.TemplateData holding other host details. The rendered output will be cached and served at "/favicon.ico" as "image/svg+xml". |  | Optional: \{\} <br /> |
 | `modulePolicy` _[ModulePolicy](#modulepolicy)_ | modulePolicy defines the policy for JavaScript references in KDexApp, KDexTheme and KDexScriptLibrary resources. When not specified the policy is Strict<br />A Host must not accept JavaScript references which do not comply with the specified policy. | Strict | Enum: [ExternalDependencies Loose ModulesRequired Strict] <br />Optional: \{\} <br /> |
+| `openapi` _[OpenAPI](#openapi)_ | openapi holds the configuration for the host's OpenAPI support. |  | Optional: \{\} <br /> |
 | `organization` _string_ | organization is the name of the Organization to which the host belongs. |  | MinLength: 5 <br />Required: \{\} <br /> |
 | `routing` _[Routing](#routing)_ | routing defines the desired routing configuration for the host. |  | Required: \{\} <br /> |
 | `scriptLibraryRef` _[KDexObjectReference](#kdexobjectreference)_ | scriptLibraryRef is an optional reference to a KDexScriptLibrary resource. |  | Optional: \{\} <br /> |
@@ -2017,6 +2019,23 @@ _Appears in:_
 | `roles` _string array_ | roles is an array of additional roles that will be requested from the provider. |  | Optional: \{\} <br /> |
 
 
+#### OpenAPI
+
+
+
+OpenAPI holds the configuration for the host's OpenAPI support.
+
+
+
+_Appears in:_
+- [KDexHostSpec](#kdexhostspec)
+- [KDexInternalHostSpec](#kdexinternalhostspec)
+
+| Field | Description | Default | Validation |
+| --- | --- | --- | --- |
+| `typesToInclude` _[TypeToInclude](#typetoinclude) array_ | typesToInclude specifies which route types will be outputed to the OpenAPI endpoint. | [BACKEND FUNCTION PAGE SYSTEM] | Enum: [BACKEND FUNCTION PAGE SYSTEM] <br /> |
+
+
 #### PackageReference
 
 
@@ -2246,6 +2265,26 @@ _Appears in:_
 | --- | --- | --- | --- |
 | `lang` _string_ | lang is a string containing a BCP 47 language tag that identifies the set of translations.<br />See https://developer.mozilla.org/en-US/docs/Glossary/BCP_47_language_tag. |  | Required: \{\} <br /> |
 | `keysAndValues` _object (keys:string, values:string)_ | keysAndValues is a map of key=/value pairs where the key is the identifier and the value is the translation of that key in the language specified by the lang property. |  | MaxProperties: 256 <br />MinProperties: 1 <br />Required: \{\} <br /> |
+
+
+#### TypeToInclude
+
+_Underlying type:_ _string_
+
+
+
+_Validation:_
+- Enum: [BACKEND FUNCTION PAGE SYSTEM]
+
+_Appears in:_
+- [OpenAPI](#openapi)
+
+| Field | Description |
+| --- | --- |
+| `BACKEND` |  |
+| `FUNCTION` |  |
+| `PAGE` |  |
+| `SYSTEM` |  |
 
 
 #### UtilityPages

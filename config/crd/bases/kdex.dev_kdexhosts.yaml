@@ -342,6 +342,29 @@ spec:
                 - ModulesRequired
                 - Strict
                 type: string
+              openapi:
+                description: openapi holds the configuration for the host's OpenAPI
+                  support.
+                properties:
+                  typesToInclude:
+                    default:
+                    - BACKEND
+                    - FUNCTION
+                    - PAGE
+                    - SYSTEM
+                    description: typesToInclude specifies which route types will be
+                      outputed to the OpenAPI endpoint.
+                    items:
+                      enum:
+                      - BACKEND
+                      - FUNCTION
+                      - PAGE
+                      - SYSTEM
+                      type: string
+                    type: array
+                required:
+                - typesToInclude
+                type: object
               organization:
                 description: organization is the name of the Organization to which
                   the host belongs.
