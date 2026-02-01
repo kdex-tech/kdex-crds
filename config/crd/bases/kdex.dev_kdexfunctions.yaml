@@ -315,13 +315,19 @@ spec:
                 - enum:
                   - Building
                   - Pending
-                  - Ready
+                  - OpenAPIValid
+                  - BuildValid
                   - StubGenerated
+                  - ExecutableCreated
+                  - Ready
                 - enum:
                   - Building
                   - Pending
-                  - Ready
+                  - OpenAPIValid
+                  - BuildValid
                   - StubGenerated
+                  - ExecutableCreated
+                  - Ready
                 description: State reflects the current state (e.g., Building, Pending,
                   Ready, StubGenerated).
                 type: string

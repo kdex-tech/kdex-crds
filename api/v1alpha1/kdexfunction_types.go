@@ -176,7 +176,7 @@ type KDexFunctionSpec struct {
 }
 
 // KDexFunctionState reflects the current state of a KDexFunction.
-// +kubebuilder:validation:Enum=Building;Pending;Ready;StubGenerated
+// +kubebuilder:validation:Enum=Building;Pending;OpenAPIValid;BuildValid;StubGenerated;ExecutableCreated;Ready
 type KDexFunctionState string
 
 const (
@@ -184,10 +184,16 @@ const (
 	KDexFunctionStateBuilding KDexFunctionState = "Building"
 	// KDexFunctionStatePending indicates the function is pending action.
 	KDexFunctionStatePending KDexFunctionState = "Pending"
-	// KDexFunctionStateReady indicates the function is ready for invocation.
-	KDexFunctionStateReady KDexFunctionState = "Ready"
+	// KDexFunctionStateOpenAPIValid indicates the OpenAPI spec is valid.
+	KDexFunctionStateOpenAPIValid KDexFunctionState = "OpenAPIValid"
+	// KDexFunctionStateBuildValid indicates the build configuration is valid.
+	KDexFunctionStateBuildValid KDexFunctionState = "BuildValid"
 	// KDexFunctionStateStubGenerated indicates the function stub has been generated.
 	KDexFunctionStateStubGenerated KDexFunctionState = "StubGenerated"
+	// KDexFunctionStateExecutableCreated indicates the executable container has been created.
+	KDexFunctionStateExecutableCreated KDexFunctionState = "ExecutableCreated"
+	// KDexFunctionStateReady indicates the function is ready for invocation.
+	KDexFunctionStateReady KDexFunctionState = "Ready"
 )
 
 // KDexFunctionStatus defines the observed state of KDexFunction
@@ -200,7 +206,7 @@ type KDexFunctionStatus struct {
 
 	// State reflects the current state (e.g., Building, Pending, Ready, StubGenerated).
 	// +kubebuilder:validation:Optional
-	// +kubebuilder:validation:Enum=Building;Pending;Ready;StubGenerated
+	// +kubebuilder:validation:Enum=Building;Pending;OpenAPIValid;BuildValid;StubGenerated;ExecutableCreated;Ready
 	State KDexFunctionState `json:"state,omitempty" protobuf:"bytes,1,opt,name=state"`
 
 	// StubDetails contains information about the generated stub.
