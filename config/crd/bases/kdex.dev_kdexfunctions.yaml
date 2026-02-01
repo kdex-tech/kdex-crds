@@ -319,6 +319,7 @@ spec:
                   - BuildValid
                   - StubGenerated
                   - ExecutableCreated
+                  - FunctionDeployed
                   - Ready
                 - enum:
                   - Building
@@ -327,6 +328,7 @@ spec:
                   - BuildValid
                   - StubGenerated
                   - ExecutableCreated
+                  - FunctionDeployed
                   - Ready
                 description: State reflects the current state (e.g., Building, Pending,
                   Ready, StubGenerated).

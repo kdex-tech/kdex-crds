@@ -176,7 +176,7 @@ type KDexFunctionSpec struct {
 }
 
 // KDexFunctionState reflects the current state of a KDexFunction.
-// +kubebuilder:validation:Enum=Building;Pending;OpenAPIValid;BuildValid;StubGenerated;ExecutableCreated;Ready
+// +kubebuilder:validation:Enum=Building;Pending;OpenAPIValid;BuildValid;StubGenerated;ExecutableCreated;FunctionDeployed;Ready
 type KDexFunctionState string
 
 const (
@@ -192,6 +192,8 @@ const (
 	KDexFunctionStateStubGenerated KDexFunctionState = "StubGenerated"
 	// KDexFunctionStateExecutableCreated indicates the executable container has been created.
 	KDexFunctionStateExecutableCreated KDexFunctionState = "ExecutableCreated"
+	// KDexFunctionStateFunctionDeployed indicates the function has been deployed to the FaaS runtime.
+	KDexFunctionStateFunctionDeployed KDexFunctionState = "FunctionDeployed"
 	// KDexFunctionStateReady indicates the function is ready for invocation.
 	KDexFunctionStateReady KDexFunctionState = "Ready"
 )
@@ -206,7 +208,7 @@ type KDexFunctionStatus struct {
 
 	// State reflects the current state (e.g., Building, Pending, Ready, StubGenerated).
 	// +kubebuilder:validation:Optional
-	// +kubebuilder:validation:Enum=Building;Pending;OpenAPIValid;BuildValid;StubGenerated;ExecutableCreated;Ready
+	// +kubebuilder:validation:Enum=Building;Pending;OpenAPIValid;BuildValid;StubGenerated;ExecutableCreated;FunctionDeployed;Ready
 	State KDexFunctionState `json:"state,omitempty" protobuf:"bytes,1,opt,name=state"`
 
 	// StubDetails contains information about the generated stub.

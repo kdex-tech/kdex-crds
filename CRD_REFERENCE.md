@@ -805,7 +805,7 @@ _Underlying type:_ _string_
 KDexFunctionState reflects the current state of a KDexFunction.
 
 _Validation:_
-- Enum: [Building Pending OpenAPIValid BuildValid StubGenerated ExecutableCreated Ready]
+- Enum: [Building Pending OpenAPIValid BuildValid StubGenerated ExecutableCreated FunctionDeployed Ready]
 
 _Appears in:_
 - [KDexFunctionStatus](#kdexfunctionstatus)
@@ -818,6 +818,7 @@ _Appears in:_
 | `BuildValid` | KDexFunctionStateBuildValid indicates the build configuration is valid.<br /> |
 | `StubGenerated` | KDexFunctionStateStubGenerated indicates the function stub has been generated.<br /> |
 | `ExecutableCreated` | KDexFunctionStateExecutableCreated indicates the executable container has been created.<br /> |
+| `FunctionDeployed` | KDexFunctionStateFunctionDeployed indicates the function has been deployed to the FaaS runtime.<br /> |
 | `Ready` | KDexFunctionStateReady indicates the function is ready for invocation.<br /> |
 
 
