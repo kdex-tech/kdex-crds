@@ -139,11 +139,6 @@ spec:
               function:
                 description: Function defines the FaaS execution details.
                 properties:
-                  codePackage:
-                    description: |-
-                      Executable is a reference to executable artifact. In most cases this will be a Docker image. In some other cases
-                      it may be an artifact native to FaaS Adaptor's target runtime.
-                    type: string
                   entrypoint:
                     description: Entrypoint is the specific function handler/method
                       to execute.
@@ -151,6 +146,11 @@ spec:
                   environment:
                     description: Environment is the FaaS environment name (e.g., go-env,
                       python-env).
+                    type: string
+                  executable:
+                    description: |-
+                      executable is a reference to executable artifact. In most cases this will be a Docker image. In some other cases
+                      it may be an artifact native to FaaS Adaptor's target runtime.
                     type: string
                   executablePullSecrets:
                     description: |-
@@ -176,6 +176,13 @@ spec:
                     x-kubernetes-list-map-keys:
                     - name
                     x-kubernetes-list-type: map
+                  generatorConfig:
+                    additionalProperties:
+                      type: string
+                    description: generatorConfig are key/value pairs that will be
+                      passed to the code generatorConfig.
+                    maxProperties: 20
+                    type: object
                   language:
                     description: Language is the programming language of the function
                       (e.g., go, python, nodejs).
@@ -195,6 +202,49 @@ spec:
                         minimum: 0
                         type: integer
                     type: object
+                  stubDetails:
+                    description: StubDetails contains information about the generated
+                      stub.
+                    properties:
+                      sourceImage:
+                        description: SourceImage is the OCI artifact reference where
+                          the stub code was pushed.
+                        type: string
+                      sourcePath:
+                        description: sourcePath is the path to the function source
+                          code.
+                        type: string
+                      sourceSecrets:
+                        description: |-
+                          sourceSecrets is an optional list of references to secrets in the same namespace to use for pulling the referenced sources.
+                          More info: https://kubernetes.io/docs/concepts/containers/images#specifying-imagepullsecrets-on-a-pod
+                          STATUS=ExecutableAvailable
+                        items:
+                          description: |-
+                            LocalObjectReference contains enough information to let you locate the
+                            referenced object inside the same namespace.
+                          properties:
+                            name:
+                              default: ""
+                              description: |-
+                                Name of the referent.
+                                This field is effectively required, but due to backwards compatibility is
+                                allowed to be empty. Instances of this type with an empty value here are
+                                almost certainly wrong.
+                                More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#names
+                              type: string
+                          type: object
+                          x-kubernetes-map-type: atomic
+                        type: array
+                        x-kubernetes-list-map-keys:
+                        - name
+                        x-kubernetes-list-type: map
+                    type: object
+                    x-kubernetes-validations:
+                    - message: exactly one of the fields in [sourcePath sourceImage]
+                        must be set
+                      rule: '[has(self.sourcePath),has(self.sourceImage)].filter(x,x==true).size()
+                        == 1'
                 required:
                 - environment
                 - language
@@ -328,13 +378,44 @@ spec:
                 x-kubernetes-list-map-keys:
                 - type
                 x-kubernetes-list-type: map
+              executable:
+                description: |-
+                  executable is a reference to executable artifact. In most cases this will be a Docker image. In some other cases
+                  it may be an artifact native to FaaS Adaptor's target runtime.
+                  STATUS=ExecutableAvailable
+                type: string
+              executablePullSecrets:
+                description: |-
+                  executablePullSecrets is an optional list of references to secrets in the same namespace to use for pulling the referenced images.
+                  More info: https://kubernetes.io/docs/concepts/containers/images#specifying-imagepullsecrets-on-a-pod
+                  STATUS=ExecutableAvailable
+                items:
+                  description: |-
+                    LocalObjectReference contains enough information to let you locate the
+                    referenced object inside the same namespace.
+                  properties:
+                    name:
+                      default: ""
+                      description: |-
+                        Name of the referent.
+                        This field is effectively required, but due to backwards compatibility is
+                        allowed to be empty. Instances of this type with an empty value here are
+                        almost certainly wrong.
+                        More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#names
+                      type: string
+                  type: object
+                  x-kubernetes-map-type: atomic
+                type: array
+                x-kubernetes-list-map-keys:
+                - name
+                x-kubernetes-list-type: map
               generatorConfig:
                 additionalProperties:
                   type: string
                 description: |-
                   generatorConfig are key/value pairs that will be passed to the code generatorConfig. These are typically provided
                   by a FaaS Adaptor.
-                  STATUS=OpenAPIValid
+                  STATUS=BuildValid
                 maxProperties: 20
                 type: object
               observedGeneration:
@@ -346,7 +427,7 @@ spec:
               openAPISchemaURL:
                 description: |-
                   OpenAPISchemaURL is the URL to the aggregated, full OpenAPI document.
-                  STATUS=BuildValid
+                  STATUS=OpenAPIValid
                 type: string
               state:
                 allOf:
@@ -372,20 +453,48 @@ spec:
                   Ready, StubGenerated).
                 type: string
               stubDetails:
-                description: StubDetails contains information about the generated
-                  stub.
+                description: |-
+                  StubDetails contains information about the generated stub.
+                  STATUS=StubGenerated
                 properties:
-                  filePath:
-                    description: FilePath is the path to the generated function file.
-                    type: string
-                  language:
-                    description: Language is the programming language of the stub.
-                    type: string
                   sourceImage:
                     description: SourceImage is the OCI artifact reference where the
                       stub code was pushed.
                     type: string
+                  sourcePath:
+                    description: sourcePath is the path to the function source code.
+                    type: string
+                  sourceSecrets:
+                    description: |-
+                      sourceSecrets is an optional list of references to secrets in the same namespace to use for pulling the referenced sources.
+                      More info: https://kubernetes.io/docs/concepts/containers/images#specifying-imagepullsecrets-on-a-pod
+                      STATUS=ExecutableAvailable
+                    items:
+                      description: |-
+                        LocalObjectReference contains enough information to let you locate the
+                        referenced object inside the same namespace.
+                      properties:
+                        name:
+                          default: ""
+                          description: |-
+                            Name of the referent.
+                            This field is effectively required, but due to backwards compatibility is
+                            allowed to be empty. Instances of this type with an empty value here are
+                            almost certainly wrong.
+                            More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#names
+                          type: string
+                      type: object
+                      x-kubernetes-map-type: atomic
+                    type: array
+                    x-kubernetes-list-map-keys:
+                    - name
+                    x-kubernetes-list-type: map
                 type: object
+                x-kubernetes-validations:
+                - message: exactly one of the fields in [sourcePath sourceImage] must
+                    be set
+                  rule: '[has(self.sourcePath),has(self.sourceImage)].filter(x,x==true).size()
+                    == 1'
               url:
                 description: URL is the full, routable URL for the function. This
                   URL may only be routable from within the network.

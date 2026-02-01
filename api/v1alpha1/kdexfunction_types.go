@@ -113,10 +113,10 @@ type KDexFunctionExec struct {
 	// +kubebuilder:validation:Required
 	Environment string `json:"environment,omitempty" protobuf:"bytes,2,opt,name=environment"`
 
-	// Executable is a reference to executable artifact. In most cases this will be a Docker image. In some other cases
+	// executable is a reference to executable artifact. In most cases this will be a Docker image. In some other cases
 	// it may be an artifact native to FaaS Adaptor's target runtime.
 	// +kubebuilder:validation:Optional
-	Executable string `json:"codePackage,omitempty" protobuf:"bytes,3,opt,name=codePackage"`
+	Executable string `json:"executable,omitempty" protobuf:"bytes,3,opt,name=executable"`
 
 	// executablePullSecrets is an optional list of references to secrets in the same namespace to use for pulling the referenced images.
 	// More info: https://kubernetes.io/docs/concepts/containers/images#specifying-imagepullsecrets-on-a-pod
@@ -127,13 +127,22 @@ type KDexFunctionExec struct {
 	// +listMapKey=name
 	ExecutablePullSecrets []corev1.LocalObjectReference `json:"executablePullSecrets,omitempty" patchStrategy:"merge" patchMergeKey:"name" protobuf:"bytes,4,rep,name=executablePullSecrets"`
 
+	// generatorConfig are key/value pairs that will be passed to the code generatorConfig.
+	// +kubebuilder:validation:MaxProperties=20
+	// +kubebuilder:validation:Optional
+	GeneratorConfig map[string]string `json:"generatorConfig,omitempty" protobuf:"bytes,5,rep,name=generatorConfig"`
+
 	// Language is the programming language of the function (e.g., go, python, nodejs).
 	// +kubebuilder:validation:Required
-	Language string `json:"language,omitempty" protobuf:"bytes,5,opt,name=language"`
+	Language string `json:"language,omitempty" protobuf:"bytes,6,opt,name=language"`
 
 	// Scaling allows configuration for min/max replicas and autoscaler type.
 	// +kubebuilder:validation:Optional
-	Scaling *ScalingConfig `json:"scaling,omitempty" protobuf:"bytes,6,opt,name=scaling"`
+	Scaling *ScalingConfig `json:"scaling,omitempty" protobuf:"bytes,7,opt,name=scaling"`
+
+	// StubDetails contains information about the generated stub.
+	// +kubebuilder:validation:Optional
+	StubDetails *StubDetails `json:"stubDetails,omitempty" protobuf:"bytes,8,opt,name=stubDetails"`
 }
 
 // +kubebuilder:object:root=true
@@ -216,15 +225,31 @@ const (
 type KDexFunctionStatus struct {
 	KDexObjectStatus `json:",inline" protobuf:"bytes,1,rep,name=kdexObjectStatus"`
 
+	// executable is a reference to executable artifact. In most cases this will be a Docker image. In some other cases
+	// it may be an artifact native to FaaS Adaptor's target runtime.
+	// STATUS=ExecutableAvailable
+	// +kubebuilder:validation:Optional
+	Executable string `json:"executable,omitempty" protobuf:"bytes,3,opt,name=executable"`
+
+	// executablePullSecrets is an optional list of references to secrets in the same namespace to use for pulling the referenced images.
+	// More info: https://kubernetes.io/docs/concepts/containers/images#specifying-imagepullsecrets-on-a-pod
+	// STATUS=ExecutableAvailable
+	// +kubebuilder:validation:Optional
+	// +patchMergeKey=name
+	// +patchStrategy=merge
+	// +listType=map
+	// +listMapKey=name
+	ExecutablePullSecrets []corev1.LocalObjectReference `json:"executablePullSecrets,omitempty" patchStrategy:"merge" patchMergeKey:"name" protobuf:"bytes,4,rep,name=executablePullSecrets"`
+
 	// generatorConfig are key/value pairs that will be passed to the code generatorConfig. These are typically provided
 	// by a FaaS Adaptor.
-	// STATUS=OpenAPIValid
+	// STATUS=BuildValid
 	// +kubebuilder:validation:MaxProperties=20
 	// +kubebuilder:validation:Optional
 	GeneratorConfig map[string]string `json:"generatorConfig,omitempty" protobuf:"bytes,2,rep,name=generatorConfig"`
 
 	// OpenAPISchemaURL is the URL to the aggregated, full OpenAPI document.
-	// STATUS=BuildValid
+	// STATUS=OpenAPIValid
 	// +kubebuilder:validation:Optional
 	OpenAPISchemaURL string `json:"openAPISchemaURL,omitempty" protobuf:"bytes,3,opt,name=openAPISchemaURL"`
 
@@ -234,6 +259,7 @@ type KDexFunctionStatus struct {
 	State KDexFunctionState `json:"state,omitempty" protobuf:"bytes,4,opt,name=state"`
 
 	// StubDetails contains information about the generated stub.
+	// STATUS=StubGenerated
 	// +kubebuilder:validation:Optional
 	StubDetails *StubDetails `json:"stubDetails,omitempty" protobuf:"bytes,5,opt,name=stubDetails"`
 
@@ -535,18 +561,25 @@ type ScalingConfig struct {
 }
 
 // StubDetails contains stub information.
+// +kubebuilder:validation:ExactlyOneOf:=sourcePath;sourceImage
 type StubDetails struct {
-	// FilePath is the path to the generated function file.
+	// sourcePath is the path to the function source code.
 	// +kubebuilder:validation:Optional
-	FilePath string `json:"filePath,omitempty" protobuf:"bytes,1,opt,name=filePath"`
-
-	// Language is the programming language of the stub.
-	// +kubebuilder:validation:Optional
-	Language string `json:"language,omitempty" protobuf:"bytes,2,opt,name=language"`
+	SourcePath string `json:"sourcePath,omitempty" protobuf:"bytes,1,opt,name=sourcePath"`
 
 	// SourceImage is the OCI artifact reference where the stub code was pushed.
 	// +kubebuilder:validation:Optional
 	SourceImage string `json:"sourceImage,omitempty" protobuf:"bytes,3,opt,name=sourceImage"`
+
+	// sourceSecrets is an optional list of references to secrets in the same namespace to use for pulling the referenced sources.
+	// More info: https://kubernetes.io/docs/concepts/containers/images#specifying-imagepullsecrets-on-a-pod
+	// STATUS=ExecutableAvailable
+	// +kubebuilder:validation:Optional
+	// +patchMergeKey=name
+	// +patchStrategy=merge
+	// +listType=map
+	// +listMapKey=name
+	SourceSecrets []corev1.LocalObjectReference `json:"sourceSecrets,omitempty" patchStrategy:"merge" patchMergeKey:"name" protobuf:"bytes,4,rep,name=sourceSecrets"`
 }
 
 var basePathRegex regexp.Regexp = *regexp.MustCompile(`^(?<basePath>/\w+/\w+)`)

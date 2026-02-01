@@ -813,10 +813,12 @@ _Appears in:_
 | --- | --- | --- | --- |
 | `entrypoint` _string_ | Entrypoint is the specific function handler/method to execute. |  | Optional: \{\} <br /> |
 | `environment` _string_ | Environment is the FaaS environment name (e.g., go-env, python-env). |  | Required: \{\} <br /> |
-| `codePackage` _string_ | Executable is a reference to executable artifact. In most cases this will be a Docker image. In some other cases<br />it may be an artifact native to FaaS Adaptor's target runtime. |  | Optional: \{\} <br /> |
+| `executable` _string_ | executable is a reference to executable artifact. In most cases this will be a Docker image. In some other cases<br />it may be an artifact native to FaaS Adaptor's target runtime. |  | Optional: \{\} <br /> |
 | `executablePullSecrets` _[LocalObjectReference](https://kubernetes.io/docs/reference/generated/kubernetes-api/v/#localobjectreference-v1-core) array_ | executablePullSecrets is an optional list of references to secrets in the same namespace to use for pulling the referenced images.<br />More info: https://kubernetes.io/docs/concepts/containers/images#specifying-imagepullsecrets-on-a-pod |  | Optional: \{\} <br /> |
+| `generatorConfig` _object (keys:string, values:string)_ | generatorConfig are key/value pairs that will be passed to the code generatorConfig. |  | MaxProperties: 20 <br />Optional: \{\} <br /> |
 | `language` _string_ | Language is the programming language of the function (e.g., go, python, nodejs). |  | Required: \{\} <br /> |
 | `scaling` _[ScalingConfig](#scalingconfig)_ | Scaling allows configuration for min/max replicas and autoscaler type. |  | Optional: \{\} <br /> |
+| `stubDetails` _[StubDetails](#stubdetails)_ | StubDetails contains information about the generated stub. |  | Optional: \{\} <br /> |
 
 
 #### KDexFunctionList
@@ -2303,13 +2305,14 @@ StubDetails contains stub information.
 
 
 _Appears in:_
+- [KDexFunctionExec](#kdexfunctionexec)
 - [KDexFunctionStatus](#kdexfunctionstatus)
 
 | Field | Description | Default | Validation |
 | --- | --- | --- | --- |
-| `filePath` _string_ | FilePath is the path to the generated function file. |  | Optional: \{\} <br /> |
-| `language` _string_ | Language is the programming language of the stub. |  | Optional: \{\} <br /> |
+| `sourcePath` _string_ | sourcePath is the path to the function source code. |  | Optional: \{\} <br /> |
 | `sourceImage` _string_ | SourceImage is the OCI artifact reference where the stub code was pushed. |  | Optional: \{\} <br /> |
+| `sourceSecrets` _[LocalObjectReference](https://kubernetes.io/docs/reference/generated/kubernetes-api/v/#localobjectreference-v1-core) array_ | sourceSecrets is an optional list of references to secrets in the same namespace to use for pulling the referenced sources.<br />More info: https://kubernetes.io/docs/concepts/containers/images#specifying-imagepullsecrets-on-a-pod<br />STATUS=ExecutableAvailable |  | Optional: \{\} <br /> |
 
 
 
