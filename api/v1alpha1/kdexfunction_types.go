@@ -105,25 +105,35 @@ type KDexFunction struct {
 
 // KDexFunctionExec defines the FaaS execution environment.
 type KDexFunctionExec struct {
-	// CodePackage is a reference to the compiled code artifact or source package.
-	// +kubebuilder:validation:Optional
-	CodePackage string `json:"codePackage,omitempty" protobuf:"bytes,2,opt,name=codePackage"`
-
 	// Entrypoint is the specific function handler/method to execute.
 	// +kubebuilder:validation:Optional
-	Entrypoint string `json:"entrypoint,omitempty" protobuf:"bytes,3,opt,name=entrypoint"`
+	Entrypoint string `json:"entrypoint,omitempty" protobuf:"bytes,1,opt,name=entrypoint"`
 
 	// Environment is the FaaS environment name (e.g., go-env, python-env).
 	// +kubebuilder:validation:Required
 	Environment string `json:"environment,omitempty" protobuf:"bytes,2,opt,name=environment"`
 
+	// Executable is a reference to executable artifact. In most cases this will be a Docker image. In some other cases
+	// it may be an artifact native to FaaS Adaptor's target runtime.
+	// +kubebuilder:validation:Optional
+	Executable string `json:"codePackage,omitempty" protobuf:"bytes,3,opt,name=codePackage"`
+
+	// executablePullSecrets is an optional list of references to secrets in the same namespace to use for pulling the referenced images.
+	// More info: https://kubernetes.io/docs/concepts/containers/images#specifying-imagepullsecrets-on-a-pod
+	// +kubebuilder:validation:Optional
+	// +patchMergeKey=name
+	// +patchStrategy=merge
+	// +listType=map
+	// +listMapKey=name
+	ExecutablePullSecrets []corev1.LocalObjectReference `json:"executablePullSecrets,omitempty" patchStrategy:"merge" patchMergeKey:"name" protobuf:"bytes,4,rep,name=executablePullSecrets"`
+
 	// Language is the programming language of the function (e.g., go, python, nodejs).
 	// +kubebuilder:validation:Required
-	Language string `json:"language,omitempty" protobuf:"bytes,1,opt,name=language"`
+	Language string `json:"language,omitempty" protobuf:"bytes,5,opt,name=language"`
 
 	// Scaling allows configuration for min/max replicas and autoscaler type.
 	// +kubebuilder:validation:Optional
-	Scaling *ScalingConfig `json:"scaling,omitempty" protobuf:"bytes,4,opt,name=scaling"`
+	Scaling *ScalingConfig `json:"scaling,omitempty" protobuf:"bytes,6,opt,name=scaling"`
 }
 
 // +kubebuilder:object:root=true
@@ -204,24 +214,32 @@ const (
 
 // KDexFunctionStatus defines the observed state of KDexFunction
 type KDexFunctionStatus struct {
-	KDexObjectStatus `json:",inline"`
+	KDexObjectStatus `json:",inline" protobuf:"bytes,1,rep,name=kdexObjectStatus"`
+
+	// generatorConfig are key/value pairs that will be passed to the code generatorConfig. These are typically provided
+	// by a FaaS Adaptor.
+	// STATUS=OpenAPIValid
+	// +kubebuilder:validation:MaxProperties=20
+	// +kubebuilder:validation:Optional
+	GeneratorConfig map[string]string `json:"generatorConfig,omitempty" protobuf:"bytes,2,rep,name=generatorConfig"`
 
 	// OpenAPISchemaURL is the URL to the aggregated, full OpenAPI document.
+	// STATUS=BuildValid
 	// +kubebuilder:validation:Optional
 	OpenAPISchemaURL string `json:"openAPISchemaURL,omitempty" protobuf:"bytes,3,opt,name=openAPISchemaURL"`
 
 	// State reflects the current state (e.g., Building, Pending, Ready, StubGenerated).
 	// +kubebuilder:validation:Optional
 	// +kubebuilder:validation:Enum=Building;Pending;OpenAPIValid;BuildValid;StubGenerated;ExecutableCreated;FunctionDeployed;Ready
-	State KDexFunctionState `json:"state,omitempty" protobuf:"bytes,1,opt,name=state"`
+	State KDexFunctionState `json:"state,omitempty" protobuf:"bytes,4,opt,name=state"`
 
 	// StubDetails contains information about the generated stub.
 	// +kubebuilder:validation:Optional
-	StubDetails *StubDetails `json:"stubDetails,omitempty" protobuf:"bytes,4,opt,name=stubDetails"`
+	StubDetails *StubDetails `json:"stubDetails,omitempty" protobuf:"bytes,5,opt,name=stubDetails"`
 
-	// URL is the full, routable URL for the function.
+	// URL is the full, routable URL for the function. This URL may only be routable from within the network.
 	// +kubebuilder:validation:Optional
-	URL string `json:"url,omitempty" protobuf:"bytes,2,opt,name=url"`
+	URL string `json:"url,omitempty" protobuf:"bytes,6,opt,name=url"`
 }
 
 type PathItem struct {
