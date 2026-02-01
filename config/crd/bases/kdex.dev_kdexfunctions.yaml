@@ -170,6 +170,9 @@ spec:
                         minimum: 0
                         type: integer
                     type: object
+                required:
+                - environment
+                - language
                 type: object
               hostRef:
                 description: hostRef is a reference to the KDexHost that this translation

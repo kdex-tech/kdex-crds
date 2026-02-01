@@ -29,6 +29,8 @@ Package v1alpha1 contains API Schema definitions for the  v1alpha1 API group.
 - [KDexClusterTranslationList](#kdexclustertranslationlist)
 - [KDexClusterUtilityPage](#kdexclusterutilitypage)
 - [KDexClusterUtilityPageList](#kdexclusterutilitypagelist)
+- [KDexFaaSAdaptor](#kdexfaasadaptor)
+- [KDexFaaSAdaptorList](#kdexfaasadaptorlist)
 - [KDexFunction](#kdexfunction)
 - [KDexFunctionList](#kdexfunctionlist)
 - [KDexHost](#kdexhost)
@@ -268,6 +270,23 @@ _Appears in:_
 | --- | --- | --- | --- |
 | `name` _string_ | name of the custom element. |  | Required: \{\} <br /> |
 | `description` _string_ | description of the custom element. |  | Optional: \{\} <br /> |
+
+
+#### FaaSBuildConfig
+
+
+
+FaaSBuildConfig defines build settings for the adaptor.
+
+
+
+_Appears in:_
+- [KDexFaaSAdaptorSpec](#kdexfaasadaptorspec)
+
+| Field | Description | Default | Validation |
+| --- | --- | --- | --- |
+| `baseImages` _object (keys:string, values:string)_ | BaseImages maps programming languages to their base images for this adaptor. |  | Optional: \{\} <br /> |
+| `builderImage` _string_ | BuilderImage is the image used to build the function artifacts. |  | Optional: \{\} <br /> |
 
 
 #### JWT
@@ -699,6 +718,63 @@ KDexClusterUtilityPageList contains a list of KDexClusterUtilityPage
 | `items` _[KDexClusterUtilityPage](#kdexclusterutilitypage) array_ |  |  |  |
 
 
+#### KDexFaaSAdaptor
+
+
+
+KDexFaaSAdaptor is the Schema for the kdexfaasadaptors API
+
+
+
+_Appears in:_
+- [KDexFaaSAdaptorList](#kdexfaasadaptorlist)
+
+| Field | Description | Default | Validation |
+| --- | --- | --- | --- |
+| `apiVersion` _string_ | `kdex.dev/v1alpha1` | | |
+| `kind` _string_ | `KDexFaaSAdaptor` | | |
+| `metadata` _[ObjectMeta](https://kubernetes.io/docs/reference/generated/kubernetes-api/v/#objectmeta-v1-meta)_ | Refer to Kubernetes API documentation for fields of `metadata`. |  |  |
+| `spec` _[KDexFaaSAdaptorSpec](#kdexfaasadaptorspec)_ | spec defines the desired state of KDexFaaSAdaptor |  |  |
+
+
+#### KDexFaaSAdaptorList
+
+
+
+KDexFaaSAdaptorList contains a list of KDexFaaSAdaptor
+
+
+
+
+
+| Field | Description | Default | Validation |
+| --- | --- | --- | --- |
+| `apiVersion` _string_ | `kdex.dev/v1alpha1` | | |
+| `kind` _string_ | `KDexFaaSAdaptorList` | | |
+| `metadata` _[ListMeta](https://kubernetes.io/docs/reference/generated/kubernetes-api/v/#listmeta-v1-meta)_ | Refer to Kubernetes API documentation for fields of `metadata`. |  |  |
+| `items` _[KDexFaaSAdaptor](#kdexfaasadaptor) array_ |  |  |  |
+
+
+#### KDexFaaSAdaptorSpec
+
+
+
+KDexFaaSAdaptorSpec defines the desired state of KDexFaaSAdaptor
+
+
+
+_Appears in:_
+- [KDexFaaSAdaptor](#kdexfaasadaptor)
+
+| Field | Description | Default | Validation |
+| --- | --- | --- | --- |
+| `build` _[FaaSBuildConfig](#faasbuildconfig)_ | Build defines the build configuration for this adaptor. |  | Optional: \{\} <br /> |
+| `config` _object (keys:string, values:string)_ | Config is a map of provider-specific configuration key-values. |  | Optional: \{\} <br /> |
+| `provider` _string_ | Provider is the type of FaaS provider (e.g., "knative", "openfaas", "lambda"). |  | Enum: [knative openfaas lambda azure-functions google-cloud-functions] <br />Required: \{\} <br /> |
+
+
+
+
 #### KDexFunction
 
 
@@ -737,8 +813,8 @@ _Appears in:_
 | --- | --- | --- | --- |
 | `codePackage` _string_ | CodePackage is a reference to the compiled code artifact or source package. |  | Optional: \{\} <br /> |
 | `entrypoint` _string_ | Entrypoint is the specific function handler/method to execute. |  | Optional: \{\} <br /> |
-| `environment` _string_ | Environment is the FaaS environment name (e.g., go-env, python-env). |  | Optional: \{\} <br /> |
-| `language` _string_ | Language is the programming language of the function (e.g., go, python, nodejs). |  | Optional: \{\} <br /> |
+| `environment` _string_ | Environment is the FaaS environment name (e.g., go-env, python-env). |  | Required: \{\} <br /> |
+| `language` _string_ | Language is the programming language of the function (e.g., go, python, nodejs). |  | Required: \{\} <br /> |
 | `scaling` _[ScalingConfig](#scalingconfig)_ | Scaling allows configuration for min/max replicas and autoscaler type. |  | Optional: \{\} <br /> |
 
 
@@ -812,14 +888,13 @@ _Appears in:_
 
 | Field | Description |
 | --- | --- |
-| `Building` | KDexFunctionStateBuilding indicates the function is being built.<br /> |
-| `Pending` | KDexFunctionStatePending indicates the function is pending action.<br /> |
-| `OpenAPIValid` | KDexFunctionStateOpenAPIValid indicates the OpenAPI spec is valid.<br /> |
-| `BuildValid` | KDexFunctionStateBuildValid indicates the build configuration is valid.<br /> |
-| `StubGenerated` | KDexFunctionStateStubGenerated indicates the function stub has been generated.<br /> |
-| `ExecutableCreated` | KDexFunctionStateExecutableCreated indicates the executable container has been created.<br /> |
-| `FunctionDeployed` | KDexFunctionStateFunctionDeployed indicates the function has been deployed to the FaaS runtime.<br /> |
-| `Ready` | KDexFunctionStateReady indicates the function is ready for invocation.<br /> |
+| `Pending` | 1. KDexFunctionStatePending indicates the function is pending action.<br /> |
+| `OpenAPIValid` | 2. KDexFunctionStateOpenAPIValid indicates the OpenAPI spec is valid.<br /> |
+| `BuildValid` | 3. KDexFunctionStateBuildValid indicates the build configuration is valid.<br /> |
+| `StubGenerated` | 4. KDexFunctionStateStubGenerated indicates the function stub has been generated.<br /> |
+| `ExecutableAvailable` | 5. KDexFunctionStateExecutableAvailable indicates the executable container is available for provisioning.<br /> |
+| `FunctionDeployed` | 6. KDexFunctionStateFunctionDeployed indicates the function has been deployed to the FaaS runtime.<br /> |
+| `Ready` | 7. KDexFunctionStateReady indicates the function is ready for invocation.<br /> |
 
 
 
@@ -1207,6 +1282,7 @@ _Appears in:_
 
 
 _Appears in:_
+- [KDexFaaSAdaptorStatus](#kdexfaasadaptorstatus)
 - [KDexFunctionStatus](#kdexfunctionstatus)
 
 | Field | Description | Default | Validation |

@@ -114,11 +114,11 @@ type KDexFunctionExec struct {
 	Entrypoint string `json:"entrypoint,omitempty" protobuf:"bytes,3,opt,name=entrypoint"`
 
 	// Environment is the FaaS environment name (e.g., go-env, python-env).
-	// +kubebuilder:validation:Optional
+	// +kubebuilder:validation:Required
 	Environment string `json:"environment,omitempty" protobuf:"bytes,2,opt,name=environment"`
 
 	// Language is the programming language of the function (e.g., go, python, nodejs).
-	// +kubebuilder:validation:Optional
+	// +kubebuilder:validation:Required
 	Language string `json:"language,omitempty" protobuf:"bytes,1,opt,name=language"`
 
 	// Scaling allows configuration for min/max replicas and autoscaler type.
@@ -180,21 +180,25 @@ type KDexFunctionSpec struct {
 type KDexFunctionState string
 
 const (
-	// KDexFunctionStateBuilding indicates the function is being built.
-	KDexFunctionStateBuilding KDexFunctionState = "Building"
-	// KDexFunctionStatePending indicates the function is pending action.
+	// 1. KDexFunctionStatePending indicates the function is pending action.
 	KDexFunctionStatePending KDexFunctionState = "Pending"
-	// KDexFunctionStateOpenAPIValid indicates the OpenAPI spec is valid.
+
+	// 2. KDexFunctionStateOpenAPIValid indicates the OpenAPI spec is valid.
 	KDexFunctionStateOpenAPIValid KDexFunctionState = "OpenAPIValid"
-	// KDexFunctionStateBuildValid indicates the build configuration is valid.
+
+	// 3. KDexFunctionStateBuildValid indicates the build configuration is valid.
 	KDexFunctionStateBuildValid KDexFunctionState = "BuildValid"
-	// KDexFunctionStateStubGenerated indicates the function stub has been generated.
+
+	// 4. KDexFunctionStateStubGenerated indicates the function stub has been generated.
 	KDexFunctionStateStubGenerated KDexFunctionState = "StubGenerated"
-	// KDexFunctionStateExecutableCreated indicates the executable container has been created.
-	KDexFunctionStateExecutableCreated KDexFunctionState = "ExecutableCreated"
-	// KDexFunctionStateFunctionDeployed indicates the function has been deployed to the FaaS runtime.
+
+	// 5. KDexFunctionStateExecutableAvailable indicates the executable container is available for provisioning.
+	KDexFunctionStateExecutableAvailable KDexFunctionState = "ExecutableAvailable"
+
+	// 6. KDexFunctionStateFunctionDeployed indicates the function has been deployed to the FaaS runtime.
 	KDexFunctionStateFunctionDeployed KDexFunctionState = "FunctionDeployed"
-	// KDexFunctionStateReady indicates the function is ready for invocation.
+
+	// 7. KDexFunctionStateReady indicates the function is ready for invocation.
 	KDexFunctionStateReady KDexFunctionState = "Ready"
 )
 

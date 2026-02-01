@@ -29,6 +29,7 @@ resources:
 - bases/kdex.dev_kdexfunctions.yaml
 - bases/kdex.dev_kdexrolebindings.yaml
 - bases/kdex.dev_kdexroles.yaml
+- bases/kdex.dev_kdexfaasadaptors.yaml
 # +kubebuilder:scaffold:crdkustomizeresource
 
 patches: []
