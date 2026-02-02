@@ -362,7 +362,12 @@ type MappingRule struct {
 type Metadata struct {
 	// Tags are used for grouping and searching functions.
 	// +kubebuilder:validation:Optional
-	Tags []string `json:"tags,omitempty" protobuf:"bytes,1,rep,name=tags"`
+	// +kubebuilder:validation:MaxItems=16
+	// +patchMergeKey=name
+	// +patchStrategy=merge
+	// +listType=map
+	// +listMapKey=name
+	Tags []Tag `json:"tags,omitempty" patchStrategy:"merge" patchMergeKey:"name" protobuf:"bytes,1,rep,name=tags"`
 
 	// Contact provides contact information for the function's owner.
 	// +kubebuilder:validation:Optional
@@ -645,6 +650,17 @@ func (s *StyleDef) ToTag() string {
 	buffer.WriteString("\n</style>")
 
 	return buffer.String()
+}
+
+type Tag struct {
+	// +kubebuilder:validation:Required
+	Name string `json:"name" protobuf:"bytes,1,req,name=name"`
+
+	// +kubebuilder:validation:Optional
+	Description string `json:"description,omitempty" protobuf:"bytes,2,opt,name=description"`
+
+	// +kubebuilder:validation:Optional
+	URL string `json:"url,omitempty" protobuf:"bytes,3,opt,name=url"`
 }
 
 // TLSSpec defines the desired state of TLS for a host.

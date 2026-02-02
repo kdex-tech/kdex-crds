@@ -293,8 +293,21 @@ spec:
                   tags:
                     description: Tags are used for grouping and searching functions.
                     items:
-                      type: string
+                      properties:
+                        description:
+                          type: string
+                        name:
+                          type: string
+                        url:
+                          type: string
+                      required:
+                      - name
+                      type: object
+                    maxItems: 16
                     type: array
+                    x-kubernetes-list-map-keys:
+                    - name
+                    x-kubernetes-list-type: map
                 type: object
             required:
             - api
