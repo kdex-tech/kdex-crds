@@ -255,7 +255,7 @@ type KDexFunctionStatus struct {
 
 	// State reflects the current state (e.g., Building, Pending, Ready, StubGenerated).
 	// +kubebuilder:validation:Optional
-	// +kubebuilder:validation:Enum=Building;Pending;OpenAPIValid;BuildValid;StubGenerated;ExecutableCreated;FunctionDeployed;Ready
+	// +kubebuilder:validation:Enum=Pending;OpenAPIValid;BuildValid;StubGenerated;ExecutableAvailable;FunctionDeployed;Ready
 	State KDexFunctionState `json:"state,omitempty" protobuf:"bytes,4,opt,name=state"`
 
 	// StubDetails contains information about the generated stub.

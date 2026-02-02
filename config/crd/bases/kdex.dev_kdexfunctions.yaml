@@ -441,12 +441,11 @@ spec:
                   - FunctionDeployed
                   - Ready
                 - enum:
-                  - Building
                   - Pending
                   - OpenAPIValid
                   - BuildValid
                   - StubGenerated
-                  - ExecutableCreated
+                  - ExecutableAvailable
                   - FunctionDeployed
                   - Ready
                 description: State reflects the current state (e.g., Building, Pending,
