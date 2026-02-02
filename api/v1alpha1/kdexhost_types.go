@@ -94,6 +94,7 @@ type KDexHostSpec struct {
 	// modulePolicy defines the policy for JavaScript references in KDexApp, KDexTheme and KDexScriptLibrary resources. When not specified the policy is Strict
 	// A Host must not accept JavaScript references which do not comply with the specified policy.
 	// +kubebuilder:validation:Optional
+	// +kubebuilder:validation:Enum=ExternalDependencies;Loose;ModulesRequired;Strict
 	// +kubebuilder:default:="Strict"
 	ModulePolicy ModulePolicy `json:"modulePolicy" protobuf:"bytes,8,opt,name=modulePolicy,casttype=ModulePolicy"`
 

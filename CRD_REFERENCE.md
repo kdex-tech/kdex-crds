@@ -884,7 +884,7 @@ _Underlying type:_ _string_
 KDexFunctionState reflects the current state of a KDexFunction.
 
 _Validation:_
-- Enum: [Building Pending OpenAPIValid BuildValid StubGenerated ExecutableCreated FunctionDeployed Ready]
+- Enum: [Pending OpenAPIValid BuildValid StubGenerated ExecutableAvailable FunctionDeployed Ready]
 
 _Appears in:_
 - [KDexFunctionStatus](#kdexfunctionstatus)

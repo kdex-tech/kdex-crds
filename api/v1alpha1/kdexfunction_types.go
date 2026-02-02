@@ -195,7 +195,7 @@ type KDexFunctionSpec struct {
 }
 
 // KDexFunctionState reflects the current state of a KDexFunction.
-// +kubebuilder:validation:Enum=Building;Pending;OpenAPIValid;BuildValid;StubGenerated;ExecutableCreated;FunctionDeployed;Ready
+// +kubebuilder:validation:Enum=Pending;OpenAPIValid;BuildValid;StubGenerated;ExecutableAvailable;FunctionDeployed;Ready
 type KDexFunctionState string
 
 const (

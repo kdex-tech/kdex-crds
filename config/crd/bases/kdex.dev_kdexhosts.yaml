@@ -332,15 +332,21 @@ spec:
                 pattern: ^/-/.+
                 type: string
               modulePolicy:
+                allOf:
+                - enum:
+                  - ExternalDependencies
+                  - Loose
+                  - ModulesRequired
+                  - Strict
+                - enum:
+                  - ExternalDependencies
+                  - Loose
+                  - ModulesRequired
+                  - Strict
                 default: Strict
                 description: |-
                   modulePolicy defines the policy for JavaScript references in KDexApp, KDexTheme and KDexScriptLibrary resources. When not specified the policy is Strict
                   A Host must not accept JavaScript references which do not comply with the specified policy.
-                enum:
-                - ExternalDependencies
-                - Loose
-                - ModulesRequired
-                - Strict
                 type: string
               openapi:
                 description: openapi holds the configuration for the host's OpenAPI

@@ -75,6 +75,7 @@ type KDexUtilityPageList struct {
 type KDexUtilityPageSpec struct {
 	// type indicates the purpose of this utility page.
 	// +kubebuilder:validation:Required
+	// +kubebuilder:validation:Enum=Announcement;Error;Login
 	Type KDexUtilityPageType `json:"type" protobuf:"bytes,1,req,name=type,casttype=KDexUtilityPageType"`
 
 	// contentEntries is a set of content entries to bind to this page. They may be either raw HTML fragments or KDexApp references.

@@ -432,12 +432,11 @@ spec:
               state:
                 allOf:
                 - enum:
-                  - Building
                   - Pending
                   - OpenAPIValid
                   - BuildValid
                   - StubGenerated
-                  - ExecutableCreated
+                  - ExecutableAvailable
                   - FunctionDeployed
                   - Ready
                 - enum:
