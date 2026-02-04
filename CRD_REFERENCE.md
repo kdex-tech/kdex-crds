@@ -289,6 +289,46 @@ _Appears in:_
 | `builderImage` _string_ | BuilderImage is the image used to build the function artifacts. |  | Optional: \{\} <br /> |
 
 
+#### GeneratorConfig
+
+
+
+
+
+
+
+_Appears in:_
+- [KDexFunctionExec](#kdexfunctionexec)
+- [KDexFunctionStatus](#kdexfunctionstatus)
+
+| Field | Description | Default | Validation |
+| --- | --- | --- | --- |
+| `args` _string array_ | args is an optional array of arguments that will be passed to the generator command. |  | Optional: \{\} <br /> |
+| `command` _string array_ | command is an array that contains the code generator command and any flags necessary. |  | Required: \{\} <br /> |
+| `git` _[Git](#git)_ | git is the configuration for the Git repository where generated code will be committed to a branch. |  | Required: \{\} <br /> |
+| `image` _string_ | image is the image containing the generator implementation; cli or scripts. |  | Required: \{\} <br /> |
+
+
+#### Git
+
+
+
+
+
+
+
+_Appears in:_
+- [GeneratorConfig](#generatorconfig)
+
+| Field | Description | Default | Validation |
+| --- | --- | --- | --- |
+| `functionSubDirectory` _string_ | functionSubDirectory is the optional path to a subdirectory in the repository in which generated code will be placed. | . | Optional: \{\} <br /> |
+| `image` _string_ | image is the name of the container image to run for git. |  | Required: \{\} <br /> |
+| `committerEmail` _string_ | committerEmail is the email address that will be used for git commits. |  | Required: \{\} <br /> |
+| `committerName` _string_ | committerName is the name that will be used for git commits. |  | Required: \{\} <br /> |
+| `repoSecretRef` _[LocalObjectReference](https://kubernetes.io/docs/reference/generated/kubernetes-api/v/#localobjectreference-v1-core)_ | repoSecretRef is a reference to a secret that contains the details for a git repository.<br />This secret should contain all of the following keys:<br />token - the authentication token<br />host - the git host address<br />org - the git org<br />repo - the git repo<br />gpg.key.id - the git signing key id (optional)<br />gpg.key - the git signing key (optional) |  | Required: \{\} <br /> |
+
+
 #### JWT
 
 
@@ -815,7 +855,7 @@ _Appears in:_
 | `environment` _string_ | Environment is the FaaS environment name (e.g., go-env, python-env). |  | Required: \{\} <br /> |
 | `executable` _string_ | executable is a reference to executable artifact. In most cases this will be a Docker image. In some other cases<br />it may be an artifact native to FaaS Adaptor's target runtime. |  | Optional: \{\} <br /> |
 | `executablePullSecrets` _[LocalObjectReference](https://kubernetes.io/docs/reference/generated/kubernetes-api/v/#localobjectreference-v1-core) array_ | executablePullSecrets is an optional list of references to secrets in the same namespace to use for pulling the referenced images.<br />More info: https://kubernetes.io/docs/concepts/containers/images#specifying-imagepullsecrets-on-a-pod |  | Optional: \{\} <br /> |
-| `generatorConfig` _object (keys:string, values:string)_ | generatorConfig are key/value pairs that will be passed to the code generatorConfig. |  | MaxProperties: 20 <br />Optional: \{\} <br /> |
+| `generatorConfig` _[GeneratorConfig](#generatorconfig)_ | generatorConfig holds the values to configure and execute the code generator. |  | Optional: \{\} <br /> |
 | `language` _string_ | Language is the programming language of the function (e.g., go, python, nodejs). |  | Required: \{\} <br /> |
 | `scaling` _[ScalingConfig](#scalingconfig)_ | Scaling allows configuration for min/max replicas and autoscaler type. |  | Optional: \{\} <br /> |
 | `stubDetails` _[StubDetails](#stubdetails)_ | StubDetails contains information about the generated stub. |  | Optional: \{\} <br /> |

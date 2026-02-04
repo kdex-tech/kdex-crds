@@ -3,10 +3,13 @@ package v1alpha1
 import (
 	"bytes"
 	"fmt"
+	"regexp"
 
+	openapi "github.com/getkin/kin-openapi/openapi3"
 	corev1 "k8s.io/api/core/v1"
 	"k8s.io/apimachinery/pkg/api/resource"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
+	runtime "k8s.io/apimachinery/pkg/runtime"
 )
 
 const (
@@ -14,6 +17,58 @@ const (
 	id   = "id"
 	src  = "src"
 )
+
+var basePathRegex regexp.Regexp = *regexp.MustCompile(`^(?<basePath>/\w+/\w+)`)
+var pathItemPathRegex regexp.Regexp = *regexp.MustCompile(`^(?<basePath>/\w+/\w+)(/.*)?`)
+
+// +kubebuilder:validation:XValidation:rule="self.paths.all(k, k.startsWith(self.basePath))",message="all keys of .spec.api.paths must be prefixed by .spec.api.basePath"
+type API struct {
+	// basePath is the base URL path for the function. It must match the regex ^/\w+/\w+ (e.g., /v1/users).
+	// +kubebuilder:validation:Required
+	// +kubebuilder:validation:Pattern=`^/\w+/\w+`
+	BasePath string `json:"basePath" protobuf:"bytes,1,req,name=basePath"`
+
+	// paths is a map of paths that exist below the basePath. All keys of the map must be paths prefixed by .spec.api.basePath.
+	// +kubebuilder:validation:MinProperties=1
+	// +kubebuilder:validation:MaxProperties=16
+	// +kubebuilder:validation:Required
+	Paths map[string]PathItem `json:"paths" protobuf:"bytes,2,req,name=paths"`
+
+	// +kubebuilder:pruning:PreserveUnknownFields
+	// +kubebuilder:validation:MaxProperties=6
+	// +kubebuilder:validation:Optional
+	Schemas map[string]runtime.RawExtension `json:"schemas,omitempty" protobuf:"bytes,3,req,name=schemas"`
+}
+
+func (a *API) BasePathRegex() regexp.Regexp {
+	return basePathRegex
+}
+
+func (in *API) GetSchemas() map[string]*openapi.SchemaRef {
+	sm := map[string]*openapi.SchemaRef{}
+	for k, _raw := range in.Schemas {
+		var s = &openapi.SchemaRef{}
+		_ = s.UnmarshalJSON(_raw.Raw)
+		sm[k] = s
+	}
+	return sm
+}
+
+func (a *API) ItemPathRegex() regexp.Regexp {
+	return pathItemPathRegex
+}
+
+func (in *API) SetSchemas(sm map[string]*openapi.SchemaRef) {
+	if len(sm) == 0 {
+		return
+	}
+	_raw := map[string]runtime.RawExtension{}
+	for k, s := range sm {
+		raw, _ := s.MarshalJSON()
+		_raw[k] = runtime.RawExtension{Raw: raw}
+	}
+	in.Schemas = _raw
+}
 
 // +kubebuilder:validation:ExactlyOneOf=linkHref;metaId;style
 type Asset struct {
@@ -243,6 +298,56 @@ type CustomElement struct {
 	// description of the custom element.
 	// +kubebuilder:validation:Optional
 	Description string `json:"description,omitempty" protobuf:"bytes,2,opt,name=description"`
+}
+
+type GeneratorConfig struct {
+	// args is an optional array of arguments that will be passed to the generator command.
+	// +kubebuilder:validation:Optional
+	Args []string `json:"args,omitempty"`
+
+	// command is an array that contains the code generator command and any flags necessary.
+	// +kubebuilder:validation:Required
+	Command []string `json:"command"`
+
+	// git is the configuration for the Git repository where generated code will be committed to a branch.
+	// +kubebuilder:validation:Required
+	Git Git `json:"git"`
+
+	// image is the image containing the generator implementation; cli or scripts.
+	// +kubebuilder:validation:Required
+	Image string `json:"image"`
+}
+
+type Git struct {
+	// functionSubDirectory is the optional path to a subdirectory in the repository in which generated code will be placed.
+	// +kubebuilder:validation:Optional
+	// +kubebuilder:default:="."
+	FunctionSubDirectory string `json:"functionSubDirectory,omitempty"`
+
+	// image is the name of the container image to run for git.
+	// +kubebuilder:validation:Required
+	Image string `json:"image"`
+
+	// committerEmail is the email address that will be used for git commits.
+	// +kubebuilder:validation:Required
+	CommitterEmail string `json:"committerEmail"`
+
+	// committerName is the name that will be used for git commits.
+	// +kubebuilder:validation:Required
+	CommitterName string `json:"committerName"`
+
+	// repoSecretRef is a reference to a secret that contains the details for a git repository.
+	// This secret should contain all of the following keys:
+	//
+	// token - the authentication token
+	// host - the git host address
+	// org - the git org
+	// repo - the git repo
+	// gpg.key.id - the git signing key id (optional)
+	// gpg.key - the git signing key (optional)
+	//
+	// +kubebuilder:validation:Required
+	RepoSecretRef corev1.LocalObjectReference `json:"repoSecretRef"`
 }
 
 // +kubebuilder:validation:XValidation:rule=`!has(self.jwtKeysSecrets) || (self.jwtKeysSecrets.size() <= 1) || (self.jwtKeysSecrets.size() > 1 && self.activeKey != "")`,message="activeKey must be set if jwtKeysSecrets has more than 1 reference"
@@ -479,6 +584,285 @@ func (p *PackageReference) ToScriptTag() string {
 	return fmt.Sprintf(importStatementTemplate, p.ToImportStatement())
 }
 
+type PathItem struct {
+	// +kubebuilder:pruning:PreserveUnknownFields
+	// +kubebuilder:validation:Optional
+	// +kubebuilder:validation:Type=object
+	Connect *runtime.RawExtension `json:"connect,omitempty" yaml:"connect,omitempty"`
+
+	// +kubebuilder:pruning:PreserveUnknownFields
+	// +kubebuilder:validation:Optional
+	// +kubebuilder:validation:Type=object
+	Delete *runtime.RawExtension `json:"delete,omitempty" yaml:"delete,omitempty"`
+
+	// +kubebuilder:validation:Optional
+	Description string `json:"description,omitempty" yaml:"description,omitempty"`
+
+	// +kubebuilder:pruning:PreserveUnknownFields
+	// +kubebuilder:validation:Optional
+	// +kubebuilder:validation:Type=object
+	Get *runtime.RawExtension `json:"get,omitempty" yaml:"get,omitempty"`
+
+	// +kubebuilder:pruning:PreserveUnknownFields
+	// +kubebuilder:validation:Optional
+	// +kubebuilder:validation:Type=object
+	Head *runtime.RawExtension `json:"head,omitempty" yaml:"head,omitempty"`
+
+	// +kubebuilder:pruning:PreserveUnknownFields
+	// +kubebuilder:validation:Optional
+	// +kubebuilder:validation:Type=object
+	Options *runtime.RawExtension `json:"options,omitempty" yaml:"options,omitempty"`
+
+	// +kubebuilder:pruning:PreserveUnknownFields
+	// +kubebuilder:validation:Optional
+	Parameters []runtime.RawExtension `json:"parameters,omitempty" yaml:"parameters,omitempty"`
+
+	// +kubebuilder:pruning:PreserveUnknownFields
+	// +kubebuilder:validation:Optional
+	// +kubebuilder:validation:Type=object
+	Patch *runtime.RawExtension `json:"patch,omitempty" yaml:"patch,omitempty"`
+
+	// +kubebuilder:pruning:PreserveUnknownFields
+	// +kubebuilder:validation:Optional
+	// +kubebuilder:validation:Type=object
+	Post *runtime.RawExtension `json:"post,omitempty" yaml:"post,omitempty"`
+
+	// +kubebuilder:pruning:PreserveUnknownFields
+	// +kubebuilder:validation:Optional
+	// +kubebuilder:validation:Type=object
+	Put *runtime.RawExtension `json:"put,omitempty" yaml:"put,omitempty"`
+
+	// +kubebuilder:validation:Optional
+	Summary string `json:"summary,omitempty" yaml:"summary,omitempty"`
+
+	// +kubebuilder:pruning:PreserveUnknownFields
+	// +kubebuilder:validation:Optional
+	// +kubebuilder:validation:Type=object
+	Trace *runtime.RawExtension `json:"trace,omitempty" yaml:"trace,omitempty"`
+}
+
+func (pi *PathItem) GetConnect() *openapi.Operation {
+	if pi.Connect == nil {
+		return nil
+	}
+	var op openapi.Operation
+	_ = op.UnmarshalJSON(pi.Connect.Raw)
+	return &op
+}
+
+func (pi *PathItem) GetDelete() *openapi.Operation {
+	if pi.Delete == nil {
+		return nil
+	}
+	var op openapi.Operation
+	_ = op.UnmarshalJSON(pi.Delete.Raw)
+	return &op
+}
+
+func (pi *PathItem) GetGet() *openapi.Operation {
+	if pi.Get == nil {
+		return nil
+	}
+	var op openapi.Operation
+	_ = op.UnmarshalJSON(pi.Get.Raw)
+	return &op
+}
+
+func (pi *PathItem) GetHead() *openapi.Operation {
+	if pi.Head == nil {
+		return nil
+	}
+	var op openapi.Operation
+	_ = op.UnmarshalJSON(pi.Head.Raw)
+	return &op
+}
+
+func (pi *PathItem) GetOp(method string) *openapi.Operation {
+	switch method {
+	case "CONNECT":
+		return pi.GetConnect()
+	case "DELETE":
+		return pi.GetDelete()
+	case "GET":
+		return pi.GetGet()
+	case "HEAD":
+		return pi.GetHead()
+	case "OPTIONS":
+		return pi.GetOptions()
+	case "PATCH":
+		return pi.GetPatch()
+	case "POST":
+		return pi.GetPost()
+	case "PUT":
+		return pi.GetPut()
+	case "TRACE":
+		return pi.GetTrace()
+	}
+	return nil
+}
+
+func (pi *PathItem) GetOptions() *openapi.Operation {
+	if pi.Options == nil {
+		return nil
+	}
+	var op openapi.Operation
+	_ = op.UnmarshalJSON(pi.Options.Raw)
+	return &op
+}
+
+func (pi *PathItem) GetParameters() []openapi.Parameter {
+	ps := []openapi.Parameter{}
+	for _, _raw := range pi.Parameters {
+		var p = openapi.Parameter{}
+		_ = p.UnmarshalJSON(_raw.Raw)
+		ps = append(ps, p)
+	}
+	return ps
+}
+
+func (pi *PathItem) GetPatch() *openapi.Operation {
+	if pi.Patch == nil {
+		return nil
+	}
+	var op openapi.Operation
+	_ = op.UnmarshalJSON(pi.Patch.Raw)
+	return &op
+}
+
+func (pi *PathItem) GetPost() *openapi.Operation {
+	if pi.Post == nil {
+		return nil
+	}
+	var op openapi.Operation
+	_ = op.UnmarshalJSON(pi.Post.Raw)
+	return &op
+}
+
+func (pi *PathItem) GetPut() *openapi.Operation {
+	if pi.Put == nil {
+		return nil
+	}
+	var op openapi.Operation
+	_ = op.UnmarshalJSON(pi.Put.Raw)
+	return &op
+}
+
+func (pi *PathItem) GetTrace() *openapi.Operation {
+	if pi.Trace == nil {
+		return nil
+	}
+	var op openapi.Operation
+	_ = op.UnmarshalJSON(pi.Trace.Raw)
+	return &op
+}
+
+func (pi *PathItem) SetConnect(op *openapi.Operation) {
+	if op == nil {
+		return
+	}
+	raw, _ := op.MarshalJSON()
+	pi.Connect = &runtime.RawExtension{Raw: raw}
+}
+
+func (pi *PathItem) SetDelete(op *openapi.Operation) {
+	if op == nil {
+		return
+	}
+	raw, _ := op.MarshalJSON()
+	pi.Delete = &runtime.RawExtension{Raw: raw}
+}
+
+func (pi *PathItem) SetGet(op *openapi.Operation) {
+	if op == nil {
+		return
+	}
+	raw, _ := op.MarshalJSON()
+	pi.Get = &runtime.RawExtension{Raw: raw}
+}
+
+func (pi *PathItem) SetHead(op *openapi.Operation) {
+	if op == nil {
+		return
+	}
+	raw, _ := op.MarshalJSON()
+	pi.Head = &runtime.RawExtension{Raw: raw}
+}
+
+func (pi *PathItem) SetOp(method string, op *openapi.Operation) {
+	switch method {
+	case "CONNECT":
+		pi.SetConnect(op)
+	case "DELETE":
+		pi.SetDelete(op)
+	case "GET":
+		pi.SetGet(op)
+	case "HEAD":
+		pi.SetHead(op)
+	case "OPTIONS":
+		pi.SetOptions(op)
+	case "PATCH":
+		pi.SetPatch(op)
+	case "POST":
+		pi.SetPost(op)
+	case "PUT":
+		pi.SetPut(op)
+	case "TRACE":
+		pi.SetTrace(op)
+	}
+}
+
+func (pi *PathItem) SetOptions(op *openapi.Operation) {
+	if op == nil {
+		return
+	}
+	raw, _ := op.MarshalJSON()
+	pi.Options = &runtime.RawExtension{Raw: raw}
+}
+
+func (pi *PathItem) SetParameters(ps []openapi.Parameter) {
+	if len(ps) == 0 {
+		return
+	}
+	_raw := []runtime.RawExtension{}
+	for _, p := range ps {
+		raw, _ := p.MarshalJSON()
+		_raw = append(_raw, runtime.RawExtension{Raw: raw})
+	}
+	pi.Parameters = _raw
+}
+
+func (pi *PathItem) SetPatch(op *openapi.Operation) {
+	if op == nil {
+		return
+	}
+	raw, _ := op.MarshalJSON()
+	pi.Patch = &runtime.RawExtension{Raw: raw}
+}
+
+func (pi *PathItem) SetPost(op *openapi.Operation) {
+	if op == nil {
+		return
+	}
+	raw, _ := op.MarshalJSON()
+	pi.Post = &runtime.RawExtension{Raw: raw}
+}
+
+func (pi *PathItem) SetPut(op *openapi.Operation) {
+	if op == nil {
+		return
+	}
+	raw, _ := op.MarshalJSON()
+	pi.Put = &runtime.RawExtension{Raw: raw}
+}
+
+func (pi *PathItem) SetTrace(op *openapi.Operation) {
+	if op == nil {
+		return
+	}
+	raw, _ := op.MarshalJSON()
+	pi.Trace = &runtime.RawExtension{Raw: raw}
+}
+
 // +kubebuilder:validation:XValidation:rule="!has(self.patternPath) || self.patternPath.startsWith(self.basePath)",message="if patternPath is specified, basePath must be a prefix of patternPath"
 type Paths struct {
 	// basePath is the shortest path by which the page may be accessed. It must not contain path parameters. This path will be used in site navigation. This path is subject to being prefixed for localization by `/{l10n}` and will be when the user selects a non-default language.
@@ -532,6 +916,19 @@ const (
 	// IngressRoutingStrategy uses Ingress to expose the host.
 	IngressRoutingStrategy RoutingStrategy = "Ingress"
 )
+
+// ScalingConfig defines scaling parameters.
+type ScalingConfig struct {
+	// MaxReplicas is the maximum number of replicas.
+	// +kubebuilder:validation:Optional
+	// +kubebuilder:validation:Minimum=1
+	MaxReplicas *int32 `json:"maxReplicas,omitempty" protobuf:"varint,2,opt,name=maxReplicas"`
+
+	// MinReplicas is the minimum number of replicas.
+	// +kubebuilder:validation:Optional
+	// +kubebuilder:validation:Minimum=0
+	MinReplicas *int32 `json:"minReplicas,omitempty" protobuf:"varint,1,opt,name=minReplicas"`
+}
 
 // +kubebuilder:validation:ExactlyOneOf=script;scriptSrc
 type ScriptDef struct {
@@ -610,6 +1007,28 @@ func (s *ScriptDef) ToTag() string {
 }
 
 type SecurityRequirement map[string][]string
+
+// StubDetails contains stub information.
+// +kubebuilder:validation:ExactlyOneOf:=sourcePath;sourceImage
+type StubDetails struct {
+	// sourcePath is the path to the function source code.
+	// +kubebuilder:validation:Optional
+	SourcePath string `json:"sourcePath,omitempty" protobuf:"bytes,1,opt,name=sourcePath"`
+
+	// SourceImage is the OCI artifact reference where the stub code was pushed.
+	// +kubebuilder:validation:Optional
+	SourceImage string `json:"sourceImage,omitempty" protobuf:"bytes,3,opt,name=sourceImage"`
+
+	// sourceSecrets is an optional list of references to secrets in the same namespace to use for pulling the referenced sources.
+	// More info: https://kubernetes.io/docs/concepts/containers/images#specifying-imagepullsecrets-on-a-pod
+	// STATUS=ExecutableAvailable
+	// +kubebuilder:validation:Optional
+	// +patchMergeKey=name
+	// +patchStrategy=merge
+	// +listType=map
+	// +listMapKey=name
+	SourceSecrets []corev1.LocalObjectReference `json:"sourceSecrets,omitempty" patchStrategy:"merge" patchMergeKey:"name" protobuf:"bytes,4,rep,name=sourceSecrets"`
+}
 
 type StyleDef struct {
 	// style is the text content to be added into a `<style>` element when rendered.
