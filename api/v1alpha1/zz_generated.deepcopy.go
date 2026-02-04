@@ -1099,7 +1099,11 @@ func (in *KDexFunctionExec) DeepCopyInto(out *KDexFunctionExec) {
 		*out = make([]v1.LocalObjectReference, len(*in))
 		copy(*out, *in)
 	}
-	in.GeneratorConfig.DeepCopyInto(&out.GeneratorConfig)
+	if in.GeneratorConfig != nil {
+		in, out := &in.GeneratorConfig, &out.GeneratorConfig
+		*out = new(GeneratorConfig)
+		(*in).DeepCopyInto(*out)
+	}
 	if in.Scaling != nil {
 		in, out := &in.Scaling, &out.Scaling
 		*out = new(ScalingConfig)
@@ -1198,7 +1202,11 @@ func (in *KDexFunctionStatus) DeepCopyInto(out *KDexFunctionStatus) {
 		*out = make([]v1.LocalObjectReference, len(*in))
 		copy(*out, *in)
 	}
-	in.GeneratorConfig.DeepCopyInto(&out.GeneratorConfig)
+	if in.GeneratorConfig != nil {
+		in, out := &in.GeneratorConfig, &out.GeneratorConfig
+		*out = new(GeneratorConfig)
+		(*in).DeepCopyInto(*out)
+	}
 	if in.StubDetails != nil {
 		in, out := &in.StubDetails, &out.StubDetails
 		*out = new(StubDetails)

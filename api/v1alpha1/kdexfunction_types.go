@@ -76,7 +76,7 @@ type KDexFunctionExec struct {
 
 	// generatorConfig holds the values to configure and execute the code generator.
 	// +kubebuilder:validation:Optional
-	GeneratorConfig GeneratorConfig `json:"generatorConfig,omitempty" protobuf:"bytes,5,opt,name=generatorConfig"`
+	GeneratorConfig *GeneratorConfig `json:"generatorConfig,omitempty" protobuf:"bytes,5,opt,name=generatorConfig"`
 
 	// Language is the programming language of the function (e.g., go, python, nodejs).
 	// +kubebuilder:validation:Required
@@ -189,7 +189,7 @@ type KDexFunctionStatus struct {
 
 	// generatorConfig holds the values to configure and execute the code generator.
 	// +kubebuilder:validation:Optional
-	GeneratorConfig GeneratorConfig `json:"generatorConfig,omitempty" protobuf:"bytes,5,opt,name=generatorConfig"`
+	GeneratorConfig *GeneratorConfig `json:"generatorConfig,omitempty" protobuf:"bytes,5,opt,name=generatorConfig"`
 
 	// OpenAPISchemaURL is the URL to the aggregated, full OpenAPI document.
 	// STATUS=OpenAPIValid
