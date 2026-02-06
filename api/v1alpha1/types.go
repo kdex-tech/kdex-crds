@@ -305,8 +305,8 @@ type GeneratorConfig struct {
 	// +kubebuilder:validation:Optional
 	Args []string `json:"args,omitempty"`
 
-	// command is an array that contains the code generator command and any flags necessary.
-	// +kubebuilder:validation:Required
+	// command is an optional array that contains the code generator command and any flags necessary.
+	// +kubebuilder:validation:Optional
 	Command []string `json:"command"`
 
 	// git is the configuration for the Git repository where generated code will be committed to a branch.

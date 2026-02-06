@@ -304,7 +304,7 @@ _Appears in:_
 | Field | Description | Default | Validation |
 | --- | --- | --- | --- |
 | `args` _string array_ | args is an optional array of arguments that will be passed to the generator command. |  | Optional: \{\} <br /> |
-| `command` _string array_ | command is an array that contains the code generator command and any flags necessary. |  | Required: \{\} <br /> |
+| `command` _string array_ | command is an optional array that contains the code generator command and any flags necessary. |  | Optional: \{\} <br /> |
 | `git` _[Git](#git)_ | git is the configuration for the Git repository where generated code will be committed to a branch. |  | Required: \{\} <br /> |
 | `image` _string_ | image is the image containing the generator implementation; cli or scripts. |  | Required: \{\} <br /> |
 
