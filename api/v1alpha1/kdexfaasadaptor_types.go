@@ -20,26 +20,11 @@ import (
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
 
-// FaaSBuildConfig defines build settings for the adaptor.
-type FaaSBuildConfig struct {
-	// BaseImages maps programming languages to their base images for this adaptor.
-	// +kubebuilder:validation:Optional
-	BaseImages map[string]string `json:"baseImages,omitempty" protobuf:"bytes,1,rep,name=baseImages"`
-
-	// BuilderImage is the image used to build the function artifacts.
-	// +kubebuilder:validation:Optional
-	BuilderImage string `json:"builderImage,omitempty" protobuf:"bytes,2,opt,name=builderImage"`
-}
-
 // KDexFaaSAdaptorSpec defines the desired state of KDexFaaSAdaptor
 type KDexFaaSAdaptorSpec struct {
-	// Build defines the build configuration for this adaptor.
-	// +kubebuilder:validation:Optional
-	Build *FaaSBuildConfig `json:"build,omitempty" protobuf:"bytes,3,opt,name=build"`
-
-	// Config is a map of provider-specific configuration key-values.
-	// +kubebuilder:validation:Optional
-	Config map[string]string `json:"config,omitempty" protobuf:"bytes,2,rep,name=config"`
+	// Generators is a map of provider-specific generator configurations.
+	// +kubebuilder:validation:MinProperties=1
+	Generators map[string]GeneratorConfig `json:"generators" protobuf:"bytes,2,rep,name=generators"`
 
 	// Provider is the type of FaaS provider (e.g., "knative", "openfaas", "lambda").
 	// +kubebuilder:validation:Required

@@ -272,23 +272,6 @@ _Appears in:_
 | `description` _string_ | description of the custom element. |  | Optional: \{\} <br /> |
 
 
-#### FaaSBuildConfig
-
-
-
-FaaSBuildConfig defines build settings for the adaptor.
-
-
-
-_Appears in:_
-- [KDexFaaSAdaptorSpec](#kdexfaasadaptorspec)
-
-| Field | Description | Default | Validation |
-| --- | --- | --- | --- |
-| `baseImages` _object (keys:string, values:string)_ | BaseImages maps programming languages to their base images for this adaptor. |  | Optional: \{\} <br /> |
-| `builderImage` _string_ | BuilderImage is the image used to build the function artifacts. |  | Optional: \{\} <br /> |
-
-
 #### GeneratorConfig
 
 
@@ -298,6 +281,7 @@ _Appears in:_
 
 
 _Appears in:_
+- [KDexFaaSAdaptorSpec](#kdexfaasadaptorspec)
 - [KDexFunctionExec](#kdexfunctionexec)
 - [KDexFunctionStatus](#kdexfunctionstatus)
 
@@ -808,8 +792,7 @@ _Appears in:_
 
 | Field | Description | Default | Validation |
 | --- | --- | --- | --- |
-| `build` _[FaaSBuildConfig](#faasbuildconfig)_ | Build defines the build configuration for this adaptor. |  | Optional: \{\} <br /> |
-| `config` _object (keys:string, values:string)_ | Config is a map of provider-specific configuration key-values. |  | Optional: \{\} <br /> |
+| `generators` _object (keys:string, values:[GeneratorConfig](#generatorconfig))_ | Generators is a map of provider-specific generator configurations. |  | MinProperties: 1 <br /> |
 | `provider` _string_ | Provider is the type of FaaS provider (e.g., "knative", "openfaas", "lambda"). |  | Enum: [knative openfaas lambda azure-functions google-cloud-functions] <br />Required: \{\} <br /> |
 
 

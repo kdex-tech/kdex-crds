@@ -43,24 +43,82 @@ spec:
           spec:
             description: spec defines the desired state of KDexFaaSAdaptor
             properties:
-              build:
-                description: Build defines the build configuration for this adaptor.
-                properties:
-                  baseImages:
-                    additionalProperties:
-                      type: string
-                    description: BaseImages maps programming languages to their base
-                      images for this adaptor.
-                    type: object
-                  builderImage:
-                    description: BuilderImage is the image used to build the function
-                      artifacts.
-                    type: string
-                type: object
-              config:
+              generators:
                 additionalProperties:
-                  type: string
-                description: Config is a map of provider-specific configuration key-values.
+                  properties:
+                    args:
+                      description: args is an optional array of arguments that will
+                        be passed to the generator command.
+                      items:
+                        type: string
+                      type: array
+                    command:
+                      description: command is an optional array that contains the
+                        code generator command and any flags necessary.
+                      items:
+                        type: string
+                      type: array
+                    git:
+                      description: git is the configuration for the Git repository
+                        where generated code will be committed to a branch.
+                      properties:
+                        committerEmail:
+                          description: committerEmail is the email address that will
+                            be used for git commits.
+                          type: string
+                        committerName:
+                          description: committerName is the name that will be used
+                            for git commits.
+                          type: string
+                        functionSubDirectory:
+                          default: .
+                          description: functionSubDirectory is the optional path to
+                            a subdirectory in the repository in which generated code
+                            will be placed.
+                          type: string
+                        image:
+                          description: image is the name of the container image to
+                            run for git.
+                          type: string
+                        repoSecretRef:
+                          description: |-
+                            repoSecretRef is a reference to a secret that contains the details for a git repository.
+                            This secret should contain all of the following keys:
+
+                            token - the authentication token
+                            host - the git host address
+                            org - the git org
+                            repo - the git repo
+                            gpg.key.id - the git signing key id (optional)
+                            gpg.key - the git signing key (optional)
+                          properties:
+                            name:
+                              default: ""
+                              description: |-
+                                Name of the referent.
+                                This field is effectively required, but due to backwards compatibility is
+                                allowed to be empty. Instances of this type with an empty value here are
+                                almost certainly wrong.
+                                More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#names
+                              type: string
+                          type: object
+                          x-kubernetes-map-type: atomic
+                      required:
+                      - committerEmail
+                      - committerName
+                      - image
+                      - repoSecretRef
+                      type: object
+                    image:
+                      description: image is the image containing the generator implementation;
+                        cli or scripts.
+                      type: string
+                  required:
+                  - git
+                  - image
+                  type: object
+                description: Generators is a map of provider-specific generator configurations.
+                minProperties: 1
                 type: object
               provider:
                 description: Provider is the type of FaaS provider (e.g., "knative",
@@ -73,6 +131,7 @@ spec:
                 - google-cloud-functions
                 type: string
             required:
+            - generators
             - provider
             type: object
           status:
