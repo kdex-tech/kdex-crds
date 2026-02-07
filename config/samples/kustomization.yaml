@@ -29,4 +29,5 @@ resources:
 - v1alpha1_kdexrole.yaml
 
 - v1alpha1_kdexfaasadaptor.yaml
+- v1alpha1_kdexclusterfaasadaptor.yaml
 # +kubebuilder:scaffold:manifestskustomizesamples

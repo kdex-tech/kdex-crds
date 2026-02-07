@@ -4,24 +4,25 @@ kind: CustomResourceDefinition
 metadata:
   annotations:
     controller-gen.kubebuilder.io/version: v0.20.0
-  name: kdexfaasadaptors.kdex.dev
+  name: kdexclusterfaasadaptors.kdex.dev
 spec:
   group: kdex.dev
   names:
     categories:
-    - kdex
-    kind: KDexFaaSAdaptor
-    listKind: KDexFaaSAdaptorList
-    plural: kdexfaasadaptors
+    - kdex-c
+    kind: KDexClusterFaaSAdaptor
+    listKind: KDexClusterFaaSAdaptorList
+    plural: kdexclusterfaasadaptors
     shortNames:
-    - kdex-fa
-    singular: kdexfaasadaptor
-  scope: Namespaced
+    - kdex-c-fa
+    singular: kdexclusterfaasadaptor
+  scope: Cluster
   versions:
   - name: v1alpha1
     schema:
       openAPIV3Schema:
-        description: KDexFaaSAdaptor is the Schema for the kdexfaasadaptors API
+        description: KDexClusterFaaSAdaptor is the Schema for the kdexclusterfaasadaptors
+          API
         properties:
           apiVersion:
             description: |-
@@ -41,7 +42,7 @@ spec:
           metadata:
             type: object
           spec:
-            description: spec defines the desired state of KDexFaaSAdaptor
+            description: spec defines the desired state of KDexClusterFaaSAdaptor
             properties:
               generators:
                 additionalProperties:
@@ -137,7 +138,7 @@ spec:
             - provider
             type: object
           status:
-            description: status defines the observed state of KDexFaaSAdaptor
+            description: status defines the observed state of KDexClusterFaaSAdaptor
             properties:
               attributes:
                 additionalProperties:

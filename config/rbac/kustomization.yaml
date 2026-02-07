@@ -22,6 +22,9 @@ resources:
 # default, aiding admins in cluster management. Those roles are
 # not used by the kdex-crds itself. You can comment the following lines
 # if you do not want those helpers be installed with your Project.
+- kdexclusterfaasadaptor_admin_role.yaml
+- kdexclusterfaasadaptor_editor_role.yaml
+- kdexclusterfaasadaptor_viewer_role.yaml
 - kdexfaasadaptor_admin_role.yaml
 - kdexfaasadaptor_editor_role.yaml
 - kdexfaasadaptor_viewer_role.yaml

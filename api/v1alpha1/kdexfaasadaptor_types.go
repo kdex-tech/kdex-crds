@@ -23,6 +23,7 @@ import (
 // KDexFaaSAdaptorSpec defines the desired state of KDexFaaSAdaptor
 type KDexFaaSAdaptorSpec struct {
 	// Generators is a map of provider-specific generator configurations.
+	// The keys of the map must be formatted as <language>/<environment> (e.g., "python/3.9"). This should align with the language and environment of the function.
 	// +kubebuilder:validation:MinProperties=1
 	Generators map[string]GeneratorConfig `json:"generators" protobuf:"bytes,2,rep,name=generators"`
 
@@ -38,7 +39,7 @@ type KDexFaaSAdaptorStatus struct {
 }
 
 // +kubebuilder:object:root=true
-// +kubebuilder:resource:scope=Cluster,shortName=kdex-c-adaptor,categories=kdex-c
+// +kubebuilder:resource:scope=Namespaced,shortName=kdex-fa,categories=kdex
 // +kubebuilder:subresource:status
 
 // KDexFaaSAdaptor is the Schema for the kdexfaasadaptors API

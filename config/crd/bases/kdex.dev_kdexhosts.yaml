@@ -296,11 +296,32 @@ spec:
                   like the Request Sniffer.
                 type: boolean
               faasAdaptorRef:
-                default: kdex-faas-adaptor-knative
-                description: faasAdaptorRef is a reference to the FaaS Adaptor that
-                  will drive KDexFunction generation of code and deployment for this
-                  host.
-                type: string
+                description: faasAdaptorRef is an optional reference to the FaaS Adaptor
+                  that will drive KDexFunction generation of code and deployment for
+                  this host. If not specified the default will be used.
+                properties:
+                  kind:
+                    description: Kind is the type of resource being referenced
+                    type: string
+                  name:
+                    description: Name of the referent.
+                    type: string
+                  namespace:
+                    description: |-
+                      Namespace, if set, causes the lookup for the namespace scoped Kind of the referent to use the specified
+                      namespace. If not set, the namespace of the resource will be used to lookup the namespace scoped Kind of the
+                      referent.
+                      If the referring resource is cluster scoped, this field is ignored.
+                      Defaulted to nil.
+                    type: string
+                required:
+                - kind
+                - name
+                type: object
+                x-kubernetes-map-type: atomic
+                x-kubernetes-validations:
+                - message: '''kind'' must be either KDexFaaSAdaptor or KDexClusterFaaSAdaptor'
+                  rule: self.kind == "KDexScriptLibrary" || self.kind == "KDexClusterScriptLibrary"
               faviconSVGTemplate:
                 description: faviconSVGTemplate contains SVG code marked up with go
                   string template to which will be passed the render.TemplateData

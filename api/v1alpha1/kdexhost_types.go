@@ -87,10 +87,10 @@ type KDexHostSpec struct {
 	// +kubebuilder:validation:Optional
 	DevMode bool `json:"devMode,omitempty" protobuf:"varint,6,opt,name=devMode"`
 
-	// faasAdaptorRef is a reference to the FaaS Adaptor that will drive KDexFunction generation of code and deployment for this host.
+	// faasAdaptorRef is an optional reference to the FaaS Adaptor that will drive KDexFunction generation of code and deployment for this host. If not specified the default will be used.
 	// +kubebuilder:validation:Optional
-	// +kubebuilder:default:="kdex-faas-adaptor-knative"
-	FaaSAdaptorRef string `json:"faasAdaptorRef,omitempty" protobuf:"bytes,7,opt,name=faasAdaptorRef"`
+	// +kubebuilder:validation:XValidation:rule=`self.kind == "KDexScriptLibrary" || self.kind == "KDexClusterScriptLibrary"`,message="'kind' must be either KDexFaaSAdaptor or KDexClusterFaaSAdaptor"
+	FaaSAdaptorRef *KDexObjectReference `json:"faasAdaptorRef,omitempty" protobuf:"bytes,7,opt,name=faasAdaptorRef"`
 
 	// faviconSVGTemplate contains SVG code marked up with go string template to which will be passed the render.TemplateData holding other host details. The rendered output will be cached and served at "/favicon.ico" as "image/svg+xml".
 	// +kubebuilder:validation:Optional
