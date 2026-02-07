@@ -31,9 +31,9 @@ import (
 // Ideally these are utilized via a FaaS layer, but for simplicity, some scenarios are modeled by the
 // Backend type using containers (native Kubernetes workloads).
 //
-// +kubebuilder:printcolumn:name="Ready",type=string,JSONPath=`.status.conditions[?(@.type=="Ready")].status`,description="The state of the Ready condition"
+// +kubebuilder:printcolumn:name="State",type=string,JSONPath=`.status.state`,description="The state of the function"
 // +kubebuilder:printcolumn:name="Gen",type="string",JSONPath=".metadata.generation",priority=1
-// +kubebuilder:printcolumn:name="Status Attributes",type="string",JSONPath=".status.attributes",priority=1
+// +kubebuilder:printcolumn:name="Detail",type="string",JSONPath=".status.detail",priority=1
 type KDexFunction struct {
 	metav1.TypeMeta `json:",inline"`
 
@@ -171,6 +171,10 @@ const (
 type KDexFunctionStatus struct {
 	KDexObjectStatus `json:",inline" protobuf:"bytes,1,rep,name=kdexObjectStatus"`
 
+	// Detail is a human-readable description of the current state.
+	// +kubebuilder:validation:Optional
+	Detail string `json:"detail,omitempty" protobuf:"bytes,2,opt,name=detail"`
+
 	// executable is a reference to executable artifact. In most cases this will be a Docker image. In some other cases
 	// it may be an artifact native to FaaS Adaptor's target runtime.
 	// STATUS=ExecutableAvailable
@@ -194,21 +198,21 @@ type KDexFunctionStatus struct {
 	// OpenAPISchemaURL is the URL to the aggregated, full OpenAPI document.
 	// STATUS=OpenAPIValid
 	// +kubebuilder:validation:Optional
-	OpenAPISchemaURL string `json:"openAPISchemaURL,omitempty" protobuf:"bytes,3,opt,name=openAPISchemaURL"`
+	OpenAPISchemaURL string `json:"openAPISchemaURL,omitempty" protobuf:"bytes,6,opt,name=openAPISchemaURL"`
 
 	// State reflects the current state (e.g., Building, Pending, Ready, StubGenerated).
 	// +kubebuilder:validation:Optional
 	// +kubebuilder:validation:Enum=Pending;OpenAPIValid;BuildValid;StubGenerated;ExecutableAvailable;FunctionDeployed;Ready
-	State KDexFunctionState `json:"state,omitempty" protobuf:"bytes,4,opt,name=state"`
+	State KDexFunctionState `json:"state,omitempty" protobuf:"bytes,7,opt,name=state"`
 
 	// StubDetails contains information about the generated stub.
 	// STATUS=StubGenerated
 	// +kubebuilder:validation:Optional
-	StubDetails *StubDetails `json:"stubDetails,omitempty" protobuf:"bytes,5,opt,name=stubDetails"`
+	StubDetails *StubDetails `json:"stubDetails,omitempty" protobuf:"bytes,8,opt,name=stubDetails"`
 
 	// URL is the full, routable URL for the function. This URL may only be routable from within the network.
 	// +kubebuilder:validation:Optional
-	URL string `json:"url,omitempty" protobuf:"bytes,6,opt,name=url"`
+	URL string `json:"url,omitempty" protobuf:"bytes,9,opt,name=url"`
 }
 
 func init() {

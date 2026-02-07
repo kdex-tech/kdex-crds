@@ -20,16 +20,16 @@ spec:
   scope: Namespaced
   versions:
   - additionalPrinterColumns:
-    - description: The state of the Ready condition
-      jsonPath: .status.conditions[?(@.type=="Ready")].status
-      name: Ready
+    - description: The state of the function
+      jsonPath: .status.state
+      name: State
       type: string
     - jsonPath: .metadata.generation
       name: Gen
       priority: 1
       type: string
-    - jsonPath: .status.attributes
-      name: Status Attributes
+    - jsonPath: .status.detail
+      name: Detail
       priority: 1
       type: string
     name: v1alpha1
@@ -459,6 +459,10 @@ spec:
                 x-kubernetes-list-map-keys:
                 - type
                 x-kubernetes-list-type: map
+              detail:
+                description: Detail is a human-readable description of the current
+                  state.
+                type: string
               executable:
                 description: |-
                   executable is a reference to executable artifact. In most cases this will be a Docker image. In some other cases
