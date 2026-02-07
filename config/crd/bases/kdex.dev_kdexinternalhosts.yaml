@@ -325,6 +325,12 @@ spec:
                     type: string
                 type: object
                 x-kubernetes-map-type: atomic
+              faasAdaptorRef:
+                default: kdex-faas-adaptor-knative
+                description: faasAdaptorRef is a reference to the FaaS Adaptor that
+                  will drive KDexFunction generation of code and deployment for this
+                  host.
+                type: string
               faviconSVGTemplate:
                 description: faviconSVGTemplate contains SVG code marked up with go
                   string template to which will be passed the render.TemplateData
