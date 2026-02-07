@@ -157,11 +157,11 @@ func (a *Assets) String() string {
 }
 
 type Auth struct {
-	// anonymousGrants is an array of scopes granted in anonymous (not logged in) access scenarios.
-	// In the spirit of least privilege security no scopes are granted by default. However, in order to make
+	// anonymousEntitlements is an array of entitlements granted in anonymous (not logged in) access scenarios.
+	// In the spirit of least privilege security no entitlements are granted by default. However, in order to make
 	// a host's pages generally accessible the scope `page:read` should be granted.
 	// +kubebuilder:validation:Optional
-	AnonymousGrants []string `json:"anonymousGrants,omitempty" protobuf:"bytes,1,rep,name=anonymousGrants"`
+	AnonymousEntitlements []string `json:"anonymousEntitlements,omitempty" protobuf:"bytes,1,rep,name=anonymousEntitlements"`
 
 	// jwt is the configuation for JWT token support.
 	// +kubebuilder:validation:Optional
