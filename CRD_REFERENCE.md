@@ -13,6 +13,8 @@ Package v1alpha1 contains API Schema definitions for the  v1alpha1 API group.
 - [KDexAppList](#kdexapplist)
 - [KDexClusterApp](#kdexclusterapp)
 - [KDexClusterAppList](#kdexclusterapplist)
+- [KDexClusterFaaSAdaptor](#kdexclusterfaasadaptor)
+- [KDexClusterFaaSAdaptorList](#kdexclusterfaasadaptorlist)
 - [KDexClusterPageArchetype](#kdexclusterpagearchetype)
 - [KDexClusterPageArchetypeList](#kdexclusterpagearchetypelist)
 - [KDexClusterPageFooter](#kdexclusterpagefooter)
@@ -440,6 +442,43 @@ KDexClusterAppList contains a list of KDexClusterApp
 | `items` _[KDexClusterApp](#kdexclusterapp) array_ |  |  |  |
 
 
+#### KDexClusterFaaSAdaptor
+
+
+
+KDexClusterFaaSAdaptor is the Schema for the kdexclusterfaasadaptors API
+
+
+
+_Appears in:_
+- [KDexClusterFaaSAdaptorList](#kdexclusterfaasadaptorlist)
+
+| Field | Description | Default | Validation |
+| --- | --- | --- | --- |
+| `apiVersion` _string_ | `kdex.dev/v1alpha1` | | |
+| `kind` _string_ | `KDexClusterFaaSAdaptor` | | |
+| `metadata` _[ObjectMeta](https://kubernetes.io/docs/reference/generated/kubernetes-api/v/#objectmeta-v1-meta)_ | Refer to Kubernetes API documentation for fields of `metadata`. |  |  |
+| `spec` _[KDexFaaSAdaptorSpec](#kdexfaasadaptorspec)_ | spec defines the desired state of KDexClusterFaaSAdaptor |  |  |
+
+
+#### KDexClusterFaaSAdaptorList
+
+
+
+KDexClusterFaaSAdaptorList contains a list of KDexClusterFaaSAdaptor
+
+
+
+
+
+| Field | Description | Default | Validation |
+| --- | --- | --- | --- |
+| `apiVersion` _string_ | `kdex.dev/v1alpha1` | | |
+| `kind` _string_ | `KDexClusterFaaSAdaptorList` | | |
+| `metadata` _[ListMeta](https://kubernetes.io/docs/reference/generated/kubernetes-api/v/#listmeta-v1-meta)_ | Refer to Kubernetes API documentation for fields of `metadata`. |  |  |
+| `items` _[KDexClusterFaaSAdaptor](#kdexclusterfaasadaptor) array_ |  |  |  |
+
+
 #### KDexClusterPageArchetype
 
 
@@ -788,11 +827,12 @@ KDexFaaSAdaptorSpec defines the desired state of KDexFaaSAdaptor
 
 
 _Appears in:_
+- [KDexClusterFaaSAdaptor](#kdexclusterfaasadaptor)
 - [KDexFaaSAdaptor](#kdexfaasadaptor)
 
 | Field | Description | Default | Validation |
 | --- | --- | --- | --- |
-| `generators` _object (keys:string, values:[GeneratorConfig](#generatorconfig))_ | Generators is a map of provider-specific generator configurations. |  | MinProperties: 1 <br /> |
+| `generators` _object (keys:string, values:[GeneratorConfig](#generatorconfig))_ | Generators is a map of provider-specific generator configurations.<br />The keys of the map must be formatted as <language>/<environment> (e.g., "python/3.9"). This should align with the language and environment of the function. |  | MinProperties: 1 <br /> |
 | `provider` _string_ | Provider is the type of FaaS provider (e.g., "knative", "openfaas", "lambda"). |  | Enum: [knative openfaas lambda azure-functions google-cloud-functions] <br />Required: \{\} <br /> |
 
 
@@ -994,7 +1034,7 @@ _Appears in:_
 | `brandName` _string_ | brandName is the name used when rendering pages belonging to the host. For example, it may be used as alt text for the logo displayed in the page header. |  | Required: \{\} <br /> |
 | `defaultLang` _string_ | defaultLang is a string containing a BCP 47 language tag.<br />See https://developer.mozilla.org/en-US/docs/Glossary/BCP_47_language_tag.<br />When render page paths do not specify a 'lang' path parameter this will be the value used. When not set the default will be 'en'. |  | Optional: \{\} <br /> |
 | `devMode` _boolean_ | devMode is a boolean that enables development features like the Request Sniffer. |  | Optional: \{\} <br /> |
-| `faasAdaptorRef` _string_ | faasAdaptorRef is a reference to the FaaS Adaptor that will drive KDexFunction generation of code and deployment for this host. | kdex-faas-adaptor-knative | Optional: \{\} <br /> |
+| `faasAdaptorRef` _[KDexObjectReference](#kdexobjectreference)_ | faasAdaptorRef is an optional reference to the FaaS Adaptor that will drive KDexFunction generation of code and deployment for this host. If not specified the default will be used. |  | Optional: \{\} <br /> |
 | `faviconSVGTemplate` _string_ | faviconSVGTemplate contains SVG code marked up with go string template to which will be passed the render.TemplateData holding other host details. The rendered output will be cached and served at "/favicon.ico" as "image/svg+xml". |  | Optional: \{\} <br /> |
 | `modulePolicy` _[ModulePolicy](#modulepolicy)_ | modulePolicy defines the policy for JavaScript references in KDexApp, KDexTheme and KDexScriptLibrary resources. When not specified the policy is Strict<br />A Host must not accept JavaScript references which do not comply with the specified policy. | Strict | Enum: [ExternalDependencies Loose ModulesRequired Strict] <br />Optional: \{\} <br /> |
 | `openapi` _[OpenAPI](#openapi)_ | openapi holds the configuration for the host's OpenAPI support. |  | Optional: \{\} <br /> |
@@ -1076,7 +1116,7 @@ _Appears in:_
 | `brandName` _string_ | brandName is the name used when rendering pages belonging to the host. For example, it may be used as alt text for the logo displayed in the page header. |  | Required: \{\} <br /> |
 | `defaultLang` _string_ | defaultLang is a string containing a BCP 47 language tag.<br />See https://developer.mozilla.org/en-US/docs/Glossary/BCP_47_language_tag.<br />When render page paths do not specify a 'lang' path parameter this will be the value used. When not set the default will be 'en'. |  | Optional: \{\} <br /> |
 | `devMode` _boolean_ | devMode is a boolean that enables development features like the Request Sniffer. |  | Optional: \{\} <br /> |
-| `faasAdaptorRef` _string_ | faasAdaptorRef is a reference to the FaaS Adaptor that will drive KDexFunction generation of code and deployment for this host. | kdex-faas-adaptor-knative | Optional: \{\} <br /> |
+| `faasAdaptorRef` _[KDexObjectReference](#kdexobjectreference)_ | faasAdaptorRef is an optional reference to the FaaS Adaptor that will drive KDexFunction generation of code and deployment for this host. If not specified the default will be used. |  | Optional: \{\} <br /> |
 | `faviconSVGTemplate` _string_ | faviconSVGTemplate contains SVG code marked up with go string template to which will be passed the render.TemplateData holding other host details. The rendered output will be cached and served at "/favicon.ico" as "image/svg+xml". |  | Optional: \{\} <br /> |
 | `modulePolicy` _[ModulePolicy](#modulepolicy)_ | modulePolicy defines the policy for JavaScript references in KDexApp, KDexTheme and KDexScriptLibrary resources. When not specified the policy is Strict<br />A Host must not accept JavaScript references which do not comply with the specified policy. | Strict | Enum: [ExternalDependencies Loose ModulesRequired Strict] <br />Optional: \{\} <br /> |
 | `openapi` _[OpenAPI](#openapi)_ | openapi holds the configuration for the host's OpenAPI support. |  | Optional: \{\} <br /> |
