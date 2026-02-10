@@ -366,6 +366,8 @@ type JWT struct {
 	JWTKeysSecrets []LocalSecretWithKeyReference `json:"jwtKeysSecrets,omitempty" protobuf:"bytes,3,rep,name=jwtKeysSecrets"`
 
 	// TODO: add "sliding window" token re-issue (as alternative to refresh tokens so that KDex remains stateless)
+	// OR add a caching layer for the tokens. This would allow us to store the tokens in the cache and only store the
+	// session id in the cookie. This would also allow us to revoke tokens on demand.
 
 	// tokenTTL is the length of time for which the token is valid
 	// +kubebuilder:validation:Optional
@@ -1008,16 +1010,19 @@ func (s *ScriptDef) ToTag() string {
 
 type SecurityRequirement map[string][]string
 
-// StubDetails contains stub information.
-// +kubebuilder:validation:ExactlyOneOf:=sourcePath;sourceImage
-type StubDetails struct {
-	// sourcePath is the path to the function source code.
-	// +kubebuilder:validation:Optional
-	SourcePath string `json:"sourcePath,omitempty" protobuf:"bytes,1,opt,name=sourcePath"`
+// Source contains source information.
+type Source struct {
+	// repository is the git repository address to the function source code.
+	// +kubebuilder:validation:Required
+	Repository string `json:"repository" protobuf:"bytes,1,req,name=repository"`
 
-	// SourceImage is the OCI artifact reference where the stub code was pushed.
+	// revision is the git revision (tag, branch or commit hash) to the function source code.
+	// +kubebuilder:validation:Required
+	Revision string `json:"revision" protobuf:"bytes,2,req,name=revision"`
+
+	// path is the path to the function source code in the repository.
 	// +kubebuilder:validation:Optional
-	SourceImage string `json:"sourceImage,omitempty" protobuf:"bytes,3,opt,name=sourceImage"`
+	Path string `json:"path,omitempty" protobuf:"bytes,3,opt,name=path"`
 
 	// sourceSecrets is an optional list of references to secrets in the same namespace to use for pulling the referenced sources.
 	// More info: https://kubernetes.io/docs/concepts/containers/images#specifying-imagepullsecrets-on-a-pod

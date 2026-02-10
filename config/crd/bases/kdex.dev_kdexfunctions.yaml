@@ -270,17 +270,20 @@ spec:
                         minimum: 0
                         type: integer
                     type: object
-                  stubDetails:
-                    description: StubDetails contains information about the generated
-                      stub.
+                  source:
+                    description: Source contains source information.
                     properties:
-                      sourceImage:
-                        description: SourceImage is the OCI artifact reference where
-                          the stub code was pushed.
+                      path:
+                        description: path is the path to the function source code
+                          in the repository.
                         type: string
-                      sourcePath:
-                        description: sourcePath is the path to the function source
-                          code.
+                      repository:
+                        description: repository is the git repository address to the
+                          function source code.
+                        type: string
+                      revision:
+                        description: revision is the git revision (tag, branch or
+                          commit hash) to the function source code.
                         type: string
                       sourceSecrets:
                         description: |-
@@ -307,12 +310,10 @@ spec:
                         x-kubernetes-list-map-keys:
                         - name
                         x-kubernetes-list-type: map
+                    required:
+                    - repository
+                    - revision
                     type: object
-                    x-kubernetes-validations:
-                    - message: exactly one of the fields in [sourcePath sourceImage]
-                        must be set
-                      rule: '[has(self.sourcePath),has(self.sourceImage)].filter(x,x==true).size()
-                        == 1'
                 required:
                 - environment
                 - language
@@ -354,10 +355,6 @@ spec:
                         description: Name of the contact.
                         type: string
                     type: object
-                  sourceImage:
-                    description: SourceImage is the OCI artifact reference where the
-                      stub code was pushed.
-                    type: string
                   tags:
                     description: Tags are used for grouping and searching functions.
                     items:
@@ -580,38 +577,22 @@ spec:
                   OpenAPISchemaURL is the URL to the aggregated, full OpenAPI document.
                   STATUS=OpenAPIValid
                 type: string
-              state:
-                allOf:
-                - enum:
-                  - Pending
-                  - OpenAPIValid
-                  - BuildValid
-                  - StubGenerated
-                  - ExecutableAvailable
-                  - FunctionDeployed
-                  - Ready
-                - enum:
-                  - Pending
-                  - OpenAPIValid
-                  - BuildValid
-                  - StubGenerated
-                  - ExecutableAvailable
-                  - FunctionDeployed
-                  - Ready
-                description: State reflects the current state (e.g., Building, Pending,
-                  Ready, StubGenerated).
-                type: string
-              stubDetails:
+              source:
                 description: |-
-                  StubDetails contains information about the generated stub.
-                  STATUS=StubGenerated
+                  Source contains source information.
+                  STATUS=SourceAvailable
                 properties:
-                  sourceImage:
-                    description: SourceImage is the OCI artifact reference where the
-                      stub code was pushed.
+                  path:
+                    description: path is the path to the function source code in the
+                      repository.
                     type: string
-                  sourcePath:
-                    description: sourcePath is the path to the function source code.
+                  repository:
+                    description: repository is the git repository address to the function
+                      source code.
+                    type: string
+                  revision:
+                    description: revision is the git revision (tag, branch or commit
+                      hash) to the function source code.
                     type: string
                   sourceSecrets:
                     description: |-
@@ -638,12 +619,31 @@ spec:
                     x-kubernetes-list-map-keys:
                     - name
                     x-kubernetes-list-type: map
+                required:
+                - repository
+                - revision
                 type: object
-                x-kubernetes-validations:
-                - message: exactly one of the fields in [sourcePath sourceImage] must
-                    be set
-                  rule: '[has(self.sourcePath),has(self.sourceImage)].filter(x,x==true).size()
-                    == 1'
+              state:
+                allOf:
+                - enum:
+                  - Pending
+                  - OpenAPIValid
+                  - BuildValid
+                  - StubGenerated
+                  - ExecutableAvailable
+                  - FunctionDeployed
+                  - Ready
+                - enum:
+                  - Pending
+                  - OpenAPIValid
+                  - BuildValid
+                  - StubGenerated
+                  - ExecutableAvailable
+                  - FunctionDeployed
+                  - Ready
+                description: State reflects the current state (e.g., Building, Pending,
+                  Ready, StubGenerated).
+                type: string
               url:
                 description: URL is the full, routable URL for the function. This
                   URL may only be routable from within the network.
