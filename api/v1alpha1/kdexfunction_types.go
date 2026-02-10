@@ -137,7 +137,7 @@ type KDexFunctionSpec struct {
 }
 
 // KDexFunctionState reflects the current state of a KDexFunction.
-// +kubebuilder:validation:Enum=Pending;OpenAPIValid;BuildValid;StubGenerated;ExecutableAvailable;FunctionDeployed;Ready
+// +kubebuilder:validation:Enum=Pending;OpenAPIValid;BuildValid;SourceAvailable;ExecutableAvailable;FunctionDeployed;Ready
 type KDexFunctionState string
 
 const (
@@ -196,9 +196,9 @@ type KDexFunctionStatus struct {
 	// +kubebuilder:validation:Optional
 	OpenAPISchemaURL string `json:"openAPISchemaURL,omitempty" protobuf:"bytes,6,opt,name=openAPISchemaURL"`
 
-	// State reflects the current state (e.g., Building, Pending, Ready, StubGenerated).
+	// State reflects the current state (e.g., Pending, OpenAPIValid, BuildValid, SourceAvailable, ExecutableAvailable, FunctionDeployed, Ready).
 	// +kubebuilder:validation:Optional
-	// +kubebuilder:validation:Enum=Pending;OpenAPIValid;BuildValid;StubGenerated;ExecutableAvailable;FunctionDeployed;Ready
+	// +kubebuilder:validation:Enum=Pending;OpenAPIValid;BuildValid;SourceAvailable;ExecutableAvailable;FunctionDeployed;Ready
 	State KDexFunctionState `json:"state,omitempty" protobuf:"bytes,7,opt,name=state"`
 
 	// Source contains source information.

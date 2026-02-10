@@ -629,7 +629,7 @@ spec:
                   - Pending
                   - OpenAPIValid
                   - BuildValid
-                  - StubGenerated
+                  - SourceAvailable
                   - ExecutableAvailable
                   - FunctionDeployed
                   - Ready
@@ -637,12 +637,13 @@ spec:
                   - Pending
                   - OpenAPIValid
                   - BuildValid
-                  - StubGenerated
+                  - SourceAvailable
                   - ExecutableAvailable
                   - FunctionDeployed
                   - Ready
-                description: State reflects the current state (e.g., Building, Pending,
-                  Ready, StubGenerated).
+                description: State reflects the current state (e.g., Pending, OpenAPIValid,
+                  BuildValid, SourceAvailable, ExecutableAvailable, FunctionDeployed,
+                  Ready).
                 type: string
               url:
                 description: URL is the full, routable URL for the function. This
