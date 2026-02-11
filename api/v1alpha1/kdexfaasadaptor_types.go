@@ -20,6 +20,9 @@ import (
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
 
+// TODO: implement a controller to validate and confirm readiness of the FaaS adaptor.
+// The controller should check if the FaaS adaptor is ready to use by checking its status.
+
 // KDexFaaSAdaptorSpec defines the desired state of KDexFaaSAdaptor
 type KDexFaaSAdaptorSpec struct {
 	// Generators is a map of provider-specific generator configurations.
