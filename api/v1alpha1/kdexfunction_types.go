@@ -199,6 +199,7 @@ type KDexFunctionStatus struct {
 	// State reflects the current state (e.g., Pending, OpenAPIValid, BuildValid, SourceAvailable, ExecutableAvailable, FunctionDeployed, Ready).
 	// +kubebuilder:validation:Optional
 	// +kubebuilder:validation:Enum=Pending;OpenAPIValid;BuildValid;SourceAvailable;ExecutableAvailable;FunctionDeployed;Ready
+	// +kubebuilder:default=Pending
 	State KDexFunctionState `json:"state,omitempty" protobuf:"bytes,7,opt,name=state"`
 
 	// Source contains source information.

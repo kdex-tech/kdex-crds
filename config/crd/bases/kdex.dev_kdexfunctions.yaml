@@ -641,6 +641,7 @@ spec:
                   - ExecutableAvailable
                   - FunctionDeployed
                   - Ready
+                default: Pending
                 description: State reflects the current state (e.g., Pending, OpenAPIValid,
                   BuildValid, SourceAvailable, ExecutableAvailable, FunctionDeployed,
                   Ready).
