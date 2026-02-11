@@ -268,10 +268,6 @@ type Builder struct {
 	// serviceAccountName is the name of the service account to use for building the image.
 	// +kubebuilder:validation:Optional
 	ServiceAccountName string `json:"serviceAccountName,omitempty" protobuf:"bytes,3,opt,name=serviceAccountName"`
-
-	// tag of the builder.
-	// +kubebuilder:validation:Required
-	Tag string `json:"tag" protobuf:"bytes,4,req,name=tag"`
 }
 
 type ContentEntryApp struct {

@@ -237,12 +237,8 @@ spec:
                       description: serviceAccountName is the name of the service account
                         to use for building the image.
                       type: string
-                    tag:
-                      description: tag of the builder.
-                      type: string
                   required:
                   - builderRef
-                  - tag
                   type: object
                 description: |-
                   Builders is a map of builder configurations.

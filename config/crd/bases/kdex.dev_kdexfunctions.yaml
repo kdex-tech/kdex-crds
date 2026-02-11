@@ -532,12 +532,8 @@ spec:
                             description: serviceAccountName is the name of the service
                               account to use for building the image.
                             type: string
-                          tag:
-                            description: tag of the builder.
-                            type: string
                         required:
                         - builderRef
-                        - tag
                         type: object
                       path:
                         description: path is the path to the source code in the repository.
@@ -1024,12 +1020,8 @@ spec:
                         description: serviceAccountName is the name of the service
                           account to use for building the image.
                         type: string
-                      tag:
-                        description: tag of the builder.
-                        type: string
                     required:
                     - builderRef
-                    - tag
                     type: object
                   path:
                     description: path is the path to the source code in the repository.
