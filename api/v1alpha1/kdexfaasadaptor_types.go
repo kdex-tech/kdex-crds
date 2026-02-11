@@ -42,12 +42,12 @@ type KDexFaaSAdaptorSpec struct {
 
 	// DeployerImage is the image to used for deploying executables into a FaaS runtime.
 	// +kubebuilder:validation:Required
-	DeployerImage string `json:"deployerImage" protobuf:"bytes,4,req,name=deployerImage"`
+	DeployerImage string `json:"deployerImage" protobuf:"bytes,3,req,name=deployerImage"`
 
 	// DeployerSecretRef is the secret reference to use for deploying executables into a FaaS runtime. It will be
 	// mounted as a volume in the deployer pod.
 	// +kubebuilder:validation:Optional
-	DeployerSecretRef *corev1.LocalObjectReference `json:"deployerSecretRef,omitempty" protobuf:"bytes,5,opt,name=deployerSecretRef"`
+	DeployerSecretRef *corev1.LocalObjectReference `json:"deployerSecretRef,omitempty" protobuf:"bytes,4,opt,name=deployerSecretRef"`
 
 	// Generators is a list of provider-specific generator configurations.
 	// +kubebuilder:validation:MinItems=1
@@ -55,12 +55,12 @@ type KDexFaaSAdaptorSpec struct {
 	// +patchStrategy=merge
 	// +listType=map
 	// +listMapKey=language
-	Generators []Generator `json:"generators" protobuf:"bytes,6,rep,name=generators"`
+	Generators []Generator `json:"generators" protobuf:"bytes,5,rep,name=generators"`
 
 	// Provider is the type of FaaS provider (e.g., "knative", "openfaas", "lambda").
 	// +kubebuilder:validation:Required
 	// +kubebuilder:validation:Enum=knative;openfaas;lambda;azure-functions;google-cloud-functions
-	Provider string `json:"provider" protobuf:"bytes,7,req,name=provider"`
+	Provider string `json:"provider" protobuf:"bytes,6,req,name=provider"`
 }
 
 // KDexFaaSAdaptorStatus defines the observed state of KDexFaaSAdaptor.
