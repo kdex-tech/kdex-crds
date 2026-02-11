@@ -898,8 +898,7 @@ _Appears in:_
 | Field | Description | Default | Validation |
 | --- | --- | --- | --- |
 | `builders` _[Builder](#builder) array_ | Builders is a list of builder configurations. |  | MinItems: 1 <br /> |
-| `defaultBuilder` _string_ | DefaultBuilder is the default builder to use for functions that do not specify a builder. |  | Required: \{\} <br /> |
-| `defaultGenerator` _string_ | DefaultGenerator is the default generator to use for functions that do not specify a generator. |  | Required: \{\} <br /> |
+| `defaultBuilderGenerator` _string_ | DefaultBuilderGenerator is the default builder/generator combination to use for functions that do not specify a builder or generator.<br />The format is "<builder>/<generator>" (e.g., "tiny/go"). |  | Pattern: `^\w+/\w+$` <br />Required: \{\} <br /> |
 | `deployerImage` _string_ | DeployerImage is the image to used for deploying executables into a FaaS runtime. |  | Required: \{\} <br /> |
 | `deployerSecretRef` _[LocalObjectReference](https://kubernetes.io/docs/reference/generated/kubernetes-api/v/#localobjectreference-v1-core)_ | DeployerSecretRef is the secret reference to use for deploying executables into a FaaS runtime. It will be<br />mounted as a volume in the deployer pod. |  | Optional: \{\} <br /> |
 | `generators` _[Generator](#generator) array_ | Generators is a list of provider-specific generator configurations. |  | MinItems: 1 <br /> |

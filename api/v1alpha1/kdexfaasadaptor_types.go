@@ -34,13 +34,11 @@ type KDexFaaSAdaptorSpec struct {
 	// +listMapKey=name
 	Builders []Builder `json:"builders" protobuf:"bytes,1,rep,name=builders"`
 
-	// DefaultBuilder is the default builder to use for functions that do not specify a builder.
+	// DefaultBuilderGenerator is the default builder/generator combination to use for functions that do not specify a builder or generator.
+	// The format is "<builder>/<generator>" (e.g., "tiny/go").
 	// +kubebuilder:validation:Required
-	DefaultBuilder string `json:"defaultBuilder" protobuf:"bytes,2,req,name=defaultBuilder"`
-
-	// DefaultGenerator is the default generator to use for functions that do not specify a generator.
-	// +kubebuilder:validation:Required
-	DefaultGenerator string `json:"defaultGenerator" protobuf:"bytes,3,req,name=defaultGenerator"`
+	// +kubebuilder:validation:Pattern=`^\w+/\w+$`
+	DefaultBuilderGenerator string `json:"defaultBuilderGenerator" protobuf:"bytes,2,req,name=defaultBuilderGenerator"`
 
 	// DeployerImage is the image to used for deploying executables into a FaaS runtime.
 	// +kubebuilder:validation:Required

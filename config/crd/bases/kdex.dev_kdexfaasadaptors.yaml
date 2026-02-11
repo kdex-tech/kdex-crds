@@ -258,13 +258,11 @@ spec:
                 x-kubernetes-list-map-keys:
                 - name
                 x-kubernetes-list-type: map
-              defaultBuilder:
-                description: DefaultBuilder is the default builder to use for functions
-                  that do not specify a builder.
-                type: string
-              defaultGenerator:
-                description: DefaultGenerator is the default generator to use for
-                  functions that do not specify a generator.
+              defaultBuilderGenerator:
+                description: |-
+                  DefaultBuilderGenerator is the default builder/generator combination to use for functions that do not specify a builder or generator.
+                  The format is "<builder>/<generator>" (e.g., "tiny/go").
+                pattern: ^\w+/\w+$
                 type: string
               deployerImage:
                 description: DeployerImage is the image to used for deploying executables
@@ -387,8 +385,7 @@ spec:
                 type: string
             required:
             - builders
-            - defaultBuilder
-            - defaultGenerator
+            - defaultBuilderGenerator
             - deployerImage
             - generators
             - provider
