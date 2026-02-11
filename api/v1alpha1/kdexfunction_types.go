@@ -50,47 +50,6 @@ type KDexFunction struct {
 	Status KDexFunctionStatus `json:"status,omitempty,omitzero"`
 }
 
-// KDexFunctionExec defines the FaaS execution environment.
-type KDexFunctionExec struct {
-	// Entrypoint is the specific function handler/method to execute.
-	// +kubebuilder:validation:Optional
-	Entrypoint string `json:"entrypoint,omitempty" protobuf:"bytes,1,opt,name=entrypoint"`
-
-	// Environment is the FaaS environment name (e.g., go-env, python-env).
-	// +kubebuilder:validation:Required
-	Environment string `json:"environment,omitempty" protobuf:"bytes,2,opt,name=environment"`
-
-	// executable is a reference to executable artifact. In most cases this will be a Docker image. In some other cases
-	// it may be an artifact native to FaaS Adaptor's target runtime.
-	// +kubebuilder:validation:Optional
-	Executable string `json:"executable,omitempty" protobuf:"bytes,3,opt,name=executable"`
-
-	// executablePullSecrets is an optional list of references to secrets in the same namespace to use for pulling the referenced images.
-	// More info: https://kubernetes.io/docs/concepts/containers/images#specifying-imagepullsecrets-on-a-pod
-	// +kubebuilder:validation:Optional
-	// +patchMergeKey=name
-	// +patchStrategy=merge
-	// +listType=map
-	// +listMapKey=name
-	ExecutablePullSecrets []corev1.LocalObjectReference `json:"executablePullSecrets,omitempty" patchStrategy:"merge" patchMergeKey:"name" protobuf:"bytes,4,rep,name=executablePullSecrets"`
-
-	// generatorConfig holds the values to configure and execute the code generator.
-	// +kubebuilder:validation:Optional
-	GeneratorConfig *GeneratorConfig `json:"generatorConfig,omitempty" protobuf:"bytes,5,opt,name=generatorConfig"`
-
-	// Language is the programming language of the function (e.g., go, python, nodejs).
-	// +kubebuilder:validation:Required
-	Language string `json:"language,omitempty" protobuf:"bytes,6,opt,name=language"`
-
-	// Scaling allows configuration for min/max replicas and autoscaler type.
-	// +kubebuilder:validation:Optional
-	Scaling *ScalingConfig `json:"scaling,omitempty" protobuf:"bytes,7,opt,name=scaling"`
-
-	// Source contains source information.
-	// +kubebuilder:validation:Optional
-	Source *Source `json:"source,omitempty" protobuf:"bytes,8,opt,name=source"`
-}
-
 // +kubebuilder:object:root=true
 
 // KDexFunctionList contains a list of KDexFunction
@@ -122,9 +81,9 @@ type KDexFunctionSpec struct {
 	// +kubebuilder:pruning:PreserveUnknownFields
 	API API `json:"api" protobuf:"bytes,2,req,name=api"`
 
-	// Function defines the FaaS execution details.
+	// Origin defines the origin of the function implementation.
 	// +kubebuilder:validation:Optional
-	Function KDexFunctionExec `json:"function,omitempty" protobuf:"bytes,3,opt,name=function"`
+	Origin FunctionOrigin `json:"origin,omitempty" protobuf:"bytes,3,opt,name=origin"`
 
 	// hostRef is a reference to the KDexHost that this translation belongs to.
 	// +kubebuilder:validation:Required
@@ -175,26 +134,17 @@ type KDexFunctionStatus struct {
 	// it may be an artifact native to FaaS Adaptor's target runtime.
 	// STATUS=ExecutableAvailable
 	// +kubebuilder:validation:Optional
-	Executable string `json:"executable,omitempty" protobuf:"bytes,3,opt,name=executable"`
+	Executable *Executable `json:"executable,omitempty" protobuf:"bytes,3,opt,name=executable"`
 
-	// executablePullSecrets is an optional list of references to secrets in the same namespace to use for pulling the referenced images.
-	// More info: https://kubernetes.io/docs/concepts/containers/images#specifying-imagepullsecrets-on-a-pod
-	// STATUS=ExecutableAvailable
+	// generator holds the values to configure and execute the code generator.
+	// STATUS=BuildValid
 	// +kubebuilder:validation:Optional
-	// +patchMergeKey=name
-	// +patchStrategy=merge
-	// +listType=map
-	// +listMapKey=name
-	ExecutablePullSecrets []corev1.LocalObjectReference `json:"executablePullSecrets,omitempty" patchStrategy:"merge" patchMergeKey:"name" protobuf:"bytes,4,rep,name=executablePullSecrets"`
-
-	// generatorConfig holds the values to configure and execute the code generator.
-	// +kubebuilder:validation:Optional
-	GeneratorConfig *GeneratorConfig `json:"generatorConfig,omitempty" protobuf:"bytes,5,opt,name=generatorConfig"`
+	Generator *Generator `json:"generator,omitempty" protobuf:"bytes,4,opt,name=generator"`
 
 	// OpenAPISchemaURL is the URL to the aggregated, full OpenAPI document.
 	// STATUS=OpenAPIValid
 	// +kubebuilder:validation:Optional
-	OpenAPISchemaURL string `json:"openAPISchemaURL,omitempty" protobuf:"bytes,6,opt,name=openAPISchemaURL"`
+	OpenAPISchemaURL string `json:"openAPISchemaURL,omitempty" protobuf:"bytes,5,opt,name=openAPISchemaURL"`
 
 	// State reflects the current state (e.g., Pending, OpenAPIValid, BuildValid, SourceAvailable, ExecutableAvailable, FunctionDeployed, Ready).
 	// +kubebuilder:validation:Optional
@@ -208,6 +158,7 @@ type KDexFunctionStatus struct {
 	Source *Source `json:"source,omitempty" protobuf:"bytes,8,opt,name=source"`
 
 	// URL is the full, routable URL for the function. This URL may only be routable from within the network.
+	// STATUS=FunctionDeployed
 	// +kubebuilder:validation:Optional
 	URL string `json:"url,omitempty" protobuf:"bytes,9,opt,name=url"`
 }

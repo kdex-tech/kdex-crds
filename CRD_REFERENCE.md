@@ -176,6 +176,26 @@ _Appears in:_
 | `staticImagePullPolicy` _[PullPolicy](https://kubernetes.io/docs/reference/generated/kubernetes-api/v/#pullpolicy-v1-core)_ | Policy for pulling the OCI theme image. Possible values are:<br />Always: the kubelet always attempts to pull the reference. Container creation will fail If the pull fails.<br />Never: the kubelet never pulls the reference and only uses a local image or artifact. Container creation will fail if the reference isn't present.<br />IfNotPresent: the kubelet pulls if the reference isn't already present on disk. Container creation will fail if the reference isn't present and the pull fails.<br />Defaults to Always if :latest tag is specified, or IfNotPresent otherwise. |  | Optional: \{\} <br /> |
 
 
+#### Builder
+
+
+
+
+
+
+
+_Appears in:_
+- [KDexFaaSAdaptorSpec](#kdexfaasadaptorspec)
+- [Source](#source)
+
+| Field | Description | Default | Validation |
+| --- | --- | --- | --- |
+| `env` _[EnvVar](https://kubernetes.io/docs/reference/generated/kubernetes-api/v/#envvar-v1-core) array_ | env is the environment variables to set in the builder. |  | Optional: \{\} <br /> |
+| `builderRef` _[KDexObjectReference](#kdexobjectreference)_ | builderRef is a reference to the kpack.io/v1alpha2/Builder or kpack.io/v1alpha2/ClusterBuilder to use for building the image. |  | Required: \{\} <br /> |
+| `serviceAccountName` _string_ | serviceAccountName is the name of the service account to use for building the image. |  | Optional: \{\} <br /> |
+| `tag` _string_ | tag of the builder. |  | Required: \{\} <br /> |
+
+
 
 
 
@@ -274,7 +294,7 @@ _Appears in:_
 | `description` _string_ | description of the custom element. |  | Optional: \{\} <br /> |
 
 
-#### GeneratorConfig
+#### Executable
 
 
 
@@ -283,16 +303,61 @@ _Appears in:_
 
 
 _Appears in:_
+- [FunctionOrigin](#functionorigin)
+- [KDexFunctionStatus](#kdexfunctionstatus)
+
+| Field | Description | Default | Validation |
+| --- | --- | --- | --- |
+| `image` _string_ | image is a reference to executable artifact. In most cases this will be a Docker image. In some other cases<br />it may be an artifact native to FaaS Adaptor's target runtime. |  | Optional: \{\} <br /> |
+| `imagePullSecrets` _[LocalObjectReference](https://kubernetes.io/docs/reference/generated/kubernetes-api/v/#localobjectreference-v1-core) array_ | executablePullSecrets is an optional list of references to secrets in the same namespace to use for pulling the referenced images.<br />More info: https://kubernetes.io/docs/concepts/containers/images#specifying-imagepullsecrets-on-a-pod |  | Optional: \{\} <br /> |
+| `scaling` _[ScalingConfig](#scalingconfig)_ | Scaling allows configuration for min/max replicas and autoscaler type. |  | Optional: \{\} <br /> |
+
+
+#### FunctionOrigin
+
+
+
+FunctionOrigin defines the origin of the function implementation.
+There are four possible ways to obtain a deployable function:
+1. Executable: A pre-built container image or VM image.
+2. Source: A reference to source code that will be compiled and built into a container image or VM image.
+3. Generator: A configuration for a code generator that will produce source code stubs for the selected language.
+4. Nothing: A code generator config will be derived from the defaults provided by the FaaS Adaptor.
+
+
+
+_Appears in:_
+- [KDexFunctionSpec](#kdexfunctionspec)
+
+| Field | Description | Default | Validation |
+| --- | --- | --- | --- |
+| `executable` _[Executable](#executable)_ | executable is a reference to a pre-built container image or VM image. |  | Optional: \{\} <br /> |
+| `generator` _[Generator](#generator)_ | generator holds the values to configure and execute the code generator. |  | Optional: \{\} <br /> |
+| `source` _[Source](#source)_ | source contains source code location information. |  | Optional: \{\} <br /> |
+
+
+#### Generator
+
+
+
+
+
+
+
+_Appears in:_
+- [FunctionOrigin](#functionorigin)
 - [KDexFaaSAdaptorSpec](#kdexfaasadaptorspec)
-- [KDexFunctionExec](#kdexfunctionexec)
 - [KDexFunctionStatus](#kdexfunctionstatus)
 
 | Field | Description | Default | Validation |
 | --- | --- | --- | --- |
 | `args` _string array_ | args is an optional array of arguments that will be passed to the generator command. |  | Optional: \{\} <br /> |
 | `command` _string array_ | command is an optional array that contains the code generator command and any flags necessary. |  | Optional: \{\} <br /> |
+| `entrypoint` _string_ | Entrypoint is the specific function handler/method to execute. |  | Optional: \{\} <br /> |
+| `environment` _string_ | Environment is the FaaS environment name (e.g., go-env, python-env). |  | Required: \{\} <br /> |
 | `git` _[Git](#git)_ | git is the configuration for the Git repository where generated code will be committed to a branch. |  | Required: \{\} <br /> |
 | `image` _string_ | image is the image containing the generator implementation; cli or scripts. |  | Required: \{\} <br /> |
+| `language` _string_ | Language is the programming language of the function (e.g., go, python, nodejs). |  | Required: \{\} <br /> |
 
 
 #### Git
@@ -304,7 +369,7 @@ _Appears in:_
 
 
 _Appears in:_
-- [GeneratorConfig](#generatorconfig)
+- [Generator](#generator)
 
 | Field | Description | Default | Validation |
 | --- | --- | --- | --- |
@@ -832,7 +897,12 @@ _Appears in:_
 
 | Field | Description | Default | Validation |
 | --- | --- | --- | --- |
-| `generators` _object (keys:string, values:[GeneratorConfig](#generatorconfig))_ | Generators is a map of provider-specific generator configurations.<br />The keys of the map must be formatted as <language>/<environment> (e.g., "python/3.9"). This should align with the language and environment of the function. |  | MinProperties: 1 <br /> |
+| `builders` _object (keys:string, values:[Builder](#builder))_ | Builders is a map of builder configurations.<br />The keys of the map must be formatted as <language>/<environment> (e.g., "python/base"). This should align with the language and environment of the function. |  | MinProperties: 1 <br /> |
+| `defaultBuilder` _string_ | DefaultBuilder is the default builder to use for functions that do not specify a builder. |  | Required: \{\} <br /> |
+| `defaultGenerator` _string_ | DefaultGenerator is the default generator to use for functions that do not specify a generator. |  | Required: \{\} <br /> |
+| `deployerImage` _string_ | DeployerImage is the image to used for deploying executables into a FaaS runtime. |  | Required: \{\} <br /> |
+| `deployerSecretRef` _[LocalObjectReference](https://kubernetes.io/docs/reference/generated/kubernetes-api/v/#localobjectreference-v1-core)_ | DeployerSecretRef is the secret reference to use for deploying executables into a FaaS runtime. It will be<br />mounted as a volume in the deployer pod. |  | Optional: \{\} <br /> |
+| `generators` _object (keys:string, values:[Generator](#generator))_ | Generators is a map of provider-specific generator configurations.<br />The keys of the map must be formatted as <language>/<environment> (e.g., "python/base"). This should align with the language and environment of the function. |  | MinProperties: 1 <br /> |
 | `provider` _string_ | Provider is the type of FaaS provider (e.g., "knative", "openfaas", "lambda"). |  | Enum: [knative openfaas lambda azure-functions google-cloud-functions] <br />Required: \{\} <br /> |
 
 
@@ -859,29 +929,6 @@ _Appears in:_
 | `kind` _string_ | `KDexFunction` | | |
 | `metadata` _[ObjectMeta](https://kubernetes.io/docs/reference/generated/kubernetes-api/v/#objectmeta-v1-meta)_ | Refer to Kubernetes API documentation for fields of `metadata`. |  | Optional: \{\} <br /> |
 | `spec` _[KDexFunctionSpec](#kdexfunctionspec)_ | spec defines the desired state of KDexFunction |  | Required: \{\} <br /> |
-
-
-#### KDexFunctionExec
-
-
-
-KDexFunctionExec defines the FaaS execution environment.
-
-
-
-_Appears in:_
-- [KDexFunctionSpec](#kdexfunctionspec)
-
-| Field | Description | Default | Validation |
-| --- | --- | --- | --- |
-| `entrypoint` _string_ | Entrypoint is the specific function handler/method to execute. |  | Optional: \{\} <br /> |
-| `environment` _string_ | Environment is the FaaS environment name (e.g., go-env, python-env). |  | Required: \{\} <br /> |
-| `executable` _string_ | executable is a reference to executable artifact. In most cases this will be a Docker image. In some other cases<br />it may be an artifact native to FaaS Adaptor's target runtime. |  | Optional: \{\} <br /> |
-| `executablePullSecrets` _[LocalObjectReference](https://kubernetes.io/docs/reference/generated/kubernetes-api/v/#localobjectreference-v1-core) array_ | executablePullSecrets is an optional list of references to secrets in the same namespace to use for pulling the referenced images.<br />More info: https://kubernetes.io/docs/concepts/containers/images#specifying-imagepullsecrets-on-a-pod |  | Optional: \{\} <br /> |
-| `generatorConfig` _[GeneratorConfig](#generatorconfig)_ | generatorConfig holds the values to configure and execute the code generator. |  | Optional: \{\} <br /> |
-| `language` _string_ | Language is the programming language of the function (e.g., go, python, nodejs). |  | Required: \{\} <br /> |
-| `scaling` _[ScalingConfig](#scalingconfig)_ | Scaling allows configuration for min/max replicas and autoscaler type. |  | Optional: \{\} <br /> |
-| `source` _[Source](#source)_ | Source contains source information. |  | Optional: \{\} <br /> |
 
 
 #### KDexFunctionList
@@ -934,7 +981,7 @@ _Appears in:_
 | Field | Description | Default | Validation |
 | --- | --- | --- | --- |
 | `api` _[API](#api)_ | API defines the OpenAPI contract for the function.<br />See https://github.com/OAI/OpenAPI-Specification/blob/main/versions/3.0.3.md#path-item-object<br />See https://github.com/OAI/OpenAPI-Specification/blob/main/versions/3.0.3.md#schema-object<br />The supported fields from 'path item object' are: summary, description, get, put, post, delete, options, head, patch, trace, parameters, and responses.<br />The field 'schemas' of type map[string]schema whose values are defined by 'schema object' is supported and can be referenced throughout operation definitions. References must be in the form "#/components/schemas/<name>". |  | Required: \{\} <br /> |
-| `function` _[KDexFunctionExec](#kdexfunctionexec)_ | Function defines the FaaS execution details. |  | Optional: \{\} <br /> |
+| `origin` _[FunctionOrigin](#functionorigin)_ | Origin defines the origin of the function implementation. |  | Optional: \{\} <br /> |
 | `hostRef` _[LocalObjectReference](https://kubernetes.io/docs/reference/generated/kubernetes-api/v/#localobjectreference-v1-core)_ | hostRef is a reference to the KDexHost that this translation belongs to. |  | Required: \{\} <br /> |
 | `metadata` _[KDexFunctionMetadata](#kdexfunctionmetadata)_ | Refer to Kubernetes API documentation for fields of `metadata`. |  | Optional: \{\} <br /> |
 
@@ -1319,6 +1366,7 @@ _Appears in:_
 
 
 _Appears in:_
+- [Builder](#builder)
 - [ContentEntry](#contententry)
 - [ContentEntryApp](#contententryapp)
 - [KDexHostSpec](#kdexhostspec)
@@ -2317,7 +2365,7 @@ ScalingConfig defines scaling parameters.
 
 
 _Appears in:_
-- [KDexFunctionExec](#kdexfunctionexec)
+- [Executable](#executable)
 
 | Field | Description | Default | Validation |
 | --- | --- | --- | --- |
@@ -2369,14 +2417,15 @@ Source contains source information.
 
 
 _Appears in:_
-- [KDexFunctionExec](#kdexfunctionexec)
+- [FunctionOrigin](#functionorigin)
 - [KDexFunctionStatus](#kdexfunctionstatus)
 
 | Field | Description | Default | Validation |
 | --- | --- | --- | --- |
-| `repository` _string_ | repository is the git repository address to the function source code. |  | Required: \{\} <br /> |
-| `revision` _string_ | revision is the git revision (tag, branch or commit hash) to the function source code. |  | Required: \{\} <br /> |
-| `path` _string_ | path is the path to the function source code in the repository. |  | Optional: \{\} <br /> |
+| `builder` _[Builder](#builder)_ | builder is used to build the source code into an image. |  | Required: \{\} <br /> |
+| `path` _string_ | path is the path to the source code in the repository. |  | Optional: \{\} <br /> |
+| `repository` _string_ | repository is the git repository address to the source code. |  | Required: \{\} <br /> |
+| `revision` _string_ | revision is the git revision (tag, branch or commit hash) to the source code. |  | Required: \{\} <br /> |
 | `sourceSecrets` _[LocalObjectReference](https://kubernetes.io/docs/reference/generated/kubernetes-api/v/#localobjectreference-v1-core) array_ | sourceSecrets is an optional list of references to secrets in the same namespace to use for pulling the referenced sources.<br />More info: https://kubernetes.io/docs/concepts/containers/images#specifying-imagepullsecrets-on-a-pod<br />STATUS=ExecutableAvailable |  | Optional: \{\} <br /> |
 
 

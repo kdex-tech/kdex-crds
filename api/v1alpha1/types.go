@@ -255,6 +255,25 @@ type ContactInfo struct {
 	Email string `json:"email,omitempty" protobuf:"bytes,2,opt,name=email"`
 }
 
+type Builder struct {
+	// env is the environment variables to set in the builder.
+	// +kubebuilder:validation:Optional
+	Env []corev1.EnvVar `json:"env,omitempty" protobuf:"bytes,1,rep,name=env"`
+
+	// builderRef is a reference to the kpack.io/v1alpha2/Builder or kpack.io/v1alpha2/ClusterBuilder to use for building the image.
+	// +kubebuilder:validation:Required
+	// +kubebuilder:validation:XValidation:rule=`self.kind == "Builder" || self.kind == "ClusterBuilder"`,message="'kind' must be either kpack.io/v1alpha2/Builder or kpack.io/v1alpha2/ClusterBuilder"
+	BuilderRef KDexObjectReference `json:"builderRef" protobuf:"bytes,2,req,name=builderRef"`
+
+	// serviceAccountName is the name of the service account to use for building the image.
+	// +kubebuilder:validation:Optional
+	ServiceAccountName string `json:"serviceAccountName,omitempty" protobuf:"bytes,3,opt,name=serviceAccountName"`
+
+	// tag of the builder.
+	// +kubebuilder:validation:Required
+	Tag string `json:"tag" protobuf:"bytes,4,req,name=tag"`
+}
+
 type ContentEntryApp struct {
 	// appRef is a reference to the KDexApp to include in this binding.
 	// +kubebuilder:validation:Optional
@@ -300,7 +319,48 @@ type CustomElement struct {
 	Description string `json:"description,omitempty" protobuf:"bytes,2,opt,name=description"`
 }
 
-type GeneratorConfig struct {
+type Executable struct {
+	// image is a reference to executable artifact. In most cases this will be a Docker image. In some other cases
+	// it may be an artifact native to FaaS Adaptor's target runtime.
+	// +kubebuilder:validation:Optional
+	Image string `json:"image,omitempty" protobuf:"bytes,1,opt,name=image"`
+
+	// executablePullSecrets is an optional list of references to secrets in the same namespace to use for pulling the referenced images.
+	// More info: https://kubernetes.io/docs/concepts/containers/images#specifying-imagepullsecrets-on-a-pod
+	// +kubebuilder:validation:Optional
+	// +patchMergeKey=name
+	// +patchStrategy=merge
+	// +listType=map
+	// +listMapKey=name
+	ImagePullSecrets []corev1.LocalObjectReference `json:"imagePullSecrets,omitempty" patchStrategy:"merge" patchMergeKey:"name" protobuf:"bytes,2,rep,name=imagePullSecrets"`
+
+	// Scaling allows configuration for min/max replicas and autoscaler type.
+	// +kubebuilder:validation:Optional
+	Scaling *ScalingConfig `json:"scaling,omitempty" protobuf:"bytes,7,opt,name=scaling"`
+}
+
+// FunctionOrigin defines the origin of the function implementation.
+// There are four possible ways to obtain a deployable function:
+// 1. Executable: A pre-built container image or VM image.
+// 2. Source: A reference to source code that will be compiled and built into a container image or VM image.
+// 3. Generator: A configuration for a code generator that will produce source code stubs for the selected language.
+// 4. Nothing: A code generator config will be derived from the defaults provided by the FaaS Adaptor.
+// +kubebuilder:validation:AtMostOneOf:=executable;generator;source
+type FunctionOrigin struct {
+	// executable is a reference to a pre-built container image or VM image.
+	// +kubebuilder:validation:Optional
+	Executable *Executable `json:"executable,omitempty" protobuf:"bytes,1,opt,name=executable"`
+
+	// generator holds the values to configure and execute the code generator.
+	// +kubebuilder:validation:Optional
+	Generator *Generator `json:"generator,omitempty" protobuf:"bytes,2,opt,name=generator"`
+
+	// source contains source code location information.
+	// +kubebuilder:validation:Optional
+	Source *Source `json:"source,omitempty" protobuf:"bytes,3,opt,name=source"`
+}
+
+type Generator struct {
 	// args is an optional array of arguments that will be passed to the generator command.
 	// +kubebuilder:validation:Optional
 	Args []string `json:"args,omitempty"`
@@ -309,6 +369,14 @@ type GeneratorConfig struct {
 	// +kubebuilder:validation:Optional
 	Command []string `json:"command,omitempty"`
 
+	// Entrypoint is the specific function handler/method to execute.
+	// +kubebuilder:validation:Optional
+	Entrypoint string `json:"entrypoint,omitempty" protobuf:"bytes,1,opt,name=entrypoint"`
+
+	// Environment is the FaaS environment name (e.g., go-env, python-env).
+	// +kubebuilder:validation:Required
+	Environment string `json:"environment,omitempty" protobuf:"bytes,2,opt,name=environment"`
+
 	// git is the configuration for the Git repository where generated code will be committed to a branch.
 	// +kubebuilder:validation:Required
 	Git Git `json:"git"`
@@ -316,6 +384,10 @@ type GeneratorConfig struct {
 	// image is the image containing the generator implementation; cli or scripts.
 	// +kubebuilder:validation:Required
 	Image string `json:"image"`
+
+	// Language is the programming language of the function (e.g., go, python, nodejs).
+	// +kubebuilder:validation:Required
+	Language string `json:"language,omitempty" protobuf:"bytes,6,opt,name=language"`
 }
 
 type Git struct {
@@ -528,16 +600,6 @@ type OIDCProvider struct {
 	// +kubebuilder:validation:Optional
 	Scopes []string `json:"roles" protobuf:"bytes,5,rep,name=roles"`
 }
-
-// +kubebuilder:validation:Enum=BACKEND;FUNCTION;PAGE;SYSTEM
-type TypeToInclude string
-
-const (
-	TypeBACKEND  TypeToInclude = "BACKEND"
-	TypeFUNCTION TypeToInclude = "FUNCTION"
-	TypePAGE     TypeToInclude = "PAGE"
-	TypeSYSTEM   TypeToInclude = "SYSTEM"
-)
 
 // OpenAPI holds the configuration for the host's OpenAPI support.
 type OpenAPI struct {
@@ -1012,17 +1074,21 @@ type SecurityRequirement map[string][]string
 
 // Source contains source information.
 type Source struct {
-	// repository is the git repository address to the function source code.
+	// builder is used to build the source code into an image.
 	// +kubebuilder:validation:Required
-	Repository string `json:"repository" protobuf:"bytes,1,req,name=repository"`
+	Builder Builder `json:"builder" protobuf:"bytes,1,req,name=builder"`
 
-	// revision is the git revision (tag, branch or commit hash) to the function source code.
-	// +kubebuilder:validation:Required
-	Revision string `json:"revision" protobuf:"bytes,2,req,name=revision"`
-
-	// path is the path to the function source code in the repository.
+	// path is the path to the source code in the repository.
 	// +kubebuilder:validation:Optional
-	Path string `json:"path,omitempty" protobuf:"bytes,3,opt,name=path"`
+	Path string `json:"path,omitempty" protobuf:"bytes,2,opt,name=path"`
+
+	// repository is the git repository address to the source code.
+	// +kubebuilder:validation:Required
+	Repository string `json:"repository" protobuf:"bytes,3,req,name=repository"`
+
+	// revision is the git revision (tag, branch or commit hash) to the source code.
+	// +kubebuilder:validation:Required
+	Revision string `json:"revision" protobuf:"bytes,4,req,name=revision"`
 
 	// sourceSecrets is an optional list of references to secrets in the same namespace to use for pulling the referenced sources.
 	// More info: https://kubernetes.io/docs/concepts/containers/images#specifying-imagepullsecrets-on-a-pod
@@ -1032,7 +1098,7 @@ type Source struct {
 	// +patchStrategy=merge
 	// +listType=map
 	// +listMapKey=name
-	SourceSecrets []corev1.LocalObjectReference `json:"sourceSecrets,omitempty" patchStrategy:"merge" patchMergeKey:"name" protobuf:"bytes,4,rep,name=sourceSecrets"`
+	SourceSecrets []corev1.LocalObjectReference `json:"sourceSecrets,omitempty" patchStrategy:"merge" patchMergeKey:"name" protobuf:"bytes,5,rep,name=sourceSecrets"`
 }
 
 type StyleDef struct {
@@ -1106,3 +1172,13 @@ type Translation struct {
 	// +kubebuilder:validation:Required
 	KeysAndValues map[string]string `json:"keysAndValues" protobuf:"bytes,2,rep,name=keysAndValues"`
 }
+
+// +kubebuilder:validation:Enum=BACKEND;FUNCTION;PAGE;SYSTEM
+type TypeToInclude string
+
+const (
+	TypeBACKEND  TypeToInclude = "BACKEND"
+	TypeFUNCTION TypeToInclude = "FUNCTION"
+	TypePAGE     TypeToInclude = "PAGE"
+	TypeSYSTEM   TypeToInclude = "SYSTEM"
+)

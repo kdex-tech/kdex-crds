@@ -136,188 +136,6 @@ spec:
                 x-kubernetes-validations:
                 - message: all keys of .spec.api.paths must be prefixed by .spec.api.basePath
                   rule: self.paths.all(k, k.startsWith(self.basePath))
-              function:
-                description: Function defines the FaaS execution details.
-                properties:
-                  entrypoint:
-                    description: Entrypoint is the specific function handler/method
-                      to execute.
-                    type: string
-                  environment:
-                    description: Environment is the FaaS environment name (e.g., go-env,
-                      python-env).
-                    type: string
-                  executable:
-                    description: |-
-                      executable is a reference to executable artifact. In most cases this will be a Docker image. In some other cases
-                      it may be an artifact native to FaaS Adaptor's target runtime.
-                    type: string
-                  executablePullSecrets:
-                    description: |-
-                      executablePullSecrets is an optional list of references to secrets in the same namespace to use for pulling the referenced images.
-                      More info: https://kubernetes.io/docs/concepts/containers/images#specifying-imagepullsecrets-on-a-pod
-                    items:
-                      description: |-
-                        LocalObjectReference contains enough information to let you locate the
-                        referenced object inside the same namespace.
-                      properties:
-                        name:
-                          default: ""
-                          description: |-
-                            Name of the referent.
-                            This field is effectively required, but due to backwards compatibility is
-                            allowed to be empty. Instances of this type with an empty value here are
-                            almost certainly wrong.
-                            More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#names
-                          type: string
-                      type: object
-                      x-kubernetes-map-type: atomic
-                    type: array
-                    x-kubernetes-list-map-keys:
-                    - name
-                    x-kubernetes-list-type: map
-                  generatorConfig:
-                    description: generatorConfig holds the values to configure and
-                      execute the code generator.
-                    properties:
-                      args:
-                        description: args is an optional array of arguments that will
-                          be passed to the generator command.
-                        items:
-                          type: string
-                        type: array
-                      command:
-                        description: command is an optional array that contains the
-                          code generator command and any flags necessary.
-                        items:
-                          type: string
-                        type: array
-                      git:
-                        description: git is the configuration for the Git repository
-                          where generated code will be committed to a branch.
-                        properties:
-                          committerEmail:
-                            description: committerEmail is the email address that
-                              will be used for git commits.
-                            type: string
-                          committerName:
-                            description: committerName is the name that will be used
-                              for git commits.
-                            type: string
-                          functionSubDirectory:
-                            default: .
-                            description: functionSubDirectory is the optional path
-                              to a subdirectory in the repository in which generated
-                              code will be placed.
-                            type: string
-                          image:
-                            description: image is the name of the container image
-                              to run for git.
-                            type: string
-                          repoSecretRef:
-                            description: |-
-                              repoSecretRef is a reference to a secret that contains the details for a git repository.
-                              This secret should contain all of the following keys:
-
-                              token - the authentication token
-                              host - the git host address
-                              org - the git org
-                              repo - the git repo
-                              gpg.key.id - the git signing key id (optional)
-                              gpg.key - the git signing key (optional)
-                            properties:
-                              name:
-                                default: ""
-                                description: |-
-                                  Name of the referent.
-                                  This field is effectively required, but due to backwards compatibility is
-                                  allowed to be empty. Instances of this type with an empty value here are
-                                  almost certainly wrong.
-                                  More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#names
-                                type: string
-                            type: object
-                            x-kubernetes-map-type: atomic
-                        required:
-                        - committerEmail
-                        - committerName
-                        - image
-                        - repoSecretRef
-                        type: object
-                      image:
-                        description: image is the image containing the generator implementation;
-                          cli or scripts.
-                        type: string
-                    required:
-                    - git
-                    - image
-                    type: object
-                  language:
-                    description: Language is the programming language of the function
-                      (e.g., go, python, nodejs).
-                    type: string
-                  scaling:
-                    description: Scaling allows configuration for min/max replicas
-                      and autoscaler type.
-                    properties:
-                      maxReplicas:
-                        description: MaxReplicas is the maximum number of replicas.
-                        format: int32
-                        minimum: 1
-                        type: integer
-                      minReplicas:
-                        description: MinReplicas is the minimum number of replicas.
-                        format: int32
-                        minimum: 0
-                        type: integer
-                    type: object
-                  source:
-                    description: Source contains source information.
-                    properties:
-                      path:
-                        description: path is the path to the function source code
-                          in the repository.
-                        type: string
-                      repository:
-                        description: repository is the git repository address to the
-                          function source code.
-                        type: string
-                      revision:
-                        description: revision is the git revision (tag, branch or
-                          commit hash) to the function source code.
-                        type: string
-                      sourceSecrets:
-                        description: |-
-                          sourceSecrets is an optional list of references to secrets in the same namespace to use for pulling the referenced sources.
-                          More info: https://kubernetes.io/docs/concepts/containers/images#specifying-imagepullsecrets-on-a-pod
-                          STATUS=ExecutableAvailable
-                        items:
-                          description: |-
-                            LocalObjectReference contains enough information to let you locate the
-                            referenced object inside the same namespace.
-                          properties:
-                            name:
-                              default: ""
-                              description: |-
-                                Name of the referent.
-                                This field is effectively required, but due to backwards compatibility is
-                                allowed to be empty. Instances of this type with an empty value here are
-                                almost certainly wrong.
-                                More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#names
-                              type: string
-                          type: object
-                          x-kubernetes-map-type: atomic
-                        type: array
-                        x-kubernetes-list-map-keys:
-                        - name
-                        x-kubernetes-list-type: map
-                    required:
-                    - repository
-                    - revision
-                    type: object
-                required:
-                - environment
-                - language
-                type: object
               hostRef:
                 description: hostRef is a reference to the KDexHost that this translation
                   belongs to.
@@ -374,6 +192,400 @@ spec:
                     - name
                     x-kubernetes-list-type: map
                 type: object
+              origin:
+                description: Origin defines the origin of the function implementation.
+                properties:
+                  executable:
+                    description: executable is a reference to a pre-built container
+                      image or VM image.
+                    properties:
+                      image:
+                        description: |-
+                          image is a reference to executable artifact. In most cases this will be a Docker image. In some other cases
+                          it may be an artifact native to FaaS Adaptor's target runtime.
+                        type: string
+                      imagePullSecrets:
+                        description: |-
+                          executablePullSecrets is an optional list of references to secrets in the same namespace to use for pulling the referenced images.
+                          More info: https://kubernetes.io/docs/concepts/containers/images#specifying-imagepullsecrets-on-a-pod
+                        items:
+                          description: |-
+                            LocalObjectReference contains enough information to let you locate the
+                            referenced object inside the same namespace.
+                          properties:
+                            name:
+                              default: ""
+                              description: |-
+                                Name of the referent.
+                                This field is effectively required, but due to backwards compatibility is
+                                allowed to be empty. Instances of this type with an empty value here are
+                                almost certainly wrong.
+                                More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#names
+                              type: string
+                          type: object
+                          x-kubernetes-map-type: atomic
+                        type: array
+                        x-kubernetes-list-map-keys:
+                        - name
+                        x-kubernetes-list-type: map
+                      scaling:
+                        description: Scaling allows configuration for min/max replicas
+                          and autoscaler type.
+                        properties:
+                          maxReplicas:
+                            description: MaxReplicas is the maximum number of replicas.
+                            format: int32
+                            minimum: 1
+                            type: integer
+                          minReplicas:
+                            description: MinReplicas is the minimum number of replicas.
+                            format: int32
+                            minimum: 0
+                            type: integer
+                        type: object
+                    type: object
+                  generator:
+                    description: generator holds the values to configure and execute
+                      the code generator.
+                    properties:
+                      args:
+                        description: args is an optional array of arguments that will
+                          be passed to the generator command.
+                        items:
+                          type: string
+                        type: array
+                      command:
+                        description: command is an optional array that contains the
+                          code generator command and any flags necessary.
+                        items:
+                          type: string
+                        type: array
+                      entrypoint:
+                        description: Entrypoint is the specific function handler/method
+                          to execute.
+                        type: string
+                      environment:
+                        description: Environment is the FaaS environment name (e.g.,
+                          go-env, python-env).
+                        type: string
+                      git:
+                        description: git is the configuration for the Git repository
+                          where generated code will be committed to a branch.
+                        properties:
+                          committerEmail:
+                            description: committerEmail is the email address that
+                              will be used for git commits.
+                            type: string
+                          committerName:
+                            description: committerName is the name that will be used
+                              for git commits.
+                            type: string
+                          functionSubDirectory:
+                            default: .
+                            description: functionSubDirectory is the optional path
+                              to a subdirectory in the repository in which generated
+                              code will be placed.
+                            type: string
+                          image:
+                            description: image is the name of the container image
+                              to run for git.
+                            type: string
+                          repoSecretRef:
+                            description: |-
+                              repoSecretRef is a reference to a secret that contains the details for a git repository.
+                              This secret should contain all of the following keys:
+
+                              token - the authentication token
+                              host - the git host address
+                              org - the git org
+                              repo - the git repo
+                              gpg.key.id - the git signing key id (optional)
+                              gpg.key - the git signing key (optional)
+                            properties:
+                              name:
+                                default: ""
+                                description: |-
+                                  Name of the referent.
+                                  This field is effectively required, but due to backwards compatibility is
+                                  allowed to be empty. Instances of this type with an empty value here are
+                                  almost certainly wrong.
+                                  More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#names
+                                type: string
+                            type: object
+                            x-kubernetes-map-type: atomic
+                        required:
+                        - committerEmail
+                        - committerName
+                        - image
+                        - repoSecretRef
+                        type: object
+                      image:
+                        description: image is the image containing the generator implementation;
+                          cli or scripts.
+                        type: string
+                      language:
+                        description: Language is the programming language of the function
+                          (e.g., go, python, nodejs).
+                        type: string
+                    required:
+                    - environment
+                    - git
+                    - image
+                    - language
+                    type: object
+                  source:
+                    description: source contains source code location information.
+                    properties:
+                      builder:
+                        description: builder is used to build the source code into
+                          an image.
+                        properties:
+                          builderRef:
+                            description: builderRef is a reference to the kpack.io/v1alpha2/Builder
+                              or kpack.io/v1alpha2/ClusterBuilder to use for building
+                              the image.
+                            properties:
+                              kind:
+                                description: Kind is the type of resource being referenced
+                                type: string
+                              name:
+                                description: Name of the referent.
+                                type: string
+                              namespace:
+                                description: |-
+                                  Namespace, if set, causes the lookup for the namespace scoped Kind of the referent to use the specified
+                                  namespace. If not set, the namespace of the resource will be used to lookup the namespace scoped Kind of the
+                                  referent.
+                                  If the referring resource is cluster scoped, this field is ignored.
+                                  Defaulted to nil.
+                                type: string
+                            required:
+                            - kind
+                            - name
+                            type: object
+                            x-kubernetes-map-type: atomic
+                            x-kubernetes-validations:
+                            - message: '''kind'' must be either kpack.io/v1alpha2/Builder
+                                or kpack.io/v1alpha2/ClusterBuilder'
+                              rule: self.kind == "Builder" || self.kind == "ClusterBuilder"
+                          env:
+                            description: env is the environment variables to set in
+                              the builder.
+                            items:
+                              description: EnvVar represents an environment variable
+                                present in a Container.
+                              properties:
+                                name:
+                                  description: |-
+                                    Name of the environment variable.
+                                    May consist of any printable ASCII characters except '='.
+                                  type: string
+                                value:
+                                  description: |-
+                                    Variable references $(VAR_NAME) are expanded
+                                    using the previously defined environment variables in the container and
+                                    any service environment variables. If a variable cannot be resolved,
+                                    the reference in the input string will be unchanged. Double $$ are reduced
+                                    to a single $, which allows for escaping the $(VAR_NAME) syntax: i.e.
+                                    "$$(VAR_NAME)" will produce the string literal "$(VAR_NAME)".
+                                    Escaped references will never be expanded, regardless of whether the variable
+                                    exists or not.
+                                    Defaults to "".
+                                  type: string
+                                valueFrom:
+                                  description: Source for the environment variable's
+                                    value. Cannot be used if value is not empty.
+                                  properties:
+                                    configMapKeyRef:
+                                      description: Selects a key of a ConfigMap.
+                                      properties:
+                                        key:
+                                          description: The key to select.
+                                          type: string
+                                        name:
+                                          default: ""
+                                          description: |-
+                                            Name of the referent.
+                                            This field is effectively required, but due to backwards compatibility is
+                                            allowed to be empty. Instances of this type with an empty value here are
+                                            almost certainly wrong.
+                                            More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#names
+                                          type: string
+                                        optional:
+                                          description: Specify whether the ConfigMap
+                                            or its key must be defined
+                                          type: boolean
+                                      required:
+                                      - key
+                                      type: object
+                                      x-kubernetes-map-type: atomic
+                                    fieldRef:
+                                      description: |-
+                                        Selects a field of the pod: supports metadata.name, metadata.namespace, `metadata.labels['<KEY>']`, `metadata.annotations['<KEY>']`,
+                                        spec.nodeName, spec.serviceAccountName, status.hostIP, status.podIP, status.podIPs.
+                                      properties:
+                                        apiVersion:
+                                          description: Version of the schema the FieldPath
+                                            is written in terms of, defaults to "v1".
+                                          type: string
+                                        fieldPath:
+                                          description: Path of the field to select
+                                            in the specified API version.
+                                          type: string
+                                      required:
+                                      - fieldPath
+                                      type: object
+                                      x-kubernetes-map-type: atomic
+                                    fileKeyRef:
+                                      description: |-
+                                        FileKeyRef selects a key of the env file.
+                                        Requires the EnvFiles feature gate to be enabled.
+                                      properties:
+                                        key:
+                                          description: |-
+                                            The key within the env file. An invalid key will prevent the pod from starting.
+                                            The keys defined within a source may consist of any printable ASCII characters except '='.
+                                            During Alpha stage of the EnvFiles feature gate, the key size is limited to 128 characters.
+                                          type: string
+                                        optional:
+                                          default: false
+                                          description: |-
+                                            Specify whether the file or its key must be defined. If the file or key
+                                            does not exist, then the env var is not published.
+                                            If optional is set to true and the specified key does not exist,
+                                            the environment variable will not be set in the Pod's containers.
+
+                                            If optional is set to false and the specified key does not exist,
+                                            an error will be returned during Pod creation.
+                                          type: boolean
+                                        path:
+                                          description: |-
+                                            The path within the volume from which to select the file.
+                                            Must be relative and may not contain the '..' path or start with '..'.
+                                          type: string
+                                        volumeName:
+                                          description: The name of the volume mount
+                                            containing the env file.
+                                          type: string
+                                      required:
+                                      - key
+                                      - path
+                                      - volumeName
+                                      type: object
+                                      x-kubernetes-map-type: atomic
+                                    resourceFieldRef:
+                                      description: |-
+                                        Selects a resource of the container: only resources limits and requests
+                                        (limits.cpu, limits.memory, limits.ephemeral-storage, requests.cpu, requests.memory and requests.ephemeral-storage) are currently supported.
+                                      properties:
+                                        containerName:
+                                          description: 'Container name: required for
+                                            volumes, optional for env vars'
+                                          type: string
+                                        divisor:
+                                          anyOf:
+                                          - type: integer
+                                          - type: string
+                                          description: Specifies the output format
+                                            of the exposed resources, defaults to
+                                            "1"
+                                          pattern: ^(\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))(([KMGTPE]i)|[numkMGTPE]|([eE](\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))))?$
+                                          x-kubernetes-int-or-string: true
+                                        resource:
+                                          description: 'Required: resource to select'
+                                          type: string
+                                      required:
+                                      - resource
+                                      type: object
+                                      x-kubernetes-map-type: atomic
+                                    secretKeyRef:
+                                      description: Selects a key of a secret in the
+                                        pod's namespace
+                                      properties:
+                                        key:
+                                          description: The key of the secret to select
+                                            from.  Must be a valid secret key.
+                                          type: string
+                                        name:
+                                          default: ""
+                                          description: |-
+                                            Name of the referent.
+                                            This field is effectively required, but due to backwards compatibility is
+                                            allowed to be empty. Instances of this type with an empty value here are
+                                            almost certainly wrong.
+                                            More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#names
+                                          type: string
+                                        optional:
+                                          description: Specify whether the Secret
+                                            or its key must be defined
+                                          type: boolean
+                                      required:
+                                      - key
+                                      type: object
+                                      x-kubernetes-map-type: atomic
+                                  type: object
+                              required:
+                              - name
+                              type: object
+                            type: array
+                          serviceAccountName:
+                            description: serviceAccountName is the name of the service
+                              account to use for building the image.
+                            type: string
+                          tag:
+                            description: tag of the builder.
+                            type: string
+                        required:
+                        - builderRef
+                        - tag
+                        type: object
+                      path:
+                        description: path is the path to the source code in the repository.
+                        type: string
+                      repository:
+                        description: repository is the git repository address to the
+                          source code.
+                        type: string
+                      revision:
+                        description: revision is the git revision (tag, branch or
+                          commit hash) to the source code.
+                        type: string
+                      sourceSecrets:
+                        description: |-
+                          sourceSecrets is an optional list of references to secrets in the same namespace to use for pulling the referenced sources.
+                          More info: https://kubernetes.io/docs/concepts/containers/images#specifying-imagepullsecrets-on-a-pod
+                          STATUS=ExecutableAvailable
+                        items:
+                          description: |-
+                            LocalObjectReference contains enough information to let you locate the
+                            referenced object inside the same namespace.
+                          properties:
+                            name:
+                              default: ""
+                              description: |-
+                                Name of the referent.
+                                This field is effectively required, but due to backwards compatibility is
+                                allowed to be empty. Instances of this type with an empty value here are
+                                almost certainly wrong.
+                                More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#names
+                              type: string
+                          type: object
+                          x-kubernetes-map-type: atomic
+                        type: array
+                        x-kubernetes-list-map-keys:
+                        - name
+                        x-kubernetes-list-type: map
+                    required:
+                    - builder
+                    - repository
+                    - revision
+                    type: object
+                type: object
+                x-kubernetes-validations:
+                - message: at most one of the fields in [executable generator source]
+                    may be set
+                  rule: '[has(self.executable),has(self.generator),has(self.source)].filter(x,x==true).size()
+                    <= 1'
             required:
             - api
             - hostRef
@@ -465,35 +677,56 @@ spec:
                   executable is a reference to executable artifact. In most cases this will be a Docker image. In some other cases
                   it may be an artifact native to FaaS Adaptor's target runtime.
                   STATUS=ExecutableAvailable
-                type: string
-              executablePullSecrets:
-                description: |-
-                  executablePullSecrets is an optional list of references to secrets in the same namespace to use for pulling the referenced images.
-                  More info: https://kubernetes.io/docs/concepts/containers/images#specifying-imagepullsecrets-on-a-pod
-                  STATUS=ExecutableAvailable
-                items:
-                  description: |-
-                    LocalObjectReference contains enough information to let you locate the
-                    referenced object inside the same namespace.
-                  properties:
-                    name:
-                      default: ""
+                properties:
+                  image:
+                    description: |-
+                      image is a reference to executable artifact. In most cases this will be a Docker image. In some other cases
+                      it may be an artifact native to FaaS Adaptor's target runtime.
+                    type: string
+                  imagePullSecrets:
+                    description: |-
+                      executablePullSecrets is an optional list of references to secrets in the same namespace to use for pulling the referenced images.
+                      More info: https://kubernetes.io/docs/concepts/containers/images#specifying-imagepullsecrets-on-a-pod
+                    items:
                       description: |-
-                        Name of the referent.
-                        This field is effectively required, but due to backwards compatibility is
-                        allowed to be empty. Instances of this type with an empty value here are
-                        almost certainly wrong.
-                        More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#names
-                      type: string
-                  type: object
-                  x-kubernetes-map-type: atomic
-                type: array
-                x-kubernetes-list-map-keys:
-                - name
-                x-kubernetes-list-type: map
-              generatorConfig:
-                description: generatorConfig holds the values to configure and execute
-                  the code generator.
+                        LocalObjectReference contains enough information to let you locate the
+                        referenced object inside the same namespace.
+                      properties:
+                        name:
+                          default: ""
+                          description: |-
+                            Name of the referent.
+                            This field is effectively required, but due to backwards compatibility is
+                            allowed to be empty. Instances of this type with an empty value here are
+                            almost certainly wrong.
+                            More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#names
+                          type: string
+                      type: object
+                      x-kubernetes-map-type: atomic
+                    type: array
+                    x-kubernetes-list-map-keys:
+                    - name
+                    x-kubernetes-list-type: map
+                  scaling:
+                    description: Scaling allows configuration for min/max replicas
+                      and autoscaler type.
+                    properties:
+                      maxReplicas:
+                        description: MaxReplicas is the maximum number of replicas.
+                        format: int32
+                        minimum: 1
+                        type: integer
+                      minReplicas:
+                        description: MinReplicas is the minimum number of replicas.
+                        format: int32
+                        minimum: 0
+                        type: integer
+                    type: object
+                type: object
+              generator:
+                description: |-
+                  generator holds the values to configure and execute the code generator.
+                  STATUS=BuildValid
                 properties:
                   args:
                     description: args is an optional array of arguments that will
@@ -507,6 +740,14 @@ spec:
                     items:
                       type: string
                     type: array
+                  entrypoint:
+                    description: Entrypoint is the specific function handler/method
+                      to execute.
+                    type: string
+                  environment:
+                    description: Environment is the FaaS environment name (e.g., go-env,
+                      python-env).
+                    type: string
                   git:
                     description: git is the configuration for the Git repository where
                       generated code will be committed to a branch.
@@ -562,9 +803,15 @@ spec:
                     description: image is the image containing the generator implementation;
                       cli or scripts.
                     type: string
+                  language:
+                    description: Language is the programming language of the function
+                      (e.g., go, python, nodejs).
+                    type: string
                 required:
+                - environment
                 - git
                 - image
+                - language
                 type: object
               observedGeneration:
                 description: |-
@@ -582,17 +829,218 @@ spec:
                   Source contains source information.
                   STATUS=SourceAvailable
                 properties:
+                  builder:
+                    description: builder is used to build the source code into an
+                      image.
+                    properties:
+                      builderRef:
+                        description: builderRef is a reference to the kpack.io/v1alpha2/Builder
+                          or kpack.io/v1alpha2/ClusterBuilder to use for building
+                          the image.
+                        properties:
+                          kind:
+                            description: Kind is the type of resource being referenced
+                            type: string
+                          name:
+                            description: Name of the referent.
+                            type: string
+                          namespace:
+                            description: |-
+                              Namespace, if set, causes the lookup for the namespace scoped Kind of the referent to use the specified
+                              namespace. If not set, the namespace of the resource will be used to lookup the namespace scoped Kind of the
+                              referent.
+                              If the referring resource is cluster scoped, this field is ignored.
+                              Defaulted to nil.
+                            type: string
+                        required:
+                        - kind
+                        - name
+                        type: object
+                        x-kubernetes-map-type: atomic
+                        x-kubernetes-validations:
+                        - message: '''kind'' must be either kpack.io/v1alpha2/Builder
+                            or kpack.io/v1alpha2/ClusterBuilder'
+                          rule: self.kind == "Builder" || self.kind == "ClusterBuilder"
+                      env:
+                        description: env is the environment variables to set in the
+                          builder.
+                        items:
+                          description: EnvVar represents an environment variable present
+                            in a Container.
+                          properties:
+                            name:
+                              description: |-
+                                Name of the environment variable.
+                                May consist of any printable ASCII characters except '='.
+                              type: string
+                            value:
+                              description: |-
+                                Variable references $(VAR_NAME) are expanded
+                                using the previously defined environment variables in the container and
+                                any service environment variables. If a variable cannot be resolved,
+                                the reference in the input string will be unchanged. Double $$ are reduced
+                                to a single $, which allows for escaping the $(VAR_NAME) syntax: i.e.
+                                "$$(VAR_NAME)" will produce the string literal "$(VAR_NAME)".
+                                Escaped references will never be expanded, regardless of whether the variable
+                                exists or not.
+                                Defaults to "".
+                              type: string
+                            valueFrom:
+                              description: Source for the environment variable's value.
+                                Cannot be used if value is not empty.
+                              properties:
+                                configMapKeyRef:
+                                  description: Selects a key of a ConfigMap.
+                                  properties:
+                                    key:
+                                      description: The key to select.
+                                      type: string
+                                    name:
+                                      default: ""
+                                      description: |-
+                                        Name of the referent.
+                                        This field is effectively required, but due to backwards compatibility is
+                                        allowed to be empty. Instances of this type with an empty value here are
+                                        almost certainly wrong.
+                                        More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#names
+                                      type: string
+                                    optional:
+                                      description: Specify whether the ConfigMap or
+                                        its key must be defined
+                                      type: boolean
+                                  required:
+                                  - key
+                                  type: object
+                                  x-kubernetes-map-type: atomic
+                                fieldRef:
+                                  description: |-
+                                    Selects a field of the pod: supports metadata.name, metadata.namespace, `metadata.labels['<KEY>']`, `metadata.annotations['<KEY>']`,
+                                    spec.nodeName, spec.serviceAccountName, status.hostIP, status.podIP, status.podIPs.
+                                  properties:
+                                    apiVersion:
+                                      description: Version of the schema the FieldPath
+                                        is written in terms of, defaults to "v1".
+                                      type: string
+                                    fieldPath:
+                                      description: Path of the field to select in
+                                        the specified API version.
+                                      type: string
+                                  required:
+                                  - fieldPath
+                                  type: object
+                                  x-kubernetes-map-type: atomic
+                                fileKeyRef:
+                                  description: |-
+                                    FileKeyRef selects a key of the env file.
+                                    Requires the EnvFiles feature gate to be enabled.
+                                  properties:
+                                    key:
+                                      description: |-
+                                        The key within the env file. An invalid key will prevent the pod from starting.
+                                        The keys defined within a source may consist of any printable ASCII characters except '='.
+                                        During Alpha stage of the EnvFiles feature gate, the key size is limited to 128 characters.
+                                      type: string
+                                    optional:
+                                      default: false
+                                      description: |-
+                                        Specify whether the file or its key must be defined. If the file or key
+                                        does not exist, then the env var is not published.
+                                        If optional is set to true and the specified key does not exist,
+                                        the environment variable will not be set in the Pod's containers.
+
+                                        If optional is set to false and the specified key does not exist,
+                                        an error will be returned during Pod creation.
+                                      type: boolean
+                                    path:
+                                      description: |-
+                                        The path within the volume from which to select the file.
+                                        Must be relative and may not contain the '..' path or start with '..'.
+                                      type: string
+                                    volumeName:
+                                      description: The name of the volume mount containing
+                                        the env file.
+                                      type: string
+                                  required:
+                                  - key
+                                  - path
+                                  - volumeName
+                                  type: object
+                                  x-kubernetes-map-type: atomic
+                                resourceFieldRef:
+                                  description: |-
+                                    Selects a resource of the container: only resources limits and requests
+                                    (limits.cpu, limits.memory, limits.ephemeral-storage, requests.cpu, requests.memory and requests.ephemeral-storage) are currently supported.
+                                  properties:
+                                    containerName:
+                                      description: 'Container name: required for volumes,
+                                        optional for env vars'
+                                      type: string
+                                    divisor:
+                                      anyOf:
+                                      - type: integer
+                                      - type: string
+                                      description: Specifies the output format of
+                                        the exposed resources, defaults to "1"
+                                      pattern: ^(\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))(([KMGTPE]i)|[numkMGTPE]|([eE](\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))))?$
+                                      x-kubernetes-int-or-string: true
+                                    resource:
+                                      description: 'Required: resource to select'
+                                      type: string
+                                  required:
+                                  - resource
+                                  type: object
+                                  x-kubernetes-map-type: atomic
+                                secretKeyRef:
+                                  description: Selects a key of a secret in the pod's
+                                    namespace
+                                  properties:
+                                    key:
+                                      description: The key of the secret to select
+                                        from.  Must be a valid secret key.
+                                      type: string
+                                    name:
+                                      default: ""
+                                      description: |-
+                                        Name of the referent.
+                                        This field is effectively required, but due to backwards compatibility is
+                                        allowed to be empty. Instances of this type with an empty value here are
+                                        almost certainly wrong.
+                                        More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#names
+                                      type: string
+                                    optional:
+                                      description: Specify whether the Secret or its
+                                        key must be defined
+                                      type: boolean
+                                  required:
+                                  - key
+                                  type: object
+                                  x-kubernetes-map-type: atomic
+                              type: object
+                          required:
+                          - name
+                          type: object
+                        type: array
+                      serviceAccountName:
+                        description: serviceAccountName is the name of the service
+                          account to use for building the image.
+                        type: string
+                      tag:
+                        description: tag of the builder.
+                        type: string
+                    required:
+                    - builderRef
+                    - tag
+                    type: object
                   path:
-                    description: path is the path to the function source code in the
-                      repository.
+                    description: path is the path to the source code in the repository.
                     type: string
                   repository:
-                    description: repository is the git repository address to the function
-                      source code.
+                    description: repository is the git repository address to the source
+                      code.
                     type: string
                   revision:
                     description: revision is the git revision (tag, branch or commit
-                      hash) to the function source code.
+                      hash) to the source code.
                     type: string
                   sourceSecrets:
                     description: |-
@@ -620,6 +1068,7 @@ spec:
                     - name
                     x-kubernetes-list-type: map
                 required:
+                - builder
                 - repository
                 - revision
                 type: object
@@ -647,8 +1096,9 @@ spec:
                   Ready).
                 type: string
               url:
-                description: URL is the full, routable URL for the function. This
-                  URL may only be routable from within the network.
+                description: |-
+                  URL is the full, routable URL for the function. This URL may only be routable from within the network.
+                  STATUS=FunctionDeployed
                 type: string
             type: object
         required:

@@ -17,6 +17,7 @@ limitations under the License.
 package v1alpha1
 
 import (
+	corev1 "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
 
@@ -25,15 +26,37 @@ import (
 
 // KDexFaaSAdaptorSpec defines the desired state of KDexFaaSAdaptor
 type KDexFaaSAdaptorSpec struct {
-	// Generators is a map of provider-specific generator configurations.
-	// The keys of the map must be formatted as <language>/<environment> (e.g., "python/3.9"). This should align with the language and environment of the function.
+	// Builders is a map of builder configurations.
+	// The keys of the map must be formatted as <language>/<environment> (e.g., "python/base"). This should align with the language and environment of the function.
 	// +kubebuilder:validation:MinProperties=1
-	Generators map[string]GeneratorConfig `json:"generators" protobuf:"bytes,2,rep,name=generators"`
+	Builders map[string]Builder `json:"builders" protobuf:"bytes,1,rep,name=builders"`
+
+	// DefaultBuilder is the default builder to use for functions that do not specify a builder.
+	// +kubebuilder:validation:Required
+	DefaultBuilder string `json:"defaultBuilder" protobuf:"bytes,2,req,name=defaultBuilder"`
+
+	// DefaultGenerator is the default generator to use for functions that do not specify a generator.
+	// +kubebuilder:validation:Required
+	DefaultGenerator string `json:"defaultGenerator" protobuf:"bytes,3,req,name=defaultGenerator"`
+
+	// DeployerImage is the image to used for deploying executables into a FaaS runtime.
+	// +kubebuilder:validation:Required
+	DeployerImage string `json:"deployerImage" protobuf:"bytes,4,req,name=deployerImage"`
+
+	// DeployerSecretRef is the secret reference to use for deploying executables into a FaaS runtime. It will be
+	// mounted as a volume in the deployer pod.
+	// +kubebuilder:validation:Optional
+	DeployerSecretRef *corev1.LocalObjectReference `json:"deployerSecretRef,omitempty" protobuf:"bytes,5,opt,name=deployerSecretRef"`
+
+	// Generators is a map of provider-specific generator configurations.
+	// The keys of the map must be formatted as <language>/<environment> (e.g., "python/base"). This should align with the language and environment of the function.
+	// +kubebuilder:validation:MinProperties=1
+	Generators map[string]Generator `json:"generators" protobuf:"bytes,6,rep,name=generators"`
 
 	// Provider is the type of FaaS provider (e.g., "knative", "openfaas", "lambda").
 	// +kubebuilder:validation:Required
 	// +kubebuilder:validation:Enum=knative;openfaas;lambda;azure-functions;google-cloud-functions
-	Provider string `json:"provider" protobuf:"bytes,1,req,name=provider"`
+	Provider string `json:"provider" protobuf:"bytes,7,req,name=provider"`
 }
 
 // KDexFaaSAdaptorStatus defines the observed state of KDexFaaSAdaptor.
