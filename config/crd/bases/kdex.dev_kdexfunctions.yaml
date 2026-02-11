@@ -264,10 +264,6 @@ spec:
                         description: Entrypoint is the specific function handler/method
                           to execute.
                         type: string
-                      environment:
-                        description: Environment is the FaaS environment name (e.g.,
-                          go-env, python-env).
-                        type: string
                       git:
                         description: git is the configuration for the Git repository
                           where generated code will be committed to a branch.
@@ -328,7 +324,6 @@ spec:
                           (e.g., go, python, nodejs).
                         type: string
                     required:
-                    - environment
                     - git
                     - image
                     - language
@@ -528,12 +523,17 @@ spec:
                               - name
                               type: object
                             type: array
+                          name:
+                            description: Name is the builder name (e.g., tiny, base,
+                              full).
+                            type: string
                           serviceAccountName:
                             description: serviceAccountName is the name of the service
                               account to use for building the image.
                             type: string
                         required:
                         - builderRef
+                        - name
                         type: object
                       path:
                         description: path is the path to the source code in the repository.
@@ -740,10 +740,6 @@ spec:
                     description: Entrypoint is the specific function handler/method
                       to execute.
                     type: string
-                  environment:
-                    description: Environment is the FaaS environment name (e.g., go-env,
-                      python-env).
-                    type: string
                   git:
                     description: git is the configuration for the Git repository where
                       generated code will be committed to a branch.
@@ -804,7 +800,6 @@ spec:
                       (e.g., go, python, nodejs).
                     type: string
                 required:
-                - environment
                 - git
                 - image
                 - language
@@ -1016,12 +1011,16 @@ spec:
                           - name
                           type: object
                         type: array
+                      name:
+                        description: Name is the builder name (e.g., tiny, base, full).
+                        type: string
                       serviceAccountName:
                         description: serviceAccountName is the name of the service
                           account to use for building the image.
                         type: string
                     required:
                     - builderRef
+                    - name
                     type: object
                   path:
                     description: path is the path to the source code in the repository.

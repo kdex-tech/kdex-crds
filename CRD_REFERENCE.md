@@ -190,8 +190,9 @@ _Appears in:_
 
 | Field | Description | Default | Validation |
 | --- | --- | --- | --- |
-| `env` _[EnvVar](https://kubernetes.io/docs/reference/generated/kubernetes-api/v/#envvar-v1-core) array_ | env is the environment variables to set in the builder. |  | Optional: \{\} <br /> |
 | `builderRef` _[KDexObjectReference](#kdexobjectreference)_ | builderRef is a reference to the kpack.io/v1alpha2/Builder or kpack.io/v1alpha2/ClusterBuilder to use for building the image. |  | Required: \{\} <br /> |
+| `env` _[EnvVar](https://kubernetes.io/docs/reference/generated/kubernetes-api/v/#envvar-v1-core) array_ | env is the environment variables to set in the builder. |  | Optional: \{\} <br /> |
+| `name` _string_ | Name is the builder name (e.g., tiny, base, full). |  | Required: \{\} <br /> |
 | `serviceAccountName` _string_ | serviceAccountName is the name of the service account to use for building the image. |  | Optional: \{\} <br /> |
 
 
@@ -353,7 +354,6 @@ _Appears in:_
 | `args` _string array_ | args is an optional array of arguments that will be passed to the generator command. |  | Optional: \{\} <br /> |
 | `command` _string array_ | command is an optional array that contains the code generator command and any flags necessary. |  | Optional: \{\} <br /> |
 | `entrypoint` _string_ | Entrypoint is the specific function handler/method to execute. |  | Optional: \{\} <br /> |
-| `environment` _string_ | Environment is the FaaS environment name (e.g., go-env, python-env). |  | Required: \{\} <br /> |
 | `git` _[Git](#git)_ | git is the configuration for the Git repository where generated code will be committed to a branch. |  | Required: \{\} <br /> |
 | `image` _string_ | image is the image containing the generator implementation; cli or scripts. |  | Required: \{\} <br /> |
 | `language` _string_ | Language is the programming language of the function (e.g., go, python, nodejs). |  | Required: \{\} <br /> |

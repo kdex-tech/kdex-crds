@@ -256,18 +256,22 @@ type ContactInfo struct {
 }
 
 type Builder struct {
-	// env is the environment variables to set in the builder.
-	// +kubebuilder:validation:Optional
-	Env []corev1.EnvVar `json:"env,omitempty" protobuf:"bytes,1,rep,name=env"`
-
 	// builderRef is a reference to the kpack.io/v1alpha2/Builder or kpack.io/v1alpha2/ClusterBuilder to use for building the image.
 	// +kubebuilder:validation:Required
 	// +kubebuilder:validation:XValidation:rule=`self.kind == "Builder" || self.kind == "ClusterBuilder"`,message="'kind' must be either kpack.io/v1alpha2/Builder or kpack.io/v1alpha2/ClusterBuilder"
-	BuilderRef KDexObjectReference `json:"builderRef" protobuf:"bytes,2,req,name=builderRef"`
+	BuilderRef KDexObjectReference `json:"builderRef" protobuf:"bytes,1,req,name=builderRef"`
+
+	// env is the environment variables to set in the builder.
+	// +kubebuilder:validation:Optional
+	Env []corev1.EnvVar `json:"env,omitempty" protobuf:"bytes,2,rep,name=env"`
+
+	// Name is the builder name (e.g., tiny, base, full).
+	// +kubebuilder:validation:Required
+	Name string `json:"name" protobuf:"bytes,3,req,name=name"`
 
 	// serviceAccountName is the name of the service account to use for building the image.
 	// +kubebuilder:validation:Optional
-	ServiceAccountName string `json:"serviceAccountName,omitempty" protobuf:"bytes,3,opt,name=serviceAccountName"`
+	ServiceAccountName string `json:"serviceAccountName,omitempty" protobuf:"bytes,4,opt,name=serviceAccountName"`
 }
 
 type ContentEntryApp struct {
@@ -368,10 +372,6 @@ type Generator struct {
 	// Entrypoint is the specific function handler/method to execute.
 	// +kubebuilder:validation:Optional
 	Entrypoint string `json:"entrypoint,omitempty" protobuf:"bytes,1,opt,name=entrypoint"`
-
-	// Environment is the FaaS environment name (e.g., go-env, python-env).
-	// +kubebuilder:validation:Required
-	Environment string `json:"environment,omitempty" protobuf:"bytes,2,opt,name=environment"`
 
 	// git is the configuration for the Git repository where generated code will be committed to a branch.
 	// +kubebuilder:validation:Required
