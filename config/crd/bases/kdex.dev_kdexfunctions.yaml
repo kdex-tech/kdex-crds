@@ -523,6 +523,13 @@ spec:
                               - name
                               type: object
                             type: array
+                          languages:
+                            description: Languages is a list of languages that this
+                              builder supports.
+                            items:
+                              type: string
+                            minItems: 1
+                            type: array
                           name:
                             description: Name is the builder name (e.g., tiny, base,
                               full).
@@ -533,6 +540,7 @@ spec:
                             type: string
                         required:
                         - builderRef
+                        - languages
                         - name
                         type: object
                       path:
@@ -1011,6 +1019,13 @@ spec:
                           - name
                           type: object
                         type: array
+                      languages:
+                        description: Languages is a list of languages that this builder
+                          supports.
+                        items:
+                          type: string
+                        minItems: 1
+                        type: array
                       name:
                         description: Name is the builder name (e.g., tiny, base, full).
                         type: string
@@ -1020,6 +1035,7 @@ spec:
                         type: string
                     required:
                     - builderRef
+                    - languages
                     - name
                     type: object
                   path:

@@ -192,6 +192,7 @@ _Appears in:_
 | --- | --- | --- | --- |
 | `builderRef` _[KDexObjectReference](#kdexobjectreference)_ | builderRef is a reference to the kpack.io/v1alpha2/Builder or kpack.io/v1alpha2/ClusterBuilder to use for building the image. |  | Required: \{\} <br /> |
 | `env` _[EnvVar](https://kubernetes.io/docs/reference/generated/kubernetes-api/v/#envvar-v1-core) array_ | env is the environment variables to set in the builder. |  | Optional: \{\} <br /> |
+| `languages` _string array_ | Languages is a list of languages that this builder supports. |  | MinItems: 1 <br />Required: \{\} <br /> |
 | `name` _string_ | Name is the builder name (e.g., tiny, base, full). |  | Required: \{\} <br /> |
 | `serviceAccountName` _string_ | serviceAccountName is the name of the service account to use for building the image. |  | Optional: \{\} <br /> |
 

@@ -265,13 +265,18 @@ type Builder struct {
 	// +kubebuilder:validation:Optional
 	Env []corev1.EnvVar `json:"env,omitempty" protobuf:"bytes,2,rep,name=env"`
 
+	// Languages is a list of languages that this builder supports.
+	// +kubebuilder:validation:Required
+	// +kubebuilder:validation:MinItems=1
+	Languages []string `json:"languages" protobuf:"bytes,3,rep,name=languages"`
+
 	// Name is the builder name (e.g., tiny, base, full).
 	// +kubebuilder:validation:Required
-	Name string `json:"name" protobuf:"bytes,3,req,name=name"`
+	Name string `json:"name" protobuf:"bytes,4,req,name=name"`
 
 	// serviceAccountName is the name of the service account to use for building the image.
 	// +kubebuilder:validation:Optional
-	ServiceAccountName string `json:"serviceAccountName,omitempty" protobuf:"bytes,4,opt,name=serviceAccountName"`
+	ServiceAccountName string `json:"serviceAccountName,omitempty" protobuf:"bytes,5,opt,name=serviceAccountName"`
 }
 
 type ContentEntryApp struct {
