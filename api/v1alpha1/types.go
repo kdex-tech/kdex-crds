@@ -324,6 +324,28 @@ type CustomElement struct {
 	Description string `json:"description,omitempty" protobuf:"bytes,2,opt,name=description"`
 }
 
+type Deployer struct {
+	// args is an optional array of arguments that will be passed to the generator command.
+	// +kubebuilder:validation:Optional
+	Args []string `json:"args,omitempty"`
+
+	// command is an optional array that contains the code generator command and any flags necessary.
+	// +kubebuilder:validation:Optional
+	Command []string `json:"command,omitempty"`
+
+	// image is the image to use for deploying executables into a FaaS runtime.
+	// +kubebuilder:validation:Required
+	Image string `json:"image" protobuf:"bytes,1,req,name=image"`
+
+	// env is the environment variables to set in the deployer.
+	// +kubebuilder:validation:Optional
+	Env []corev1.EnvVar `json:"env,omitempty" protobuf:"bytes,2,rep,name=env"`
+
+	// serviceAccountName is the name of the service account to use for deploying executables into a FaaS runtime.
+	// +kubebuilder:validation:Optional
+	ServiceAccountName string `json:"serviceAccountName,omitempty" protobuf:"bytes,3,opt,name=serviceAccountName"`
+}
+
 type Executable struct {
 	// image is a reference to executable artifact. In most cases this will be a Docker image. In some other cases
 	// it may be an artifact native to FaaS Adaptor's target runtime.
@@ -389,6 +411,10 @@ type Generator struct {
 	// Language is the programming language of the function (e.g., go, python, nodejs).
 	// +kubebuilder:validation:Required
 	Language string `json:"language,omitempty" protobuf:"bytes,6,opt,name=language"`
+
+	// serviceAccountName is the name of the service account to use for the generator job.
+	// +kubebuilder:validation:Optional
+	ServiceAccountName string `json:"serviceAccountName,omitempty" protobuf:"bytes,7,opt,name=serviceAccountName"`
 }
 
 type Git struct {

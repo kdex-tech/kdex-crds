@@ -17,7 +17,6 @@ limitations under the License.
 package v1alpha1
 
 import (
-	corev1 "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
 
@@ -40,14 +39,9 @@ type KDexFaaSAdaptorSpec struct {
 	// +kubebuilder:validation:Pattern=`^\w+/\w+$`
 	DefaultBuilderGenerator string `json:"defaultBuilderGenerator" protobuf:"bytes,2,req,name=defaultBuilderGenerator"`
 
-	// DeployerImage is the image to used for deploying executables into a FaaS runtime.
+	// Deployer is the configuration for the deployer.
 	// +kubebuilder:validation:Required
-	DeployerImage string `json:"deployerImage" protobuf:"bytes,3,req,name=deployerImage"`
-
-	// DeployerSecretRef is the secret reference to use for deploying executables into a FaaS runtime. It will be
-	// mounted as a volume in the deployer pod.
-	// +kubebuilder:validation:Optional
-	DeployerSecretRef *corev1.LocalObjectReference `json:"deployerSecretRef,omitempty" protobuf:"bytes,4,opt,name=deployerSecretRef"`
+	Deployer Deployer `json:"deployer" protobuf:"bytes,3,req,name=deployer"`
 
 	// Generators is a list of provider-specific generator configurations.
 	// +kubebuilder:validation:MinItems=1

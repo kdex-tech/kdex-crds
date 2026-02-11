@@ -295,6 +295,26 @@ _Appears in:_
 | `description` _string_ | description of the custom element. |  | Optional: \{\} <br /> |
 
 
+#### Deployer
+
+
+
+
+
+
+
+_Appears in:_
+- [KDexFaaSAdaptorSpec](#kdexfaasadaptorspec)
+
+| Field | Description | Default | Validation |
+| --- | --- | --- | --- |
+| `args` _string array_ | args is an optional array of arguments that will be passed to the generator command. |  | Optional: \{\} <br /> |
+| `command` _string array_ | command is an optional array that contains the code generator command and any flags necessary. |  | Optional: \{\} <br /> |
+| `image` _string_ | image is the image to use for deploying executables into a FaaS runtime. |  | Required: \{\} <br /> |
+| `env` _[EnvVar](https://kubernetes.io/docs/reference/generated/kubernetes-api/v/#envvar-v1-core) array_ | env is the environment variables to set in the deployer. |  | Optional: \{\} <br /> |
+| `serviceAccountName` _string_ | serviceAccountName is the name of the service account to use for deploying executables into a FaaS runtime. |  | Optional: \{\} <br /> |
+
+
 #### Executable
 
 
@@ -358,6 +378,7 @@ _Appears in:_
 | `git` _[Git](#git)_ | git is the configuration for the Git repository where generated code will be committed to a branch. |  | Required: \{\} <br /> |
 | `image` _string_ | image is the image containing the generator implementation; cli or scripts. |  | Required: \{\} <br /> |
 | `language` _string_ | Language is the programming language of the function (e.g., go, python, nodejs). |  | Required: \{\} <br /> |
+| `serviceAccountName` _string_ | serviceAccountName is the name of the service account to use for the generator job. |  | Optional: \{\} <br /> |
 
 
 #### Git
@@ -899,8 +920,7 @@ _Appears in:_
 | --- | --- | --- | --- |
 | `builders` _[Builder](#builder) array_ | Builders is a list of builder configurations. |  | MinItems: 1 <br /> |
 | `defaultBuilderGenerator` _string_ | DefaultBuilderGenerator is the default builder/generator combination to use for functions that do not specify a builder or generator.<br />The format is "<builder>/<generator>" (e.g., "tiny/go"). |  | Pattern: `^\w+/\w+$` <br />Required: \{\} <br /> |
-| `deployerImage` _string_ | DeployerImage is the image to used for deploying executables into a FaaS runtime. |  | Required: \{\} <br /> |
-| `deployerSecretRef` _[LocalObjectReference](https://kubernetes.io/docs/reference/generated/kubernetes-api/v/#localobjectreference-v1-core)_ | DeployerSecretRef is the secret reference to use for deploying executables into a FaaS runtime. It will be<br />mounted as a volume in the deployer pod. |  | Optional: \{\} <br /> |
+| `deployer` _[Deployer](#deployer)_ | Deployer is the configuration for the deployer. |  | Required: \{\} <br /> |
 | `generators` _[Generator](#generator) array_ | Generators is a list of provider-specific generator configurations. |  | MinItems: 1 <br /> |
 | `provider` _string_ | Provider is the type of FaaS provider (e.g., "knative", "openfaas", "lambda"). |  | Enum: [knative openfaas lambda azure-functions google-cloud-functions] <br />Required: \{\} <br /> |
 
