@@ -901,7 +901,7 @@ _Appears in:_
 | `defaultGenerator` _string_ | DefaultGenerator is the default generator to use for functions that do not specify a generator. |  | Required: \{\} <br /> |
 | `deployerImage` _string_ | DeployerImage is the image to used for deploying executables into a FaaS runtime. |  | Required: \{\} <br /> |
 | `deployerSecretRef` _[LocalObjectReference](https://kubernetes.io/docs/reference/generated/kubernetes-api/v/#localobjectreference-v1-core)_ | DeployerSecretRef is the secret reference to use for deploying executables into a FaaS runtime. It will be<br />mounted as a volume in the deployer pod. |  | Optional: \{\} <br /> |
-| `generators` _object (keys:string, values:[Generator](#generator))_ | Generators is a map of provider-specific generator configurations.<br />The keys of the map must be formatted as <language>/<environment> (e.g., "python/base"). This should align with the language and environment of the function. |  | MinProperties: 1 <br /> |
+| `generators` _[Generator](#generator) array_ | Generators is a list of provider-specific generator configurations. |  | MinItems: 1 <br /> |
 | `provider` _string_ | Provider is the type of FaaS provider (e.g., "knative", "openfaas", "lambda"). |  | Enum: [knative openfaas lambda azure-functions google-cloud-functions] <br />Required: \{\} <br /> |
 
 

@@ -48,10 +48,9 @@ type KDexFaaSAdaptorSpec struct {
 	// +kubebuilder:validation:Optional
 	DeployerSecretRef *corev1.LocalObjectReference `json:"deployerSecretRef,omitempty" protobuf:"bytes,5,opt,name=deployerSecretRef"`
 
-	// Generators is a map of provider-specific generator configurations.
-	// The keys of the map must be formatted as <language>/<environment> (e.g., "python/base"). This should align with the language and environment of the function.
-	// +kubebuilder:validation:MinProperties=1
-	Generators map[string]Generator `json:"generators" protobuf:"bytes,6,rep,name=generators"`
+	// Generators is a list of provider-specific generator configurations.
+	// +kubebuilder:validation:MinItems=1
+	Generators []Generator `json:"generators" protobuf:"bytes,6,rep,name=generators"`
 
 	// Provider is the type of FaaS provider (e.g., "knative", "openfaas", "lambda").
 	// +kubebuilder:validation:Required

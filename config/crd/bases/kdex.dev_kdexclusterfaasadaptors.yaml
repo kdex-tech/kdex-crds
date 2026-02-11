@@ -275,7 +275,8 @@ spec:
                 type: object
                 x-kubernetes-map-type: atomic
               generators:
-                additionalProperties:
+                description: Generators is a list of provider-specific generator configurations.
+                items:
                   properties:
                     args:
                       description: args is an optional array of arguments that will
@@ -362,11 +363,8 @@ spec:
                   - image
                   - language
                   type: object
-                description: |-
-                  Generators is a map of provider-specific generator configurations.
-                  The keys of the map must be formatted as <language>/<environment> (e.g., "python/base"). This should align with the language and environment of the function.
-                minProperties: 1
-                type: object
+                minItems: 1
+                type: array
               provider:
                 description: Provider is the type of FaaS provider (e.g., "knative",
                   "openfaas", "lambda").

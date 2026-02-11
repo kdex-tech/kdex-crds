@@ -1153,9 +1153,9 @@ func (in *KDexFaaSAdaptorSpec) DeepCopyInto(out *KDexFaaSAdaptorSpec) {
 	}
 	if in.Generators != nil {
 		in, out := &in.Generators, &out.Generators
-		*out = make(map[string]Generator, len(*in))
-		for key, val := range *in {
-			(*out)[key] = *val.DeepCopy()
+		*out = make([]Generator, len(*in))
+		for i := range *in {
+			(*in)[i].DeepCopyInto(&(*out)[i])
 		}
 	}
 }
