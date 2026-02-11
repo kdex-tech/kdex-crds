@@ -896,7 +896,7 @@ _Appears in:_
 
 | Field | Description | Default | Validation |
 | --- | --- | --- | --- |
-| `builders` _object (keys:string, values:[Builder](#builder))_ | Builders is a map of builder configurations.<br />The keys of the map must be formatted as <language>/<environment> (e.g., "python/base"). This should align with the language and environment of the function. |  | MinProperties: 1 <br /> |
+| `builders` _[Builder](#builder) array_ | Builders is a list of builder configurations. |  | MinItems: 1 <br /> |
 | `defaultBuilder` _string_ | DefaultBuilder is the default builder to use for functions that do not specify a builder. |  | Required: \{\} <br /> |
 | `defaultGenerator` _string_ | DefaultGenerator is the default generator to use for functions that do not specify a generator. |  | Required: \{\} <br /> |
 | `deployerImage` _string_ | DeployerImage is the image to used for deploying executables into a FaaS runtime. |  | Required: \{\} <br /> |

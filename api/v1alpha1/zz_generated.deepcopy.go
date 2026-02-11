@@ -1141,9 +1141,9 @@ func (in *KDexFaaSAdaptorSpec) DeepCopyInto(out *KDexFaaSAdaptorSpec) {
 	*out = *in
 	if in.Builders != nil {
 		in, out := &in.Builders, &out.Builders
-		*out = make(map[string]Builder, len(*in))
-		for key, val := range *in {
-			(*out)[key] = *val.DeepCopy()
+		*out = make([]Builder, len(*in))
+		for i := range *in {
+			(*in)[i].DeepCopyInto(&(*out)[i])
 		}
 	}
 	if in.DeployerSecretRef != nil {

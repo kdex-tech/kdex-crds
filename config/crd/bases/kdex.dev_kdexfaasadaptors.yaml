@@ -44,7 +44,8 @@ spec:
             description: spec defines the desired state of KDexFaaSAdaptor
             properties:
               builders:
-                additionalProperties:
+                description: Builders is a list of builder configurations.
+                items:
                   properties:
                     builderRef:
                       description: builderRef is a reference to the kpack.io/v1alpha2/Builder
@@ -244,11 +245,11 @@ spec:
                   - builderRef
                   - name
                   type: object
-                description: |-
-                  Builders is a map of builder configurations.
-                  The keys of the map must be formatted as <language>/<environment> (e.g., "python/base"). This should align with the language and environment of the function.
-                minProperties: 1
-                type: object
+                minItems: 1
+                type: array
+                x-kubernetes-list-map-keys:
+                - name
+                x-kubernetes-list-type: map
               defaultBuilder:
                 description: DefaultBuilder is the default builder to use for functions
                   that do not specify a builder.
@@ -363,6 +364,9 @@ spec:
                   type: object
                 minItems: 1
                 type: array
+                x-kubernetes-list-map-keys:
+                - language
+                x-kubernetes-list-type: map
               provider:
                 description: Provider is the type of FaaS provider (e.g., "knative",
                   "openfaas", "lambda").

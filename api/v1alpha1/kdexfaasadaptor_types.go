@@ -26,10 +26,13 @@ import (
 
 // KDexFaaSAdaptorSpec defines the desired state of KDexFaaSAdaptor
 type KDexFaaSAdaptorSpec struct {
-	// Builders is a map of builder configurations.
-	// The keys of the map must be formatted as <language>/<environment> (e.g., "python/base"). This should align with the language and environment of the function.
-	// +kubebuilder:validation:MinProperties=1
-	Builders map[string]Builder `json:"builders" protobuf:"bytes,1,rep,name=builders"`
+	// Builders is a list of builder configurations.
+	// +kubebuilder:validation:MinItems=1
+	// +patchMergeKey=name
+	// +patchStrategy=merge
+	// +listType=map
+	// +listMapKey=name
+	Builders []Builder `json:"builders" protobuf:"bytes,1,rep,name=builders"`
 
 	// DefaultBuilder is the default builder to use for functions that do not specify a builder.
 	// +kubebuilder:validation:Required
@@ -50,6 +53,10 @@ type KDexFaaSAdaptorSpec struct {
 
 	// Generators is a list of provider-specific generator configurations.
 	// +kubebuilder:validation:MinItems=1
+	// +patchMergeKey=language
+	// +patchStrategy=merge
+	// +listType=map
+	// +listMapKey=language
 	Generators []Generator `json:"generators" protobuf:"bytes,6,rep,name=generators"`
 
 	// Provider is the type of FaaS provider (e.g., "knative", "openfaas", "lambda").
