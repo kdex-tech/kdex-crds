@@ -1102,8 +1102,8 @@ type SecurityRequirement map[string][]string
 // Source contains source information.
 type Source struct {
 	// builder is used to build the source code into an image.
-	// +kubebuilder:validation:Required
-	Builder Builder `json:"builder" protobuf:"bytes,1,req,name=builder"`
+	// +kubebuilder:validation:Optional
+	Builder *Builder `json:"builder,omitempty" protobuf:"bytes,1,opt,name=builder"`
 
 	// path is the path to the source code in the repository.
 	// +kubebuilder:validation:Optional

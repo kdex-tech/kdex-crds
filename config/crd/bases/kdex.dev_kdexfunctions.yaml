@@ -584,7 +584,6 @@ spec:
                         - name
                         x-kubernetes-list-type: map
                     required:
-                    - builder
                     - repository
                     - revision
                     type: object
@@ -1083,7 +1082,6 @@ spec:
                     - name
                     x-kubernetes-list-type: map
                 required:
-                - builder
                 - repository
                 - revision
                 type: object

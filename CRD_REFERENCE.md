@@ -2441,7 +2441,7 @@ _Appears in:_
 
 | Field | Description | Default | Validation |
 | --- | --- | --- | --- |
-| `builder` _[Builder](#builder)_ | builder is used to build the source code into an image. |  | Required: \{\} <br /> |
+| `builder` _[Builder](#builder)_ | builder is used to build the source code into an image. |  | Optional: \{\} <br /> |
 | `path` _string_ | path is the path to the source code in the repository. |  | Optional: \{\} <br /> |
 | `repository` _string_ | repository is the git repository address to the source code. |  | Required: \{\} <br /> |
 | `revision` _string_ | revision is the git revision (tag, branch or commit hash) to the source code. |  | Required: \{\} <br /> |
