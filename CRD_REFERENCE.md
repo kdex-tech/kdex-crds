@@ -922,6 +922,7 @@ _Appears in:_
 | `defaultBuilderGenerator` _string_ | DefaultBuilderGenerator is the default builder/generator combination to use for functions that do not specify a builder or generator.<br />The format is "<builder>/<generator>" (e.g., "tiny/go"). |  | Pattern: `^\w+/\w+$` <br />Required: \{\} <br /> |
 | `deployer` _[Deployer](#deployer)_ | Deployer is the configuration for the deployer. |  | Required: \{\} <br /> |
 | `generators` _[Generator](#generator) array_ | Generators is a list of provider-specific generator configurations. |  | MinItems: 1 <br /> |
+| `observer` _[Observer](#observer)_ | Observer is the configuration for the observer. |  | Optional: \{\} <br /> |
 | `provider` _string_ | Provider is the type of FaaS provider (e.g., "knative", "openfaas", "lambda"). |  | Enum: [knative openfaas lambda azure-functions google-cloud-functions] <br />Required: \{\} <br /> |
 
 
@@ -2231,6 +2232,27 @@ _Appears in:_
 | `clientSecretRef` _[LocalSecretWithKeyReference](#localsecretwithkeyreference)_ | clientSecretRef is a reference to a secret in the host's namespace that holds the client_secret assigned to this application by the OIDC provider. |  | Required: \{\} <br /> |
 | `oidcProviderURL` _string_ | oidcProviderURL is the well known URL of the OIDC provider. |  | Required: \{\} <br /> |
 | `roles` _string array_ | roles is an array of additional roles that will be requested from the provider. |  | Optional: \{\} <br /> |
+
+
+#### Observer
+
+
+
+
+
+
+
+_Appears in:_
+- [KDexFaaSAdaptorSpec](#kdexfaasadaptorspec)
+
+| Field | Description | Default | Validation |
+| --- | --- | --- | --- |
+| `args` _string array_ | args is an optional array of arguments that will be passed to the generator command. |  | Optional: \{\} <br /> |
+| `command` _string array_ | command is an optional array that contains the code generator command and any flags necessary. |  | Optional: \{\} <br /> |
+| `image` _string_ | image is the image to use for observing the function state. |  | Required: \{\} <br /> |
+| `env` _[EnvVar](https://kubernetes.io/docs/reference/generated/kubernetes-api/v/#envvar-v1-core) array_ | env is the environment variables to set in the observer. |  | Optional: \{\} <br /> |
+| `schedule` _string_ | schedule is the schedule in Cron format, see https://en.wikipedia.org/wiki/Cron. | */5 * * * * | Optional: \{\} <br /> |
+| `serviceAccountName` _string_ | serviceAccountName is the name of the service account to use for observing the function state. |  | Optional: \{\} <br /> |
 
 
 #### OpenAPI

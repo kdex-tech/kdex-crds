@@ -346,6 +346,33 @@ type Deployer struct {
 	ServiceAccountName string `json:"serviceAccountName,omitempty" protobuf:"bytes,3,opt,name=serviceAccountName"`
 }
 
+type Observer struct {
+	// args is an optional array of arguments that will be passed to the generator command.
+	// +kubebuilder:validation:Optional
+	Args []string `json:"args,omitempty"`
+
+	// command is an optional array that contains the code generator command and any flags necessary.
+	// +kubebuilder:validation:Optional
+	Command []string `json:"command,omitempty"`
+
+	// image is the image to use for observing the function state.
+	// +kubebuilder:validation:Required
+	Image string `json:"image" protobuf:"bytes,1,req,name=image"`
+
+	// env is the environment variables to set in the observer.
+	// +kubebuilder:validation:Optional
+	Env []corev1.EnvVar `json:"env,omitempty" protobuf:"bytes,2,rep,name=env"`
+
+	// schedule is the schedule in Cron format, see https://en.wikipedia.org/wiki/Cron.
+	// +kubebuilder:validation:Optional
+	// +kubebuilder:default="*/5 * * * *"
+	Schedule string `json:"schedule,omitempty" protobuf:"bytes,3,opt,name=schedule"`
+
+	// serviceAccountName is the name of the service account to use for observing the function state.
+	// +kubebuilder:validation:Optional
+	ServiceAccountName string `json:"serviceAccountName,omitempty" protobuf:"bytes,4,opt,name=serviceAccountName"`
+}
+
 type Executable struct {
 	// image is a reference to executable artifact. In most cases this will be a Docker image. In some other cases
 	// it may be an artifact native to FaaS Adaptor's target runtime.

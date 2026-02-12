@@ -51,6 +51,10 @@ type KDexFaaSAdaptorSpec struct {
 	// +listMapKey=language
 	Generators []Generator `json:"generators" protobuf:"bytes,5,rep,name=generators"`
 
+	// Observer is the configuration for the observer.
+	// +kubebuilder:validation:Optional
+	Observer *Observer `json:"observer,omitempty" protobuf:"bytes,4,opt,name=observer"`
+
 	// Provider is the type of FaaS provider (e.g., "knative", "openfaas", "lambda").
 	// +kubebuilder:validation:Required
 	// +kubebuilder:validation:Enum=knative;openfaas;lambda;azure-functions;google-cloud-functions
