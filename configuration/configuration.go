@@ -24,6 +24,16 @@ type AuthData struct {
 	Username string `json:"username,omitempty" yaml:"username,omitempty"`
 }
 
+type BackendDefault struct {
+	Deployment            appsv1.DeploymentSpec    `json:"deployment" yaml:"deployment"`
+	HttpRoute             gatewayv1.HTTPRouteSpec  `json:"httpRoute" yaml:"httpRoute"`
+	Ingress               networkingv1.IngressSpec `json:"ingress" yaml:"ingress"`
+	ModulePath            string                   `json:"modulePath" yaml:"modulePath"`
+	Service               corev1.ServiceSpec       `json:"service" yaml:"service"`
+	ServerImage           string                   `json:"serverImage" yaml:"serverImage"`
+	ServerImagePullPolicy corev1.PullPolicy        `json:"serverImagePullPolicy" yaml:"serverImagePullPolicy"`
+}
+
 type HostDefault struct {
 	Deployment appsv1.DeploymentSpec `json:"deployment" yaml:"deployment"`
 	RoleRef    rbacv1.RoleRef        `json:"roleRef" yaml:"roleRef"`
@@ -72,16 +82,6 @@ func (c *Registry) GetAddress() string {
 	} else {
 		return "https://" + c.Host
 	}
-}
-
-type BackendDefault struct {
-	Deployment            appsv1.DeploymentSpec    `json:"deployment" yaml:"deployment"`
-	HttpRoute             gatewayv1.HTTPRouteSpec  `json:"httpRoute" yaml:"httpRoute"`
-	Ingress               networkingv1.IngressSpec `json:"ingress" yaml:"ingress"`
-	ModulePath            string                   `json:"modulePath" yaml:"modulePath"`
-	Service               corev1.ServiceSpec       `json:"service" yaml:"service"`
-	ServerImage           string                   `json:"serverImage" yaml:"serverImage"`
-	ServerImagePullPolicy corev1.PullPolicy        `json:"serverImagePullPolicy" yaml:"serverImagePullPolicy"`
 }
 
 func LoadConfiguration(configFile string, scheme *runtime.Scheme) NexusConfiguration {

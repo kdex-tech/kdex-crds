@@ -182,6 +182,14 @@ type Auth struct {
 
 // Backend defines a deployment for serving resources specific to the refer.
 type Backend struct {
+	// env is an optional list of environment variables to set in the container.
+	// +kubebuilder:validation:Optional
+	// +patchMergeKey=name
+	// +patchStrategy=merge
+	// +listType=map
+	// +listMapKey=name
+	Env []corev1.EnvVar `json:"env,omitempty" patchStrategy:"merge" patchMergeKey:"name" protobuf:"bytes,1,rep,name=env"`
+
 	// imagePullSecrets is an optional list of references to secrets in the same namespace to use for pulling the referenced images.
 	// More info: https://kubernetes.io/docs/concepts/containers/images#specifying-imagepullsecrets-on-a-pod
 	// +kubebuilder:validation:Optional

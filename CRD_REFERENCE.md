@@ -166,6 +166,7 @@ _Appears in:_
 
 | Field | Description | Default | Validation |
 | --- | --- | --- | --- |
+| `env` _[EnvVar](https://kubernetes.io/docs/reference/generated/kubernetes-api/v/#envvar-v1-core) array_ | env is an optional list of environment variables to set in the container. |  | Optional: \{\} <br /> |
 | `imagePullSecrets` _[LocalObjectReference](https://kubernetes.io/docs/reference/generated/kubernetes-api/v/#localobjectreference-v1-core) array_ | imagePullSecrets is an optional list of references to secrets in the same namespace to use for pulling the referenced images.<br />More info: https://kubernetes.io/docs/concepts/containers/images#specifying-imagepullsecrets-on-a-pod |  | Optional: \{\} <br /> |
 | `ingressPath` _string_ | ingressPath is a prefix beginning with '/-/' plus additional characters. This indicates where in the Ingress/HTTPRoute the Backend will be mounted.<br />This value is determined by the implementation that embeds the Backend and cannot be changed. |  | Optional: \{\} <br />Pattern: `^/-/.+` <br /> |
 | `replicas` _integer_ | replicas is the number of desired pods. This is a pointer to distinguish between explicit<br />zero and not specified. Defaults to 1. |  | Optional: \{\} <br /> |
@@ -481,6 +482,7 @@ _Appears in:_
 | `customElements` _[CustomElement](#customelement) array_ | customElements is a list of custom elements implemented by the micro-frontend application. |  | MaxItems: 32 <br />MinItems: 1 <br /> |
 | `packageReference` _[PackageReference](#packagereference)_ | packageReference specifies the name and version of an NPM package that contains the script. The package.json must describe an ES module. |  | Required: \{\} <br /> |
 | `scripts` _[ScriptDef](#scriptdef) array_ | scripts is a set of script references. They may contain URLs that point to resources hosted at some public address, npm module references or they may contain tag contents. |  | MaxItems: 8 <br />Optional: \{\} <br /> |
+| `env` _[EnvVar](https://kubernetes.io/docs/reference/generated/kubernetes-api/v/#envvar-v1-core) array_ | env is an optional list of environment variables to set in the container. |  | Optional: \{\} <br /> |
 | `imagePullSecrets` _[LocalObjectReference](https://kubernetes.io/docs/reference/generated/kubernetes-api/v/#localobjectreference-v1-core) array_ | imagePullSecrets is an optional list of references to secrets in the same namespace to use for pulling the referenced images.<br />More info: https://kubernetes.io/docs/concepts/containers/images#specifying-imagepullsecrets-on-a-pod |  | Optional: \{\} <br /> |
 | `ingressPath` _string_ | ingressPath is a prefix beginning with '/-/' plus additional characters. This indicates where in the Ingress/HTTPRoute the Backend will be mounted.<br />This value is determined by the implementation that embeds the Backend and cannot be changed. |  | Optional: \{\} <br />Pattern: `^/-/.+` <br /> |
 | `replicas` _integer_ | replicas is the number of desired pods. This is a pointer to distinguish between explicit<br />zero and not specified. Defaults to 1. |  | Optional: \{\} <br /> |
@@ -1089,6 +1091,7 @@ _Appears in:_
 | --- | --- | --- | --- |
 | `assets` _[Assets](#assets)_ | assets is a set of elements that define a host specific HTML instructions (e.g. favicon, site logo, charset). |  | MaxItems: 32 <br /> |
 | `auth` _[Auth](#auth)_ | auth holds the host's authentication configuration. |  | Optional: \{\} <br /> |
+| `env` _[EnvVar](https://kubernetes.io/docs/reference/generated/kubernetes-api/v/#envvar-v1-core) array_ | env is an optional list of environment variables to set in the container. |  | Optional: \{\} <br /> |
 | `imagePullSecrets` _[LocalObjectReference](https://kubernetes.io/docs/reference/generated/kubernetes-api/v/#localobjectreference-v1-core) array_ | imagePullSecrets is an optional list of references to secrets in the same namespace to use for pulling the referenced images.<br />More info: https://kubernetes.io/docs/concepts/containers/images#specifying-imagepullsecrets-on-a-pod |  | Optional: \{\} <br /> |
 | `ingressPath` _string_ | ingressPath is a prefix beginning with '/-/' plus additional characters. This indicates where in the Ingress/HTTPRoute the Backend will be mounted.<br />This value is determined by the implementation that embeds the Backend and cannot be changed. |  | Optional: \{\} <br />Pattern: `^/-/.+` <br /> |
 | `replicas` _integer_ | replicas is the number of desired pods. This is a pointer to distinguish between explicit<br />zero and not specified. Defaults to 1. |  | Optional: \{\} <br /> |
@@ -1171,6 +1174,7 @@ _Appears in:_
 | --- | --- | --- | --- |
 | `assets` _[Assets](#assets)_ | assets is a set of elements that define a host specific HTML instructions (e.g. favicon, site logo, charset). |  | MaxItems: 32 <br /> |
 | `auth` _[Auth](#auth)_ | auth holds the host's authentication configuration. |  | Optional: \{\} <br /> |
+| `env` _[EnvVar](https://kubernetes.io/docs/reference/generated/kubernetes-api/v/#envvar-v1-core) array_ | env is an optional list of environment variables to set in the container. |  | Optional: \{\} <br /> |
 | `imagePullSecrets` _[LocalObjectReference](https://kubernetes.io/docs/reference/generated/kubernetes-api/v/#localobjectreference-v1-core) array_ | imagePullSecrets is an optional list of references to secrets in the same namespace to use for pulling the referenced images.<br />More info: https://kubernetes.io/docs/concepts/containers/images#specifying-imagepullsecrets-on-a-pod |  | Optional: \{\} <br /> |
 | `ingressPath` _string_ | ingressPath is a prefix beginning with '/-/' plus additional characters. This indicates where in the Ingress/HTTPRoute the Backend will be mounted.<br />This value is determined by the implementation that embeds the Backend and cannot be changed. |  | Optional: \{\} <br />Pattern: `^/-/.+` <br /> |
 | `replicas` _integer_ | replicas is the number of desired pods. This is a pointer to distinguish between explicit<br />zero and not specified. Defaults to 1. |  | Optional: \{\} <br /> |
@@ -1903,6 +1907,7 @@ _Appears in:_
 | --- | --- | --- | --- |
 | `packageReference` _[PackageReference](#packagereference)_ | packageReference specifies the name and version of an NPM package that contains the script. The package.json must describe an ES module. |  | Optional: \{\} <br /> |
 | `scripts` _[ScriptDef](#scriptdef) array_ | scripts is a set of script references. They may contain URLs that point to resources hosted at some public address, npm module references or they may contain tag contents. |  | MaxItems: 8 <br />Optional: \{\} <br /> |
+| `env` _[EnvVar](https://kubernetes.io/docs/reference/generated/kubernetes-api/v/#envvar-v1-core) array_ | env is an optional list of environment variables to set in the container. |  | Optional: \{\} <br /> |
 | `imagePullSecrets` _[LocalObjectReference](https://kubernetes.io/docs/reference/generated/kubernetes-api/v/#localobjectreference-v1-core) array_ | imagePullSecrets is an optional list of references to secrets in the same namespace to use for pulling the referenced images.<br />More info: https://kubernetes.io/docs/concepts/containers/images#specifying-imagepullsecrets-on-a-pod |  | Optional: \{\} <br /> |
 | `ingressPath` _string_ | ingressPath is a prefix beginning with '/-/' plus additional characters. This indicates where in the Ingress/HTTPRoute the Backend will be mounted.<br />This value is determined by the implementation that embeds the Backend and cannot be changed. |  | Optional: \{\} <br />Pattern: `^/-/.+` <br /> |
 | `replicas` _integer_ | replicas is the number of desired pods. This is a pointer to distinguish between explicit<br />zero and not specified. Defaults to 1. |  | Optional: \{\} <br /> |
@@ -1969,6 +1974,7 @@ _Appears in:_
 | --- | --- | --- | --- |
 | `assets` _[Assets](#assets)_ | assets is a set of elements that define a portable set of design rules. |  | MaxItems: 32 <br /> |
 | `scriptLibraryRef` _[KDexObjectReference](#kdexobjectreference)_ | scriptLibraryRef is an optional reference to a KDexScriptLibrary resource. |  | Optional: \{\} <br /> |
+| `env` _[EnvVar](https://kubernetes.io/docs/reference/generated/kubernetes-api/v/#envvar-v1-core) array_ | env is an optional list of environment variables to set in the container. |  | Optional: \{\} <br /> |
 | `imagePullSecrets` _[LocalObjectReference](https://kubernetes.io/docs/reference/generated/kubernetes-api/v/#localobjectreference-v1-core) array_ | imagePullSecrets is an optional list of references to secrets in the same namespace to use for pulling the referenced images.<br />More info: https://kubernetes.io/docs/concepts/containers/images#specifying-imagepullsecrets-on-a-pod |  | Optional: \{\} <br /> |
 | `ingressPath` _string_ | ingressPath is a prefix beginning with '/-/' plus additional characters. This indicates where in the Ingress/HTTPRoute the Backend will be mounted.<br />This value is determined by the implementation that embeds the Backend and cannot be changed. |  | Optional: \{\} <br />Pattern: `^/-/.+` <br /> |
 | `replicas` _integer_ | replicas is the number of desired pods. This is a pointer to distinguish between explicit<br />zero and not specified. Defaults to 1. |  | Optional: \{\} <br /> |
