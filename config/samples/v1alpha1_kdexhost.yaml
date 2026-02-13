@@ -15,4 +15,4 @@ spec:
   modulePolicy: Loose
   routing:
     domains:
-      - site-a.docker.localhost
+    - site-a.test
