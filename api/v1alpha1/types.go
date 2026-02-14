@@ -1045,15 +1045,114 @@ const (
 
 // ScalingConfig defines scaling parameters.
 type ScalingConfig struct {
-	// MaxReplicas is the maximum number of replicas.
+	// activationScale controls the minimum number of replicas that will be created
+	// when the Function scales up from zero. After the Function has reached this
+	// scale one time, this value is ignored. This means that the Function will
+	// scale down after the activation scale is reached if the actual traffic
+	// received needs a smaller scale.
+	//
+	// When the Function is created, the larger of activation scale and lower
+	// bound is automatically chosen as the initial target scale.
+	//
+	// +kubebuilder:validation:Optional
+	// +kubebuilder:default:=1
+	ActivationScale *int32 `json:"activationScale,omitempty" protobuf:"varint,1,opt,name=activationScale"`
+
+	// initialScale controls the initial target scale a Function must reach
+	// immediately after it is created before it is marked as Ready. After the
+	// Function has reached this scale one time, this value is ignored. This
+	// means that the Function will scale down after the initial target scale
+	// is reached if the actual traffic received only needs a smaller scale.
+	//
+	// When the Function is created, the larger of initialScale and
+	// minScale is automatically chosen as the initial target scale.
+	//
+	// +kubebuilder:validation:Optional
+	// +kubebuilder:default:=1
+	InitialScale *int32 `json:"initialScale,omitempty" protobuf:"varint,2,opt,name=initialScale"`
+
+	// maxScale controls the maximum number of replicas that each Function
+	// should have. The autoscaler will attempt to never have more than this
+	// number of replicas running, or in the process of being created, at any
+	// one point in time.
+	// +kubebuilder:validation:Optional
+	// +kubebuilder:default:=0
+	MaxScale *int32 `json:"maxScale,omitempty" protobuf:"varint,3,opt,name=maxScale"`
+
+	// metric defines which metric type is watched by the Autoscaler.
+	// +kubebuilder:validation:Enum="concurrency";"rps"
+	// +kubebuilder:validation:Optional
+	// +kubebuilder:default:="concurrency"
+	Metric *string `json:"metric,omitempty" protobuf:"bytes,4,opt,name=metric"`
+
+	// minScale controls the minimum number of replicas that each Function
+	// should have. The autoscaler will attempt to never have less than this
+	// number of replicas at any one point in time.
+	// +kubebuilder:validation:Optional
+	// +kubebuilder:default:=0
+	MinScale *int32 `json:"minScale,omitempty" protobuf:"varint,5,opt,name=minScale"`
+
+	// panicThresholdPercentage defines when the Autoscaler will move from stable
+	// mode into panic mode.
+	// +kubebuilder:validation:Optional
+	// +kubebuilder:validation:Minimum=110
+	// +kubebuilder:validation:Maximum=1000
+	// +kubebuilder:default:=200
+	PanicThresholdPercentage *int32 `json:"panicThresholdPercentage,omitempty" protobuf:"varint,6,opt,name=panicThresholdPercentage"`
+
+	// The panic window is defined as a percentage of the stable window to
+	// assure that both are relative to each other in a working way.
+	//
+	// panicWindowPercentage indicates how the window over which historical
+	// data is evaluated will shrink upon entering panic mode. For example,
+	// a value of 10.0 means that in panic mode the window will be 10% of the
+	// stable window size.
 	// +kubebuilder:validation:Optional
 	// +kubebuilder:validation:Minimum=1
-	MaxReplicas *int32 `json:"maxReplicas,omitempty" protobuf:"varint,2,opt,name=maxReplicas"`
+	// +kubebuilder:validation:Maximum=100
+	// +kubebuilder:default:=10
+	PanicWindowPercentage *int32 `json:"panicWindowPercentage,omitempty" protobuf:"varint,7,opt,name=panicWindowPercentage"`
 
-	// MinReplicas is the minimum number of replicas.
+	// scaleDownDelay specifies a time window which must pass at reduced
+	// concurrency before a scale-down decision is applied. This can be useful,
+	// for example, to keep containers around for a configurable duration to
+	// avoid a cold start penalty if new requests come in. Unlike setting a lower
+	// bound, the revision will eventually be scaled down if reduced concurrency
+	// is maintained for the delay period.
 	// +kubebuilder:validation:Optional
-	// +kubebuilder:validation:Minimum=0
-	MinReplicas *int32 `json:"minReplicas,omitempty" protobuf:"varint,1,opt,name=minReplicas"`
+	// +kubebuilder:default:="0s"
+	ScaleDownDelay *metav1.Duration `json:"scaleDownDelay,omitempty" protobuf:"bytes,8,opt,name=scaleDownDelay"`
+
+	// scaleToZeroPodRetentionPeriod determines the minimum amount of time that
+	// the last pod will remain active after the Autoscaler decides to scale pods
+	// to zero. This can be useful to avoid a cold start penalty if new requests
+	// come in. Unlike setting a lower bound, the revision will eventually be
+	// scaled down if reduced concurrency is maintained for the delay period.
+	// +kubebuilder:validation:Optional
+	// +kubebuilder:default:="0s"
+	ScaleToZeroPodRetentionPeriod *metav1.Duration `json:"scaleToZeroPodRetentionPeriod,omitempty" protobuf:"bytes,9,opt,name=scaleToZeroPodRetentionPeriod"`
+
+	// stableWindow defines the sliding time window over which metrics are
+	// averaged to provide the input for scaling decisions when the autoscaler
+	// is not in Panic mode.
+	// +kubebuilder:validation:Optional
+	// +kubebuilder:default:="60s"
+	StableWindow *metav1.Duration `json:"stableWindow,omitempty" protobuf:"bytes,10,opt,name=stableWindow"`
+
+	// target provides the Autoscaler with a target value that it tries to
+	// maintain for the configured metric. This value is metric agnostic. This
+	// means the target is simply an integer value, which can be applied for any
+	// metric type.
+	// +kubebuilder:validation:Optional
+	Target *int32 `json:"target,omitempty" protobuf:"varint,11,opt,name=target"`
+
+	// targetUtilizationPercentage specifies what percentage of the previously
+	// specified target should actually be targeted by the Autoscaler. This is
+	// also known as specifying the hotness at which a replica runs, which causes
+	// the Autoscaler to scale up before the defined hard limit is reached.
+	// +kubebuilder:validation:Optional
+	// +kubebuilder:default:=70
+	TargetUtilizationPercentage *int32 `json:"targetUtilizationPercentage,omitempty" protobuf:"varint,12,opt,name=targetUtilizationPercentage"`
 }
 
 // +kubebuilder:validation:ExactlyOneOf=script;scriptSrc

@@ -232,15 +232,122 @@ spec:
                         description: Scaling allows configuration for min/max replicas
                           and autoscaler type.
                         properties:
-                          maxReplicas:
-                            description: MaxReplicas is the maximum number of replicas.
+                          activationScale:
+                            default: 1
+                            description: |-
+                              activationScale controls the minimum number of replicas that will be created
+                              when the Function scales up from zero. After the Function has reached this
+                              scale one time, this value is ignored. This means that the Function will
+                              scale down after the activation scale is reached if the actual traffic
+                              received needs a smaller scale.
+
+                              When the Function is created, the larger of activation scale and lower
+                              bound is automatically chosen as the initial target scale.
                             format: int32
+                            type: integer
+                          initialScale:
+                            default: 1
+                            description: |-
+                              initialScale controls the initial target scale a Function must reach
+                              immediately after it is created before it is marked as Ready. After the
+                              Function has reached this scale one time, this value is ignored. This
+                              means that the Function will scale down after the initial target scale
+                              is reached if the actual traffic received only needs a smaller scale.
+
+                              When the Function is created, the larger of initialScale and
+                              minScale is automatically chosen as the initial target scale.
+                            format: int32
+                            type: integer
+                          maxScale:
+                            default: 0
+                            description: |-
+                              maxScale controls the maximum number of replicas that each Function
+                              should have. The autoscaler will attempt to never have more than this
+                              number of replicas running, or in the process of being created, at any
+                              one point in time.
+                            format: int32
+                            type: integer
+                          metric:
+                            default: concurrency
+                            description: metric defines which metric type is watched
+                              by the Autoscaler.
+                            enum:
+                            - concurrency
+                            - rps
+                            type: string
+                          minScale:
+                            default: 0
+                            description: |-
+                              minScale controls the minimum number of replicas that each Function
+                              should have. The autoscaler will attempt to never have less than this
+                              number of replicas at any one point in time.
+                            format: int32
+                            type: integer
+                          panicThresholdPercentage:
+                            default: 200
+                            description: |-
+                              panicThresholdPercentage defines when the Autoscaler will move from stable
+                              mode into panic mode.
+                            format: int32
+                            maximum: 1000
+                            minimum: 110
+                            type: integer
+                          panicWindowPercentage:
+                            default: 10
+                            description: |-
+                              The panic window is defined as a percentage of the stable window to
+                              assure that both are relative to each other in a working way.
+
+                              panicWindowPercentage indicates how the window over which historical
+                              data is evaluated will shrink upon entering panic mode. For example,
+                              a value of 10.0 means that in panic mode the window will be 10% of the
+                              stable window size.
+                            format: int32
+                            maximum: 100
                             minimum: 1
                             type: integer
-                          minReplicas:
-                            description: MinReplicas is the minimum number of replicas.
+                          scaleDownDelay:
+                            default: 0s
+                            description: |-
+                              scaleDownDelay specifies a time window which must pass at reduced
+                              concurrency before a scale-down decision is applied. This can be useful,
+                              for example, to keep containers around for a configurable duration to
+                              avoid a cold start penalty if new requests come in. Unlike setting a lower
+                              bound, the revision will eventually be scaled down if reduced concurrency
+                              is maintained for the delay period.
+                            type: string
+                          scaleToZeroPodRetentionPeriod:
+                            default: 0s
+                            description: |-
+                              scaleToZeroPodRetentionPeriod determines the minimum amount of time that
+                              the last pod will remain active after the Autoscaler decides to scale pods
+                              to zero. This can be useful to avoid a cold start penalty if new requests
+                              come in. Unlike setting a lower bound, the revision will eventually be
+                              scaled down if reduced concurrency is maintained for the delay period.
+                            type: string
+                          stableWindow:
+                            default: 60s
+                            description: |-
+                              stableWindow defines the sliding time window over which metrics are
+                              averaged to provide the input for scaling decisions when the autoscaler
+                              is not in Panic mode.
+                            type: string
+                          target:
+                            description: |-
+                              target provides the Autoscaler with a target value that it tries to
+                              maintain for the configured metric. This value is metric agnostic. This
+                              means the target is simply an integer value, which can be applied for any
+                              metric type.
                             format: int32
-                            minimum: 0
+                            type: integer
+                          targetUtilizationPercentage:
+                            default: 70
+                            description: |-
+                              targetUtilizationPercentage specifies what percentage of the previously
+                              specified target should actually be targeted by the Autoscaler. This is
+                              also known as specifying the hotness at which a replica runs, which causes
+                              the Autoscaler to scale up before the defined hard limit is reached.
+                            format: int32
                             type: integer
                         type: object
                     type: object
@@ -718,15 +825,122 @@ spec:
                     description: Scaling allows configuration for min/max replicas
                       and autoscaler type.
                     properties:
-                      maxReplicas:
-                        description: MaxReplicas is the maximum number of replicas.
+                      activationScale:
+                        default: 1
+                        description: |-
+                          activationScale controls the minimum number of replicas that will be created
+                          when the Function scales up from zero. After the Function has reached this
+                          scale one time, this value is ignored. This means that the Function will
+                          scale down after the activation scale is reached if the actual traffic
+                          received needs a smaller scale.
+
+                          When the Function is created, the larger of activation scale and lower
+                          bound is automatically chosen as the initial target scale.
                         format: int32
+                        type: integer
+                      initialScale:
+                        default: 1
+                        description: |-
+                          initialScale controls the initial target scale a Function must reach
+                          immediately after it is created before it is marked as Ready. After the
+                          Function has reached this scale one time, this value is ignored. This
+                          means that the Function will scale down after the initial target scale
+                          is reached if the actual traffic received only needs a smaller scale.
+
+                          When the Function is created, the larger of initialScale and
+                          minScale is automatically chosen as the initial target scale.
+                        format: int32
+                        type: integer
+                      maxScale:
+                        default: 0
+                        description: |-
+                          maxScale controls the maximum number of replicas that each Function
+                          should have. The autoscaler will attempt to never have more than this
+                          number of replicas running, or in the process of being created, at any
+                          one point in time.
+                        format: int32
+                        type: integer
+                      metric:
+                        default: concurrency
+                        description: metric defines which metric type is watched by
+                          the Autoscaler.
+                        enum:
+                        - concurrency
+                        - rps
+                        type: string
+                      minScale:
+                        default: 0
+                        description: |-
+                          minScale controls the minimum number of replicas that each Function
+                          should have. The autoscaler will attempt to never have less than this
+                          number of replicas at any one point in time.
+                        format: int32
+                        type: integer
+                      panicThresholdPercentage:
+                        default: 200
+                        description: |-
+                          panicThresholdPercentage defines when the Autoscaler will move from stable
+                          mode into panic mode.
+                        format: int32
+                        maximum: 1000
+                        minimum: 110
+                        type: integer
+                      panicWindowPercentage:
+                        default: 10
+                        description: |-
+                          The panic window is defined as a percentage of the stable window to
+                          assure that both are relative to each other in a working way.
+
+                          panicWindowPercentage indicates how the window over which historical
+                          data is evaluated will shrink upon entering panic mode. For example,
+                          a value of 10.0 means that in panic mode the window will be 10% of the
+                          stable window size.
+                        format: int32
+                        maximum: 100
                         minimum: 1
                         type: integer
-                      minReplicas:
-                        description: MinReplicas is the minimum number of replicas.
+                      scaleDownDelay:
+                        default: 0s
+                        description: |-
+                          scaleDownDelay specifies a time window which must pass at reduced
+                          concurrency before a scale-down decision is applied. This can be useful,
+                          for example, to keep containers around for a configurable duration to
+                          avoid a cold start penalty if new requests come in. Unlike setting a lower
+                          bound, the revision will eventually be scaled down if reduced concurrency
+                          is maintained for the delay period.
+                        type: string
+                      scaleToZeroPodRetentionPeriod:
+                        default: 0s
+                        description: |-
+                          scaleToZeroPodRetentionPeriod determines the minimum amount of time that
+                          the last pod will remain active after the Autoscaler decides to scale pods
+                          to zero. This can be useful to avoid a cold start penalty if new requests
+                          come in. Unlike setting a lower bound, the revision will eventually be
+                          scaled down if reduced concurrency is maintained for the delay period.
+                        type: string
+                      stableWindow:
+                        default: 60s
+                        description: |-
+                          stableWindow defines the sliding time window over which metrics are
+                          averaged to provide the input for scaling decisions when the autoscaler
+                          is not in Panic mode.
+                        type: string
+                      target:
+                        description: |-
+                          target provides the Autoscaler with a target value that it tries to
+                          maintain for the configured metric. This value is metric agnostic. This
+                          means the target is simply an integer value, which can be applied for any
+                          metric type.
                         format: int32
-                        minimum: 0
+                        type: integer
+                      targetUtilizationPercentage:
+                        default: 70
+                        description: |-
+                          targetUtilizationPercentage specifies what percentage of the previously
+                          specified target should actually be targeted by the Autoscaler. This is
+                          also known as specifying the hotness at which a replica runs, which causes
+                          the Autoscaler to scale up before the defined hard limit is reached.
+                        format: int32
                         type: integer
                     type: object
                 type: object
