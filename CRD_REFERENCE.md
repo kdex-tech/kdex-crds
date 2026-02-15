@@ -145,7 +145,7 @@ _Appears in:_
 | --- | --- | --- | --- |
 | `anonymousEntitlements` _string array_ | anonymousEntitlements is an array of entitlements granted in anonymous (not logged in) access scenarios.<br />In the spirit of least privilege security no entitlements are granted by default. However, in order to make<br />a host's pages generally accessible the scope `page:read` should be granted. |  | Optional: \{\} <br /> |
 | `jwt` _[JWT](#jwt)_ | jwt is the configuation for JWT token support. |  | Optional: \{\} <br /> |
-| `claimMappings` _MappingRule array_ | claimMappings is an array of CEL expressions for extracting custom claims from<br />identity sources and mapping the results onto the Primary Access Token (PAT).<br />Generally this is used to map OIDC claims. However, it can also be used<br />with external data sources like LDAP, databases, or others through identity<br />integration. |  | MaxItems: 16 <br />Optional: \{\} <br /> |
+| `claimMappings` _MappingRule array_ | claimMappings is an array of CEL expressions for extracting custom claims from<br />identity sources and mapping the results onto the Primary Access Token (PAT).<br />This is used to map OIDC claims but can also be used with external data<br />sources like LDAP or others via identity integration. |  | MaxItems: 16 <br />Optional: \{\} <br /> |
 | `oidcProvider` _[OIDCProvider](#oidcprovider)_ | oidcProvider is the configuration for an optional OIDC provider. |  | Optional: \{\} <br /> |
 
 

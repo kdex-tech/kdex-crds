@@ -170,9 +170,8 @@ type Auth struct {
 
 	// claimMappings is an array of CEL expressions for extracting custom claims from
 	// identity sources and mapping the results onto the Primary Access Token (PAT).
-	// Generally this is used to map OIDC claims. However, it can also be used
-	// with external data sources like LDAP, databases, or others through identity
-	// integration.
+	// This is used to map OIDC claims but can also be used with external data
+	// sources like LDAP or others via identity integration.
 	// +kubebuilder:validation:Optional
 	// +kubebuilder:validation:MaxItems=16
 	ClaimMappings []dmapper.MappingRule `json:"claimMappings,omitempty" protobuf:"bytes,3,rep,name=claimMappings"`
