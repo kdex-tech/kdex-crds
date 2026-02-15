@@ -168,17 +168,18 @@ type Auth struct {
 	// +kubebuilder:validation:Optional
 	JWT JWT `json:"jwt,omitempty" protobuf:"bytes,2,opt,name=jwt"`
 
-	// mappers is an array of CEL expressions for extracting custom claims from identity sources and mapping the results
-	// onto the local token.
-	// Generally this is used to map OIDC claims. However, it can also be used with external data models such as LDAP
-	// or others forms via identity integration.
+	// claimMappings is an array of CEL expressions for extracting custom claims from
+	// identity sources and mapping the results onto the Primary Access Token (PAT).
+	// Generally this is used to map OIDC claims. However, it can also be used
+	// with external data sources like LDAP, databases, or others through identity
+	// integration.
 	// +kubebuilder:validation:Optional
 	// +kubebuilder:validation:MaxItems=16
-	Mappers []dmapper.MappingRule `json:"mappers,omitempty" protobuf:"bytes,3,rep,name=mappers"`
+	ClaimMappings []dmapper.MappingRule `json:"claimMappings,omitempty" protobuf:"bytes,3,rep,name=claimMappings"`
 
 	// oidcProvider is the configuration for an optional OIDC provider.
 	// +kubebuilder:validation:Optional
-	OIDCProvider *OIDCProvider `json:"oidcProvider,omitempty" protobuf:"bytes,2,opt,name=oidcProvider"`
+	OIDCProvider *OIDCProvider `json:"oidcProvider,omitempty" protobuf:"bytes,4,opt,name=oidcProvider"`
 }
 
 // Backend defines a deployment for serving resources specific to the refer.

@@ -122,6 +122,44 @@ spec:
                     items:
                       type: string
                     type: array
+                  claimMappings:
+                    description: |-
+                      claimMappings is an array of CEL expressions for extracting custom claims from
+                      identity sources and mapping the results onto the Primary Access Token (PAT).
+                      Generally this is used to map OIDC claims. However, it can also be used
+                      with external data sources like LDAP, databases, or others through identity
+                      integration.
+                    items:
+                      description: |-
+                        MappingRule defines a transformation rule for mapping arbitrary data from an
+                        input to an output.
+                      properties:
+                        required:
+                          default: false
+                          description: |-
+                            required indicates that if the rule fails to produce a value the rule
+                            will be skipped. Otherwise the execution should fail.
+                          type: boolean
+                        sourceExpression:
+                          description: |-
+                            sourceExpression is CEL program to compute a transformation of input into
+                            a new form.
+                          example: self.oidc.groups.filter(g, g.startsWith('app_')).join(',')
+                          minLength: 5
+                          type: string
+                        targetPropPath:
+                          description: |-
+                            targetPropPath is a dot-separated property path for where the result
+                            should be attached in the output.
+                          example: auth.internal_groups
+                          minLength: 5
+                          type: string
+                      required:
+                      - sourceExpression
+                      - targetPropPath
+                      type: object
+                    maxItems: 16
+                    type: array
                   jwt:
                     description: jwt is the configuation for JWT token support.
                     properties:
@@ -180,43 +218,6 @@ spec:
                       rule: '!has(self.jwtKeysSecrets) || (self.jwtKeysSecrets.size()
                         <= 1) || (self.jwtKeysSecrets.size() > 1 && self.activeKey
                         != "")'
-                  mappers:
-                    description: |-
-                      mappers is an array of CEL expressions for extracting custom claims from identity sources and mapping the results
-                      onto the local token.
-                      Generally this is used to map OIDC claims. However, it can also be used with external data models such as LDAP
-                      or others forms via identity integration.
-                    items:
-                      description: |-
-                        MappingRule defines a transformation rule for mapping arbitrary data from an
-                        input to an output.
-                      properties:
-                        required:
-                          default: false
-                          description: |-
-                            required indicates that if the rule fails to produce a value the rule
-                            will be skipped. Otherwise the execution should fail.
-                          type: boolean
-                        sourceExpression:
-                          description: |-
-                            sourceExpression is CEL program to compute a transformation of input into
-                            a new form.
-                          example: self.oidc.groups.filter(g, g.startsWith('app_')).join(',')
-                          minLength: 5
-                          type: string
-                        targetPropPath:
-                          description: |-
-                            targetPropPath is a dot-separated property path for where the result
-                            should be attached in the output.
-                          example: auth.internal_groups
-                          minLength: 5
-                          type: string
-                      required:
-                      - sourceExpression
-                      - targetPropPath
-                      type: object
-                    maxItems: 16
-                    type: array
                   oidcProvider:
                     description: oidcProvider is the configuration for an optional
                       OIDC provider.

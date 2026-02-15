@@ -17,6 +17,7 @@ limitations under the License.
 package v1alpha1
 
 import (
+	"github.com/kdex-tech/dmapper"
 	corev1 "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
@@ -72,27 +73,35 @@ type KDexFunctionMetadata struct {
 
 // KDexFunctionSpec defines the desired state of KDexFunction
 type KDexFunctionSpec struct {
-	// API defines the OpenAPI contract for the function.
+	// api defines the OpenAPI contract for the function.
 	// See https://github.com/OAI/OpenAPI-Specification/blob/main/versions/3.0.3.md#path-item-object
 	// See https://github.com/OAI/OpenAPI-Specification/blob/main/versions/3.0.3.md#schema-object
 	// The supported fields from 'path item object' are: summary, description, get, put, post, delete, options, head, patch, trace, parameters, and responses.
 	// The field 'schemas' of type map[string]schema whose values are defined by 'schema object' is supported and can be referenced throughout operation definitions. References must be in the form "#/components/schemas/<name>".
 	// +kubebuilder:validation:Required
 	// +kubebuilder:pruning:PreserveUnknownFields
-	API API `json:"api" protobuf:"bytes,2,req,name=api"`
-
-	// Origin defines the origin of the function implementation.
-	// +kubebuilder:validation:Optional
-	Origin FunctionOrigin `json:"origin,omitempty" protobuf:"bytes,3,opt,name=origin"`
+	API API `json:"api" protobuf:"bytes,1,req,name=api"`
 
 	// hostRef is a reference to the KDexHost that this translation belongs to.
 	// +kubebuilder:validation:Required
 	// +kubebuilder:validation:XValidation:rule="self.name.size() > 0",message="hostRef.name must not be empty"
 	HostRef corev1.LocalObjectReference `json:"hostRef" protobuf:"bytes,2,req,name=hostRef"`
 
-	// Metadata defines the metadata for the function for cataloging and discovery purposes.
+	// metadata defines the metadata for the function for cataloging and discovery purposes.
 	// +kubebuilder:validation:Optional
-	Metadata KDexFunctionMetadata `json:"metadata,omitempty" protobuf:"bytes,1,opt,name=metadata"`
+	Metadata KDexFunctionMetadata `json:"metadata,omitempty" protobuf:"bytes,3,opt,name=metadata"`
+
+	// origin defines the origin of the function implementation.
+	// +kubebuilder:validation:Optional
+	Origin FunctionOrigin `json:"origin,omitempty" protobuf:"bytes,4,opt,name=origin"`
+
+	// claimMappings is an array of CEL expressions for extracting custom claims
+	// from the current authorization context onto the Function Access Token (FAT).
+	// This can be used to map Function specific claims like tenant, department_id,
+	// strip_customer_id, etc. to the FAT.
+	// +kubebuilder:validation:Optional
+	// +kubebuilder:validation:MaxItems=16
+	ClaimMappings []dmapper.MappingRule `json:"claimMappings,omitempty" protobuf:"bytes,5,rep,name=claimMappings"`
 }
 
 // KDexFunctionState reflects the current state of a KDexFunction.

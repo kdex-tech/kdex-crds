@@ -145,7 +145,7 @@ _Appears in:_
 | --- | --- | --- | --- |
 | `anonymousEntitlements` _string array_ | anonymousEntitlements is an array of entitlements granted in anonymous (not logged in) access scenarios.<br />In the spirit of least privilege security no entitlements are granted by default. However, in order to make<br />a host's pages generally accessible the scope `page:read` should be granted. |  | Optional: \{\} <br /> |
 | `jwt` _[JWT](#jwt)_ | jwt is the configuation for JWT token support. |  | Optional: \{\} <br /> |
-| `mappers` _MappingRule array_ | mappers is an array of CEL expressions for extracting custom claims from identity sources and mapping the results<br />onto the local token.<br />Generally this is used to map OIDC claims. However, it can also be used with external data models such as LDAP<br />or others forms via identity integration. |  | MaxItems: 16 <br />Optional: \{\} <br /> |
+| `claimMappings` _MappingRule array_ | claimMappings is an array of CEL expressions for extracting custom claims from<br />identity sources and mapping the results onto the Primary Access Token (PAT).<br />Generally this is used to map OIDC claims. However, it can also be used<br />with external data sources like LDAP, databases, or others through identity<br />integration. |  | MaxItems: 16 <br />Optional: \{\} <br /> |
 | `oidcProvider` _[OIDCProvider](#oidcprovider)_ | oidcProvider is the configuration for an optional OIDC provider. |  | Optional: \{\} <br /> |
 
 
@@ -1002,10 +1002,11 @@ _Appears in:_
 
 | Field | Description | Default | Validation |
 | --- | --- | --- | --- |
-| `api` _[API](#api)_ | API defines the OpenAPI contract for the function.<br />See https://github.com/OAI/OpenAPI-Specification/blob/main/versions/3.0.3.md#path-item-object<br />See https://github.com/OAI/OpenAPI-Specification/blob/main/versions/3.0.3.md#schema-object<br />The supported fields from 'path item object' are: summary, description, get, put, post, delete, options, head, patch, trace, parameters, and responses.<br />The field 'schemas' of type map[string]schema whose values are defined by 'schema object' is supported and can be referenced throughout operation definitions. References must be in the form "#/components/schemas/<name>". |  | Required: \{\} <br /> |
-| `origin` _[FunctionOrigin](#functionorigin)_ | Origin defines the origin of the function implementation. |  | Optional: \{\} <br /> |
+| `api` _[API](#api)_ | api defines the OpenAPI contract for the function.<br />See https://github.com/OAI/OpenAPI-Specification/blob/main/versions/3.0.3.md#path-item-object<br />See https://github.com/OAI/OpenAPI-Specification/blob/main/versions/3.0.3.md#schema-object<br />The supported fields from 'path item object' are: summary, description, get, put, post, delete, options, head, patch, trace, parameters, and responses.<br />The field 'schemas' of type map[string]schema whose values are defined by 'schema object' is supported and can be referenced throughout operation definitions. References must be in the form "#/components/schemas/<name>". |  | Required: \{\} <br /> |
 | `hostRef` _[LocalObjectReference](https://kubernetes.io/docs/reference/generated/kubernetes-api/v/#localobjectreference-v1-core)_ | hostRef is a reference to the KDexHost that this translation belongs to. |  | Required: \{\} <br /> |
 | `metadata` _[KDexFunctionMetadata](#kdexfunctionmetadata)_ | Refer to Kubernetes API documentation for fields of `metadata`. |  | Optional: \{\} <br /> |
+| `origin` _[FunctionOrigin](#functionorigin)_ | origin defines the origin of the function implementation. |  | Optional: \{\} <br /> |
+| `claimMappings` _MappingRule array_ | claimMappings is an array of CEL expressions for extracting custom claims<br />from the current authorization context onto the Function Access Token (FAT).<br />This can be used to map Function specific claims like tenant, department_id,<br />strip_customer_id, etc. to the FAT. |  | MaxItems: 16 <br />Optional: \{\} <br /> |
 
 
 #### KDexFunctionState
