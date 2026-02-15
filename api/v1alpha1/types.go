@@ -6,6 +6,7 @@ import (
 	"regexp"
 
 	openapi "github.com/getkin/kin-openapi/openapi3"
+	"github.com/kdex-tech/dmapper"
 	corev1 "k8s.io/api/core/v1"
 	"k8s.io/apimachinery/pkg/api/resource"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
@@ -173,7 +174,7 @@ type Auth struct {
 	// or others forms via identity integration.
 	// +kubebuilder:validation:Optional
 	// +kubebuilder:validation:MaxItems=16
-	Mappers []MappingRule `json:"mappers,omitempty" protobuf:"bytes,3,rep,name=mappers"`
+	Mappers []dmapper.MappingRule `json:"mappers,omitempty" protobuf:"bytes,3,rep,name=mappers"`
 
 	// oidcProvider is the configuration for an optional OIDC provider.
 	// +kubebuilder:validation:Optional
@@ -580,23 +581,6 @@ type LocalSecretWithKeyReference struct {
 	// +kubebuilder:validation:Required
 	// +kubebuilder:validation:XValidation:rule="self.name.size() > 0",message="secretRef.name must not be empty"
 	SecretRef corev1.LocalObjectReference `json:"secretRef" protobuf:"bytes,2,req,name=secretRef"`
-}
-
-type MappingRule struct {
-	// required indicates that if the rule fails to produce a value token generation should fail as well
-	// +kubebuilder:validation:Optional
-	// +kubebuilder:default:=false
-	Required bool `json:"required"`
-
-	// sourceExpression is CEL program to compute a transformation of claims from the OIDC token.
-	// +kubebuilder:validation:Required
-	// +kubebuilder:example:=`oidc.groups.filter(g, g.startsWith('app_'))`
-	SourceExpression string `json:"sourceExpression"`
-
-	// targetPropPath is a nested property path to where the result will be attached to the claims structure
-	// +kubebuilder:validation:Required
-	// +kubebuilder:example:=`auth.internal_groups`
-	TargetPropPath string `json:"targetPropPath"`
 }
 
 // KDexFunctionMetadata defines the metadata for the function.

@@ -172,21 +172,29 @@ spec:
                       Generally this is used to map OIDC claims. However, it can also be used with external data models such as LDAP
                       or others forms via identity integration.
                     items:
+                      description: |-
+                        MappingRule defines a transformation rule for mapping arbitrary data from an
+                        input to an output.
                       properties:
                         required:
                           default: false
-                          description: required indicates that if the rule fails to
-                            produce a value token generation should fail as well
+                          description: |-
+                            required indicates that if the rule fails to produce a value the rule
+                            will be skipped. Otherwise the execution should fail.
                           type: boolean
                         sourceExpression:
-                          description: sourceExpression is CEL program to compute
-                            a transformation of claims from the OIDC token.
-                          example: oidc.groups.filter(g, g.startsWith('app_'))
+                          description: |-
+                            sourceExpression is CEL program to compute a transformation of input into
+                            a new form.
+                          example: self.oidc.groups.filter(g, g.startsWith('app_')).join(',')
+                          minLength: 5
                           type: string
                         targetPropPath:
-                          description: targetPropPath is a nested property path to
-                            where the result will be attached to the claims structure
+                          description: |-
+                            targetPropPath is a dot-separated property path for where the result
+                            should be attached in the output.
                           example: auth.internal_groups
+                          minLength: 5
                           type: string
                       required:
                       - sourceExpression

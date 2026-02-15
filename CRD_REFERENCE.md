@@ -145,7 +145,7 @@ _Appears in:_
 | --- | --- | --- | --- |
 | `anonymousEntitlements` _string array_ | anonymousEntitlements is an array of entitlements granted in anonymous (not logged in) access scenarios.<br />In the spirit of least privilege security no entitlements are granted by default. However, in order to make<br />a host's pages generally accessible the scope `page:read` should be granted. |  | Optional: \{\} <br /> |
 | `jwt` _[JWT](#jwt)_ | jwt is the configuation for JWT token support. |  | Optional: \{\} <br /> |
-| `mappers` _[MappingRule](#mappingrule) array_ | mappers is an array of CEL expressions for extracting custom claims from identity sources and mapping the results<br />onto the local token.<br />Generally this is used to map OIDC claims. However, it can also be used with external data models such as LDAP<br />or others forms via identity integration. |  | MaxItems: 16 <br />Optional: \{\} <br /> |
+| `mappers` _MappingRule array_ | mappers is an array of CEL expressions for extracting custom claims from identity sources and mapping the results<br />onto the local token.<br />Generally this is used to map OIDC claims. However, it can also be used with external data models such as LDAP<br />or others forms via identity integration. |  | MaxItems: 16 <br />Optional: \{\} <br /> |
 | `oidcProvider` _[OIDCProvider](#oidcprovider)_ | oidcProvider is the configuration for an optional OIDC provider. |  | Optional: \{\} <br /> |
 
 
@@ -2144,24 +2144,6 @@ _Appears in:_
 | --- | --- | --- | --- |
 | `keyProperty` _string_ | keyProperty is the property from which to extract a value from the secret |  | Required: \{\} <br /> |
 | `secretRef` _[LocalObjectReference](https://kubernetes.io/docs/reference/generated/kubernetes-api/v/#localobjectreference-v1-core)_ | secretRef is a reference to a secret in the same namespace as the referrer. |  | Required: \{\} <br /> |
-
-
-#### MappingRule
-
-
-
-
-
-
-
-_Appears in:_
-- [Auth](#auth)
-
-| Field | Description | Default | Validation |
-| --- | --- | --- | --- |
-| `required` _boolean_ | required indicates that if the rule fails to produce a value token generation should fail as well | false | Optional: \{\} <br /> |
-| `sourceExpression` _string_ | sourceExpression is CEL program to compute a transformation of claims from the OIDC token. |  | Required: \{\} <br /> |
-| `targetPropPath` _string_ | targetPropPath is a nested property path to where the result will be attached to the claims structure |  | Required: \{\} <br /> |
 
 
 #### Metadata
