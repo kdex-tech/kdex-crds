@@ -82,26 +82,26 @@ type KDexFunctionSpec struct {
 	// +kubebuilder:pruning:PreserveUnknownFields
 	API API `json:"api" protobuf:"bytes,1,req,name=api"`
 
-	// hostRef is a reference to the KDexHost that this translation belongs to.
-	// +kubebuilder:validation:Required
-	// +kubebuilder:validation:XValidation:rule="self.name.size() > 0",message="hostRef.name must not be empty"
-	HostRef corev1.LocalObjectReference `json:"hostRef" protobuf:"bytes,2,req,name=hostRef"`
-
-	// metadata defines the metadata for the function for cataloging and discovery purposes.
-	// +kubebuilder:validation:Optional
-	Metadata KDexFunctionMetadata `json:"metadata,omitempty" protobuf:"bytes,3,opt,name=metadata"`
-
-	// origin defines the origin of the function implementation.
-	// +kubebuilder:validation:Optional
-	Origin FunctionOrigin `json:"origin,omitempty" protobuf:"bytes,4,opt,name=origin"`
-
 	// claimMappings is an array of CEL expressions for extracting custom claims
 	// from the current authorization context onto the Function Access Token (FAT).
 	// This can be used to map Function specific claims like tenant, department_id,
 	// strip_customer_id, etc. to the FAT.
 	// +kubebuilder:validation:Optional
 	// +kubebuilder:validation:MaxItems=16
-	ClaimMappings []dmapper.MappingRule `json:"claimMappings,omitempty" protobuf:"bytes,5,rep,name=claimMappings"`
+	ClaimMappings []dmapper.MappingRule `json:"claimMappings,omitempty" protobuf:"bytes,2,rep,name=claimMappings"`
+
+	// hostRef is a reference to the KDexHost that this translation belongs to.
+	// +kubebuilder:validation:Required
+	// +kubebuilder:validation:XValidation:rule="self.name.size() > 0",message="hostRef.name must not be empty"
+	HostRef corev1.LocalObjectReference `json:"hostRef" protobuf:"bytes,3,req,name=hostRef"`
+
+	// metadata defines the metadata for the function for cataloging and discovery purposes.
+	// +kubebuilder:validation:Optional
+	Metadata KDexFunctionMetadata `json:"metadata,omitempty" protobuf:"bytes,4,opt,name=metadata"`
+
+	// origin defines the origin of the function implementation.
+	// +kubebuilder:validation:Optional
+	Origin FunctionOrigin `json:"origin,omitempty" protobuf:"bytes,5,opt,name=origin"`
 }
 
 // KDexFunctionState reflects the current state of a KDexFunction.

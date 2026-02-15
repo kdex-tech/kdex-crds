@@ -1003,10 +1003,10 @@ _Appears in:_
 | Field | Description | Default | Validation |
 | --- | --- | --- | --- |
 | `api` _[API](#api)_ | api defines the OpenAPI contract for the function.<br />See https://github.com/OAI/OpenAPI-Specification/blob/main/versions/3.0.3.md#path-item-object<br />See https://github.com/OAI/OpenAPI-Specification/blob/main/versions/3.0.3.md#schema-object<br />The supported fields from 'path item object' are: summary, description, get, put, post, delete, options, head, patch, trace, parameters, and responses.<br />The field 'schemas' of type map[string]schema whose values are defined by 'schema object' is supported and can be referenced throughout operation definitions. References must be in the form "#/components/schemas/<name>". |  | Required: \{\} <br /> |
+| `claimMappings` _MappingRule array_ | claimMappings is an array of CEL expressions for extracting custom claims<br />from the current authorization context onto the Function Access Token (FAT).<br />This can be used to map Function specific claims like tenant, department_id,<br />strip_customer_id, etc. to the FAT. |  | MaxItems: 16 <br />Optional: \{\} <br /> |
 | `hostRef` _[LocalObjectReference](https://kubernetes.io/docs/reference/generated/kubernetes-api/v/#localobjectreference-v1-core)_ | hostRef is a reference to the KDexHost that this translation belongs to. |  | Required: \{\} <br /> |
 | `metadata` _[KDexFunctionMetadata](#kdexfunctionmetadata)_ | Refer to Kubernetes API documentation for fields of `metadata`. |  | Optional: \{\} <br /> |
 | `origin` _[FunctionOrigin](#functionorigin)_ | origin defines the origin of the function implementation. |  | Optional: \{\} <br /> |
-| `claimMappings` _MappingRule array_ | claimMappings is an array of CEL expressions for extracting custom claims<br />from the current authorization context onto the Function Access Token (FAT).<br />This can be used to map Function specific claims like tenant, department_id,<br />strip_customer_id, etc. to the FAT. |  | MaxItems: 16 <br />Optional: \{\} <br /> |
 
 
 #### KDexFunctionState
