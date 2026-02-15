@@ -588,15 +588,15 @@ type MappingRule struct {
 	// +kubebuilder:default:=false
 	Required bool `json:"required"`
 
-	// expession is CEL program to compute a transformation of claims from the OIDC token.
+	// sourceExpression is CEL program to compute a transformation of claims from the OIDC token.
 	// +kubebuilder:validation:Required
 	// +kubebuilder:example:=`oidc.groups.filter(g, g.startsWith('app_'))`
-	SourceExpression string `json:"expession"`
+	SourceExpression string `json:"sourceExpression"`
 
-	// target is a nested property path to where the result will be attached to the claims structure
+	// targetPropPath is a nested property path to where the result will be attached to the claims structure
 	// +kubebuilder:validation:Required
 	// +kubebuilder:example:=`auth.internal_groups`
-	TargetPropPath string `json:"target"`
+	TargetPropPath string `json:"targetPropPath"`
 }
 
 // KDexFunctionMetadata defines the metadata for the function.

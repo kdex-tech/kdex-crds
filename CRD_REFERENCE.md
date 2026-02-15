@@ -2160,8 +2160,8 @@ _Appears in:_
 | Field | Description | Default | Validation |
 | --- | --- | --- | --- |
 | `required` _boolean_ | required indicates that if the rule fails to produce a value token generation should fail as well | false | Optional: \{\} <br /> |
-| `expession` _string_ | expession is CEL program to compute a transformation of claims from the OIDC token. |  | Required: \{\} <br /> |
-| `target` _string_ | target is a nested property path to where the result will be attached to the claims structure |  | Required: \{\} <br /> |
+| `sourceExpression` _string_ | sourceExpression is CEL program to compute a transformation of claims from the OIDC token. |  | Required: \{\} <br /> |
+| `targetPropPath` _string_ | targetPropPath is a nested property path to where the result will be attached to the claims structure |  | Required: \{\} <br /> |
 
 
 #### Metadata
