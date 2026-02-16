@@ -162,7 +162,7 @@ hostDefault:
           - --webserver-bind-address=:8090
           command:
           - /manager
-          image: kdex-tech/kdex-web:latest
+          image: kdex-tech/kdex-host:latest
           livenessProbe:
             httpGet:
               path: /healthz
