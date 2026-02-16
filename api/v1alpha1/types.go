@@ -1299,6 +1299,7 @@ type Tag struct {
 }
 
 // TLSSpec defines the desired state of TLS for a host.
+// +kubebuilder:validation:XValidation:rule=`!has(self.secretRef) || self.secretRef.name != ""`,message="secretRef.name must be non-empty"
 type TLSSpec struct {
 	// secretRef is a reference to a secret containing a TLS certificate and key for the domains specified on the host.
 	// +kubebuilder:validation:Required

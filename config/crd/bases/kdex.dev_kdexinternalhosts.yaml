@@ -791,6 +791,9 @@ spec:
                     required:
                     - secretRef
                     type: object
+                    x-kubernetes-validations:
+                    - message: secretRef.name must be non-empty
+                      rule: '!has(self.secretRef) || self.secretRef.name != ""'
                 required:
                 - domains
                 type: object
