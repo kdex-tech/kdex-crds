@@ -63,6 +63,7 @@ type KDexHostList struct {
 }
 
 // KDexHostSpec defines the desired state of KDexHost
+// +kubebuilder:validation:XValidation:rule=`self.devMode == true || (has(self.auth) && has(self.auth.jwt) && has(self.auth.jwt.jwtKeysSecrets) && self.auth.jwt.jwtKeysSecrets.size() > 0)`,message="'devMode' must be true or 'auth.jwt.jwtKeysSecrets' must be specified"
 type KDexHostSpec struct {
 	// assets is a set of elements that define a host specific HTML instructions (e.g. favicon, site logo, charset).
 	Assets Assets `json:"assets,omitempty" protobuf:"bytes,1,rep,name=assets"`

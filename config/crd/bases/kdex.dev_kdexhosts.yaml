@@ -911,6 +911,12 @@ spec:
             - organization
             - routing
             type: object
+            x-kubernetes-validations:
+            - message: '''devMode'' must be true or ''auth.jwt.jwtKeysSecrets'' must
+                be specified'
+              rule: self.devMode == true || (has(self.auth) && has(self.auth.jwt)
+                && has(self.auth.jwt.jwtKeysSecrets) && self.auth.jwt.jwtKeysSecrets.size()
+                > 0)
           status:
             description: status defines the observed state of KDexApp
             properties:
