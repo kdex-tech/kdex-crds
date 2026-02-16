@@ -912,8 +912,8 @@ spec:
             - routing
             type: object
             x-kubernetes-validations:
-            - message: '''devMode'' must be true or ''auth.jwt.jwtKeysSecrets'' must
-                be specified'
+            - message: '''spec.devMode'' must be true or ''spec.auth.jwt.jwtKeysSecrets''
+                must be specified'
               rule: self.devMode == true || (has(self.auth) && has(self.auth.jwt)
                 && has(self.auth.jwt.jwtKeysSecrets) && self.auth.jwt.jwtKeysSecrets.size()
                 > 0)
