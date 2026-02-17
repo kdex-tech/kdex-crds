@@ -179,6 +179,11 @@ type Auth struct {
 	// oidcProvider is the configuration for an optional OIDC provider.
 	// +kubebuilder:validation:Optional
 	OIDCProvider *OIDCProvider `json:"oidcProvider,omitempty" protobuf:"bytes,4,opt,name=oidcProvider"`
+
+	// clientsSecretRef is a reference to a secret in the same namespace as the referrer that contains client credentials.
+	// The secret should contain clientID: clientSecret pairs in its data map.
+	// +kubebuilder:validation:Optional
+	ClientsSecretRef *corev1.LocalObjectReference `json:"clientsSecretRef,omitempty" protobuf:"bytes,5,opt,name=clientsSecretRef"`
 }
 
 // Backend defines a deployment for serving resources specific to the refer.

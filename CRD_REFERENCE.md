@@ -147,6 +147,7 @@ _Appears in:_
 | `jwt` _[JWT](#jwt)_ | jwt is the configuation for JWT token support. |  | Optional: \{\} <br /> |
 | `claimMappings` _MappingRule array_ | claimMappings is an array of CEL expressions for extracting custom claims from<br />identity sources and mapping the results onto the Primary Access Token (PAT).<br />This is used to map OIDC claims but can also be used with external data<br />sources like LDAP or others via identity integration. |  | MaxItems: 16 <br />Optional: \{\} <br /> |
 | `oidcProvider` _[OIDCProvider](#oidcprovider)_ | oidcProvider is the configuration for an optional OIDC provider. |  | Optional: \{\} <br /> |
+| `clientsSecretRef` _[LocalObjectReference](https://kubernetes.io/docs/reference/generated/kubernetes-api/v/#localobjectreference-v1-core)_ | clientsSecretRef is a reference to a secret in the same namespace as the referrer that contains client credentials.<br />The secret should contain clientID: clientSecret pairs in its data map. |  | Optional: \{\} <br /> |
 
 
 #### Backend
