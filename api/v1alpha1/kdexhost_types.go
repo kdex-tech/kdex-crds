@@ -134,6 +134,9 @@ type KDexHostSpec struct {
 	// +kubebuilder:validation:Optional
 	ServiceAccountRef *corev1.LocalObjectReference `json:"serviceAccountRef,omitempty" protobuf:"bytes,18,opt,name=serviceAccountRef"`
 
+	// ServiceAccountSecrets is an internal list of resolved secrets that are referenced by the service account.
+	ServiceAccountSecrets []corev1.Secret `json:"-"`
+
 	// translationRefs is an array of references to KDexTranslation or KDexClusterTranslation resources that define the translations that should apply to this host.
 	// +listType=map
 	// +listMapKey=name
