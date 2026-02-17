@@ -529,6 +529,11 @@ spec:
                       though the annotation is officially deprecated, for backwards compatibility
                       reasons, ingress controllers should still honor that annotation if present.
                     type: string
+                  scheme:
+                    default: http
+                    description: scheme is the scheme to use for the host. If not
+                      specified http is assumed.
+                    type: string
                   strategy:
                     default: Ingress
                     description: strategy is the routing strategy to use. If not specified

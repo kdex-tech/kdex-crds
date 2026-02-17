@@ -941,10 +941,15 @@ type Routing struct {
 	// +kubebuilder:validation:Optional
 	IngressClassName *string `json:"ingressClassName,omitempty" protobuf:"bytes,2,opt,name=ingressClassName"`
 
+	// scheme is the scheme to use for the host. If not specified http is assumed.
+	// +kubebuilder:validation:Optional
+	// +kubebuilder:default:="http"
+	Scheme string `json:"scheme" protobuf:"bytes,3,opt,name=scheme"`
+
 	// strategy is the routing strategy to use. If not specified Ingress is assumed.
 	// +kubebuilder:validation:Optional
 	// +kubebuilder:default:="Ingress"
-	Strategy RoutingStrategy `json:"strategy,omitempty" protobuf:"bytes,3,opt,name=strategy,casttype=RoutingStrategy"`
+	Strategy RoutingStrategy `json:"strategy,omitempty" protobuf:"bytes,4,opt,name=strategy,casttype=RoutingStrategy"`
 }
 
 // RoutingStrategy defines the routing strategy to use.
