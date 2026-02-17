@@ -17,6 +17,7 @@ limitations under the License.
 package v1alpha1
 
 import (
+	corev1 "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
 
@@ -63,7 +64,6 @@ type KDexHostList struct {
 }
 
 // KDexHostSpec defines the desired state of KDexHost
-// +kubebuilder:validation:XValidation:rule=`(has(self.devMode) && self.devMode == true) || (has(self.auth) && has(self.auth.jwt) && has(self.auth.jwt.jwtKeysSecrets) && self.auth.jwt.jwtKeysSecrets.size() > 0)`,message="'spec.devMode' must be true or 'spec.auth.jwt.jwtKeysSecrets' must be specified"
 type KDexHostSpec struct {
 	// assets is a set of elements that define a host specific HTML instructions (e.g. favicon, site logo, charset).
 	Assets Assets `json:"assets,omitempty" protobuf:"bytes,1,rep,name=assets"`
@@ -129,6 +129,10 @@ type KDexHostSpec struct {
 	// +kubebuilder:validation:Optional
 	// +kubebuilder:validation:XValidation:rule=`self.kind == "KDexTheme" || self.kind == "KDexClusterTheme"`,message="'kind' must be either KDexTheme or KDexClusterTheme"
 	ThemeRef *KDexObjectReference `json:"themeRef,omitempty" protobuf:"bytes,15,opt,name=themeRef"`
+
+	// serviceAccountRef is a reference to the service account used by the host to access secrets.
+	// +kubebuilder:validation:Optional
+	ServiceAccountRef *corev1.LocalObjectReference `json:"serviceAccountRef,omitempty" protobuf:"bytes,18,opt,name=serviceAccountRef"`
 
 	// translationRefs is an array of references to KDexTranslation or KDexClusterTranslation resources that define the translations that should apply to this host.
 	// +listType=map

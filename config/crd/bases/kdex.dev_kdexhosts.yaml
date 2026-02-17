@@ -144,150 +144,24 @@ spec:
                       type: object
                     maxItems: 16
                     type: array
-                  clientsSecretRef:
-                    description: |-
-                      clientsSecretRef is a reference to a secret in the same namespace as the referrer that contains client credentials.
-                      The secret should contain clientID: clientSecret pairs in its data map.
-                    properties:
-                      name:
-                        default: ""
-                        description: |-
-                          Name of the referent.
-                          This field is effectively required, but due to backwards compatibility is
-                          allowed to be empty. Instances of this type with an empty value here are
-                          almost certainly wrong.
-                          More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#names
-                        type: string
-                    type: object
-                    x-kubernetes-map-type: atomic
                   jwt:
                     description: jwt is the configuation for JWT token support.
                     properties:
-                      activeKey:
-                        description: activeKey contains the name of the secret that
-                          holds the currently active key. This can be omitted when
-                          there is only a single key specified.
-                        type: string
                       cookieName:
                         default: auth_token
                         description: cookieName is the name of the Cookie in which
                           the JWT token will be stored. (default is "auth_token")
                         type: string
-                      jwtKeysSecrets:
-                        description: jwtKeysSecrets is an optional list of references
-                          to secrets in the same namespace that hold private PEM encoded
-                          signing keys.
-                        items:
-                          properties:
-                            keyProperty:
-                              description: keyProperty is the property from which
-                                to extract a value from the secret
-                              type: string
-                            secretRef:
-                              description: secretRef is a reference to a secret in
-                                the same namespace as the referrer.
-                              properties:
-                                name:
-                                  default: ""
-                                  description: |-
-                                    Name of the referent.
-                                    This field is effectively required, but due to backwards compatibility is
-                                    allowed to be empty. Instances of this type with an empty value here are
-                                    almost certainly wrong.
-                                    More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#names
-                                  type: string
-                              type: object
-                              x-kubernetes-map-type: atomic
-                              x-kubernetes-validations:
-                              - message: secretRef.name must not be empty
-                                rule: self.name.size() > 0
-                          required:
-                          - keyProperty
-                          - secretRef
-                          type: object
-                        type: array
                       tokenTTL:
                         default: 1h
                         description: tokenTTL is the length of time for which the
                           token is valid
                         type: string
                     type: object
-                    x-kubernetes-validations:
-                    - message: activeKey must be set if jwtKeysSecrets has more than
-                        1 reference
-                      rule: '!has(self.jwtKeysSecrets) || (self.jwtKeysSecrets.size()
-                        <= 1) || (self.jwtKeysSecrets.size() > 1 && self.activeKey
-                        != "")'
                   oidcProvider:
                     description: oidcProvider is the configuration for an optional
                       OIDC provider.
                     properties:
-                      blockKeySecretRef:
-                        description: |-
-                          blockKeySecretRef is a reference to a Secret that contains the specified key whose valie is a 32-byte blockKey used to encrypt OIDC tokens.
-                          If none is provided one will be generated in memory. However, an in memory key is not viable for production systems.
-                        properties:
-                          keyProperty:
-                            description: keyProperty is the property from which to
-                              extract a value from the secret
-                            type: string
-                          secretRef:
-                            description: secretRef is a reference to a secret in the
-                              same namespace as the referrer.
-                            properties:
-                              name:
-                                default: ""
-                                description: |-
-                                  Name of the referent.
-                                  This field is effectively required, but due to backwards compatibility is
-                                  allowed to be empty. Instances of this type with an empty value here are
-                                  almost certainly wrong.
-                                  More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#names
-                                type: string
-                            type: object
-                            x-kubernetes-map-type: atomic
-                            x-kubernetes-validations:
-                            - message: secretRef.name must not be empty
-                              rule: self.name.size() > 0
-                        required:
-                        - keyProperty
-                        - secretRef
-                        type: object
-                      clientID:
-                        description: clientID is the id assigned by the provider to
-                          this application.
-                        type: string
-                      clientSecretRef:
-                        description: clientSecretRef is a reference to a secret in
-                          the host's namespace that holds the client_secret assigned
-                          to this application by the OIDC provider.
-                        properties:
-                          keyProperty:
-                            description: keyProperty is the property from which to
-                              extract a value from the secret
-                            type: string
-                          secretRef:
-                            description: secretRef is a reference to a secret in the
-                              same namespace as the referrer.
-                            properties:
-                              name:
-                                default: ""
-                                description: |-
-                                  Name of the referent.
-                                  This field is effectively required, but due to backwards compatibility is
-                                  allowed to be empty. Instances of this type with an empty value here are
-                                  almost certainly wrong.
-                                  More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#names
-                                type: string
-                            type: object
-                            x-kubernetes-map-type: atomic
-                            x-kubernetes-validations:
-                            - message: secretRef.name must not be empty
-                              rule: self.name.size() > 0
-                        required:
-                        - keyProperty
-                        - secretRef
-                        type: object
                       oidcProviderURL:
                         description: oidcProviderURL is the well known URL of the
                           OIDC provider.
@@ -299,8 +173,6 @@ spec:
                           type: string
                         type: array
                     required:
-                    - clientID
-                    - clientSecretRef
                     - oidcProviderURL
                     type: object
                 type: object
@@ -513,30 +385,6 @@ spec:
                   holding other host details. The rendered output will be cached and
                   served at "/favicon.ico" as "image/svg+xml".
                 type: string
-              imagePullSecrets:
-                description: |-
-                  imagePullSecrets is an optional list of references to secrets in the same namespace to use for pulling the referenced images.
-                  More info: https://kubernetes.io/docs/concepts/containers/images#specifying-imagepullsecrets-on-a-pod
-                items:
-                  description: |-
-                    LocalObjectReference contains enough information to let you locate the
-                    referenced object inside the same namespace.
-                  properties:
-                    name:
-                      default: ""
-                      description: |-
-                        Name of the referent.
-                        This field is effectively required, but due to backwards compatibility is
-                        allowed to be empty. Instances of this type with an empty value here are
-                        almost certainly wrong.
-                        More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#names
-                      type: string
-                  type: object
-                  x-kubernetes-map-type: atomic
-                type: array
-                x-kubernetes-list-map-keys:
-                - name
-                x-kubernetes-list-type: map
               ingressPath:
                 description: |-
                   ingressPath is a prefix beginning with '/-/' plus additional characters. This indicates where in the Ingress/HTTPRoute the Backend will be mounted.
@@ -689,31 +537,6 @@ spec:
                     - Ingress
                     - HTTPRoute
                     type: string
-                  tls:
-                    description: tls is the TLS configuration for the host.
-                    properties:
-                      secretRef:
-                        description: secretRef is a reference to a secret containing
-                          a TLS certificate and key for the domains specified on the
-                          host.
-                        properties:
-                          name:
-                            default: ""
-                            description: |-
-                              Name of the referent.
-                              This field is effectively required, but due to backwards compatibility is
-                              allowed to be empty. Instances of this type with an empty value here are
-                              almost certainly wrong.
-                              More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#names
-                            type: string
-                        type: object
-                        x-kubernetes-map-type: atomic
-                    required:
-                    - secretRef
-                    type: object
-                    x-kubernetes-validations:
-                    - message: secretRef.name must be non-empty
-                      rule: '!has(self.secretRef) || self.secretRef.name != ""'
                 required:
                 - domains
                 type: object
@@ -766,6 +589,21 @@ spec:
                   IfNotPresent: the kubelet pulls if the reference isn't already present on disk. Container creation will fail if the reference isn't present and the pull fails.
                   Defaults to Always if :latest tag is specified, or IfNotPresent otherwise.
                 type: string
+              serviceAccountRef:
+                description: serviceAccountRef is a reference to the service account
+                  used by the host to access secrets.
+                properties:
+                  name:
+                    default: ""
+                    description: |-
+                      Name of the referent.
+                      This field is effectively required, but due to backwards compatibility is
+                      allowed to be empty. Instances of this type with an empty value here are
+                      almost certainly wrong.
+                      More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#names
+                    type: string
+                type: object
+                x-kubernetes-map-type: atomic
               staticImage:
                 description: |-
                   staticImage is the name of an OCI image that contains static resources that will be served by the Backend. This may not apply if the serverImage is set to a custom implementation.
@@ -927,12 +765,6 @@ spec:
             - organization
             - routing
             type: object
-            x-kubernetes-validations:
-            - message: '''spec.devMode'' must be true or ''spec.auth.jwt.jwtKeysSecrets''
-                must be specified'
-              rule: (has(self.devMode) && self.devMode == true) || (has(self.auth)
-                && has(self.auth.jwt) && has(self.auth.jwt.jwtKeysSecrets) && self.auth.jwt.jwtKeysSecrets.size()
-                > 0)
           status:
             description: status defines the observed state of KDexApp
             properties:

@@ -241,30 +241,6 @@ spec:
                           image is a reference to executable artifact. In most cases this will be a Docker image. In some other cases
                           it may be an artifact native to FaaS Adaptor's target runtime.
                         type: string
-                      imagePullSecrets:
-                        description: |-
-                          executablePullSecrets is an optional list of references to secrets in the same namespace to use for pulling the referenced images.
-                          More info: https://kubernetes.io/docs/concepts/containers/images#specifying-imagepullsecrets-on-a-pod
-                        items:
-                          description: |-
-                            LocalObjectReference contains enough information to let you locate the
-                            referenced object inside the same namespace.
-                          properties:
-                            name:
-                              default: ""
-                              description: |-
-                                Name of the referent.
-                                This field is effectively required, but due to backwards compatibility is
-                                allowed to be empty. Instances of this type with an empty value here are
-                                almost certainly wrong.
-                                More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#names
-                              type: string
-                          type: object
-                          x-kubernetes-map-type: atomic
-                        type: array
-                        x-kubernetes-list-map-keys:
-                        - name
-                        x-kubernetes-list-type: map
                       scaling:
                         description: Scaling allows configuration for min/max replicas
                           and autoscaler type.
@@ -430,34 +406,10 @@ spec:
                             description: image is the name of the container image
                               to run for git.
                             type: string
-                          repoSecretRef:
-                            description: |-
-                              repoSecretRef is a reference to a secret that contains the details for a git repository.
-                              This secret should contain all of the following keys:
-
-                              token - the authentication token
-                              host - the git host address
-                              org - the git org
-                              repo - the git repo
-                              gpg.key.id - the git signing key id (optional)
-                              gpg.key - the git signing key (optional)
-                            properties:
-                              name:
-                                default: ""
-                                description: |-
-                                  Name of the referent.
-                                  This field is effectively required, but due to backwards compatibility is
-                                  allowed to be empty. Instances of this type with an empty value here are
-                                  almost certainly wrong.
-                                  More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#names
-                                type: string
-                            type: object
-                            x-kubernetes-map-type: atomic
                         required:
                         - committerEmail
                         - committerName
                         - image
-                        - repoSecretRef
                         type: object
                       image:
                         description: image is the image containing the generator implementation;
@@ -702,31 +654,6 @@ spec:
                         description: revision is the git revision (tag, branch or
                           commit hash) to the source code.
                         type: string
-                      sourceSecrets:
-                        description: |-
-                          sourceSecrets is an optional list of references to secrets in the same namespace to use for pulling the referenced sources.
-                          More info: https://kubernetes.io/docs/concepts/containers/images#specifying-imagepullsecrets-on-a-pod
-                          STATUS=ExecutableAvailable
-                        items:
-                          description: |-
-                            LocalObjectReference contains enough information to let you locate the
-                            referenced object inside the same namespace.
-                          properties:
-                            name:
-                              default: ""
-                              description: |-
-                                Name of the referent.
-                                This field is effectively required, but due to backwards compatibility is
-                                allowed to be empty. Instances of this type with an empty value here are
-                                almost certainly wrong.
-                                More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#names
-                              type: string
-                          type: object
-                          x-kubernetes-map-type: atomic
-                        type: array
-                        x-kubernetes-list-map-keys:
-                        - name
-                        x-kubernetes-list-type: map
                     required:
                     - repository
                     - revision
@@ -834,30 +761,6 @@ spec:
                       image is a reference to executable artifact. In most cases this will be a Docker image. In some other cases
                       it may be an artifact native to FaaS Adaptor's target runtime.
                     type: string
-                  imagePullSecrets:
-                    description: |-
-                      executablePullSecrets is an optional list of references to secrets in the same namespace to use for pulling the referenced images.
-                      More info: https://kubernetes.io/docs/concepts/containers/images#specifying-imagepullsecrets-on-a-pod
-                    items:
-                      description: |-
-                        LocalObjectReference contains enough information to let you locate the
-                        referenced object inside the same namespace.
-                      properties:
-                        name:
-                          default: ""
-                          description: |-
-                            Name of the referent.
-                            This field is effectively required, but due to backwards compatibility is
-                            allowed to be empty. Instances of this type with an empty value here are
-                            almost certainly wrong.
-                            More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#names
-                          type: string
-                      type: object
-                      x-kubernetes-map-type: atomic
-                    type: array
-                    x-kubernetes-list-map-keys:
-                    - name
-                    x-kubernetes-list-type: map
                   scaling:
                     description: Scaling allows configuration for min/max replicas
                       and autoscaler type.
@@ -1024,34 +927,10 @@ spec:
                         description: image is the name of the container image to run
                           for git.
                         type: string
-                      repoSecretRef:
-                        description: |-
-                          repoSecretRef is a reference to a secret that contains the details for a git repository.
-                          This secret should contain all of the following keys:
-
-                          token - the authentication token
-                          host - the git host address
-                          org - the git org
-                          repo - the git repo
-                          gpg.key.id - the git signing key id (optional)
-                          gpg.key - the git signing key (optional)
-                        properties:
-                          name:
-                            default: ""
-                            description: |-
-                              Name of the referent.
-                              This field is effectively required, but due to backwards compatibility is
-                              allowed to be empty. Instances of this type with an empty value here are
-                              almost certainly wrong.
-                              More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#names
-                            type: string
-                        type: object
-                        x-kubernetes-map-type: atomic
                     required:
                     - committerEmail
                     - committerName
                     - image
-                    - repoSecretRef
                     type: object
                   image:
                     description: image is the image containing the generator implementation;
@@ -1307,31 +1186,6 @@ spec:
                     description: revision is the git revision (tag, branch or commit
                       hash) to the source code.
                     type: string
-                  sourceSecrets:
-                    description: |-
-                      sourceSecrets is an optional list of references to secrets in the same namespace to use for pulling the referenced sources.
-                      More info: https://kubernetes.io/docs/concepts/containers/images#specifying-imagepullsecrets-on-a-pod
-                      STATUS=ExecutableAvailable
-                    items:
-                      description: |-
-                        LocalObjectReference contains enough information to let you locate the
-                        referenced object inside the same namespace.
-                      properties:
-                        name:
-                          default: ""
-                          description: |-
-                            Name of the referent.
-                            This field is effectively required, but due to backwards compatibility is
-                            allowed to be empty. Instances of this type with an empty value here are
-                            almost certainly wrong.
-                            More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#names
-                          type: string
-                      type: object
-                      x-kubernetes-map-type: atomic
-                    type: array
-                    x-kubernetes-list-map-keys:
-                    - name
-                    x-kubernetes-list-type: map
                 required:
                 - repository
                 - revision

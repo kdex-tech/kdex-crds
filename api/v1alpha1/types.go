@@ -164,10 +164,6 @@ type Auth struct {
 	// +kubebuilder:validation:Optional
 	AnonymousEntitlements []string `json:"anonymousEntitlements,omitempty" protobuf:"bytes,1,rep,name=anonymousEntitlements"`
 
-	// jwt is the configuation for JWT token support.
-	// +kubebuilder:validation:Optional
-	JWT JWT `json:"jwt,omitempty" protobuf:"bytes,2,opt,name=jwt"`
-
 	// claimMappings is an array of CEL expressions for extracting custom claims from
 	// identity sources and mapping the results onto the Primary Access Token (PAT).
 	// This is used to map OIDC claims but can also be used with external data
@@ -176,14 +172,13 @@ type Auth struct {
 	// +kubebuilder:validation:MaxItems=16
 	ClaimMappings []dmapper.MappingRule `json:"claimMappings,omitempty" protobuf:"bytes,3,rep,name=claimMappings"`
 
+	// jwt is the configuation for JWT token support.
+	// +kubebuilder:validation:Optional
+	JWT JWT `json:"jwt,omitempty" protobuf:"bytes,2,opt,name=jwt"`
+
 	// oidcProvider is the configuration for an optional OIDC provider.
 	// +kubebuilder:validation:Optional
 	OIDCProvider *OIDCProvider `json:"oidcProvider,omitempty" protobuf:"bytes,4,opt,name=oidcProvider"`
-
-	// clientsSecretRef is a reference to a secret in the same namespace as the referrer that contains client credentials.
-	// The secret should contain clientID: clientSecret pairs in its data map.
-	// +kubebuilder:validation:Optional
-	ClientsSecretRef *corev1.LocalObjectReference `json:"clientsSecretRef,omitempty" protobuf:"bytes,5,opt,name=clientsSecretRef"`
 }
 
 // Backend defines a deployment for serving resources specific to the refer.
@@ -195,15 +190,6 @@ type Backend struct {
 	// +listType=map
 	// +listMapKey=name
 	Env []corev1.EnvVar `json:"env,omitempty" patchStrategy:"merge" patchMergeKey:"name" protobuf:"bytes,1,rep,name=env"`
-
-	// imagePullSecrets is an optional list of references to secrets in the same namespace to use for pulling the referenced images.
-	// More info: https://kubernetes.io/docs/concepts/containers/images#specifying-imagepullsecrets-on-a-pod
-	// +kubebuilder:validation:Optional
-	// +patchMergeKey=name
-	// +patchStrategy=merge
-	// +listType=map
-	// +listMapKey=name
-	ImagePullSecrets []corev1.LocalObjectReference `json:"imagePullSecrets,omitempty" patchStrategy:"merge" patchMergeKey:"name" protobuf:"bytes,1,rep,name=imagePullSecrets"`
 
 	// ingressPath is a prefix beginning with '/-/' plus additional characters. This indicates where in the Ingress/HTTPRoute the Backend will be mounted.
 	// This value is determined by the implementation that embeds the Backend and cannot be changed.
@@ -393,15 +379,6 @@ type Executable struct {
 	// +kubebuilder:validation:Optional
 	Image string `json:"image,omitempty" protobuf:"bytes,1,opt,name=image"`
 
-	// executablePullSecrets is an optional list of references to secrets in the same namespace to use for pulling the referenced images.
-	// More info: https://kubernetes.io/docs/concepts/containers/images#specifying-imagepullsecrets-on-a-pod
-	// +kubebuilder:validation:Optional
-	// +patchMergeKey=name
-	// +patchStrategy=merge
-	// +listType=map
-	// +listMapKey=name
-	ImagePullSecrets []corev1.LocalObjectReference `json:"imagePullSecrets,omitempty" patchStrategy:"merge" patchMergeKey:"name" protobuf:"bytes,2,rep,name=imagePullSecrets"`
-
 	// Scaling allows configuration for min/max replicas and autoscaler type.
 	// +kubebuilder:validation:Optional
 	Scaling *ScalingConfig `json:"scaling,omitempty" protobuf:"bytes,7,opt,name=scaling"`
@@ -475,39 +452,18 @@ type Git struct {
 	// committerName is the name that will be used for git commits.
 	// +kubebuilder:validation:Required
 	CommitterName string `json:"committerName"`
-
-	// repoSecretRef is a reference to a secret that contains the details for a git repository.
-	// This secret should contain all of the following keys:
-	//
-	// token - the authentication token
-	// host - the git host address
-	// org - the git org
-	// repo - the git repo
-	// gpg.key.id - the git signing key id (optional)
-	// gpg.key - the git signing key (optional)
-	//
-	// +kubebuilder:validation:Required
-	RepoSecretRef corev1.LocalObjectReference `json:"repoSecretRef"`
 }
 
-// +kubebuilder:validation:XValidation:rule=`!has(self.jwtKeysSecrets) || (self.jwtKeysSecrets.size() <= 1) || (self.jwtKeysSecrets.size() > 1 && self.activeKey != "")`,message="activeKey must be set if jwtKeysSecrets has more than 1 reference"
 type JWT struct {
-	// activeKey contains the name of the secret that holds the currently active key. This can be omitted when there is only a single key specified.
-	// +kubebuilder:validation:Optional
-	ActiveKey string `json:"activeKey" protobuf:"bytes,1,opt,name=activeKey"`
+
+	// TODO: add "sliding window" token re-issue (as alternative to refresh tokens so that KDex remains stateless)
+	// OR add a caching layer for the tokens. This would allow us to store the tokens in the cache and only store the
+	// session id in the cookie. This would also allow us to revoke tokens on demand.
 
 	// cookieName is the name of the Cookie in which the JWT token will be stored. (default is "auth_token")
 	// +kubebuilder:validation:Optional
 	// +kubebuilder:default:="auth_token"
 	CookieName string `json:"cookieName" protobuf:"bytes,2,opt,name=cookieName"`
-
-	// jwtKeysSecrets is an optional list of references to secrets in the same namespace that hold private PEM encoded signing keys.
-	// +kubebuilder:validation:Optional
-	JWTKeysSecrets []LocalSecretWithKeyReference `json:"jwtKeysSecrets,omitempty" protobuf:"bytes,3,rep,name=jwtKeysSecrets"`
-
-	// TODO: add "sliding window" token re-issue (as alternative to refresh tokens so that KDex remains stateless)
-	// OR add a caching layer for the tokens. This would allow us to store the tokens in the cache and only store the
-	// session id in the cookie. This would also allow us to revoke tokens on demand.
 
 	// tokenTTL is the length of time for which the token is valid
 	// +kubebuilder:validation:Optional
@@ -577,17 +533,6 @@ type KDexObjectReference struct {
 	Namespace string `json:"namespace,omitempty" protobuf:"bytes,3,opt,name=namespace"`
 }
 
-type LocalSecretWithKeyReference struct {
-	// keyProperty is the property from which to extract a value from the secret
-	// +kubebuilder:validation:Required
-	KeyProperty string `json:"keyProperty" protobuf:"bytes,1,req,name=keyProperty"`
-
-	// secretRef is a reference to a secret in the same namespace as the referrer.
-	// +kubebuilder:validation:Required
-	// +kubebuilder:validation:XValidation:rule="self.name.size() > 0",message="secretRef.name must not be empty"
-	SecretRef corev1.LocalObjectReference `json:"secretRef" protobuf:"bytes,2,req,name=secretRef"`
-}
-
 // KDexFunctionMetadata defines the metadata for the function.
 type Metadata struct {
 	// Tags are used for grouping and searching functions.
@@ -630,18 +575,6 @@ type NavigationHints struct {
 }
 
 type OIDCProvider struct {
-	// blockKeySecretRef is a reference to a Secret that contains the specified key whose valie is a 32-byte blockKey used to encrypt OIDC tokens.
-	// If none is provided one will be generated in memory. However, an in memory key is not viable for production systems.
-	// +kubebuilder:validation:Optional
-	BlockKeySecretRef *LocalSecretWithKeyReference `json:"blockKeySecretRef,omitempty" protobuf:"bytes,2,req,name=blockKeySecretRef"`
-
-	// clientID is the id assigned by the provider to this application.
-	// +kubebuilder:validation:Required
-	ClientID string `json:"clientID" protobuf:"bytes,1,req,name=clientID"`
-
-	// clientSecretRef is a reference to a secret in the host's namespace that holds the client_secret assigned to this application by the OIDC provider.
-	// +kubebuilder:validation:Required
-	ClientSecretRef LocalSecretWithKeyReference `json:"clientSecretRef,omitempty" protobuf:"bytes,2,req,name=clientSecretRef"`
 
 	// oidcProviderURL is the well known URL of the OIDC provider.
 	// +kubebuilder:validation:Required
@@ -660,8 +593,9 @@ type OpenAPI struct {
 }
 
 // PackageReference specifies the name and version of an NPM package. Prefereably the package should be available from
-// the public npm registry. If the package is not available from the public npm registry, a secretRef should be provided
-// to authenticate to the npm registry. That package must contain an ES module for use in the browser.
+// the public npm registry. If the package is not available from the public npm registry, a secretRef should be
+// associated with the ServiceAccount named in ServiceAccountRef to authenticate to the npm registry.
+// That package must contain an ES module for use in the browser.
 type PackageReference struct {
 	// name contains a scoped npm package name.
 	// +kubebuilder:validation:Required
@@ -674,10 +608,6 @@ type PackageReference struct {
 	// exportMapping is a mapping of the module's exports that will be used when the module import is written. e.g. `import [exportMapping] from [module_name];`. If exportMapping is not provided the module will be written as `import [module_name];`
 	// +kubebuilder:validation:Optional
 	ExportMapping string `json:"exportMapping,omitempty" protobuf:"bytes,3,opt,name=exportMapping"`
-
-	// secretRef is a reference to a secret containing authentication credentials for the NPM registry that holds the package.
-	// +kubebuilder:validation:Optional
-	SecretRef *corev1.LocalObjectReference `json:"secretRef,omitempty" protobuf:"bytes,4,opt,name=secretRef"`
 }
 
 func (p *PackageReference) ToImportStatement() string {
@@ -1015,10 +945,6 @@ type Routing struct {
 	// +kubebuilder:validation:Optional
 	// +kubebuilder:default:="Ingress"
 	Strategy RoutingStrategy `json:"strategy,omitempty" protobuf:"bytes,3,opt,name=strategy,casttype=RoutingStrategy"`
-
-	// tls is the TLS configuration for the host.
-	// +kubebuilder:validation:Optional
-	TLS *TLSSpec `json:"tls,omitempty" protobuf:"bytes,4,opt,name=tls"`
 }
 
 // RoutingStrategy defines the routing strategy to use.
@@ -1239,16 +1165,6 @@ type Source struct {
 	// revision is the git revision (tag, branch or commit hash) to the source code.
 	// +kubebuilder:validation:Required
 	Revision string `json:"revision" protobuf:"bytes,4,req,name=revision"`
-
-	// sourceSecrets is an optional list of references to secrets in the same namespace to use for pulling the referenced sources.
-	// More info: https://kubernetes.io/docs/concepts/containers/images#specifying-imagepullsecrets-on-a-pod
-	// STATUS=ExecutableAvailable
-	// +kubebuilder:validation:Optional
-	// +patchMergeKey=name
-	// +patchStrategy=merge
-	// +listType=map
-	// +listMapKey=name
-	SourceSecrets []corev1.LocalObjectReference `json:"sourceSecrets,omitempty" patchStrategy:"merge" patchMergeKey:"name" protobuf:"bytes,5,rep,name=sourceSecrets"`
 }
 
 type StyleDef struct {
@@ -1301,14 +1217,6 @@ type Tag struct {
 
 	// +kubebuilder:validation:Optional
 	URL string `json:"url,omitempty" protobuf:"bytes,3,opt,name=url"`
-}
-
-// TLSSpec defines the desired state of TLS for a host.
-// +kubebuilder:validation:XValidation:rule=`!has(self.secretRef) || self.secretRef.name != ""`,message="secretRef.name must be non-empty"
-type TLSSpec struct {
-	// secretRef is a reference to a secret containing a TLS certificate and key for the domains specified on the host.
-	// +kubebuilder:validation:Required
-	SecretRef corev1.LocalObjectReference `json:"secretRef" protobuf:"bytes,1,req,name=secretRef"`
 }
 
 type Translation struct {
