@@ -1467,9 +1467,20 @@ func (in *KDexHostSpec) DeepCopyInto(out *KDexHostSpec) {
 	out.ServiceAccountRef = in.ServiceAccountRef
 	if in.ServiceAccountSecrets != nil {
 		in, out := &in.ServiceAccountSecrets, &out.ServiceAccountSecrets
-		*out = make([]v1.Secret, len(*in))
-		for i := range *in {
-			(*in)[i].DeepCopyInto(&(*out)[i])
+		*out = make(map[string][]v1.Secret, len(*in))
+		for key, val := range *in {
+			var outVal []v1.Secret
+			if val == nil {
+				(*out)[key] = nil
+			} else {
+				inVal := (*in)[key]
+				in, out := &inVal, &outVal
+				*out = make([]v1.Secret, len(*in))
+				for i := range *in {
+					(*in)[i].DeepCopyInto(&(*out)[i])
+				}
+			}
+			(*out)[key] = outVal
 		}
 	}
 	if in.TranslationRefs != nil {
