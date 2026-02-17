@@ -131,8 +131,8 @@ type KDexHostSpec struct {
 	ThemeRef *KDexObjectReference `json:"themeRef,omitempty" protobuf:"bytes,15,opt,name=themeRef"`
 
 	// serviceAccountRef is a reference to the service account used by the host to access secrets.
-	// +kubebuilder:validation:Optional
-	ServiceAccountRef *corev1.LocalObjectReference `json:"serviceAccountRef,omitempty" protobuf:"bytes,18,opt,name=serviceAccountRef"`
+	// +kubebuilder:validation:Required
+	ServiceAccountRef corev1.LocalObjectReference `json:"serviceAccountRef" protobuf:"bytes,18,req,name=serviceAccountRef"`
 
 	// ServiceAccountSecrets is an internal list of resolved secrets that are referenced by the service account.
 	ServiceAccountSecrets []corev1.Secret `json:"-"`

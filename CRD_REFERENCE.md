@@ -1106,7 +1106,7 @@ _Appears in:_
 | `scriptLibraryRef` _[KDexObjectReference](#kdexobjectreference)_ | scriptLibraryRef is an optional reference to a KDexScriptLibrary resource. |  | Optional: \{\} <br /> |
 | `security` _[SecurityRequirement](#securityrequirement)_ | Optional top level security requirements. |  |  |
 | `themeRef` _[KDexObjectReference](#kdexobjectreference)_ | themeRef is a reference to the theme that should apply to all pages bound to this host. |  | Optional: \{\} <br /> |
-| `serviceAccountRef` _[LocalObjectReference](https://kubernetes.io/docs/reference/generated/kubernetes-api/v/#localobjectreference-v1-core)_ | serviceAccountRef is a reference to the service account used by the host to access secrets. |  | Optional: \{\} <br /> |
+| `serviceAccountRef` _[LocalObjectReference](https://kubernetes.io/docs/reference/generated/kubernetes-api/v/#localobjectreference-v1-core)_ | serviceAccountRef is a reference to the service account used by the host to access secrets. |  | Required: \{\} <br /> |
 | `translationRefs` _[KDexObjectReference](#kdexobjectreference) array_ | translationRefs is an array of references to KDexTranslation or KDexClusterTranslation resources that define the translations that should apply to this host. |  | Optional: \{\} <br /> |
 | `utilityPages` _[UtilityPages](#utilitypages)_ | utilityPages defines the utility pages (announcement, error, login) for the host. |  | Optional: \{\} <br /> |
 
@@ -1189,7 +1189,7 @@ _Appears in:_
 | `scriptLibraryRef` _[KDexObjectReference](#kdexobjectreference)_ | scriptLibraryRef is an optional reference to a KDexScriptLibrary resource. |  | Optional: \{\} <br /> |
 | `security` _[SecurityRequirement](#securityrequirement)_ | Optional top level security requirements. |  |  |
 | `themeRef` _[KDexObjectReference](#kdexobjectreference)_ | themeRef is a reference to the theme that should apply to all pages bound to this host. |  | Optional: \{\} <br /> |
-| `serviceAccountRef` _[LocalObjectReference](https://kubernetes.io/docs/reference/generated/kubernetes-api/v/#localobjectreference-v1-core)_ | serviceAccountRef is a reference to the service account used by the host to access secrets. |  | Optional: \{\} <br /> |
+| `serviceAccountRef` _[LocalObjectReference](https://kubernetes.io/docs/reference/generated/kubernetes-api/v/#localobjectreference-v1-core)_ | serviceAccountRef is a reference to the service account used by the host to access secrets. |  | Required: \{\} <br /> |
 | `translationRefs` _[KDexObjectReference](#kdexobjectreference) array_ | translationRefs is an array of references to KDexTranslation or KDexClusterTranslation resources that define the translations that should apply to this host. |  | Optional: \{\} <br /> |
 | `utilityPages` _[UtilityPages](#utilitypages)_ | utilityPages defines the utility pages (announcement, error, login) for the host. |  | Optional: \{\} <br /> |
 | `announcementRef` _[LocalObjectReference](https://kubernetes.io/docs/reference/generated/kubernetes-api/v/#localobjectreference-v1-core)_ | announcementRef is a reference to the KDexInternalUtilityPage that provides the announcement page. |  | Optional: \{\} <br /> |

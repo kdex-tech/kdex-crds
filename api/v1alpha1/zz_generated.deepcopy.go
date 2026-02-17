@@ -1464,11 +1464,7 @@ func (in *KDexHostSpec) DeepCopyInto(out *KDexHostSpec) {
 		*out = new(KDexObjectReference)
 		**out = **in
 	}
-	if in.ServiceAccountRef != nil {
-		in, out := &in.ServiceAccountRef, &out.ServiceAccountRef
-		*out = new(v1.LocalObjectReference)
-		**out = **in
-	}
+	out.ServiceAccountRef = in.ServiceAccountRef
 	if in.ServiceAccountSecrets != nil {
 		in, out := &in.ServiceAccountSecrets, &out.ServiceAccountSecrets
 		*out = make([]v1.Secret, len(*in))
