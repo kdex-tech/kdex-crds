@@ -608,6 +608,10 @@ type PackageReference struct {
 	// exportMapping is a mapping of the module's exports that will be used when the module import is written. e.g. `import [exportMapping] from [module_name];`. If exportMapping is not provided the module will be written as `import [module_name];`
 	// +kubebuilder:validation:Optional
 	ExportMapping string `json:"exportMapping,omitempty" protobuf:"bytes,3,opt,name=exportMapping"`
+
+	// secretRef is a reference to a secret containing authentication credentials for the NPM registry that holds the package.
+	// +kubebuilder:validation:Optional
+	SecretRef *corev1.LocalObjectReference `json:"secretRef,omitempty" protobuf:"bytes,4,opt,name=secretRef"`
 }
 
 func (p *PackageReference) ToImportStatement() string {

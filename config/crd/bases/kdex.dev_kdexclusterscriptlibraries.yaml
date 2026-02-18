@@ -238,6 +238,21 @@ spec:
                   name:
                     description: name contains a scoped npm package name.
                     type: string
+                  secretRef:
+                    description: secretRef is a reference to a secret containing authentication
+                      credentials for the NPM registry that holds the package.
+                    properties:
+                      name:
+                        default: ""
+                        description: |-
+                          Name of the referent.
+                          This field is effectively required, but due to backwards compatibility is
+                          allowed to be empty. Instances of this type with an empty value here are
+                          almost certainly wrong.
+                          More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#names
+                        type: string
+                    type: object
+                    x-kubernetes-map-type: atomic
                   version:
                     description: version contains a specific npm package version.
                     type: string
