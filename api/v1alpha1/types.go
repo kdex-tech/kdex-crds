@@ -1157,6 +1157,18 @@ func (s *ScriptDef) ToTag() string {
 
 type SecurityRequirement map[string][]string
 
+type ServiceAccountSecrets []corev1.Secret
+
+func (s ServiceAccountSecrets) Filter(predicate func(corev1.Secret) bool) []corev1.Secret {
+	filtered := []corev1.Secret{}
+	for _, secret := range s {
+		if predicate(secret) {
+			filtered = append(filtered, secret)
+		}
+	}
+	return filtered
+}
+
 // Source contains source information.
 type Source struct {
 	// builder is used to build the source code into an image.

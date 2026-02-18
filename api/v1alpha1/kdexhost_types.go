@@ -134,8 +134,8 @@ type KDexHostSpec struct {
 	// +kubebuilder:validation:Required
 	ServiceAccountRef corev1.LocalObjectReference `json:"serviceAccountRef" protobuf:"bytes,18,req,name=serviceAccountRef"`
 
-	// ServiceAccountSecrets is an internal map of resolved secrets that are referenced by the service account.
-	ServiceAccountSecrets map[string][]corev1.Secret `json:"-"`
+	// ServiceAccountSecrets is an internal list of resolved secrets that are referenced by the service account.
+	ServiceAccountSecrets ServiceAccountSecrets `json:"-"`
 
 	// translationRefs is an array of references to KDexTranslation or KDexClusterTranslation resources that define the translations that should apply to this host.
 	// +listType=map
