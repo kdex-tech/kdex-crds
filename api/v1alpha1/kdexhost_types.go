@@ -131,6 +131,42 @@ type KDexHostSpec struct {
 	ThemeRef *KDexObjectReference `json:"themeRef,omitempty" protobuf:"bytes,15,opt,name=themeRef"`
 
 	// serviceAccountRef is a reference to the service account used by the host to access secrets.
+	//
+	// Each Secret should match one of the following cases:
+	//
+	// - be annotated with kdex.dev/secret-type = auth-client (multiple)
+	//     - contain key client-id OR client_id
+	//     - contain key client-secret OR client_secret
+	//     - contain key redirect-uri OR redirect_uri
+	//
+	// - be annotated with kdex.dev/secret-type = git (single)
+	//     - contain key host
+	//     - contain key org
+	//     - contain key repo
+	//     - contain key token
+	//     - contain key user
+	//
+	// - be annotated with kdex.dev/secret-type = jwt-keys (multiple)
+	//     - contain key private-key
+	//
+	//   ** optionally annotated with kdex.dev/active-key = true
+	//
+	// - be annotated with kdex.dev/secret-type = oidc-client (single)
+	//     - contain key client-id OR client_id
+	//     - contain key client-secret OR client_secret
+	//     - contain optional key block-key OR block_key
+	//
+	// - be annotated with kdex.dev/secret-type = subject (multiple)
+	//     - contain key subject
+	//     - contain key password
+	//     - contain optional key email
+	//     - contain optional key first-name
+	//     - contain optional key last-name
+	//
+	// - be of type kubernetes.io/dockerconfigjson (multiple)
+	//
+	// - be of type kubernetes.io/tls (single)
+	//
 	// +kubebuilder:validation:Required
 	ServiceAccountRef corev1.LocalObjectReference `json:"serviceAccountRef" protobuf:"bytes,18,req,name=serviceAccountRef"`
 
