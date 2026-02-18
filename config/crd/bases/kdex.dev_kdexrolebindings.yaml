@@ -44,10 +44,6 @@ spec:
           spec:
             description: spec defines the desired state of KDexRoleBinding
             properties:
-              email:
-                description: email is the email address of the subject, used for local
-                  fallback lookup or metadata.
-                type: string
               hostRef:
                 description: hostRef is a reference to the KDexHost that this binding
                   is for.
@@ -72,27 +68,11 @@ spec:
                   type: string
                 minItems: 1
                 type: array
-              secretRef:
-                description: |-
-                  secretRef is an optional reference to a secret that contains keys that map to subject and
-                  the value is the password. As such the secret can be mapped to multiple KDexRoleBinding.
-                  This simple fallback is not intended for large scale production use. Thought it may be used for administration.
-                properties:
-                  name:
-                    default: ""
-                    description: |-
-                      Name of the referent.
-                      This field is effectively required, but due to backwards compatibility is
-                      allowed to be empty. Instances of this type with an empty value here are
-                      almost certainly wrong.
-                      More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#names
-                    type: string
-                type: object
-                x-kubernetes-map-type: atomic
               subject:
                 description: |-
                   subject is the subject identifier. It should be from the OIDC provider (e.g. Google).
-                  However, if the secretRef is set then it contains a local identity managed
+                  However, if the ServiceAccount referenced by the host has secrets attached labelled with
+                  "kdex.dev/secret-type=subject" then it contains a local identity managed
                   through the Secret.
                 minLength: 5
                 type: string

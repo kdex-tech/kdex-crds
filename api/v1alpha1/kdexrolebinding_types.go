@@ -23,10 +23,6 @@ import (
 
 // KDexRoleBindingSpec defines the desired state of KDexRoleBinding
 type KDexRoleBindingSpec struct {
-	// email is the email address of the subject, used for local fallback lookup or metadata.
-	// +kubebuilder:validation:Optional
-	Email string `json:"email,omitempty" protobuf:"bytes,1,opt,name=email"`
-
 	// hostRef is a reference to the KDexHost that this binding is for.
 	// +kubebuilder:validation:Required
 	// +kubebuilder:validation:XValidation:rule="self.name.size() > 0",message="hostRef.name must not be empty"
@@ -37,14 +33,9 @@ type KDexRoleBindingSpec struct {
 	// +kubebuilder:validation:MinItems=1
 	Roles []string `json:"roles" protobuf:"bytes,3,rep,name=roles"`
 
-	// secretRef is an optional reference to a secret that contains keys that map to subject and
-	// the value is the password. As such the secret can be mapped to multiple KDexRoleBinding.
-	// This simple fallback is not intended for large scale production use. Thought it may be used for administration.
-	// +kubebuilder:validation:Optional
-	SecretRef *corev1.LocalObjectReference `json:"secretRef" protobuf:"bytes,4,opt,name=secretRef"`
-
 	// subject is the subject identifier. It should be from the OIDC provider (e.g. Google).
-	// However, if the secretRef is set then it contains a local identity managed
+	// However, if the ServiceAccount referenced by the host has secrets attached labelled with
+	// "kdex.dev/secret-type=subject" then it contains a local identity managed
 	// through the Secret.
 	// +kubebuilder:validation:Required
 	// +kubebuilder:validation:MinLength=5
