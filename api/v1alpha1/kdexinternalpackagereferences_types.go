@@ -79,6 +79,9 @@ type KDexInternalPackageReferencesSpec struct {
 	// +listMapKey=name
 	// +kubebuilder:validation:MinItems=1
 	PackageReferences []PackageReference `json:"packageReferences" protobuf:"bytes,2,rep,name=packageReferences"`
+
+	// +kubebuilder:validation:Required
+	ServiceAccountRef corev1.LocalObjectReference `json:"serviceAccountRef" protobuf:"bytes,18,req,name=serviceAccountRef"`
 }
 
 func init() {
