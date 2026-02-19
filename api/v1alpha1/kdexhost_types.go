@@ -132,40 +132,50 @@ type KDexHostSpec struct {
 
 	// serviceAccountRef is a reference to the service account used by the host to access secrets.
 	//
-	// Each Secret should match one of the following cases:
+	// Each Secret must match one of the following:
 	//
-	// - be annotated with kdex.dev/secret-type = auth-client (multiple)
-	//     - contain key client-id OR client_id
-	//     - contain key client-secret OR client_secret
-	//     - contain key redirect-uri OR redirect_uri
+	// - is annotated with 'kdex.dev/secret-type = auth-client' (multiple)
+	//     - must contain key 'client-id' OR 'client_id'
+	//     - must contain key 'client-secret' OR 'client_secret'
+	//     - must contain key 'redirect-uri' OR 'redirect_uri'
 	//
-	// - be annotated with kdex.dev/secret-type = git (single)
-	//     - contain key host
-	//     - contain key org
-	//     - contain key repo
-	//     - contain key token
-	//     - contain key user
+	// - is annotated with 'kdex.dev/secret-type = git' (single)
+	//     - must contain key 'host'
+	//     - must contain key 'org'
+	//     - must contain key 'repo'
+	//     - must contain key 'token'
+	//     - must contain key 'user'
 	//
-	// - be annotated with kdex.dev/secret-type = jwt-keys (multiple)
-	//     - contain key private-key
+	// - is annotated with 'kdex.dev/secret-type = jwt-keys' (multiple)
+	//     - must contain key 'private-key'
+	//     - may be annotated with 'kdex.dev/active-key = true'
 	//
-	//   ** optionally annotated with kdex.dev/active-key = true
+	// - is annotated with 'kdex.dev/secret-type = ldap' (single)
+	//     - must contain key 'active-directory' (true|false)
+	//     - must contain key 'addr'
+	//     - must contain key 'base-dn'
+	//     - must contain key 'bind-dn'
+	//     - must contain key 'bind-user'
+	//     - must contain key 'bind-pass'
+	//     - must contain key 'user-filter'
+	//     - may contain key 'attributes' (comma separated list of attributes to retrieve)
 	//
-	// - be annotated with kdex.dev/secret-type = oidc-client (single)
-	//     - contain key client-id OR client_id
-	//     - contain key client-secret OR client_secret
-	//     - contain optional key block-key OR block_key
+	// - is annotated with 'kdex.dev/secret-type = npm' (single)
+	//     - must contain key '.npmrc' (formatted as a complete .npmrc file)
 	//
-	// - be annotated with kdex.dev/secret-type = subject (multiple)
-	//     - contain key subject
-	//     - contain key password
-	//     - contain optional key email
-	//     - contain optional key first-name
-	//     - contain optional key last-name
+	// - is annotated with 'kdex.dev/secret-type = oidc-client' (single)
+	//     - must contain key 'client-id' OR 'client_id'
+	//     - must contain key 'client-secret' OR 'client_secret'
+	//     - may contain key 'block-key' OR 'block_key'
 	//
-	// - be of type kubernetes.io/dockerconfigjson (multiple)
+	// - is annotated with 'kdex.dev/secret-type = subject' (multiple)
+	//     - must contain key 'sub'
+	//     - must contain key 'password'
+	//     - may contain arbitrary key(string)/value(string|yaml) pairs which can be mapped to the claims using the spec.auth.claimMappings
 	//
-	// - be of type kubernetes.io/tls (single)
+	// - is of type 'kubernetes.io/dockerconfigjson' (multiple)
+	//
+	// - is of type 'kubernetes.io/tls' (single)
 	//
 	// +kubebuilder:validation:Required
 	ServiceAccountRef corev1.LocalObjectReference `json:"serviceAccountRef" protobuf:"bytes,18,req,name=serviceAccountRef"`

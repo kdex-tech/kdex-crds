@@ -17,6 +17,7 @@ limitations under the License.
 package v1alpha1
 
 import (
+	corev1 "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
 
@@ -60,10 +61,19 @@ type KDexInternalPackageReferencesList struct {
 
 // KDexInternalPackageReferencesSpec defines the desired state of KDexInternalPackageReferences
 type KDexInternalPackageReferencesSpec struct {
+	// +kubebuilder:validation:Required
+	BuilderImage string `json:"builderImage" protobuf:"bytes,1,opt,name=builderImage"`
+
+	// +kubebuilder:validation:Optional
+	BuilderImagePullSecrets []corev1.LocalObjectReference `json:"builderImagePullSecrets" protobuf:"bytes,2,rep,name=builderImagePullSecrets"`
+
+	// +kubebuilder:validation:Optional
+	NPMSecretRef *corev1.LocalObjectReference `json:"npmSecretRef" protobuf:"bytes,3,opt,name=npmSecretRef"`
+
 	// +listType=map
 	// +listMapKey=name
 	// +kubebuilder:validation:MinItems=1
-	PackageReferences []PackageReference `json:"packageReferences" protobuf:"bytes,1,rep,name=packageReferences"`
+	PackageReferences []PackageReference `json:"packageReferences" protobuf:"bytes,2,rep,name=packageReferences"`
 }
 
 func init() {
