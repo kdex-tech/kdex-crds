@@ -67,6 +67,11 @@ type KDexInternalPackageReferencesSpec struct {
 	// +kubebuilder:validation:Optional
 	BuilderImagePullSecrets []corev1.LocalObjectReference `json:"builderImagePullSecrets" protobuf:"bytes,2,rep,name=builderImagePullSecrets"`
 
+	// hostRef is a reference to the KDexHost that this internal package references is for.
+	// +kubebuilder:validation:Required
+	// +kubebuilder:validation:XValidation:rule="self.name.size() > 0",message="hostRef.name must not be empty"
+	HostRef corev1.LocalObjectReference `json:"hostRef" protobuf:"bytes,2,req,name=hostRef"`
+
 	// +kubebuilder:validation:Optional
 	NPMSecretRef *corev1.LocalObjectReference `json:"npmSecretRef" protobuf:"bytes,3,opt,name=npmSecretRef"`
 

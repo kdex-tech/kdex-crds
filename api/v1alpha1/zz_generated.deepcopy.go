@@ -1661,6 +1661,7 @@ func (in *KDexInternalPackageReferencesSpec) DeepCopyInto(out *KDexInternalPacka
 		*out = make([]v1.LocalObjectReference, len(*in))
 		copy(*out, *in)
 	}
+	out.HostRef = in.HostRef
 	if in.NPMSecretRef != nil {
 		in, out := &in.NPMSecretRef, &out.NPMSecretRef
 		*out = new(v1.LocalObjectReference)
