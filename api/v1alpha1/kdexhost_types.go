@@ -142,9 +142,9 @@ type KDexHostSpec struct {
 	// - is annotated with 'kdex.dev/secret-type = git' (single)
 	//     - must contain key 'host'
 	//     - must contain key 'org'
+	//     - must contain key 'password'
 	//     - must contain key 'repo'
-	//     - must contain key 'token'
-	//     - must contain key 'user'
+	//     - must contain key 'username'
 	//
 	// - is annotated with 'kdex.dev/secret-type = jwt-keys' (multiple)
 	//     - must contain key 'private-key'
