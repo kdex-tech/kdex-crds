@@ -139,6 +139,11 @@ type KDexHostSpec struct {
 	//     - may contain key 'public' (true|false, default: false)
 	//     - if not public, must contain key 'client-secret' OR 'client_secret'
 	//     - must contain key 'redirect-uris' OR 'redirect_uris' (comma separated list)
+	//     - may contain key 'allowed-grant-types' OR 'allowed_grant_types' (comma separated list)
+	//     - may contain key 'allowed-scopes' OR 'allowed_scopes' (comma separated list)
+	//     - may contain key 'require-pkce' OR 'require_pkce' (true|false, default: false)
+	//     - may contain key 'name'
+	//     - may contain key 'description'
 	//
 	// - is annotated with 'kdex.dev/secret-type = git' (single)
 	//     - must contain key 'host'
