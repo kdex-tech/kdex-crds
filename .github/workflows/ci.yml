@@ -1,0 +1,49 @@
+name: CI
+
+on:
+  push:
+    branches-ignore:
+    - "dependabot/**"
+    paths:
+    - "**"
+    - "!docs/**"
+    tags:
+    - "v*"
+  pull_request:
+    paths:
+    - "**"
+    - "!docs/**"
+
+env:
+  LC_ALL: en_US.UTF-8
+
+defaults:
+  run:
+    shell: bash
+
+permissions:
+  packages: write
+  contents: read
+
+jobs:
+  ci:
+    name: Build, Test
+    runs-on: ubuntu-latest
+    steps:
+    - name: Clone the code
+      uses: actions/checkout@v4
+
+    - name: Setup Go
+      uses: actions/setup-go@v5
+      with:
+        go-version-file: go.mod
+
+    - name: Run Linter
+      uses: golangci/golangci-lint-action@v6
+      with:
+        version: v2.7.2
+
+    - name: Run Unit Tests
+      run: |
+        go mod tidy
+        make test
