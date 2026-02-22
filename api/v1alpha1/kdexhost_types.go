@@ -136,8 +136,9 @@ type KDexHostSpec struct {
 	//
 	// - is annotated with 'kdex.dev/secret-type = auth-client' (multiple)
 	//     - must contain key 'client-id' OR 'client_id'
-	//     - must contain key 'client-secret' OR 'client_secret'
-	//     - must contain key 'redirect-uri' OR 'redirect_uri'
+	//     - may contain key 'public' (true|false, default: false)
+	//     - if not public, must contain key 'client-secret' OR 'client_secret'
+	//     - must contain key 'redirect-uris' OR 'redirect_uris' (comma separated list)
 	//
 	// - is annotated with 'kdex.dev/secret-type = git' (single)
 	//     - must contain key 'host'
