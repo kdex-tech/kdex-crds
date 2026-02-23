@@ -94,7 +94,8 @@ _Appears in:_
 
 
 
-
+_Validation:_
+- ExactlyOneOf: [linkHref metaId style]
 
 _Appears in:_
 - [Assets](#assets)
@@ -114,6 +115,7 @@ _Underlying type:_ _[Asset](#asset)_
 
 
 _Validation:_
+- ExactlyOneOf: [linkHref metaId style]
 - MaxItems: 32
 
 _Appears in:_
@@ -228,7 +230,8 @@ _Appears in:_
 
 
 
-
+_Validation:_
+- ExactlyOneOf: [appRef rawHTML]
 
 _Appears in:_
 - [KDexInternalUtilityPageSpec](#kdexinternalutilitypagespec)
@@ -344,7 +347,8 @@ There are four possible ways to obtain a deployable function:
 3. Generator: A configuration for a code generator that will produce source code stubs for the selected language.
 4. Nothing: A code generator config will be derived from the defaults provided by the FaaS Adaptor.
 
-
+_Validation:_
+- AtMostOneOf: [executable generator source]
 
 _Appears in:_
 - [KDexFunctionSpec](#kdexfunctionspec)
@@ -476,7 +480,7 @@ _Appears in:_
 | --- | --- | --- | --- |
 | `customElements` _[CustomElement](#customelement) array_ | customElements is a list of custom elements implemented by the micro-frontend application. |  | MaxItems: 32 <br />MinItems: 1 <br /> |
 | `packageReference` _[PackageReference](#packagereference)_ | packageReference specifies the name and version of an NPM package that contains the script. The package.json must describe an ES module. |  | Required: \{\} <br /> |
-| `scripts` _[ScriptDef](#scriptdef) array_ | scripts is a set of script references. They may contain URLs that point to resources hosted at some public address, npm module references or they may contain tag contents. |  | MaxItems: 8 <br />Optional: \{\} <br /> |
+| `scripts` _[ScriptDef](#scriptdef) array_ | scripts is a set of script references. They may contain URLs that point to resources hosted at some public address, npm module references or they may contain tag contents. |  | ExactlyOneOf: [script scriptSrc] <br />MaxItems: 8 <br />Optional: \{\} <br /> |
 | `ingressPath` _string_ | ingressPath is a prefix beginning with '/-/' plus additional characters. This indicates where in the Ingress/HTTPRoute the Backend will be mounted.<br />This value is determined by the implementation that embeds the Backend and cannot be changed. |  | Optional: \{\} <br />Pattern: `^/-/.+` <br /> |
 | `env` _[EnvVar](https://kubernetes.io/docs/reference/generated/kubernetes-api/v/#envvar-v1-core) array_ | env is an optional list of environment variables to set in the container. |  | Optional: \{\} <br /> |
 | `replicas` _integer_ | replicas is the number of desired pods. This is a pointer to distinguish between explicit<br />zero and not specified. Defaults to 1. |  | Optional: \{\} <br /> |
@@ -503,7 +507,7 @@ _Appears in:_
 | `apiVersion` _string_ | `kdex.dev/v1alpha1` | | |
 | `kind` _string_ | `KDexClusterApp` | | |
 | `metadata` _[ObjectMeta](https://kubernetes.io/docs/reference/generated/kubernetes-api/v/#objectmeta-v1-meta)_ | Refer to Kubernetes API documentation for fields of `metadata`. |  | Optional: \{\} <br /> |
-| `spec` _[KDexAppSpec](#kdexappspec)_ | spec defines the desired state of KDexClusterApp |  |  |
+| `spec` _[KDexAppSpec](#kdexappspec)_ | spec defines the desired state of KDexClusterApp |  | Required: \{\} <br /> |
 
 
 #### KDexClusterAppList
@@ -539,8 +543,8 @@ _Appears in:_
 | --- | --- | --- | --- |
 | `apiVersion` _string_ | `kdex.dev/v1alpha1` | | |
 | `kind` _string_ | `KDexClusterFaaSAdaptor` | | |
-| `metadata` _[ObjectMeta](https://kubernetes.io/docs/reference/generated/kubernetes-api/v/#objectmeta-v1-meta)_ | Refer to Kubernetes API documentation for fields of `metadata`. |  |  |
-| `spec` _[KDexFaaSAdaptorSpec](#kdexfaasadaptorspec)_ | spec defines the desired state of KDexClusterFaaSAdaptor |  |  |
+| `metadata` _[ObjectMeta](https://kubernetes.io/docs/reference/generated/kubernetes-api/v/#objectmeta-v1-meta)_ | Refer to Kubernetes API documentation for fields of `metadata`. |  | Optional: \{\} <br /> |
+| `spec` _[KDexFaaSAdaptorSpec](#kdexfaasadaptorspec)_ | spec defines the desired state of KDexClusterFaaSAdaptor |  | Required: \{\} <br /> |
 
 
 #### KDexClusterFaaSAdaptorList
@@ -577,7 +581,7 @@ _Appears in:_
 | `apiVersion` _string_ | `kdex.dev/v1alpha1` | | |
 | `kind` _string_ | `KDexClusterPageArchetype` | | |
 | `metadata` _[ObjectMeta](https://kubernetes.io/docs/reference/generated/kubernetes-api/v/#objectmeta-v1-meta)_ | Refer to Kubernetes API documentation for fields of `metadata`. |  | Optional: \{\} <br /> |
-| `spec` _[KDexPageArchetypeSpec](#kdexpagearchetypespec)_ | spec defines the desired state of KDexClusterPageArchetype |  |  |
+| `spec` _[KDexPageArchetypeSpec](#kdexpagearchetypespec)_ | spec defines the desired state of KDexClusterPageArchetype |  | Required: \{\} <br /> |
 
 
 #### KDexClusterPageArchetypeList
@@ -614,7 +618,7 @@ _Appears in:_
 | `apiVersion` _string_ | `kdex.dev/v1alpha1` | | |
 | `kind` _string_ | `KDexClusterPageFooter` | | |
 | `metadata` _[ObjectMeta](https://kubernetes.io/docs/reference/generated/kubernetes-api/v/#objectmeta-v1-meta)_ | Refer to Kubernetes API documentation for fields of `metadata`. |  | Optional: \{\} <br /> |
-| `spec` _[KDexPageFooterSpec](#kdexpagefooterspec)_ | spec defines the desired state of KDexClusterPageFooter |  |  |
+| `spec` _[KDexPageFooterSpec](#kdexpagefooterspec)_ | spec defines the desired state of KDexClusterPageFooter |  | Required: \{\} <br /> |
 
 
 #### KDexClusterPageFooterList
@@ -651,7 +655,7 @@ _Appears in:_
 | `apiVersion` _string_ | `kdex.dev/v1alpha1` | | |
 | `kind` _string_ | `KDexClusterPageHeader` | | |
 | `metadata` _[ObjectMeta](https://kubernetes.io/docs/reference/generated/kubernetes-api/v/#objectmeta-v1-meta)_ | Refer to Kubernetes API documentation for fields of `metadata`. |  | Optional: \{\} <br /> |
-| `spec` _[KDexPageHeaderSpec](#kdexpageheaderspec)_ | spec defines the desired state of KDexClusterPageHeader |  |  |
+| `spec` _[KDexPageHeaderSpec](#kdexpageheaderspec)_ | spec defines the desired state of KDexClusterPageHeader |  | Required: \{\} <br /> |
 
 
 #### KDexClusterPageHeaderList
@@ -688,7 +692,7 @@ _Appears in:_
 | `apiVersion` _string_ | `kdex.dev/v1alpha1` | | |
 | `kind` _string_ | `KDexClusterPageNavigation` | | |
 | `metadata` _[ObjectMeta](https://kubernetes.io/docs/reference/generated/kubernetes-api/v/#objectmeta-v1-meta)_ | Refer to Kubernetes API documentation for fields of `metadata`. |  | Optional: \{\} <br /> |
-| `spec` _[KDexPageNavigationSpec](#kdexpagenavigationspec)_ | spec defines the desired state of KDexClusterPageNavigation |  |  |
+| `spec` _[KDexPageNavigationSpec](#kdexpagenavigationspec)_ | spec defines the desired state of KDexClusterPageNavigation |  | Required: \{\} <br /> |
 
 
 #### KDexClusterPageNavigationList
@@ -725,7 +729,7 @@ _Appears in:_
 | `apiVersion` _string_ | `kdex.dev/v1alpha1` | | |
 | `kind` _string_ | `KDexClusterScriptLibrary` | | |
 | `metadata` _[ObjectMeta](https://kubernetes.io/docs/reference/generated/kubernetes-api/v/#objectmeta-v1-meta)_ | Refer to Kubernetes API documentation for fields of `metadata`. |  | Optional: \{\} <br /> |
-| `spec` _[KDexScriptLibrarySpec](#kdexscriptlibraryspec)_ | spec defines the desired state of KDexClusterScriptLibrary |  |  |
+| `spec` _[KDexScriptLibrarySpec](#kdexscriptlibraryspec)_ | spec defines the desired state of KDexClusterScriptLibrary |  | Required: \{\} <br /> |
 
 
 #### KDexClusterScriptLibraryList
@@ -762,7 +766,7 @@ _Appears in:_
 | `apiVersion` _string_ | `kdex.dev/v1alpha1` | | |
 | `kind` _string_ | `KDexClusterTheme` | | |
 | `metadata` _[ObjectMeta](https://kubernetes.io/docs/reference/generated/kubernetes-api/v/#objectmeta-v1-meta)_ | Refer to Kubernetes API documentation for fields of `metadata`. |  | Optional: \{\} <br /> |
-| `spec` _[KDexThemeSpec](#kdexthemespec)_ | spec defines the desired state of KDexClusterTheme |  |  |
+| `spec` _[KDexThemeSpec](#kdexthemespec)_ | spec defines the desired state of KDexClusterTheme |  | Required: \{\} <br /> |
 
 
 #### KDexClusterThemeList
@@ -801,7 +805,7 @@ _Appears in:_
 | --- | --- | --- | --- |
 | `apiVersion` _string_ | `kdex.dev/v1alpha1` | | |
 | `kind` _string_ | `KDexClusterTranslation` | | |
-| `metadata` _[ObjectMeta](https://kubernetes.io/docs/reference/generated/kubernetes-api/v/#objectmeta-v1-meta)_ | Refer to Kubernetes API documentation for fields of `metadata`. |  |  |
+| `metadata` _[ObjectMeta](https://kubernetes.io/docs/reference/generated/kubernetes-api/v/#objectmeta-v1-meta)_ | Refer to Kubernetes API documentation for fields of `metadata`. |  | Optional: \{\} <br /> |
 | `spec` _[KDexTranslationSpec](#kdextranslationspec)_ | spec defines the desired state of KDexTranslation |  | Required: \{\} <br /> |
 
 
@@ -878,8 +882,8 @@ _Appears in:_
 | --- | --- | --- | --- |
 | `apiVersion` _string_ | `kdex.dev/v1alpha1` | | |
 | `kind` _string_ | `KDexFaaSAdaptor` | | |
-| `metadata` _[ObjectMeta](https://kubernetes.io/docs/reference/generated/kubernetes-api/v/#objectmeta-v1-meta)_ | Refer to Kubernetes API documentation for fields of `metadata`. |  |  |
-| `spec` _[KDexFaaSAdaptorSpec](#kdexfaasadaptorspec)_ | spec defines the desired state of KDexFaaSAdaptor |  |  |
+| `metadata` _[ObjectMeta](https://kubernetes.io/docs/reference/generated/kubernetes-api/v/#objectmeta-v1-meta)_ | Refer to Kubernetes API documentation for fields of `metadata`. |  | Optional: \{\} <br /> |
+| `spec` _[KDexFaaSAdaptorSpec](#kdexfaasadaptorspec)_ | spec defines the desired state of KDexFaaSAdaptor |  | Required: \{\} <br /> |
 
 
 #### KDexFaaSAdaptorList
@@ -1000,7 +1004,7 @@ _Appears in:_
 | `claimMappings` _MappingRule array_ | claimMappings is an array of CEL expressions for extracting custom claims<br />from the current authorization context onto the Function Access Token (FAT).<br />This can be used to map Function specific claims like tenant, department_id,<br />strip_customer_id, etc. to the FAT. |  | MaxItems: 16 <br />Optional: \{\} <br /> |
 | `hostRef` _[LocalObjectReference](https://kubernetes.io/docs/reference/generated/kubernetes-api/v/#localobjectreference-v1-core)_ | hostRef is a reference to the KDexHost that this translation belongs to. |  | Required: \{\} <br /> |
 | `metadata` _[KDexFunctionMetadata](#kdexfunctionmetadata)_ | Refer to Kubernetes API documentation for fields of `metadata`. |  | Optional: \{\} <br /> |
-| `origin` _[FunctionOrigin](#functionorigin)_ | origin defines the origin of the function implementation. |  | Optional: \{\} <br /> |
+| `origin` _[FunctionOrigin](#functionorigin)_ | origin defines the origin of the function implementation. |  | AtMostOneOf: [executable generator source] <br />Optional: \{\} <br /> |
 
 
 #### KDexFunctionState
@@ -1084,7 +1088,7 @@ _Appears in:_
 
 | Field | Description | Default | Validation |
 | --- | --- | --- | --- |
-| `assets` _[Assets](#assets)_ | assets is a set of elements that define a host specific HTML instructions (e.g. favicon, site logo, charset). |  | MaxItems: 32 <br /> |
+| `assets` _[Assets](#assets)_ | assets is a set of elements that define a host specific HTML instructions (e.g. favicon, site logo, charset). |  | ExactlyOneOf: [linkHref metaId style] <br />MaxItems: 32 <br /> |
 | `auth` _[Auth](#auth)_ | auth holds the host's authentication configuration. |  | Optional: \{\} <br /> |
 | `ingressPath` _string_ | ingressPath is a prefix beginning with '/-/' plus additional characters. This indicates where in the Ingress/HTTPRoute the Backend will be mounted.<br />This value is determined by the implementation that embeds the Backend and cannot be changed. |  | Optional: \{\} <br />Pattern: `^/-/.+` <br /> |
 | `env` _[EnvVar](https://kubernetes.io/docs/reference/generated/kubernetes-api/v/#envvar-v1-core) array_ | env is an optional list of environment variables to set in the container. |  | Optional: \{\} <br /> |
@@ -1167,7 +1171,7 @@ _Appears in:_
 
 | Field | Description | Default | Validation |
 | --- | --- | --- | --- |
-| `assets` _[Assets](#assets)_ | assets is a set of elements that define a host specific HTML instructions (e.g. favicon, site logo, charset). |  | MaxItems: 32 <br /> |
+| `assets` _[Assets](#assets)_ | assets is a set of elements that define a host specific HTML instructions (e.g. favicon, site logo, charset). |  | ExactlyOneOf: [linkHref metaId style] <br />MaxItems: 32 <br /> |
 | `auth` _[Auth](#auth)_ | auth holds the host's authentication configuration. |  | Optional: \{\} <br /> |
 | `ingressPath` _string_ | ingressPath is a prefix beginning with '/-/' plus additional characters. This indicates where in the Ingress/HTTPRoute the Backend will be mounted.<br />This value is determined by the implementation that embeds the Backend and cannot be changed. |  | Optional: \{\} <br />Pattern: `^/-/.+` <br /> |
 | `env` _[EnvVar](https://kubernetes.io/docs/reference/generated/kubernetes-api/v/#envvar-v1-core) array_ | env is an optional list of environment variables to set in the container. |  | Optional: \{\} <br /> |
@@ -1219,7 +1223,7 @@ _Appears in:_
 | `apiVersion` _string_ | `kdex.dev/v1alpha1` | | |
 | `kind` _string_ | `KDexInternalPackageReferences` | | |
 | `metadata` _[ObjectMeta](https://kubernetes.io/docs/reference/generated/kubernetes-api/v/#objectmeta-v1-meta)_ | Refer to Kubernetes API documentation for fields of `metadata`. |  | Optional: \{\} <br /> |
-| `spec` _[KDexInternalPackageReferencesSpec](#kdexinternalpackagereferencesspec)_ | spec defines the desired state of KDexInternalPackageReferences |  |  |
+| `spec` _[KDexInternalPackageReferencesSpec](#kdexinternalpackagereferencesspec)_ | spec defines the desired state of KDexInternalPackageReferences |  | Required: \{\} <br /> |
 
 
 #### KDexInternalPackageReferencesList
@@ -1276,7 +1280,7 @@ _Appears in:_
 | --- | --- | --- | --- |
 | `apiVersion` _string_ | `kdex.dev/v1alpha1` | | |
 | `kind` _string_ | `KDexInternalTranslation` | | |
-| `metadata` _[ObjectMeta](https://kubernetes.io/docs/reference/generated/kubernetes-api/v/#objectmeta-v1-meta)_ | Refer to Kubernetes API documentation for fields of `metadata`. |  |  |
+| `metadata` _[ObjectMeta](https://kubernetes.io/docs/reference/generated/kubernetes-api/v/#objectmeta-v1-meta)_ | Refer to Kubernetes API documentation for fields of `metadata`. |  | Optional: \{\} <br /> |
 | `spec` _[KDexInternalTranslationSpec](#kdexinternaltranslationspec)_ | spec defines the desired state of KDexInternalTranslation |  | Required: \{\} <br /> |
 
 
@@ -1370,7 +1374,7 @@ _Appears in:_
 | Field | Description | Default | Validation |
 | --- | --- | --- | --- |
 | `type` _[KDexUtilityPageType](#kdexutilitypagetype)_ | type indicates the purpose of this utility page. |  | Enum: [Announcement Error Login] <br />Required: \{\} <br /> |
-| `contentEntries` _[ContentEntry](#contententry) array_ | contentEntries is a set of content entries to bind to this page. They may be either raw HTML fragments or KDexApp references. |  | MaxItems: 8 <br />MinItems: 1 <br />Required: \{\} <br /> |
+| `contentEntries` _[ContentEntry](#contententry) array_ | contentEntries is a set of content entries to bind to this page. They may be either raw HTML fragments or KDexApp references. |  | ExactlyOneOf: [appRef rawHTML] <br />MaxItems: 8 <br />MinItems: 1 <br />Required: \{\} <br /> |
 | `overrideFooterRef` _[KDexObjectReference](#kdexobjectreference)_ | overrideFooterRef is an optional reference to a KDexPageFooter resource. If not specified, the footer from the archetype will be used. |  | Optional: \{\} <br /> |
 | `overrideHeaderRef` _[KDexObjectReference](#kdexobjectreference)_ | overrideHeaderRef is an optional reference to a KDexPageHeader resource. If not specified, the header from the archetype will be used. |  | Optional: \{\} <br /> |
 | `overrideNavigationRefs` _object (keys:string, values:[KDexObjectReference](#kdexobjectreference))_ | overrideNavigationRefs is an optional map of keyed navigation object references. When not empty, the 'main' key must be specified. These navigations will be merged with the navigations from the archetype. |  | MaxProperties: 10 <br />Optional: \{\} <br /> |
@@ -1547,7 +1551,7 @@ _Appears in:_
 
 | Field | Description | Default | Validation |
 | --- | --- | --- | --- |
-| `contentEntries` _[ContentEntry](#contententry) array_ | contentEntries is a set of content entries to bind to this page. They may be either raw HTML fragments or KDexApp references. |  | MaxItems: 32 <br />MinItems: 1 <br />Required: \{\} <br /> |
+| `contentEntries` _[ContentEntry](#contententry) array_ | contentEntries is a set of content entries to bind to this page. They may be either raw HTML fragments or KDexApp references. |  | ExactlyOneOf: [appRef rawHTML] <br />MaxItems: 32 <br />MinItems: 1 <br />Required: \{\} <br /> |
 | `hostRef` _[LocalObjectReference](https://kubernetes.io/docs/reference/generated/kubernetes-api/v/#localobjectreference-v1-core)_ | hostRef is a reference to the KDexHost that this binding is for. |  | Required: \{\} <br /> |
 | `label` _string_ | label is the value used in menus and page titles before localization occurs (or when no translation exists for the current language). |  | MaxLength: 256 <br />MinLength: 3 <br />Required: \{\} <br /> |
 | `tags` _[Tag](#tag) array_ | Tags are used for grouping and searching functions. |  | MaxItems: 16 <br />Optional: \{\} <br /> |
@@ -1754,8 +1758,8 @@ _Appears in:_
 | --- | --- | --- | --- |
 | `apiVersion` _string_ | `kdex.dev/v1alpha1` | | |
 | `kind` _string_ | `KDexRole` | | |
-| `metadata` _[ObjectMeta](https://kubernetes.io/docs/reference/generated/kubernetes-api/v/#objectmeta-v1-meta)_ | Refer to Kubernetes API documentation for fields of `metadata`. |  |  |
-| `spec` _[KDexRoleSpec](#kdexrolespec)_ | spec defines the desired state of KDexRole |  |  |
+| `metadata` _[ObjectMeta](https://kubernetes.io/docs/reference/generated/kubernetes-api/v/#objectmeta-v1-meta)_ | Refer to Kubernetes API documentation for fields of `metadata`. |  | Optional: \{\} <br /> |
+| `spec` _[KDexRoleSpec](#kdexrolespec)_ | spec defines the desired state of KDexRole |  | Required: \{\} <br /> |
 
 
 #### KDexRoleBinding
@@ -1773,8 +1777,8 @@ _Appears in:_
 | --- | --- | --- | --- |
 | `apiVersion` _string_ | `kdex.dev/v1alpha1` | | |
 | `kind` _string_ | `KDexRoleBinding` | | |
-| `metadata` _[ObjectMeta](https://kubernetes.io/docs/reference/generated/kubernetes-api/v/#objectmeta-v1-meta)_ | Refer to Kubernetes API documentation for fields of `metadata`. |  |  |
-| `spec` _[KDexRoleBindingSpec](#kdexrolebindingspec)_ | spec defines the desired state of KDexRoleBinding |  |  |
+| `metadata` _[ObjectMeta](https://kubernetes.io/docs/reference/generated/kubernetes-api/v/#objectmeta-v1-meta)_ | Refer to Kubernetes API documentation for fields of `metadata`. |  | Optional: \{\} <br /> |
+| `spec` _[KDexRoleBindingSpec](#kdexrolebindingspec)_ | spec defines the desired state of KDexRoleBinding |  | Required: \{\} <br /> |
 
 
 #### KDexRoleBindingList
@@ -1868,7 +1872,7 @@ _Appears in:_
 | `apiVersion` _string_ | `kdex.dev/v1alpha1` | | |
 | `kind` _string_ | `KDexScriptLibrary` | | |
 | `metadata` _[ObjectMeta](https://kubernetes.io/docs/reference/generated/kubernetes-api/v/#objectmeta-v1-meta)_ | Refer to Kubernetes API documentation for fields of `metadata`. |  | Optional: \{\} <br /> |
-| `spec` _[KDexScriptLibrarySpec](#kdexscriptlibraryspec)_ | spec defines the desired state of KDexScriptLibrary |  |  |
+| `spec` _[KDexScriptLibrarySpec](#kdexscriptlibraryspec)_ | spec defines the desired state of KDexScriptLibrary |  | Required: \{\} <br /> |
 
 
 #### KDexScriptLibraryList
@@ -1904,7 +1908,7 @@ _Appears in:_
 | Field | Description | Default | Validation |
 | --- | --- | --- | --- |
 | `packageReference` _[PackageReference](#packagereference)_ | packageReference specifies the name and version of an NPM package that contains the script. The package.json must describe an ES module. |  | Optional: \{\} <br /> |
-| `scripts` _[ScriptDef](#scriptdef) array_ | scripts is a set of script references. They may contain URLs that point to resources hosted at some public address, npm module references or they may contain tag contents. |  | MaxItems: 8 <br />Optional: \{\} <br /> |
+| `scripts` _[ScriptDef](#scriptdef) array_ | scripts is a set of script references. They may contain URLs that point to resources hosted at some public address, npm module references or they may contain tag contents. |  | ExactlyOneOf: [script scriptSrc] <br />MaxItems: 8 <br />Optional: \{\} <br /> |
 | `ingressPath` _string_ | ingressPath is a prefix beginning with '/-/' plus additional characters. This indicates where in the Ingress/HTTPRoute the Backend will be mounted.<br />This value is determined by the implementation that embeds the Backend and cannot be changed. |  | Optional: \{\} <br />Pattern: `^/-/.+` <br /> |
 | `env` _[EnvVar](https://kubernetes.io/docs/reference/generated/kubernetes-api/v/#envvar-v1-core) array_ | env is an optional list of environment variables to set in the container. |  | Optional: \{\} <br /> |
 | `replicas` _integer_ | replicas is the number of desired pods. This is a pointer to distinguish between explicit<br />zero and not specified. Defaults to 1. |  | Optional: \{\} <br /> |
@@ -1969,7 +1973,7 @@ _Appears in:_
 
 | Field | Description | Default | Validation |
 | --- | --- | --- | --- |
-| `assets` _[Assets](#assets)_ | assets is a set of elements that define a portable set of design rules. |  | MaxItems: 32 <br /> |
+| `assets` _[Assets](#assets)_ | assets is a set of elements that define a portable set of design rules. |  | ExactlyOneOf: [linkHref metaId style] <br />MaxItems: 32 <br /> |
 | `scriptLibraryRef` _[KDexObjectReference](#kdexobjectreference)_ | scriptLibraryRef is an optional reference to a KDexScriptLibrary resource. |  | Optional: \{\} <br /> |
 | `ingressPath` _string_ | ingressPath is a prefix beginning with '/-/' plus additional characters. This indicates where in the Ingress/HTTPRoute the Backend will be mounted.<br />This value is determined by the implementation that embeds the Backend and cannot be changed. |  | Optional: \{\} <br />Pattern: `^/-/.+` <br /> |
 | `env` _[EnvVar](https://kubernetes.io/docs/reference/generated/kubernetes-api/v/#envvar-v1-core) array_ | env is an optional list of environment variables to set in the container. |  | Optional: \{\} <br /> |
@@ -2096,7 +2100,7 @@ _Appears in:_
 | Field | Description | Default | Validation |
 | --- | --- | --- | --- |
 | `type` _[KDexUtilityPageType](#kdexutilitypagetype)_ | type indicates the purpose of this utility page. |  | Enum: [Announcement Error Login] <br />Required: \{\} <br /> |
-| `contentEntries` _[ContentEntry](#contententry) array_ | contentEntries is a set of content entries to bind to this page. They may be either raw HTML fragments or KDexApp references. |  | MaxItems: 8 <br />MinItems: 1 <br />Required: \{\} <br /> |
+| `contentEntries` _[ContentEntry](#contententry) array_ | contentEntries is a set of content entries to bind to this page. They may be either raw HTML fragments or KDexApp references. |  | ExactlyOneOf: [appRef rawHTML] <br />MaxItems: 8 <br />MinItems: 1 <br />Required: \{\} <br /> |
 | `overrideFooterRef` _[KDexObjectReference](#kdexobjectreference)_ | overrideFooterRef is an optional reference to a KDexPageFooter resource. If not specified, the footer from the archetype will be used. |  | Optional: \{\} <br /> |
 | `overrideHeaderRef` _[KDexObjectReference](#kdexobjectreference)_ | overrideHeaderRef is an optional reference to a KDexPageHeader resource. If not specified, the header from the archetype will be used. |  | Optional: \{\} <br /> |
 | `overrideNavigationRefs` _object (keys:string, values:[KDexObjectReference](#kdexobjectreference))_ | overrideNavigationRefs is an optional map of keyed navigation object references. When not empty, the 'main' key must be specified. These navigations will be merged with the navigations from the archetype. |  | MaxProperties: 10 <br />Optional: \{\} <br /> |
@@ -2417,7 +2421,8 @@ _Appears in:_
 
 
 
-
+_Validation:_
+- ExactlyOneOf: [script scriptSrc]
 
 _Appears in:_
 - [KDexAppSpec](#kdexappspec)

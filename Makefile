@@ -123,13 +123,13 @@ GOLANGCI_LINT = $(LOCALBIN)/golangci-lint
 
 ## Tool Versions
 #https://github.com/kubernetes-sigs/kustomize/releases/latest
-KUSTOMIZE_VERSION ?= v5.8.0
+KUSTOMIZE_VERSION ?= v5.8.1
 # https://github.com/kubernetes-sigs/controller-tools/releases/latest
-CONTROLLER_TOOLS_VERSION ?= v0.20.0
+CONTROLLER_TOOLS_VERSION ?= v0.20.1
 # https://github.com/elastic/crd-ref-docs/releases/latest
-CRD_REF_DOCS_VERSION ?= v0.2.0
+CRD_REF_DOCS_VERSION ?= v0.3.0
 # https://github.com/golangci/golangci-lint/releases/latest
-GOLANGCI_LINT_VERSION ?= v2.7.2
+GOLANGCI_LINT_VERSION ?= v2.10.1
 
 .PHONY: kustomize
 kustomize: $(KUSTOMIZE) ## Download kustomize locally if necessary.

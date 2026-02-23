@@ -744,7 +744,7 @@ func (pi *PathItem) GetOptions() *openapi.Operation {
 }
 
 func (pi *PathItem) GetParameters() []openapi.Parameter {
-	ps := []openapi.Parameter{}
+	ps := make([]openapi.Parameter, 0, len(pi.Parameters))
 	for _, _raw := range pi.Parameters {
 		var p = openapi.Parameter{}
 		_ = p.UnmarshalJSON(_raw.Raw)
