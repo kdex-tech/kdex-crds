@@ -117,10 +117,6 @@ type KDexHostSpec struct {
 	// +kubebuilder:validation:Required
 	Routing Routing `json:"routing" protobuf:"bytes,12,req,name=routing"`
 
-	// runtime defines the runtime configuration for the host.
-	// +kubebuilder:validation:Optional
-	Runtime *Runtime `json:"runtime,omitempty" protobuf:"bytes,13,opt,name=runtime"`
-
 	// scriptLibraryRef is an optional reference to a KDexScriptLibrary resource.
 	// +kubebuilder:validation:Optional
 	// +kubebuilder:validation:XValidation:rule=`self.kind == "KDexScriptLibrary" || self.kind == "KDexClusterScriptLibrary"`,message="'kind' must be either KDexScriptLibrary or KDexClusterScriptLibrary"

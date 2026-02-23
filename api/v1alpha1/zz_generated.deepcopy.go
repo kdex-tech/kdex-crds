@@ -1416,11 +1416,6 @@ func (in *KDexHostSpec) DeepCopyInto(out *KDexHostSpec) {
 	}
 	in.OpenAPI.DeepCopyInto(&out.OpenAPI)
 	in.Routing.DeepCopyInto(&out.Routing)
-	if in.Runtime != nil {
-		in, out := &in.Runtime, &out.Runtime
-		*out = new(Runtime)
-		(*in).DeepCopyInto(*out)
-	}
 	if in.ScriptLibraryRef != nil {
 		in, out := &in.ScriptLibraryRef, &out.ScriptLibraryRef
 		*out = new(KDexObjectReference)
