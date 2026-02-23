@@ -117,18 +117,22 @@ type KDexHostSpec struct {
 	// +kubebuilder:validation:Required
 	Routing Routing `json:"routing" protobuf:"bytes,12,req,name=routing"`
 
+	// runtime defines the runtime configuration for the host.
+	// +kubebuilder:validation:Optional
+	Runtime *Runtime `json:"runtime,omitempty" protobuf:"bytes,13,opt,name=runtime"`
+
 	// scriptLibraryRef is an optional reference to a KDexScriptLibrary resource.
 	// +kubebuilder:validation:Optional
 	// +kubebuilder:validation:XValidation:rule=`self.kind == "KDexScriptLibrary" || self.kind == "KDexClusterScriptLibrary"`,message="'kind' must be either KDexScriptLibrary or KDexClusterScriptLibrary"
-	ScriptLibraryRef *KDexObjectReference `json:"scriptLibraryRef,omitempty" protobuf:"bytes,13,opt,name=scriptLibraryRef"`
+	ScriptLibraryRef *KDexObjectReference `json:"scriptLibraryRef,omitempty" protobuf:"bytes,14,opt,name=scriptLibraryRef"`
 
 	// Optional top level security requirements.
-	Security *[]SecurityRequirement `json:"security,omitempty" yaml:"security,omitempty" protobuf:"bytes,14,rep,name=security"`
+	Security *[]SecurityRequirement `json:"security,omitempty" yaml:"security,omitempty" protobuf:"bytes,15,rep,name=security"`
 
 	// themeRef is a reference to the theme that should apply to all pages bound to this host.
 	// +kubebuilder:validation:Optional
 	// +kubebuilder:validation:XValidation:rule=`self.kind == "KDexTheme" || self.kind == "KDexClusterTheme"`,message="'kind' must be either KDexTheme or KDexClusterTheme"
-	ThemeRef *KDexObjectReference `json:"themeRef,omitempty" protobuf:"bytes,15,opt,name=themeRef"`
+	ThemeRef *KDexObjectReference `json:"themeRef,omitempty" protobuf:"bytes,16,opt,name=themeRef"`
 
 	// serviceAccountRef is a reference to the service account used by the host to access secrets.
 	//
