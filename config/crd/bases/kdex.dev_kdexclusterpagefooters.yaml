@@ -58,9 +58,10 @@ spec:
             description: spec defines the desired state of KDexClusterPageFooter
             properties:
               content:
-                description: content is a Go HTML template that defines the content
-                  of an App Server page footer section. Use the `.Footer` property
-                  to position its content in the template.
+                description: content is a Go HTML template (using delimiters '{@'
+                  and '@}') that defines the content of an App Server page footer
+                  section. Use the `.Footer` property to position its content in the
+                  template.
                 example: <small>&copy; {{ .Date.Year() }} {{ .Organization }}. All
                   Rights Reserved.</small>
                 minLength: 5
@@ -91,14 +92,6 @@ spec:
                 x-kubernetes-validations:
                 - message: '''kind'' must be either KDexScriptLibrary or KDexClusterScriptLibrary'
                   rule: self.kind == "KDexScriptLibrary" || self.kind == "KDexClusterScriptLibrary"
-              templateDelimiters:
-                description: templateDelimiters is an optional list of two strings
-                  that define the start and end template tags for the content.
-                items:
-                  type: string
-                maxItems: 2
-                minItems: 2
-                type: array
             required:
             - content
             type: object

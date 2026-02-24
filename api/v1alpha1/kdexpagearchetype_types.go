@@ -60,7 +60,7 @@ type KDexPageArchetypeList struct {
 
 // KDexPageArchetypeSpec defines the desired state of KDexPageArchetype
 type KDexPageArchetypeSpec struct {
-	// content is a Go HTML template that defines the structure of an HTML page.
+	// content is a Go HTML template (using delimiters '{@' and '@}') that defines the structure of an HTML page.
 	// +kubebuilder:validation:Required
 	// +kubebuilder:validation:MinLength=5
 	Content string `json:"content" protobuf:"bytes,1,req,name=content"`
@@ -86,12 +86,6 @@ type KDexPageArchetypeSpec struct {
 	// +kubebuilder:validation:Optional
 	// +kubebuilder:validation:XValidation:rule=`self.kind == "KDexScriptLibrary" || self.kind == "KDexClusterScriptLibrary"`,message="'kind' must be either KDexScriptLibrary or KDexClusterScriptLibrary"
 	ScriptLibraryRef *KDexObjectReference `json:"scriptLibraryRef,omitempty" protobuf:"bytes,5,opt,name=scriptLibraryRef"`
-
-	// templateDelimiters is an optional list of two strings that define the start and end template tags for the content.
-	// +kubebuilder:validation:Optional
-	// +kubebuilder:validation:MinItems=2
-	// +kubebuilder:validation:MaxItems=2
-	TemplateDelimiters []string `json:"templateDelimiters,omitempty" protobuf:"bytes,6,rep,name=templateDelimiters"`
 }
 
 func init() {
