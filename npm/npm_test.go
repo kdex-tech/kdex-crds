@@ -359,26 +359,22 @@ func TestRegistryImpl_ValidatePackage(t *testing.T) {
 func TestNewRegistry(t *testing.T) {
 	tests := []struct {
 		name    string
-		c       *configuration.NexusConfiguration
+		c       *configuration.Registry
 		secret  *corev1.Secret
 		wantErr string
 	}{
 		{
 			name: "no secret",
-			c: &configuration.NexusConfiguration{
-				DefaultNpmRegistry: configuration.Registry{
-					Host: "test",
-				},
+			c: &configuration.Registry{
+				Host: "test",
 			},
 			secret:  nil,
 			wantErr: "",
 		},
 		{
 			name: "secret missing kdex.dev/npm-server-address annotation",
-			c: &configuration.NexusConfiguration{
-				DefaultNpmRegistry: configuration.Registry{
-					Host: "test",
-				},
+			c: &configuration.Registry{
+				Host: "test",
 			},
 			secret: &corev1.Secret{
 				ObjectMeta: v1.ObjectMeta{},
@@ -387,10 +383,8 @@ func TestNewRegistry(t *testing.T) {
 		},
 		{
 			name: "secret with kdex.dev/npm-server-address annotation",
-			c: &configuration.NexusConfiguration{
-				DefaultNpmRegistry: configuration.Registry{
-					Host: "test",
-				},
+			c: &configuration.Registry{
+				Host: "test",
 			},
 			secret: &corev1.Secret{
 				ObjectMeta: v1.ObjectMeta{

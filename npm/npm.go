@@ -13,10 +13,10 @@ import (
 )
 
 func NewRegistry(
-	c *configuration.NexusConfiguration,
+	dr *configuration.Registry,
 	secret *corev1.Secret,
 ) (Registry, error) {
-	config, err := newRegistry(c, secret)
+	config, err := newRegistry(dr, secret)
 
 	if err != nil {
 		return nil, errors.Join(fmt.Errorf("npm: failed to create registry"), err)
@@ -126,11 +126,11 @@ func (p *PackageJSON) hasESModule() error {
 }
 
 func newRegistry(
-	c *configuration.NexusConfiguration,
+	dr *configuration.Registry,
 	secret *corev1.Secret,
 ) (*configuration.Registry, error) {
 	if secret == nil {
-		return &c.DefaultNpmRegistry, nil
+		return dr, nil
 	}
 
 	host := secret.Annotations["kdex.dev/npm-server-address"]
