@@ -59,10 +59,9 @@ type KDexPageFooterList struct {
 
 // KDexPageFooterSpec defines the desired state of KDexPageFooter
 type KDexPageFooterSpec struct {
-	// content is a Go HTML template (using delimiters '{@' and '@}') that defines the content of an App Server page footer section. Use the `.Footer` property to position its content in the template.
+	// content is a Go HTML template (using delimiters '[[' and ']]') that defines the content of an App Server page footer section. Use the `.Footer` property to position its content in the template.
 	// +kubebuilder:validation:Required
 	// +kubebuilder:validation:MinLength=5
-	// +kubebuilder:example:=`<small>&copy; {{ .Date.Year() }} {{ .Organization }}. All Rights Reserved.</small>`
 	Content string `json:"content" protobuf:"bytes,1,req,name=content"`
 
 	// scriptLibraryRef is an optional reference to a KDexScriptLibrary resource.

@@ -280,7 +280,7 @@ type ContentEntryApp struct {
 }
 
 type ContentEntryStatic struct {
-	// rawHTML is a Go HTML template (using delimiters '{@' and '@}') to be rendered in the specified slot (if present in the template).
+	// rawHTML is a Go HTML template (using delimiters '[[' and ']]') to be rendered in the specified slot (if present in the template).
 	// +kubebuilder:validation:Optional
 	RawHTML string `json:"rawHTML,omitempty" protobuf:"bytes,1,opt,name=rawHTML"`
 }

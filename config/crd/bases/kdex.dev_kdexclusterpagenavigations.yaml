@@ -58,8 +58,8 @@ spec:
             description: spec defines the desired state of KDexClusterPageNavigation
             properties:
               content:
-                description: content is a Go HTML template (using delimiters '{@'
-                  and '@}') that defines the content of an App Server page navigation.
+                description: content is a Go HTML template (using delimiters '[['
+                  and ']]') that defines the content of an App Server page navigation.
                   Use the `.Navigation["<name>"]` property to position its content
                   in the template.
                 minLength: 5

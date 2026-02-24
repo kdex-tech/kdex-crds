@@ -58,12 +58,10 @@ spec:
             description: spec defines the desired state of KDexClusterPageFooter
             properties:
               content:
-                description: content is a Go HTML template (using delimiters '{@'
-                  and '@}') that defines the content of an App Server page footer
+                description: content is a Go HTML template (using delimiters '[['
+                  and ']]') that defines the content of an App Server page footer
                   section. Use the `.Footer` property to position its content in the
                   template.
-                example: <small>&copy; {{ .Date.Year() }} {{ .Organization }}. All
-                  Rights Reserved.</small>
                 minLength: 5
                 type: string
               scriptLibraryRef:

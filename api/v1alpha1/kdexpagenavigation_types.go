@@ -60,7 +60,7 @@ type KDexPageNavigationList struct {
 
 // KDexPageNavigationSpec defines the desired state of KDexPageNavigation
 type KDexPageNavigationSpec struct {
-	// content is a Go HTML template (using delimiters '{@' and '@}') that defines the content of an App Server page navigation. Use the `.Navigation["<name>"]` property to position its content in the template.
+	// content is a Go HTML template (using delimiters '[[' and ']]') that defines the content of an App Server page navigation. Use the `.Navigation["<name>"]` property to position its content in the template.
 	// +kubebuilder:validation:Required
 	// +kubebuilder:validation:MinLength=5
 	Content string `json:"content" protobuf:"bytes,1,req,name=content"`

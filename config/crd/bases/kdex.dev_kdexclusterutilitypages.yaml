@@ -105,7 +105,7 @@ spec:
                       type: string
                     rawHTML:
                       description: rawHTML is a Go HTML template (using delimiters
-                        '{@' and '@}') to be rendered in the specified slot (if present
+                        '[[' and ']]') to be rendered in the specified slot (if present
                         in the template).
                       type: string
                     slot:

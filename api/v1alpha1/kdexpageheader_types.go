@@ -59,10 +59,9 @@ type KDexPageHeaderList struct {
 
 // KDexPageHeaderSpec defines the desired state of KDexPageHeader
 type KDexPageHeaderSpec struct {
-	// content is a Go HTML template (using delimiters '{@' and '@}') that defines the content of an App Server page header section. Use the `.Header` property to position its content in the template.
+	// content is a Go HTML template (using delimiters '[[' and ']]') that defines the content of an App Server page header section. Use the `.Header` property to position its content in the template.
 	// +kubebuilder:validation:Required
 	// +kubebuilder:validation:MinLength=5
-	// +kubebuilder:example:=`<a class="logo" href="#">{{ .Title }}</a>`
 	Content string `json:"content" protobuf:"bytes,1,req,name=content"`
 
 	// scriptLibraryRef is an optional reference to a KDexScriptLibrary resource.

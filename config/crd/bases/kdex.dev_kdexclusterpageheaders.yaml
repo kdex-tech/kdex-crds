@@ -58,11 +58,10 @@ spec:
             description: spec defines the desired state of KDexClusterPageHeader
             properties:
               content:
-                description: content is a Go HTML template (using delimiters '{@'
-                  and '@}') that defines the content of an App Server page header
+                description: content is a Go HTML template (using delimiters '[['
+                  and ']]') that defines the content of an App Server page header
                   section. Use the `.Header` property to position its content in the
                   template.
-                example: <a class="logo" href="#">{{ .Title }}</a>
                 minLength: 5
                 type: string
               scriptLibraryRef:
