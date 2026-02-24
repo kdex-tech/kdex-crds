@@ -455,18 +455,6 @@ type JWT struct {
 	TokenTTL string `json:"tokenTTL" protobuf:"bytes,4,req,name=tokenTTL"`
 }
 
-type KDexObject struct {
-	metav1.TypeMeta `json:",inline"`
-
-	// metadata is a standard object metadata
-	// +kubebuilder:validation:Optional
-	metav1.ObjectMeta `json:"metadata,omitempty" protobuf:"bytes,1,opt,name=metadata"`
-
-	// status defines the observed state of the resource
-	// +kubebuilder:validation:Optional
-	Status KDexObjectStatus `json:"status,omitempty" protobuf:"bytes,2,opt,name=status"`
-}
-
 type KDexObjectStatus struct {
 	// For Kubernetes API conventions, see:
 	// https://github.com/kubernetes/community/blob/master/contributors/devel/sig-architecture/api-conventions.md#typical-status-properties
