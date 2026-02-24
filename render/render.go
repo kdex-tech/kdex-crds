@@ -231,7 +231,7 @@ func (r *Renderer) RenderOne(
 		}
 	}
 
-	instance, err := template.New(templateName).Funcs(funcs).Parse(templateContent)
+	instance, err := template.New(templateName).Delims("[[", "]]").Funcs(funcs).Parse(templateContent)
 	if err != nil {
 		return "", err
 	}

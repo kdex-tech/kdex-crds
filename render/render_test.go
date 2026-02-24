@@ -13,7 +13,7 @@ func TestRenderOne(t *testing.T) {
 	data := TemplateData{
 		Title: "World",
 	}
-	templateContent := "Hello, {{.Title}}!"
+	templateContent := "Hello, [[.Title]]!"
 
 	r := &Renderer{}
 	actual, err := r.RenderOne("test", templateContent, data)
@@ -25,7 +25,7 @@ func TestRenderOne_InvalidTemplate(t *testing.T) {
 	data := TemplateData{
 		Title: "World",
 	}
-	templateContent := "Hello, {{.Invalid}}!"
+	templateContent := "Hello, [[.Invalid]]!"
 
 	r := &Renderer{}
 	_, err := r.RenderOne("test", templateContent, data)
@@ -38,9 +38,9 @@ func TestRenderAll(t *testing.T) {
 	r := &Renderer{
 		Contents: map[string]string{
 			"main":    "<h1>Welcome</h1>",
-			"sidebar": `<my-app-element id="sidebar" data-date="{{.LastModified.Format "2006-01-02"}}"></my-app-element>`,
+			"sidebar": `<my-app-element id="sidebar" data-date="[[.LastModified.Format "2006-01-02"]]"></my-app-element>`,
 		},
-		Footer:     "FOOTER {{ .Extra.extra }}",
+		Footer:     "FOOTER [[ .Extra.extra ]]",
 		FootScript: "<script>foot</script>",
 		Extra: map[string]any{
 			"extra": "extra data",
@@ -67,25 +67,25 @@ func TestRenderAll(t *testing.T) {
 		Title:        "Test Page",
 		TemplateName: "main",
 		TemplateContent: `<!DOCTYPE html>
-<html lang="{{ .Language }}">
+<html lang="[[ .Language ]]">
 <head>
-<title>{{.Title}}</title>
-	{{.Meta}}
-	{{.HeadScript}}
-	{{.Theme}}
+<title>[[.Title]]</title>
+	[[.Meta]]
+	[[.HeadScript]]
+	[[.Theme]]
 </head>
 <body>
-	<header>{{.Header}}</header>
-	<nav>{{range $key, $value := .Navigation}}
-	{{$key}}: {{$value}}
-	{{end}}</nav>
-	<main>{{range $key, $value := .Content}}
-	<div id="slot-{{$key}}">{{$value}}</div>
-	{{end}}</main>
-	<footer>{{.Footer}}</footer>
-	<span>{{.Host.Name}}</span>
-	<span>{{.Host.Namespace}}</span>
-	{{.FootScript}}
+	<header>[[.Header]]</header>
+	<nav>[[range $key, $value := .Navigation]]
+	[[$key]]: [[$value]]
+	[[end]]</nav>
+	<main>[[range $key, $value := .Content]]
+	<div id="slot-[[$key]]">[[$value]]</div>
+	[[end]]</main>
+	<footer>[[.Footer]]</footer>
+	<span>[[.Host.Name]]</span>
+	<span>[[.Host.Namespace]]</span>
+	[[.FootScript]]
 </body>
 </html>`,
 	}
@@ -111,7 +111,7 @@ func TestRenderAll_InvalidHeaderTemplate(t *testing.T) {
 	r := &Renderer{
 		TemplateName: "main",
 		Navigations:  nil,
-		Header:       "{{.Invalid}}",
+		Header:       "[[.Invalid]]",
 		Footer:       "",
 	}
 	_, err := r.RenderPage()
@@ -123,7 +123,7 @@ func TestRenderAll_InvalidFooterTemplate(t *testing.T) {
 		TemplateName: "main",
 		Navigations:  nil,
 		Header:       "",
-		Footer:       "{{.Invalid}}",
+		Footer:       "[[.Invalid]]",
 	}
 	_, err := r.RenderPage()
 	assert.Error(t, err)
@@ -133,7 +133,7 @@ func TestRenderAll_InvalidNavigationTemplate(t *testing.T) {
 	r := &Renderer{
 		TemplateName: "main",
 		Navigations: map[string]string{
-			"main": "{{.Invalid}}",
+			"main": "[[.Invalid]]",
 		},
 		Header: "",
 		Footer: "",
@@ -146,7 +146,7 @@ func TestRenderAll_InvalidContentTemplate(t *testing.T) {
 	r := &Renderer{
 		TemplateName: "main",
 		Contents: map[string]string{
-			"main": "{{.Invalid}}",
+			"main": "[[.Invalid]]",
 		},
 		Navigations: nil,
 		Header:      "",
@@ -159,7 +159,7 @@ func TestRenderAll_InvalidContentTemplate(t *testing.T) {
 func TestRenderAll_InvalidMainTemplate(t *testing.T) {
 	r := &Renderer{
 		TemplateName:    "main",
-		TemplateContent: "{{.Invalid}}",
+		TemplateContent: "[[.Invalid]]",
 		Navigations:     nil,
 		Header:          "",
 		Footer:          "",
@@ -188,7 +188,7 @@ func TestRenderer_RenderOne(t *testing.T) {
 		{
 			name:            "sortBy",
 			templateName:    "test",
-			templateContent: `{{ .PageMap | values | sortBy "Weight" true | extract "Label" | join "," }}`,
+			templateContent: `[[ .PageMap | values | sortBy "Weight" true | extract "Label" | join "," ]]`,
 			data: TemplateData{
 				PageMap: map[string]any{
 					"home": PageEntry{
@@ -207,7 +207,7 @@ func TestRenderer_RenderOne(t *testing.T) {
 		{
 			name:            "pop",
 			templateName:    "test",
-			templateContent: `{{ (pop .PageMap "home").Label }}--{{ .PageMap | values | sortBy "Weight" true | extract "Label" | join "," }}`,
+			templateContent: `[[ (pop .PageMap "home").Label ]]--[[ .PageMap | values | sortBy "Weight" true | extract "Label" | join "," ]]`,
 			data: TemplateData{
 				PageMap: map[string]any{
 					"home": PageEntry{
@@ -226,7 +226,7 @@ func TestRenderer_RenderOne(t *testing.T) {
 		{
 			name:            "pop template.HTML",
 			templateName:    "test",
-			templateContent: `{{ pop .Navigation "main" }}--{{ index .Navigation "main" }}`,
+			templateContent: `[[ pop .Navigation "main" ]]--[[ index .Navigation "main" ]]`,
 			data: TemplateData{
 				Navigation: map[string]template.HTML{
 					"main": "MAIN",
