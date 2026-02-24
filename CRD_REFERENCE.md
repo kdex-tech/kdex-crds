@@ -244,7 +244,8 @@ _Appears in:_
 | `appRef` _[KDexObjectReference](#kdexobjectreference)_ | appRef is a reference to the KDexApp to include in this binding. |  | Optional: \{\} <br /> |
 | `customElementName` _string_ | customElementName is the name of the KDexApp custom element to render in the specified slot (if present in the template). |  | Optional: \{\} <br /> |
 | `attributes` _object (keys:string, values:string)_ | attributes are key/value pairs that will be added to the custom element as attributes when rendered. |  | MaxProperties: 10 <br />Optional: \{\} <br /> |
-| `rawHTML` _string_ | rawHTML is a raw HTML string to be rendered in the specified slot (if present in the template). |  | Optional: \{\} <br /> |
+| `rawHTML` _string_ | rawHTML is a raw HTML string containing Go HTML template tags to be rendered in the specified slot (if present in the template). |  | Optional: \{\} <br /> |
+| `templateDelimiters` _string array_ | templateDelimiters is an optional list of two strings that define the start and end template tags for the rawHTML. |  | MaxItems: 2 <br />MinItems: 2 <br />Optional: \{\} <br /> |
 
 
 #### ContentEntryApp
@@ -278,7 +279,8 @@ _Appears in:_
 
 | Field | Description | Default | Validation |
 | --- | --- | --- | --- |
-| `rawHTML` _string_ | rawHTML is a raw HTML string to be rendered in the specified slot (if present in the template). |  | Optional: \{\} <br /> |
+| `rawHTML` _string_ | rawHTML is a raw HTML string containing Go HTML template tags to be rendered in the specified slot (if present in the template). |  | Optional: \{\} <br /> |
+| `templateDelimiters` _string array_ | templateDelimiters is an optional list of two strings that define the start and end template tags for the rawHTML. |  | MaxItems: 2 <br />MinItems: 2 <br />Optional: \{\} <br /> |
 
 
 #### CustomElement
@@ -1490,11 +1492,12 @@ _Appears in:_
 
 | Field | Description | Default | Validation |
 | --- | --- | --- | --- |
-| `content` _string_ | content is a go string template that defines the structure of an HTML page. |  | MinLength: 5 <br />Required: \{\} <br /> |
+| `content` _string_ | content is a Go HTML template that defines the structure of an HTML page. |  | MinLength: 5 <br />Required: \{\} <br /> |
 | `defaultFooterRef` _[KDexObjectReference](#kdexobjectreference)_ | defaultFooterRef is an optional reference to a KDexPageFooter resource. If not specified, no footer will be displayed. Use the `.Footer` property to position its content in the template. |  | Optional: \{\} <br /> |
 | `defaultHeaderRef` _[KDexObjectReference](#kdexobjectreference)_ | defaultHeaderRef is an optional reference to a KDexPageHeader resource. If not specified, no header will be displayed. Use the `.Header` property to position its content in the template. |  | Optional: \{\} <br /> |
 | `defaultNavigationRefs` _object (keys:string, values:[KDexObjectReference](#kdexobjectreference))_ | defaultNavigationRefs is an optional map of keyed navigation object references. Use `.Navigation.<key>` to position the navigation's content in the template. When not empty, the 'main' key must be specified. |  | MaxProperties: 10 <br />Optional: \{\} <br /> |
 | `scriptLibraryRef` _[KDexObjectReference](#kdexobjectreference)_ | scriptLibraryRef is an optional reference to a KDexScriptLibrary resource. |  | Optional: \{\} <br /> |
+| `templateDelimiters` _string array_ | templateDelimiters is an optional list of two strings that define the start and end template tags for the content. |  | MaxItems: 2 <br />MinItems: 2 <br />Optional: \{\} <br /> |
 
 
 #### KDexPageBinding
@@ -1622,8 +1625,9 @@ _Appears in:_
 
 | Field | Description | Default | Validation |
 | --- | --- | --- | --- |
-| `content` _string_ | content is a go string template that defines the content of an App Server page footer section. Use the `.Footer` property to position its content in the template. |  | MinLength: 5 <br />Required: \{\} <br /> |
+| `content` _string_ | content is a Go HTML template that defines the content of an App Server page footer section. Use the `.Footer` property to position its content in the template. |  | MinLength: 5 <br />Required: \{\} <br /> |
 | `scriptLibraryRef` _[KDexObjectReference](#kdexobjectreference)_ | scriptLibraryRef is an optional reference to a KDexScriptLibrary resource. |  | Optional: \{\} <br /> |
+| `templateDelimiters` _string array_ | templateDelimiters is an optional list of two strings that define the start and end template tags for the content. |  | MaxItems: 2 <br />MinItems: 2 <br />Optional: \{\} <br /> |
 
 
 #### KDexPageHeader
@@ -1680,8 +1684,9 @@ _Appears in:_
 
 | Field | Description | Default | Validation |
 | --- | --- | --- | --- |
-| `content` _string_ | content is a go string template that defines the content of an App Server page header section. Use the `.Header` property to position its content in the template. |  | MinLength: 5 <br />Required: \{\} <br /> |
+| `content` _string_ | content is a Go HTML template that defines the content of an App Server page header section. Use the `.Header` property to position its content in the template. |  | MinLength: 5 <br />Required: \{\} <br /> |
 | `scriptLibraryRef` _[KDexObjectReference](#kdexobjectreference)_ | scriptLibraryRef is an optional reference to a KDexScriptLibrary resource. |  | Optional: \{\} <br /> |
+| `templateDelimiters` _string array_ | templateDelimiters is an optional list of two strings that define the start and end template tags for the content. |  | MaxItems: 2 <br />MinItems: 2 <br />Optional: \{\} <br /> |
 
 
 #### KDexPageNavigation
@@ -1739,8 +1744,9 @@ _Appears in:_
 
 | Field | Description | Default | Validation |
 | --- | --- | --- | --- |
-| `content` _string_ | content is a go string template that defines the content of an App Server page navigation. Use the `.Navigation["<name>"]` property to position its content in the template. |  | MinLength: 5 <br />Required: \{\} <br /> |
+| `content` _string_ | content is a Go HTML template that defines the content of an App Server page navigation. Use the `.Navigation["<name>"]` property to position its content in the template. |  | MinLength: 5 <br />Required: \{\} <br /> |
 | `scriptLibraryRef` _[KDexObjectReference](#kdexobjectreference)_ | scriptLibraryRef is an optional reference to a KDexScriptLibrary resource. |  | Optional: \{\} <br /> |
+| `templateDelimiters` _string array_ | templateDelimiters is an optional list of two strings that define the start and end template tags for the content. |  | MaxItems: 2 <br />MinItems: 2 <br />Optional: \{\} <br /> |
 
 
 #### KDexRole

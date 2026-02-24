@@ -105,13 +105,22 @@ spec:
                         template).
                       type: string
                     rawHTML:
-                      description: rawHTML is a raw HTML string to be rendered in
-                        the specified slot (if present in the template).
+                      description: rawHTML is a raw HTML string containing Go HTML
+                        template tags to be rendered in the specified slot (if present
+                        in the template).
                       type: string
                     slot:
                       description: slot is the unique name to which this entry will
                         be bound.
                       type: string
+                    templateDelimiters:
+                      description: templateDelimiters is an optional list of two strings
+                        that define the start and end template tags for the rawHTML.
+                      items:
+                        type: string
+                      maxItems: 2
+                      minItems: 2
+                      type: array
                   required:
                   - slot
                   type: object

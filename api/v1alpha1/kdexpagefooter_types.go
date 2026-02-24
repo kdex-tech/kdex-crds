@@ -59,7 +59,7 @@ type KDexPageFooterList struct {
 
 // KDexPageFooterSpec defines the desired state of KDexPageFooter
 type KDexPageFooterSpec struct {
-	// content is a go string template that defines the content of an App Server page footer section. Use the `.Footer` property to position its content in the template.
+	// content is a Go HTML template that defines the content of an App Server page footer section. Use the `.Footer` property to position its content in the template.
 	// +kubebuilder:validation:Required
 	// +kubebuilder:validation:MinLength=5
 	// +kubebuilder:example:=`<small>&copy; {{ .Date.Year() }} {{ .Organization }}. All Rights Reserved.</small>`
@@ -69,6 +69,12 @@ type KDexPageFooterSpec struct {
 	// +kubebuilder:validation:Optional
 	// +kubebuilder:validation:XValidation:rule=`self.kind == "KDexScriptLibrary" || self.kind == "KDexClusterScriptLibrary"`,message="'kind' must be either KDexScriptLibrary or KDexClusterScriptLibrary"
 	ScriptLibraryRef *KDexObjectReference `json:"scriptLibraryRef,omitempty" protobuf:"bytes,2,opt,name=scriptLibraryRef"`
+
+	// templateDelimiters is an optional list of two strings that define the start and end template tags for the content.
+	// +kubebuilder:validation:Optional
+	// +kubebuilder:validation:MinItems=2
+	// +kubebuilder:validation:MaxItems=2
+	TemplateDelimiters []string `json:"templateDelimiters,omitempty" protobuf:"bytes,6,rep,name=templateDelimiters"`
 }
 
 func init() {

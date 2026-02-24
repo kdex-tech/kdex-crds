@@ -280,9 +280,15 @@ type ContentEntryApp struct {
 }
 
 type ContentEntryStatic struct {
-	// rawHTML is a raw HTML string to be rendered in the specified slot (if present in the template).
+	// rawHTML is a raw HTML string containing Go HTML template tags to be rendered in the specified slot (if present in the template).
 	// +kubebuilder:validation:Optional
 	RawHTML string `json:"rawHTML,omitempty" protobuf:"bytes,1,opt,name=rawHTML"`
+
+	// templateDelimiters is an optional list of two strings that define the start and end template tags for the rawHTML.
+	// +kubebuilder:validation:Optional
+	// +kubebuilder:validation:MinItems=2
+	// +kubebuilder:validation:MaxItems=2
+	TemplateDelimiters []string `json:"templateDelimiters,omitempty" protobuf:"bytes,6,rep,name=templateDelimiters"`
 }
 
 // +kubebuilder:validation:ExactlyOneOf=appRef;rawHTML
