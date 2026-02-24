@@ -1415,11 +1415,7 @@ func (in *KDexHostSpec) DeepCopyInto(out *KDexHostSpec) {
 		**out = **in
 	}
 	in.OpenAPI.DeepCopyInto(&out.OpenAPI)
-	if in.Registries != nil {
-		in, out := &in.Registries, &out.Registries
-		*out = new(Registries)
-		**out = **in
-	}
+	out.Registries = in.Registries
 	in.Routing.DeepCopyInto(&out.Routing)
 	if in.ScriptLibraryRef != nil {
 		in, out := &in.ScriptLibraryRef, &out.ScriptLibraryRef

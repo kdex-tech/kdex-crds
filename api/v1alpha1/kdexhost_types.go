@@ -115,7 +115,7 @@ type KDexHostSpec struct {
 
 	// registries defines the registries that should be used for this host. If not provided these will be inherited from the default configuration.
 	// +kubebuilder:validation:Optional
-	Registries *Registries `json:"registries,omitempty" protobuf:"bytes,12,opt,name=registries"`
+	Registries Registries `json:"registries,omitempty" protobuf:"bytes,12,opt,name=registries"`
 
 	// routing defines the desired routing configuration for the host.
 	// +kubebuilder:validation:Required
