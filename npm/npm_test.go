@@ -292,7 +292,7 @@ func TestRegistryImpl_ValidatePackage(t *testing.T) {
 			},
 			packageName:    "test",
 			packageVersion: "1.1.0",
-			wantErr:        "version of package not found: test@1.1.0",
+			wantErr:        "version of package not found test@1.1.0",
 		},
 		{
 			name: "with authorization",
@@ -346,7 +346,7 @@ func TestRegistryImpl_ValidatePackage(t *testing.T) {
 
 			gotErr := registry.ValidatePackage(tt.packageName, tt.packageVersion)
 			if gotErr != nil {
-				assert.Equal(t, tt.wantErr, gotErr.Error())
+				assert.Contains(t, gotErr.Error(), tt.wantErr)
 				return
 			}
 			if tt.wantErr != "" {
@@ -361,7 +361,6 @@ func TestNewRegistry(t *testing.T) {
 		name    string
 		c       *configuration.NexusConfiguration
 		secret  *corev1.Secret
-		error   func(err error, msg string, keysAndValues ...any)
 		wantErr string
 	}{
 		{
@@ -372,7 +371,6 @@ func TestNewRegistry(t *testing.T) {
 				},
 			},
 			secret:  nil,
-			error:   nil,
 			wantErr: "",
 		},
 		{
@@ -385,7 +383,6 @@ func TestNewRegistry(t *testing.T) {
 			secret: &corev1.Secret{
 				ObjectMeta: v1.ObjectMeta{},
 			},
-			error:   nil,
 			wantErr: "kdex.dev/npm-server-address annotation is missing",
 		},
 		{
@@ -402,15 +399,14 @@ func TestNewRegistry(t *testing.T) {
 					},
 				},
 			},
-			error:   nil,
 			wantErr: "",
 		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			_, err := npm.NewRegistry(tt.c, tt.secret, tt.error)
+			_, err := npm.NewRegistry(tt.c, tt.secret)
 			if err != nil {
-				assert.Equal(t, tt.wantErr, err.Error())
+				assert.Contains(t, err.Error(), tt.wantErr)
 				return
 			}
 			if tt.wantErr != "" {

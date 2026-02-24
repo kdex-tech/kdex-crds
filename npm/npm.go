@@ -2,6 +2,7 @@ package npm
 
 import (
 	"encoding/json"
+	"errors"
 	"fmt"
 	"io"
 	"net/http"
@@ -14,21 +15,77 @@ import (
 func NewRegistry(
 	c *configuration.NexusConfiguration,
 	secret *corev1.Secret,
-	error func(err error, msg string, keysAndValues ...any),
 ) (Registry, error) {
 	config, err := newRegistry(c, secret)
 
 	if err != nil {
-		return nil, err
+		return nil, errors.Join(fmt.Errorf("npm: failed to create registry"), err)
 	}
 
 	return &RegistryImpl{
 		Config: config,
-		Error:  error,
 	}, nil
 }
 
-func (p *PackageJSON) HasESModule() error {
+func (r *RegistryImpl) ValidatePackage(packageName string, packageVersion string) error {
+	packageInfo, err := r.getPackageInfo(packageName)
+
+	if err != nil {
+		return errors.Join(fmt.Errorf("npm: failed to get package info for %s", packageName), err)
+	}
+
+	versionPackageJSON, ok := packageInfo.Versions[packageVersion]
+
+	if !ok {
+		return fmt.Errorf("npm: version of package not found %s at %s", packageName+"@"+packageVersion, r.Config.GetAddress())
+	}
+
+	return versionPackageJSON.hasESModule()
+}
+
+func (r *RegistryImpl) getPackageInfo(packageName string) (p *PackageInfo, e error) {
+	packageURL := fmt.Sprintf("%s/%s", r.Config.GetAddress(), packageName)
+
+	req, err := http.NewRequest("GET", packageURL, nil)
+	if err != nil {
+		return nil, errors.Join(fmt.Errorf("failed to create request: %s", packageURL), err)
+	}
+
+	authorization := r.Config.EncodeAuthorization()
+	if authorization != "" {
+		req.Header.Set("Authorization", authorization)
+	}
+
+	req.Header.Set("Accept", "application/vnd.npm.formats+json")
+
+	client := &http.Client{}
+	resp, err := client.Do(req)
+	if err != nil {
+		return nil, errors.Join(fmt.Errorf("failed to do request: %s", packageURL), err)
+	}
+	defer func() {
+		if err := resp.Body.Close(); err != nil {
+			e = errors.Join(e, errors.Join(fmt.Errorf("failed to close response body: %s", packageURL), err))
+		}
+	}()
+
+	if resp.StatusCode != http.StatusOK {
+		return nil, fmt.Errorf("failed to get package info: %s for %s", resp.Status, packageURL)
+	}
+
+	packageInfo := &PackageInfo{}
+
+	var body []byte
+	if body, err = io.ReadAll(resp.Body); err == nil {
+		if err = json.Unmarshal(body, &packageInfo); err != nil {
+			return nil, errors.Join(fmt.Errorf("failed to unmarshal package info: %s", packageURL), err)
+		}
+	}
+
+	return packageInfo, nil
+}
+
+func (p *PackageJSON) hasESModule() error {
 	if p.Browser != "" {
 		return nil
 	}
@@ -101,64 +158,4 @@ func newRegistry(
 		Host:     host,
 		InSecure: insecure == "true",
 	}, nil
-}
-
-func (r *RegistryImpl) GetPackageInfo(packageName string) (*PackageInfo, error) {
-	packageURL := fmt.Sprintf("%s/%s", r.Config.GetAddress(), packageName)
-
-	req, err := http.NewRequest("GET", packageURL, nil)
-	if err != nil {
-		return nil, err
-	}
-
-	authorization := r.Config.EncodeAuthorization()
-	if authorization != "" {
-		req.Header.Set("Authorization", authorization)
-	}
-
-	req.Header.Set("Accept", "application/vnd.npm.formats+json")
-
-	client := &http.Client{}
-	resp, err := client.Do(req)
-	if err != nil {
-		return nil, err
-	}
-	defer func() {
-		if err := resp.Body.Close(); err != nil {
-			r.Error(err, "failed to close response body")
-		}
-	}()
-
-	fmt.Println("Response Status:", resp.Status)
-
-	if resp.StatusCode != http.StatusOK {
-		return nil, fmt.Errorf("%s", resp.Status)
-	}
-
-	packageInfo := &PackageInfo{}
-
-	var body []byte
-	if body, err = io.ReadAll(resp.Body); err == nil {
-		if err = json.Unmarshal(body, &packageInfo); err != nil {
-			return nil, err
-		}
-	}
-
-	return packageInfo, nil
-}
-
-func (r *RegistryImpl) ValidatePackage(packageName string, packageVersion string) error {
-	packageInfo, err := r.GetPackageInfo(packageName)
-
-	if err != nil {
-		return err
-	}
-
-	versionPackageJSON, ok := packageInfo.Versions[packageVersion]
-
-	if !ok {
-		return fmt.Errorf("version of package not found: %s", packageName+"@"+packageVersion)
-	}
-
-	return versionPackageJSON.HasESModule()
 }
