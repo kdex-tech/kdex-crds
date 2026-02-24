@@ -504,6 +504,22 @@ spec:
                   the host belongs.
                 minLength: 5
                 type: string
+              registries:
+                description: registries defines the registries that should be used
+                  for this host. If not provided these will be inherited from the
+                  default configuration.
+                properties:
+                  imageRegistry:
+                    description: |-
+                      imageRegistry is the image registry used by this host. If not set the value will be inherited from the default configuration.
+                      Credentials should be provided as a Secret associated to the ServiceAccount referenced by spec.serviceAccountRef.
+                    type: string
+                  npmRegistry:
+                    description: |-
+                      npmRegistry is the npm registry used by this host. If not set the value will be inherited from the default configuration.
+                      Credentials should be provided as a Secret associated to the ServiceAccount referenced by spec.serviceAccountRef.
+                    type: string
+                type: object
               replicas:
                 description: |-
                   replicas is the number of desired pods. This is a pointer to distinguish between explicit

@@ -113,9 +113,13 @@ type KDexHostSpec struct {
 	// +kubebuilder:validation:MinLength=5
 	Organization string `json:"organization" protobuf:"bytes,11,req,name=organization"`
 
+	// registries defines the registries that should be used for this host. If not provided these will be inherited from the default configuration.
+	// +kubebuilder:validation:Optional
+	Registries *Registries `json:"registries,omitempty" protobuf:"bytes,12,opt,name=registries"`
+
 	// routing defines the desired routing configuration for the host.
 	// +kubebuilder:validation:Required
-	Routing Routing `json:"routing" protobuf:"bytes,12,req,name=routing"`
+	Routing Routing `json:"routing" protobuf:"bytes,13,req,name=routing"`
 
 	// scriptLibraryRef is an optional reference to a KDexScriptLibrary resource.
 	// +kubebuilder:validation:Optional
@@ -124,11 +128,6 @@ type KDexHostSpec struct {
 
 	// Optional top level security requirements.
 	Security *[]SecurityRequirement `json:"security,omitempty" yaml:"security,omitempty" protobuf:"bytes,15,rep,name=security"`
-
-	// themeRef is a reference to the theme that should apply to all pages bound to this host.
-	// +kubebuilder:validation:Optional
-	// +kubebuilder:validation:XValidation:rule=`self.kind == "KDexTheme" || self.kind == "KDexClusterTheme"`,message="'kind' must be either KDexTheme or KDexClusterTheme"
-	ThemeRef *KDexObjectReference `json:"themeRef,omitempty" protobuf:"bytes,16,opt,name=themeRef"`
 
 	// serviceAccountRef is a reference to the service account used by the host to access secrets.
 	//
@@ -188,6 +187,11 @@ type KDexHostSpec struct {
 
 	// ServiceAccountSecrets is an internal list of resolved secrets that are referenced by the service account.
 	ServiceAccountSecrets ServiceAccountSecrets `json:"-"`
+
+	// themeRef is a reference to the theme that should apply to all pages bound to this host.
+	// +kubebuilder:validation:Optional
+	// +kubebuilder:validation:XValidation:rule=`self.kind == "KDexTheme" || self.kind == "KDexClusterTheme"`,message="'kind' must be either KDexTheme or KDexClusterTheme"
+	ThemeRef *KDexObjectReference `json:"themeRef,omitempty" protobuf:"bytes,16,opt,name=themeRef"`
 
 	// translationRefs is an array of references to KDexTranslation or KDexClusterTranslation resources that define the translations that should apply to this host.
 	// +listType=map

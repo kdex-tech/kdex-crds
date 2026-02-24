@@ -896,6 +896,18 @@ type Paths struct {
 	PatternPath string `json:"patternPath,omitempty" protobuf:"bytes,2,opt,name=patternPath"`
 }
 
+type Registries struct {
+	// imageRegistry is the image registry used by this host. If not set the value will be inherited from the default configuration.
+	// Credentials should be provided as a Secret associated to the ServiceAccount referenced by spec.serviceAccountRef.
+	// +kubebuilder:validation:Optional
+	ImageRegistry string `json:"imageRegistry,omitempty" protobuf:"bytes,1,opt,name=imageRegistry"`
+
+	// npmRegistry is the npm registry used by this host. If not set the value will be inherited from the default configuration.
+	// Credentials should be provided as a Secret associated to the ServiceAccount referenced by spec.serviceAccountRef.
+	// +kubebuilder:validation:Optional
+	NpmRegistry string `json:"npmRegistry,omitempty" protobuf:"bytes,2,opt,name=npmRegistry"`
+}
+
 // Routing defines the desired routing configuration for the host.
 type Routing struct {
 	// domains are the names by which this host is addressed. The first domain listed is the preferred domain. The domains may contain wildcard prefix in the form '*.'. Longest match always wins.
