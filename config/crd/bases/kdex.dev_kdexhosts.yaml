@@ -445,12 +445,34 @@ spec:
                     description: |-
                       imageRegistry is the image registry used by this host. If not set the value will be inherited from the default configuration.
                       Credentials should be provided as a Secret associated to the ServiceAccount referenced by spec.serviceAccountRef.
-                    type: string
+                    properties:
+                      host:
+                        description: host is the domain name (and port) of the registry.
+                        type: string
+                      insecure:
+                        default: false
+                        description: insecure indicates whether the registry has a
+                          secure address or not.
+                        type: boolean
+                    required:
+                    - host
+                    type: object
                   npmRegistry:
                     description: |-
                       npmRegistry is the npm registry used by this host. If not set the value will be inherited from the default configuration.
                       Credentials should be provided as a Secret associated to the ServiceAccount referenced by spec.serviceAccountRef.
-                    type: string
+                    properties:
+                      host:
+                        description: host is the domain name (and port) of the registry.
+                        type: string
+                      insecure:
+                        default: false
+                        description: insecure indicates whether the registry has a
+                          secure address or not.
+                        type: boolean
+                    required:
+                    - host
+                    type: object
                 type: object
               replicas:
                 description: |-

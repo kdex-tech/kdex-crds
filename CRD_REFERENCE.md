@@ -2341,8 +2341,25 @@ _Appears in:_
 
 | Field | Description | Default | Validation |
 | --- | --- | --- | --- |
-| `imageRegistry` _string_ | imageRegistry is the image registry used by this host. If not set the value will be inherited from the default configuration.<br />Credentials should be provided as a Secret associated to the ServiceAccount referenced by spec.serviceAccountRef. |  | Optional: \{\} <br /> |
-| `npmRegistry` _string_ | npmRegistry is the npm registry used by this host. If not set the value will be inherited from the default configuration.<br />Credentials should be provided as a Secret associated to the ServiceAccount referenced by spec.serviceAccountRef. |  | Optional: \{\} <br /> |
+| `imageRegistry` _[Registry](#registry)_ | imageRegistry is the image registry used by this host. If not set the value will be inherited from the default configuration.<br />Credentials should be provided as a Secret associated to the ServiceAccount referenced by spec.serviceAccountRef. |  | Optional: \{\} <br /> |
+| `npmRegistry` _[Registry](#registry)_ | npmRegistry is the npm registry used by this host. If not set the value will be inherited from the default configuration.<br />Credentials should be provided as a Secret associated to the ServiceAccount referenced by spec.serviceAccountRef. |  | Optional: \{\} <br /> |
+
+
+#### Registry
+
+
+
+
+
+
+
+_Appears in:_
+- [Registries](#registries)
+
+| Field | Description | Default | Validation |
+| --- | --- | --- | --- |
+| `host` _string_ | host is the domain name (and port) of the registry. |  | Required: \{\} <br /> |
+| `insecure` _boolean_ | insecure indicates whether the registry has a secure address or not. | false | Optional: \{\} <br /> |
 
 
 #### Routing
