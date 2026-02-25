@@ -50,6 +50,12 @@ type NexusConfiguration struct {
 	DefaultImageRegistry Registry       `json:"defaultImageRegistry" yaml:"defaultImageRegistry"`
 	DefaultNpmRegistry   Registry       `json:"defaultNpmRegistry" yaml:"defaultNpmRegistry"`
 	HostDefault          HostDefault    `json:"hostDefault" yaml:"hostDefault"`
+	PackageBuilder       PackageBuilder `json:"packageBuilder" yaml:"packageBuilder"`
+}
+
+type PackageBuilder struct {
+	Image           string            `json:"image" yaml:"image"`
+	ImagePullPolicy corev1.PullPolicy `json:"imagePullPolicy" yaml:"imagePullPolicy"`
 }
 
 type Registry struct {
@@ -136,14 +142,11 @@ backendDefault:
       port: 80
       protocol: TCP
       targetPort: server
-  serverImage: kdex-tech/kdex-themeserver:latest
-  serverImagePullPolicy: Always
+  serverImage: ghcr.io/kdex-tech/backend-static:latest
 defaultNpmRegistry:
   host: registry.npmjs.org
-  insecure: false
 defaultImageRegistry:
   host: docker.io
-  insecure: false
 hostDefault:
   deployment:
     selector:
@@ -160,7 +163,7 @@ hostDefault:
           - --webserver-bind-address=:8090
           command:
           - /manager
-          image: kdex-tech/kdex-host:latest
+          image: ghcr.io/kdex-tech/host-manager:latest
           livenessProbe:
             httpGet:
               path: /healthz
@@ -209,6 +212,8 @@ hostDefault:
       port: 8090
       protocol: TCP
       targetPort: server
+packageBuilder:
+  image: ghcr.io/kdex-tech/cli-tools:latest
 `)
 	gvk := GroupVersion.WithKind("NexusConfiguration")
 	decoder := serializer.NewCodecFactory(scheme).UniversalDeserializer()
