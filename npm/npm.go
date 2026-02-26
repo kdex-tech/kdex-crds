@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"io"
 	"net/http"
+	"net/url"
 	"regexp"
 	"strings"
 
@@ -15,11 +16,8 @@ import (
 
 var scopedPackageRegex = regexp.MustCompile(`^@[a-z0-9-~][a-z0-9-._~]*\/[a-z0-9-~][a-z0-9-._~]*$`)
 
-func NewRegistry(
-	dr *configuration.Registry,
-	secret *corev1.Secret,
-) (Registry, error) {
-	config, err := newRegistry(dr, secret)
+func NewRegistry(host string, secret *corev1.Secret) (Registry, error) {
+	config, err := newRegistry(host, secret)
 
 	if err != nil {
 		return nil, errors.Join(fmt.Errorf("npm: failed to create registry"), err)
@@ -133,36 +131,41 @@ func (p *PackageJSON) hasESModule() error {
 }
 
 func newRegistry(
-	dr *configuration.Registry,
-	secret *corev1.Secret,
+	host string,
+	secrets *corev1.Secret,
 ) (*configuration.Registry, error) {
-	if secret == nil {
-		return dr, nil
+	url, err := url.Parse(host)
+	if err != nil {
+		return nil, fmt.Errorf("failed to parse host: %s", host)
 	}
 
-	host := secret.Annotations["kdex.dev/npm-server-address"]
-
-	if host == "" {
-		return nil, fmt.Errorf("kdex.dev/npm-server-address annotation is missing")
+	insecure := false
+	if url.Scheme == "http" {
+		insecure = true
 	}
 
-	if strings.Contains(host, "://") {
-		host = strings.Split(host, "://")[1]
+	reg := &configuration.Registry{
+		Host:     url.Host,
+		InSecure: insecure,
 	}
 
-	insecure := secret.Annotations["kdex.dev/npm-server-insecure"]
-
-	if insecure == "" {
-		insecure = "false"
+	if secrets == nil {
+		return reg, nil
 	}
 
-	return &configuration.Registry{
-		AuthData: configuration.AuthData{
-			Password: string(secret.Data["password"]),
-			Token:    string(secret.Data["token"]),
-			Username: string(secret.Data["username"]),
-		},
-		Host:     host,
-		InSecure: insecure == "true",
-	}, nil
+	if host != secrets.Annotations["kdex.dev/npm-server-address"] {
+		return nil, fmt.Errorf("kdex.dev/npm-server-address annotation on secret does not match host: %s", host)
+	}
+
+	if secrets.Annotations["kdex.dev/npm-server-insecure"] == "true" {
+		reg.InSecure = true
+	}
+
+	reg.AuthData = configuration.AuthData{
+		Password: string(secrets.Data["password"]),
+		Token:    string(secrets.Data["token"]),
+		Username: string(secrets.Data["username"]),
+	}
+
+	return reg, nil
 }

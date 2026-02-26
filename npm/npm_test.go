@@ -368,34 +368,65 @@ func TestRegistryImpl_ValidatePackage(t *testing.T) {
 
 func TestNewRegistry(t *testing.T) {
 	tests := []struct {
-		name    string
-		c       *configuration.Registry
-		secret  *corev1.Secret
-		wantErr string
+		name         string
+		registryHost string
+		secret       *corev1.Secret
+		wantErr      string
 	}{
 		{
-			name: "no secret",
-			c: &configuration.Registry{
-				Host: "test",
+			name:         "no secret",
+			registryHost: "https://test",
+			secret:       nil,
+			wantErr:      "",
+		},
+		{
+			name:         "insecure registry",
+			registryHost: "http://test",
+			secret: &corev1.Secret{
+				ObjectMeta: v1.ObjectMeta{
+					Annotations: map[string]string{
+						"kdex.dev/npm-server-address": "http://test",
+					},
+				},
 			},
-			secret:  nil,
 			wantErr: "",
 		},
 		{
-			name: "secret missing kdex.dev/npm-server-address annotation",
-			c: &configuration.Registry{
-				Host: "test",
+			name:         "insecure registry - not a match",
+			registryHost: "http://test",
+			secret: &corev1.Secret{
+				ObjectMeta: v1.ObjectMeta{
+					Annotations: map[string]string{
+						"kdex.dev/npm-server-address": "https://test",
+					},
+				},
 			},
+			wantErr: "kdex.dev/npm-server-address annotation on secret does not match host",
+		},
+		{
+			name:         "https but insecure registry",
+			registryHost: "https://test",
+			secret: &corev1.Secret{
+				ObjectMeta: v1.ObjectMeta{
+					Annotations: map[string]string{
+						"kdex.dev/npm-server-address":  "https://test",
+						"kdex.dev/npm-server-insecure": "true",
+					},
+				},
+			},
+			wantErr: "",
+		},
+		{
+			name:         "secret missing kdex.dev/npm-server-address annotation",
+			registryHost: "https://test",
 			secret: &corev1.Secret{
 				ObjectMeta: v1.ObjectMeta{},
 			},
-			wantErr: "kdex.dev/npm-server-address annotation is missing",
+			wantErr: "kdex.dev/npm-server-address annotation on secret does not match host",
 		},
 		{
-			name: "secret with kdex.dev/npm-server-address annotation",
-			c: &configuration.Registry{
-				Host: "test",
-			},
+			name:         "secret with kdex.dev/npm-server-address annotation",
+			registryHost: "https://test",
 			secret: &corev1.Secret{
 				ObjectMeta: v1.ObjectMeta{
 					Annotations: map[string]string{
@@ -408,7 +439,7 @@ func TestNewRegistry(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			_, err := npm.NewRegistry(tt.c, tt.secret)
+			_, err := npm.NewRegistry(tt.registryHost, tt.secret)
 			if err != nil {
 				assert.Contains(t, err.Error(), tt.wantErr)
 				return
