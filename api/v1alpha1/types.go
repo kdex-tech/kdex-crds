@@ -569,21 +569,26 @@ type OpenAPI struct {
 // associated with the ServiceAccount named in ServiceAccountRef to authenticate to the npm registry.
 // That package must contain an ES module for use in the browser.
 type PackageReference struct {
-	// name contains a scoped npm package name.
-	// +kubebuilder:validation:Required
-	Name string `json:"name" protobuf:"bytes,1,req,name=name"`
-
-	// version contains a specific npm package version.
-	// +kubebuilder:validation:Required
-	Version string `json:"version" protobuf:"bytes,2,req,name=version"`
-
 	// exportMapping is a mapping of the module's exports that will be used when the module import is written. e.g. `import [exportMapping] from [module_name];`. If exportMapping is not provided the module will be written as `import [module_name];`
 	// +kubebuilder:validation:Optional
 	ExportMapping string `json:"exportMapping,omitempty" protobuf:"bytes,3,opt,name=exportMapping"`
 
+	// name contains a scoped npm package name.
+	// +kubebuilder:validation:Required
+	// +kubebuilder:validation:Pattern=^@[a-z0-9-~][a-z0-9-._~]*\/[a-z0-9-~][a-z0-9-._~]*$
+	Name string `json:"name" protobuf:"bytes,1,req,name=name"`
+
+	// registry is the URL of the NPM registry that holds the package. If not set the default registry will be used.
+	// +kubebuilder:validation:Optional
+	Registry string `json:"registry,omitempty" protobuf:"bytes,2,opt,name=registry"`
+
 	// secretRef is a reference to a secret containing authentication credentials for the NPM registry that holds the package.
 	// +kubebuilder:validation:Optional
 	SecretRef *corev1.LocalObjectReference `json:"secretRef,omitempty" protobuf:"bytes,4,opt,name=secretRef"`
+
+	// version contains a specific npm package version.
+	// +kubebuilder:validation:Required
+	Version string `json:"version" protobuf:"bytes,2,req,name=version"`
 }
 
 func (p *PackageReference) ToImportStatement() string {

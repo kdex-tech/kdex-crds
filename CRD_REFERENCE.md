@@ -2257,10 +2257,11 @@ _Appears in:_
 
 | Field | Description | Default | Validation |
 | --- | --- | --- | --- |
-| `name` _string_ | name contains a scoped npm package name. |  | Required: \{\} <br /> |
-| `version` _string_ | version contains a specific npm package version. |  | Required: \{\} <br /> |
 | `exportMapping` _string_ | exportMapping is a mapping of the module's exports that will be used when the module import is written. e.g. `import [exportMapping] from [module_name];`. If exportMapping is not provided the module will be written as `import [module_name];` |  | Optional: \{\} <br /> |
+| `name` _string_ | name contains a scoped npm package name. |  | Pattern: `^@[a-z0-9-~][a-z0-9-._~]*\/[a-z0-9-~][a-z0-9-._~]*$` <br />Required: \{\} <br /> |
+| `registry` _string_ | registry is the URL of the NPM registry that holds the package. If not set the default registry will be used. |  | Optional: \{\} <br /> |
 | `secretRef` _[LocalObjectReference](https://kubernetes.io/docs/reference/generated/kubernetes-api/v/#localobjectreference-v1-core)_ | secretRef is a reference to a secret containing authentication credentials for the NPM registry that holds the package. |  | Optional: \{\} <br /> |
+| `version` _string_ | version contains a specific npm package version. |  | Required: \{\} <br /> |
 
 
 #### PathItem

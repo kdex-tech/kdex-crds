@@ -267,6 +267,11 @@ spec:
                     type: string
                   name:
                     description: name contains a scoped npm package name.
+                    pattern: ^@[a-z0-9-~][a-z0-9-._~]*\/[a-z0-9-~][a-z0-9-._~]*$
+                    type: string
+                  registry:
+                    description: registry is the URL of the NPM registry that holds
+                      the package. If not set the default registry will be used.
                     type: string
                   secretRef:
                     description: secretRef is a reference to a secret containing authentication
