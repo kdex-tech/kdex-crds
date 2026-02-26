@@ -6,11 +6,14 @@ import (
 	"fmt"
 	"io"
 	"net/http"
+	"regexp"
 	"strings"
 
 	corev1 "k8s.io/api/core/v1"
 	"kdex.dev/crds/configuration"
 )
+
+var scopedPackageRegex = regexp.MustCompile(`^@[a-z0-9-~][a-z0-9-._~]*\/[a-z0-9-~][a-z0-9-._~]*$`)
 
 func NewRegistry(
 	dr *configuration.Registry,
@@ -28,6 +31,10 @@ func NewRegistry(
 }
 
 func (r *RegistryImpl) ValidatePackage(packageName string, packageVersion string) error {
+	if !scopedPackageRegex.MatchString(packageName) {
+		return fmt.Errorf("invalid package name, must be scoped with @scope/name: %s", packageName)
+	}
+
 	packageInfo, err := r.getPackageInfo(packageName)
 
 	if err != nil {

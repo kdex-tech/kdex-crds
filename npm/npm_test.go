@@ -24,12 +24,22 @@ func TestRegistryImpl_ValidatePackage(t *testing.T) {
 		wantErr        string
 	}{
 		{
-			name:     "not found",
+			name:     "not scoped",
 			authData: configuration.AuthData{},
 			handler: func(w http.ResponseWriter, r *http.Request) {
 				w.WriteHeader(http.StatusNotFound)
 			},
 			packageName:    "test",
+			packageVersion: "1.0.0",
+			wantErr:        "invalid package name, must be scoped with @scope/name: test",
+		},
+		{
+			name:     "not found",
+			authData: configuration.AuthData{},
+			handler: func(w http.ResponseWriter, r *http.Request) {
+				w.WriteHeader(http.StatusNotFound)
+			},
+			packageName:    "@test/test",
 			packageVersion: "1.0.0",
 			wantErr:        "404 Not Found",
 		},
@@ -43,7 +53,7 @@ func TestRegistryImpl_ValidatePackage(t *testing.T) {
 					},
 					Versions: map[string]npm.PackageJSON{
 						"1.0.0": {
-							Name:    "test",
+							Name:    "@test/test",
 							Version: "1.0.0",
 						},
 					},
@@ -56,7 +66,7 @@ func TestRegistryImpl_ValidatePackage(t *testing.T) {
 					w.WriteHeader(http.StatusInternalServerError)
 				}
 			},
-			packageName:    "test",
+			packageName:    "@test/test",
 			packageVersion: "1.0.0",
 			wantErr:        "package does not contain an ES module",
 		},
@@ -70,7 +80,7 @@ func TestRegistryImpl_ValidatePackage(t *testing.T) {
 					},
 					Versions: map[string]npm.PackageJSON{
 						"1.0.0": {
-							Name:    "test",
+							Name:    "@test/test",
 							Main:    "./test.mjs",
 							Version: "1.0.0",
 						},
@@ -84,7 +94,7 @@ func TestRegistryImpl_ValidatePackage(t *testing.T) {
 					w.WriteHeader(http.StatusInternalServerError)
 				}
 			},
-			packageName:    "test",
+			packageName:    "@test/test",
 			packageVersion: "1.0.0",
 			wantErr:        "",
 		},
@@ -101,7 +111,7 @@ func TestRegistryImpl_ValidatePackage(t *testing.T) {
 							Exports: &npm.Exports{
 								Single: "./test,.mjs",
 							},
-							Name:    "test",
+							Name:    "@test/test",
 							Version: "1.0.0",
 						},
 					},
@@ -114,7 +124,7 @@ func TestRegistryImpl_ValidatePackage(t *testing.T) {
 					w.WriteHeader(http.StatusInternalServerError)
 				}
 			},
-			packageName:    "test",
+			packageName:    "@test/test",
 			packageVersion: "1.0.0",
 			wantErr:        "",
 		},
@@ -133,7 +143,7 @@ func TestRegistryImpl_ValidatePackage(t *testing.T) {
 									"import": "./test,.mjs",
 								},
 							},
-							Name:    "test",
+							Name:    "@test/test",
 							Version: "1.0.0",
 						},
 					},
@@ -146,7 +156,7 @@ func TestRegistryImpl_ValidatePackage(t *testing.T) {
 					w.WriteHeader(http.StatusInternalServerError)
 				}
 			},
-			packageName:    "test",
+			packageName:    "@test/test",
 			packageVersion: "1.0.0",
 			wantErr:        "",
 		},
@@ -165,7 +175,7 @@ func TestRegistryImpl_ValidatePackage(t *testing.T) {
 									"browser": "./test,.mjs",
 								},
 							},
-							Name:    "test",
+							Name:    "@test/test",
 							Version: "1.0.0",
 						},
 					},
@@ -178,7 +188,7 @@ func TestRegistryImpl_ValidatePackage(t *testing.T) {
 					w.WriteHeader(http.StatusInternalServerError)
 				}
 			},
-			packageName:    "test",
+			packageName:    "@test/test",
 			packageVersion: "1.0.0",
 			wantErr:        "",
 		},
@@ -193,7 +203,7 @@ func TestRegistryImpl_ValidatePackage(t *testing.T) {
 					Versions: map[string]npm.PackageJSON{
 						"1.0.0": {
 							Module:  "./test,.mjs",
-							Name:    "test",
+							Name:    "@test/test",
 							Version: "1.0.0",
 						},
 					},
@@ -206,7 +216,7 @@ func TestRegistryImpl_ValidatePackage(t *testing.T) {
 					w.WriteHeader(http.StatusInternalServerError)
 				}
 			},
-			packageName:    "test",
+			packageName:    "@test/test",
 			packageVersion: "1.0.0",
 			wantErr:        "",
 		},
@@ -220,7 +230,7 @@ func TestRegistryImpl_ValidatePackage(t *testing.T) {
 					},
 					Versions: map[string]npm.PackageJSON{
 						"1.0.0": {
-							Name:    "test",
+							Name:    "@test/test",
 							Type:    "module",
 							Version: "1.0.0",
 						},
@@ -234,7 +244,7 @@ func TestRegistryImpl_ValidatePackage(t *testing.T) {
 					w.WriteHeader(http.StatusInternalServerError)
 				}
 			},
-			packageName:    "test",
+			packageName:    "@test/test",
 			packageVersion: "1.0.0",
 			wantErr:        "",
 		},
@@ -249,7 +259,7 @@ func TestRegistryImpl_ValidatePackage(t *testing.T) {
 					Versions: map[string]npm.PackageJSON{
 						"1.0.0": {
 							Browser: "./test.mjs",
-							Name:    "test",
+							Name:    "@test/test",
 							Version: "1.0.0",
 						},
 					},
@@ -262,7 +272,7 @@ func TestRegistryImpl_ValidatePackage(t *testing.T) {
 					w.WriteHeader(http.StatusInternalServerError)
 				}
 			},
-			packageName:    "test",
+			packageName:    "@test/test",
 			packageVersion: "1.0.0",
 			wantErr:        "",
 		},
@@ -277,7 +287,7 @@ func TestRegistryImpl_ValidatePackage(t *testing.T) {
 					Versions: map[string]npm.PackageJSON{
 						"1.0.0": {
 							Browser: "./test.mjs",
-							Name:    "test",
+							Name:    "@test/test",
 							Version: "1.0.0",
 						},
 					},
@@ -290,9 +300,9 @@ func TestRegistryImpl_ValidatePackage(t *testing.T) {
 					w.WriteHeader(http.StatusInternalServerError)
 				}
 			},
-			packageName:    "test",
+			packageName:    "@test/test",
 			packageVersion: "1.1.0",
-			wantErr:        "version of package not found test@1.1.0",
+			wantErr:        "version of package not found @test/test@1.1.0",
 		},
 		{
 			name: "with authorization",
@@ -308,7 +318,7 @@ func TestRegistryImpl_ValidatePackage(t *testing.T) {
 					Versions: map[string]npm.PackageJSON{
 						"1.0.0": {
 							Browser: "./test.mjs",
-							Name:    "test",
+							Name:    "@test/test",
 							Version: "1.0.0",
 						},
 					},
@@ -321,7 +331,7 @@ func TestRegistryImpl_ValidatePackage(t *testing.T) {
 					w.WriteHeader(http.StatusInternalServerError)
 				}
 			},
-			packageName:    "test",
+			packageName:    "@test/test",
 			packageVersion: "1.0.0",
 			wantErr:        "",
 		},
