@@ -1,6 +1,9 @@
 package npm
 
-import "kdex.dev/crds/configuration"
+import (
+	corev1 "k8s.io/api/core/v1"
+	"kdex.dev/crds/configuration"
+)
 
 type DistTags struct {
 	Latest string `json:"latest"`
@@ -54,6 +57,8 @@ type PackageJSON struct {
 type Registry interface {
 	ValidatePackage(packageName string, packageVersion string) error
 }
+
+type RegistryFactory func(registry string, secret *corev1.Secret) (Registry, error)
 
 type RegistryImpl struct {
 	Config *configuration.Registry
