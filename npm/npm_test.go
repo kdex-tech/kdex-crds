@@ -374,6 +374,12 @@ func TestNewRegistry(t *testing.T) {
 		wantErr      string
 	}{
 		{
+			name:         "empty host",
+			registryHost: "",
+			secret:       nil,
+			wantErr:      "host cannot be empty",
+		},
+		{
 			name:         "no secret",
 			registryHost: "https://test",
 			secret:       nil,

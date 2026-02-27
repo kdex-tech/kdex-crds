@@ -134,6 +134,10 @@ func newRegistry(
 	host string,
 	secrets *corev1.Secret,
 ) (*configuration.Registry, error) {
+	if host == "" {
+		return nil, fmt.Errorf("host cannot be empty")
+	}
+
 	url, err := url.Parse(host)
 	if err != nil {
 		return nil, fmt.Errorf("failed to parse host: %s", host)
