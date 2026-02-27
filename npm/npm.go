@@ -138,18 +138,15 @@ func newRegistry(
 		return nil, fmt.Errorf("host cannot be empty")
 	}
 
-	url, err := url.Parse(host)
+	hostURL, err := url.Parse(host)
 	if err != nil {
 		return nil, fmt.Errorf("failed to parse host: %s", host)
 	}
 
-	insecure := false
-	if url.Scheme == "http" {
-		insecure = true
-	}
+	insecure := hostURL.Scheme == "http"
 
 	reg := &configuration.Registry{
-		Host:     url.Host,
+		Host:     hostURL.Host,
 		InSecure: insecure,
 	}
 
