@@ -59,13 +59,21 @@ type LevelEnablerByName struct {
 
 func (c LevelEnablerByName) Check(entry zapcore.Entry, ce *zapcore.CheckedEntry) *zapcore.CheckedEntry {
 	loggerName := entry.LoggerName
-
 	minLevel := c.DefaultLevel
 
+	// Track the length of the matching prefix to ensure the most specific one wins
+	longestMatch := -1
+
 	for prefix, level := range c.MinLevels {
+		// Check if prefix matches the logger name or is a parent segment
 		if loggerName == prefix ||
 			(len(loggerName) > len(prefix) && loggerName[:len(prefix)] == prefix && loggerName[len(prefix)] == '.') {
-			minLevel = level
+
+			// Only update if this prefix is longer (more specific) than our previous match
+			if len(prefix) > longestMatch {
+				minLevel = level
+				longestMatch = len(prefix)
+			}
 		}
 	}
 
