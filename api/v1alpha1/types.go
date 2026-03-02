@@ -909,26 +909,15 @@ type Paths struct {
 }
 
 type Registries struct {
-	// imageRegistry is the image registry used by this host. If not set the value will be inherited from the default configuration.
+	// imageRegistry is the default image registry used by this host. If not set the value will be inherited from the default configuration.
 	// Credentials should be provided as a Secret associated to the ServiceAccount referenced by spec.serviceAccountRef.
 	// +kubebuilder:validation:Optional
-	ImageRegistry Registry `json:"imageRegistry,omitempty" protobuf:"bytes,1,opt,name=imageRegistry"`
+	ImageRegistry string `json:"imageRegistry,omitempty" protobuf:"bytes,1,opt,name=imageRegistry"`
 
-	// npmRegistry is the npm registry used by this host. If not set the value will be inherited from the default configuration.
+	// npmRegistry is the default npm registry used by this host. If not set the value will be inherited from the default configuration.
 	// Credentials should be provided as a Secret associated to the ServiceAccount referenced by spec.serviceAccountRef.
 	// +kubebuilder:validation:Optional
-	NpmRegistry Registry `json:"npmRegistry,omitempty" protobuf:"bytes,2,opt,name=npmRegistry"`
-}
-
-type Registry struct {
-	// host is the domain name (and port) of the registry.
-	// +kubebuilder:validation:Required
-	Host string `json:"host"`
-
-	// insecure indicates whether the registry has a secure address or not.
-	// +kubebuilder:validation:Optional
-	// +kubebuilder:default:=false
-	Insecure bool `json:"insecure,omitempty"`
+	NpmRegistry string `json:"npmRegistry,omitempty" protobuf:"bytes,2,opt,name=npmRegistry"`
 }
 
 // Routing defines the desired routing configuration for the host.
