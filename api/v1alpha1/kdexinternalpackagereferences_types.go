@@ -70,18 +70,18 @@ type KDexInternalPackageReferencesSpec struct {
 	// hostRef is a reference to the KDexHost that this internal package references is for.
 	// +kubebuilder:validation:Required
 	// +kubebuilder:validation:XValidation:rule="self.name.size() > 0",message="hostRef.name must not be empty"
-	HostRef corev1.LocalObjectReference `json:"hostRef" protobuf:"bytes,2,req,name=hostRef"`
+	HostRef corev1.LocalObjectReference `json:"hostRef" protobuf:"bytes,3,req,name=hostRef"`
 
 	// +kubebuilder:validation:Optional
-	NPMSecretRef *corev1.LocalObjectReference `json:"npmSecretRef" protobuf:"bytes,3,opt,name=npmSecretRef"`
+	NPMSecretRefs []corev1.LocalObjectReference `json:"npmSecretRefs" protobuf:"bytes,4,rep,name=npmSecretRefs"`
 
 	// +listType=map
 	// +listMapKey=name
 	// +kubebuilder:validation:MinItems=1
-	PackageReferences []PackageReference `json:"packageReferences" protobuf:"bytes,2,rep,name=packageReferences"`
+	PackageReferences []PackageReference `json:"packageReferences" protobuf:"bytes,5,rep,name=packageReferences"`
 
 	// +kubebuilder:validation:Required
-	ServiceAccountRef corev1.LocalObjectReference `json:"serviceAccountRef" protobuf:"bytes,18,req,name=serviceAccountRef"`
+	ServiceAccountRef corev1.LocalObjectReference `json:"serviceAccountRef" protobuf:"bytes,6,req,name=serviceAccountRef"`
 }
 
 func init() {
