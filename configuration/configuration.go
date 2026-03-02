@@ -101,8 +101,8 @@ backendDefault:
       protocol: TCP
       targetPort: server
   serverImage: ghcr.io/kdex-tech/backend-static:latest
-defaultNpmRegistry: registry.npmjs.org
 defaultImageRegistry: docker.io
+defaultNpmRegistry: registry.npmjs.org
 hostDefault:
   deployment:
     selector:
