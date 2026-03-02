@@ -1,13 +1,16 @@
 package npm
 
 import (
+	"encoding/base64"
 	"encoding/json"
 	"errors"
 	"fmt"
 	"io"
+	"maps"
 	"net/http"
 	"net/url"
 	"regexp"
+	"slices"
 	"strings"
 
 	corev1 "k8s.io/api/core/v1"
@@ -132,7 +135,7 @@ func (p *PackageJSON) hasESModule() error {
 
 func newRegistry(
 	host string,
-	secrets *corev1.Secret,
+	secret *corev1.Secret,
 ) (*configuration.Registry, error) {
 	if host == "" {
 		return nil, fmt.Errorf("host cannot be empty")
@@ -150,23 +153,111 @@ func newRegistry(
 		InSecure: insecure,
 	}
 
-	if secrets == nil {
+	if secret == nil {
 		return reg, nil
 	}
 
-	if host != secrets.Annotations["kdex.dev/npm-server-address"] {
-		return nil, fmt.Errorf("kdex.dev/npm-server-address annotation on secret does not match host: %s", host)
+	if secret.Annotations["kdex.dev/secret-type"] != "npm" {
+		return nil, fmt.Errorf("secret must have annotation kdex.dev/secret-type=npm")
 	}
 
-	if secrets.Annotations["kdex.dev/npm-server-insecure"] == "true" {
-		reg.InSecure = true
+	npmrc, ok := secret.Data[".npmrc"]
+	if !ok {
+		return nil, fmt.Errorf("secret must have key .npmrc")
 	}
 
-	reg.AuthData = configuration.AuthData{
-		Password: string(secrets.Data["password"]),
-		Token:    string(secrets.Data["token"]),
-		Username: string(secrets.Data["username"]),
+	registries, err := ParseNpmrc(string(npmrc))
+	if err != nil {
+		return nil, fmt.Errorf("failed to parse npmrc: %s", err)
+	}
+
+	for _, r := range registries {
+		if r.Host == host {
+			reg = &r
+		}
 	}
 
 	return reg, nil
+}
+
+func ParseNpmrc(data string) ([]configuration.Registry, error) {
+	// Map to group properties by registry host
+	registryMap := make(map[string]*configuration.Registry)
+
+	for line := range strings.SplitSeq(data, "\n") {
+		line = strings.TrimSpace(line)
+		if line == "" || strings.HasPrefix(line, "#") || strings.HasPrefix(line, ";") {
+			continue
+		}
+
+		parts := strings.SplitN(line, "=", 2)
+		if len(parts) != 2 {
+			continue
+		}
+
+		key := strings.TrimSpace(parts[0])
+		value := strings.TrimSpace(parts[1])
+
+		// Handle the registry host part of the key (e.g., //npm.test/:_authToken)
+		if strings.HasPrefix(key, "//") {
+			hostEnd := strings.LastIndex(key, ":")
+			if hostEnd == -1 {
+				continue
+			}
+
+			url, err := url.Parse(key[:hostEnd])
+			if err != nil {
+				continue
+			}
+
+			host := url.Host
+			prop := key[hostEnd+1:]
+
+			reg, ok := registryMap[host]
+			if !ok {
+				registryMap[host] = &configuration.Registry{
+					Host: host,
+				}
+				reg = registryMap[host]
+			}
+
+			switch prop {
+			case "_authToken":
+				reg.AuthData.Token = value
+			case "_auth":
+				// Decode Base64 username:password
+				decoded, err := base64.StdEncoding.DecodeString(value)
+				if err == nil {
+					creds := strings.SplitN(string(decoded), ":", 2)
+					if len(creds) == 2 {
+						reg.AuthData.Username = creds[0]
+						reg.AuthData.Password = creds[1]
+					}
+				}
+			}
+		} else if strings.HasSuffix(key, "registry") {
+			url, err := url.Parse(value)
+			if err != nil {
+				continue
+			}
+			reg, ok := registryMap[url.Host]
+			if !ok {
+				registryMap[url.Host] = &configuration.Registry{
+					Host: url.Host,
+				}
+				reg = registryMap[url.Host]
+			}
+			reg.InSecure = url.Scheme == "http"
+		}
+	}
+
+	// Convert map to slice
+	keys := slices.Collect(maps.Keys(registryMap))
+	slices.Sort(keys)
+
+	registries := make([]configuration.Registry, len(keys))
+	for i, key := range keys {
+		registries[i] = *registryMap[key]
+	}
+	return registries, nil
 }

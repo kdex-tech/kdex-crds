@@ -1,6 +1,7 @@
 package npm_test
 
 import (
+	"encoding/base64"
 	"encoding/json"
 	"net/http"
 	"net/http/httptest"
@@ -391,23 +392,21 @@ func TestNewRegistry(t *testing.T) {
 			secret: &corev1.Secret{
 				ObjectMeta: v1.ObjectMeta{
 					Annotations: map[string]string{
-						"kdex.dev/npm-server-address": "http://test",
+						"kdex.dev/secret-type": "npm",
 					},
 				},
 			},
 			wantErr: "",
 		},
 		{
-			name:         "insecure registry - not a match",
+			name:         "insecure registry - incorrect annotations",
 			registryHost: "http://test",
 			secret: &corev1.Secret{
 				ObjectMeta: v1.ObjectMeta{
-					Annotations: map[string]string{
-						"kdex.dev/npm-server-address": "https://test",
-					},
+					Annotations: map[string]string{},
 				},
 			},
-			wantErr: "kdex.dev/npm-server-address annotation on secret does not match host",
+			wantErr: "secret must have annotation kdex.dev/secret-type=npm",
 		},
 		{
 			name:         "https but insecure registry",
@@ -415,28 +414,30 @@ func TestNewRegistry(t *testing.T) {
 			secret: &corev1.Secret{
 				ObjectMeta: v1.ObjectMeta{
 					Annotations: map[string]string{
-						"kdex.dev/npm-server-address":  "https://test",
-						"kdex.dev/npm-server-insecure": "true",
+						"kdex.dev/secret-type": "npm",
 					},
+				},
+				StringData: map[string]string{
+					".npmrc": `registry=http://test`,
 				},
 			},
 			wantErr: "",
 		},
 		{
-			name:         "secret missing kdex.dev/npm-server-address annotation",
+			name:         "secret missing kdex.dev/secret-type=npm annotation",
 			registryHost: "https://test",
 			secret: &corev1.Secret{
 				ObjectMeta: v1.ObjectMeta{},
 			},
-			wantErr: "kdex.dev/npm-server-address annotation on secret does not match host",
+			wantErr: "secret must have annotation kdex.dev/secret-type=npm",
 		},
 		{
-			name:         "secret with kdex.dev/npm-server-address annotation",
+			name:         "secret with kdex.dev/secret-type=npm annotation",
 			registryHost: "https://test",
 			secret: &corev1.Secret{
 				ObjectMeta: v1.ObjectMeta{
 					Annotations: map[string]string{
-						"kdex.dev/npm-server-address": "https://test",
+						"kdex.dev/secret-type": "npm",
 					},
 				},
 			},
@@ -465,4 +466,101 @@ func MockServer(setup func(mux *http.ServeMux)) *httptest.Server {
 	server := httptest.NewServer(mux)
 
 	return server
+}
+
+func TestParseNpmrc(t *testing.T) {
+	tests := []struct {
+		name       string
+		data       string
+		assertions func(*testing.T, []configuration.Registry, error)
+	}{
+		{
+			name: "empty",
+			data: "",
+			assertions: func(t *testing.T, got []configuration.Registry, err error) {
+				assert.NoError(t, err)
+				assert.Empty(t, got)
+			},
+		},
+		{
+			name: "valid",
+			data: `//npm.test/:_authToken=bearer
+//npm.test/:_auth=` + base64.StdEncoding.EncodeToString([]byte("basic:basic")),
+			assertions: func(t *testing.T, got []configuration.Registry, err error) {
+				assert.NoError(t, err)
+				assert.Len(t, got, 1)
+				assert.Equal(t, "npm.test", got[0].Host)
+				assert.False(t, got[0].InSecure)
+				assert.Equal(t, "bearer", got[0].AuthData.Token)
+				assert.Equal(t, "basic", got[0].AuthData.Username)
+				assert.Equal(t, "basic", got[0].AuthData.Password)
+			},
+		},
+		{
+			name: "valid insecure",
+			data: `registry=http://npm.test
+//npm.test/:_authToken=bearer
+//npm.test/:_auth=` + base64.StdEncoding.EncodeToString([]byte("basic:basic")),
+			assertions: func(t *testing.T, got []configuration.Registry, err error) {
+				assert.NoError(t, err)
+				assert.Len(t, got, 1)
+				assert.Equal(t, "npm.test", got[0].Host)
+				assert.True(t, got[0].InSecure)
+				assert.Equal(t, "bearer", got[0].AuthData.Token)
+				assert.Equal(t, "basic", got[0].AuthData.Username)
+				assert.Equal(t, "basic", got[0].AuthData.Password)
+			},
+		},
+		{
+			name: "valid insecure with namespaced registry",
+			data: `@foo:registry=http://npm.test
+//npm.test/:_authToken=bearer
+//npm.test/:_auth=` + base64.StdEncoding.EncodeToString([]byte("basic:basic")),
+			assertions: func(t *testing.T, got []configuration.Registry, err error) {
+				assert.NoError(t, err)
+				assert.Len(t, got, 1)
+				assert.Equal(t, "npm.test", got[0].Host)
+				assert.True(t, got[0].InSecure)
+				assert.Equal(t, "bearer", got[0].AuthData.Token)
+				assert.Equal(t, "basic", got[0].AuthData.Username)
+				assert.Equal(t, "basic", got[0].AuthData.Password)
+			},
+		},
+		{
+			name: "multiple registries",
+			data: `@foo:registry=http://npm1.test
+@bar:registry=http://npm2.test
+registry=https://npm3.test
+//npm1.test/:_authToken=bearer
+//npm2.test/:_auth=` + base64.StdEncoding.EncodeToString([]byte("basic:basic")),
+			assertions: func(t *testing.T, got []configuration.Registry, err error) {
+				assert.NoError(t, err)
+				assert.Len(t, got, 3)
+				assert.Equal(t, "npm1.test", got[0].Host)
+				assert.Equal(t, "npm2.test", got[1].Host)
+				assert.Equal(t, "npm3.test", got[2].Host)
+
+				assert.True(t, got[0].InSecure)
+				assert.Equal(t, "", got[0].AuthData.Password)
+				assert.Equal(t, "bearer", got[0].AuthData.Token)
+				assert.Equal(t, "", got[0].AuthData.Username)
+
+				assert.True(t, got[1].InSecure)
+				assert.Equal(t, "basic", got[1].AuthData.Password)
+				assert.Equal(t, "", got[1].AuthData.Token)
+				assert.Equal(t, "basic", got[1].AuthData.Username)
+
+				assert.False(t, got[2].InSecure)
+				assert.Equal(t, "", got[2].AuthData.Token)
+				assert.Equal(t, "", got[2].AuthData.Username)
+				assert.Equal(t, "", got[2].AuthData.Password)
+			},
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			got, gotErr := npm.ParseNpmrc(tt.data)
+			tt.assertions(t, got, gotErr)
+		})
+	}
 }
