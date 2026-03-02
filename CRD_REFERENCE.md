@@ -1259,12 +1259,8 @@ _Appears in:_
 
 | Field | Description | Default | Validation |
 | --- | --- | --- | --- |
-| `builderImage` _string_ |  |  | Required: \{\} <br /> |
-| `builderImagePullSecrets` _[LocalObjectReference](https://kubernetes.io/docs/reference/generated/kubernetes-api/v/#localobjectreference-v1-core) array_ |  |  | Optional: \{\} <br /> |
 | `hostRef` _[LocalObjectReference](https://kubernetes.io/docs/reference/generated/kubernetes-api/v/#localobjectreference-v1-core)_ | hostRef is a reference to the KDexHost that this internal package references is for. |  | Required: \{\} <br /> |
-| `npmSecretRefs` _[LocalObjectReference](https://kubernetes.io/docs/reference/generated/kubernetes-api/v/#localobjectreference-v1-core) array_ |  |  | Optional: \{\} <br /> |
 | `packageReferences` _[PackageReference](#packagereference) array_ |  |  | MinItems: 1 <br /> |
-| `serviceAccountRef` _[LocalObjectReference](https://kubernetes.io/docs/reference/generated/kubernetes-api/v/#localobjectreference-v1-core)_ |  |  | Required: \{\} <br /> |
 
 
 #### KDexInternalTranslation
