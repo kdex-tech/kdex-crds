@@ -253,17 +253,28 @@ spec:
                           - must contain key '.npmrc' (formatted as a complete .npmrc file)
                           - the .npmrc file must contain a credential entry for the registry specified in the PackageReference
                     properties:
-                      name:
-                        default: ""
-                        description: |-
-                          Name of the referent.
-                          This field is effectively required, but due to backwards compatibility is
-                          allowed to be empty. Instances of this type with an empty value here are
-                          almost certainly wrong.
-                          More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#names
+                      kind:
+                        description: Kind is the type of resource being referenced
                         type: string
+                      name:
+                        description: Name of the referent.
+                        type: string
+                      namespace:
+                        description: |-
+                          Namespace, if set, causes the lookup for the namespace scoped Kind of the referent to use the specified
+                          namespace. If not set, the namespace of the resource will be used to lookup the namespace scoped Kind of the
+                          referent.
+                          If the referring resource is cluster scoped, this field is ignored.
+                          Defaulted to nil.
+                        type: string
+                    required:
+                    - kind
+                    - name
                     type: object
                     x-kubernetes-map-type: atomic
+                    x-kubernetes-validations:
+                    - message: '''kind'' must be Secret'
+                      rule: self.kind == "Secret"
                   version:
                     description: version contains a specific npm package version.
                     type: string

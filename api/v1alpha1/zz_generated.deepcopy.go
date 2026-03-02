@@ -3010,7 +3010,7 @@ func (in *PackageReference) DeepCopyInto(out *PackageReference) {
 	*out = *in
 	if in.SecretRef != nil {
 		in, out := &in.SecretRef, &out.SecretRef
-		*out = new(v1.LocalObjectReference)
+		*out = new(KDexObjectReference)
 		**out = **in
 	}
 }

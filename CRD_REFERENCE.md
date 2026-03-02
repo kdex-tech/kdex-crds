@@ -1407,6 +1407,7 @@ _Appears in:_
 - [KDexPageNavigationSpec](#kdexpagenavigationspec)
 - [KDexThemeSpec](#kdexthemespec)
 - [KDexUtilityPageSpec](#kdexutilitypagespec)
+- [PackageReference](#packagereference)
 - [UtilityPages](#utilitypages)
 
 | Field | Description | Default | Validation |
@@ -2260,7 +2261,7 @@ _Appears in:_
 | `exportMapping` _string_ | exportMapping is a mapping of the module's exports that will be used when the module import is written. e.g. `import [exportMapping] from [module_name];`. If exportMapping is not provided the module will be written as `import [module_name];` |  | Optional: \{\} <br /> |
 | `name` _string_ | name contains a scoped npm package name. |  | Pattern: `^@[a-z0-9-~][a-z0-9-._~]*\/[a-z0-9-~][a-z0-9-._~]*$` <br />Required: \{\} <br /> |
 | `registry` _string_ | registry is the URL of the NPM registry that holds the package. If not set the default registry will be used. |  | Optional: \{\} <br /> |
-| `secretRef` _[LocalObjectReference](https://kubernetes.io/docs/reference/generated/kubernetes-api/v/#localobjectreference-v1-core)_ | secretRef is a reference to a secret containing authentication credentials for the NPM registry that holds the package.<br />The Secret must match the following:<br />- is annotated with 'kdex.dev/secret-type = npm' (single)<br />    - must contain key '.npmrc' (formatted as a complete .npmrc file)<br />    - the .npmrc file must contain a credential entry for the registry specified in the PackageReference |  | Optional: \{\} <br /> |
+| `secretRef` _[KDexObjectReference](#kdexobjectreference)_ | secretRef is a reference to a secret containing authentication credentials for the NPM registry that holds the package.<br />The Secret must match the following:<br />- is annotated with 'kdex.dev/secret-type = npm' (single)<br />    - must contain key '.npmrc' (formatted as a complete .npmrc file)<br />    - the .npmrc file must contain a credential entry for the registry specified in the PackageReference |  | Optional: \{\} <br /> |
 | `version` _string_ | version contains a specific npm package version. |  | Required: \{\} <br /> |
 
 

@@ -591,7 +591,8 @@ type PackageReference struct {
 	//     - the .npmrc file must contain a credential entry for the registry specified in the PackageReference
 	//
 	// +kubebuilder:validation:Optional
-	SecretRef *corev1.LocalObjectReference `json:"secretRef,omitempty" protobuf:"bytes,4,opt,name=secretRef"`
+	// +kubebuilder:validation:XValidation:rule=`self.kind == "Secret"`,message="'kind' must be Secret"
+	SecretRef *KDexObjectReference `json:"secretRef,omitempty" protobuf:"bytes,4,opt,name=secretRef"`
 
 	// version contains a specific npm package version.
 	// +kubebuilder:validation:Required
