@@ -2,8 +2,16 @@ package npm
 
 import (
 	corev1 "k8s.io/api/core/v1"
-	"kdex.dev/crds/configuration"
 )
+
+type AuthData struct {
+	// +kubebuilder:validation:Optional
+	Password string `json:"password,omitempty" yaml:"password,omitempty"`
+	// +kubebuilder:validation:Optional
+	Token string `json:"token,omitempty" yaml:"token,omitempty"`
+	// +kubebuilder:validation:Optional
+	Username string `json:"username,omitempty" yaml:"username,omitempty"`
+}
 
 type DistTags struct {
 	Latest string `json:"latest"`
@@ -54,12 +62,17 @@ type PackageJSON struct {
 	Version              string            `json:"version"`
 }
 
-type Registry interface {
+type PackageValidator interface {
 	ValidatePackage(packageName string, packageVersion string) error
 }
 
-type RegistryFactory func(registry string, secret *corev1.Secret) (Registry, error)
+type PackageValidatorFactory func(registry string, secret *corev1.Secret) (PackageValidator, error)
 
-type RegistryImpl struct {
-	Config *configuration.Registry
+type Registry struct {
+	// +kubebuilder:validation:Optional
+	AuthData AuthData `json:"authData,omitempty" yaml:"authData,omitempty"`
+	// +required
+	Host string `json:"host" yaml:"host"`
+	// +kubebuilder:validation:Optional
+	InSecure bool `json:"insecure,omitempty" yaml:"insecure,omitempty"`
 }

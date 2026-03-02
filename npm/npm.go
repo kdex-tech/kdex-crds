@@ -14,29 +14,38 @@ import (
 	"strings"
 
 	corev1 "k8s.io/api/core/v1"
-	"kdex.dev/crds/configuration"
 )
 
 var scopedPackageRegex = regexp.MustCompile(`^@[a-z0-9-~][a-z0-9-._~]*\/[a-z0-9-~][a-z0-9-._~]*$`)
 
-func NewRegistry(host string, secret *corev1.Secret) (Registry, error) {
-	config, err := newRegistry(host, secret)
-
-	if err != nil {
-		return nil, errors.Join(fmt.Errorf("npm: failed to create registry"), err)
+func (c *Registry) EncodeAuthorization() string {
+	if c.AuthData.Token != "" {
+		return "Bearer " + c.AuthData.Token
 	}
 
-	return &RegistryImpl{
-		Config: config,
-	}, nil
+	if c.AuthData.Username != "" && c.AuthData.Password != "" {
+		return "Basic " + base64.StdEncoding.EncodeToString(
+			fmt.Appendf(nil, "%s:%s", c.AuthData.Username, c.AuthData.Password),
+		)
+	}
+
+	return ""
 }
 
-func (r *RegistryImpl) ValidatePackage(packageName string, packageVersion string) error {
+func (c *Registry) GetAddress() string {
+	if c.InSecure {
+		return "http://" + c.Host
+	} else {
+		return "https://" + c.Host
+	}
+}
+
+func (r *Registry) ValidatePackage(packageName string, packageVersion string) error {
 	if !scopedPackageRegex.MatchString(packageName) {
 		return fmt.Errorf("invalid package name, must be scoped with @scope/name: %s", packageName)
 	}
 
-	packageInfo, err := r.getPackageInfo(packageName)
+	packageInfo, err := r.GetPackageInfo(packageName)
 
 	if err != nil {
 		return errors.Join(fmt.Errorf("npm: failed to get package info for %s", packageName), err)
@@ -45,21 +54,21 @@ func (r *RegistryImpl) ValidatePackage(packageName string, packageVersion string
 	versionPackageJSON, ok := packageInfo.Versions[packageVersion]
 
 	if !ok {
-		return fmt.Errorf("npm: version of package not found %s at %s", packageName+"@"+packageVersion, r.Config.GetAddress())
+		return fmt.Errorf("npm: version of package not found %s at %s", packageName+"@"+packageVersion, r.GetAddress())
 	}
 
 	return versionPackageJSON.hasESModule()
 }
 
-func (r *RegistryImpl) getPackageInfo(packageName string) (p *PackageInfo, e error) {
-	packageURL := fmt.Sprintf("%s/%s", r.Config.GetAddress(), packageName)
+func (r *Registry) GetPackageInfo(packageName string) (p *PackageInfo, e error) {
+	packageURL := fmt.Sprintf("%s/%s", r.GetAddress(), packageName)
 
 	req, err := http.NewRequest("GET", packageURL, nil)
 	if err != nil {
 		return nil, errors.Join(fmt.Errorf("failed to create request: %s", packageURL), err)
 	}
 
-	authorization := r.Config.EncodeAuthorization()
+	authorization := r.EncodeAuthorization()
 	if authorization != "" {
 		req.Header.Set("Authorization", authorization)
 	}
@@ -93,96 +102,19 @@ func (r *RegistryImpl) getPackageInfo(packageName string) (p *PackageInfo, e err
 	return packageInfo, nil
 }
 
-func (p *PackageJSON) hasESModule() error {
-	if p.Browser != "" {
-		return nil
+func NewRegistry(host string, secret *corev1.Secret) (*Registry, error) {
+	config, err := newRegistry(host, secret)
+
+	if err != nil {
+		return nil, errors.Join(fmt.Errorf("npm: failed to create registry"), err)
 	}
 
-	if p.Type == "module" {
-		return nil
-	}
-
-	if p.Module != "" {
-		return nil
-	}
-
-	if p.Exports != nil {
-		if strings.HasSuffix(p.Exports.Single, ".mjs") {
-			return nil
-		}
-
-		if p.Exports.Multiple != nil {
-			_, ok := p.Exports.Multiple["browser"]
-
-			if ok {
-				return nil
-			}
-
-			_, ok = p.Exports.Multiple["import"]
-
-			if ok {
-				return nil
-			}
-		}
-	}
-
-	if strings.HasSuffix(p.Main, ".mjs") {
-		return nil
-	}
-
-	return fmt.Errorf("package does not contain an ES module")
+	return config, nil
 }
 
-func newRegistry(
-	host string,
-	secret *corev1.Secret,
-) (*configuration.Registry, error) {
-	if host == "" {
-		return nil, fmt.Errorf("host cannot be empty")
-	}
-
-	hostURL, err := url.Parse(host)
-	if err != nil {
-		return nil, fmt.Errorf("failed to parse host: %s", host)
-	}
-
-	insecure := hostURL.Scheme == "http"
-
-	reg := &configuration.Registry{
-		Host:     hostURL.Host,
-		InSecure: insecure,
-	}
-
-	if secret == nil {
-		return reg, nil
-	}
-
-	if secret.Annotations["kdex.dev/secret-type"] != "npm" {
-		return nil, fmt.Errorf("secret must have annotation kdex.dev/secret-type=npm")
-	}
-
-	npmrc, ok := secret.Data[".npmrc"]
-	if !ok {
-		return nil, fmt.Errorf("secret must have key .npmrc")
-	}
-
-	registries, err := ParseNpmrc(string(npmrc))
-	if err != nil {
-		return nil, fmt.Errorf("failed to parse npmrc: %s", err)
-	}
-
-	for _, r := range registries {
-		if r.Host == host {
-			reg = &r
-		}
-	}
-
-	return reg, nil
-}
-
-func ParseNpmrc(data string) ([]configuration.Registry, error) {
+func ParseNpmrc(data string) []Registry {
 	// Map to group properties by registry host
-	registryMap := make(map[string]*configuration.Registry)
+	registryMap := make(map[string]*Registry)
 
 	for line := range strings.SplitSeq(data, "\n") {
 		line = strings.TrimSpace(line)
@@ -215,7 +147,7 @@ func ParseNpmrc(data string) ([]configuration.Registry, error) {
 
 			reg, ok := registryMap[host]
 			if !ok {
-				registryMap[host] = &configuration.Registry{
+				registryMap[host] = &Registry{
 					Host: host,
 				}
 				reg = registryMap[host]
@@ -242,7 +174,7 @@ func ParseNpmrc(data string) ([]configuration.Registry, error) {
 			}
 			reg, ok := registryMap[hostURL.Host]
 			if !ok {
-				registryMap[hostURL.Host] = &configuration.Registry{
+				registryMap[hostURL.Host] = &Registry{
 					Host: hostURL.Host,
 				}
 				reg = registryMap[hostURL.Host]
@@ -255,9 +187,57 @@ func ParseNpmrc(data string) ([]configuration.Registry, error) {
 	keys := slices.Collect(maps.Keys(registryMap))
 	slices.Sort(keys)
 
-	registries := make([]configuration.Registry, len(keys))
+	registries := make([]Registry, len(keys))
 	for i, key := range keys {
 		registries[i] = *registryMap[key]
 	}
-	return registries, nil
+	return registries
+}
+
+func newRegistry(
+	host string,
+	secret *corev1.Secret,
+) (*Registry, error) {
+	if host == "" {
+		return nil, fmt.Errorf("host cannot be empty")
+	}
+
+	if !strings.Contains(host, "://") {
+		host = "//" + host
+	}
+
+	hostURL, err := url.Parse(host)
+	if err != nil {
+		return nil, fmt.Errorf("failed to parse host: %s", host)
+	}
+
+	insecure := hostURL.Scheme == "http"
+
+	reg := &Registry{
+		Host:     hostURL.Host,
+		InSecure: insecure,
+	}
+
+	if secret == nil {
+		return reg, nil
+	}
+
+	if secret.Annotations["kdex.dev/secret-type"] != "npm" {
+		return nil, fmt.Errorf("secret must have annotation kdex.dev/secret-type=npm")
+	}
+
+	npmrc, ok := secret.Data[".npmrc"]
+	if !ok {
+		return nil, fmt.Errorf("secret must have key .npmrc")
+	}
+
+	registries := ParseNpmrc(string(npmrc))
+
+	for _, r := range registries {
+		if r.Host == hostURL.Host {
+			reg = &r
+		}
+	}
+
+	return reg, nil
 }

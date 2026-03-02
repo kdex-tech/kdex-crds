@@ -1,8 +1,6 @@
 package configuration
 
 import (
-	"encoding/base64"
-	"fmt"
 	"os"
 
 	appsv1 "k8s.io/api/apps/v1"
@@ -14,15 +12,6 @@ import (
 	"k8s.io/apimachinery/pkg/runtime/serializer"
 	gatewayv1 "sigs.k8s.io/gateway-api/apis/v1"
 )
-
-type AuthData struct {
-	// +kubebuilder:validation:Optional
-	Password string `json:"password,omitempty" yaml:"password,omitempty"`
-	// +kubebuilder:validation:Optional
-	Token string `json:"token,omitempty" yaml:"token,omitempty"`
-	// +kubebuilder:validation:Optional
-	Username string `json:"username,omitempty" yaml:"username,omitempty"`
-}
 
 type BackendDefault struct {
 	Deployment            appsv1.DeploymentSpec    `json:"deployment" yaml:"deployment"`
@@ -47,8 +36,8 @@ type NexusConfiguration struct {
 	metav1.ObjectMeta `json:"metadata,omitempty,omitzero"`
 
 	BackendDefault       BackendDefault `json:"backendDefault" yaml:"backendDefault"`
-	DefaultImageRegistry Registry       `json:"defaultImageRegistry" yaml:"defaultImageRegistry"`
-	DefaultNpmRegistry   Registry       `json:"defaultNpmRegistry" yaml:"defaultNpmRegistry"`
+	DefaultImageRegistry string         `json:"defaultImageRegistry" yaml:"defaultImageRegistry"`
+	DefaultNpmRegistry   string         `json:"defaultNpmRegistry" yaml:"defaultNpmRegistry"`
 	HostDefault          HostDefault    `json:"hostDefault" yaml:"hostDefault"`
 	PackageBuilder       PackageBuilder `json:"packageBuilder" yaml:"packageBuilder"`
 }
@@ -56,37 +45,6 @@ type NexusConfiguration struct {
 type PackageBuilder struct {
 	Image           string            `json:"image" yaml:"image"`
 	ImagePullPolicy corev1.PullPolicy `json:"imagePullPolicy" yaml:"imagePullPolicy"`
-}
-
-type Registry struct {
-	// +kubebuilder:validation:Optional
-	AuthData AuthData `json:"authData,omitempty" yaml:"authData,omitempty"`
-	// +required
-	Host string `json:"host" yaml:"host"`
-	// +kubebuilder:validation:Optional
-	InSecure bool `json:"insecure,omitempty" yaml:"insecure,omitempty"`
-}
-
-func (c *Registry) EncodeAuthorization() string {
-	if c.AuthData.Token != "" {
-		return "Bearer " + c.AuthData.Token
-	}
-
-	if c.AuthData.Username != "" && c.AuthData.Password != "" {
-		return "Basic " + base64.StdEncoding.EncodeToString(
-			fmt.Appendf(nil, "%s:%s", c.AuthData.Username, c.AuthData.Password),
-		)
-	}
-
-	return ""
-}
-
-func (c *Registry) GetAddress() string {
-	if c.InSecure {
-		return "http://" + c.Host
-	} else {
-		return "https://" + c.Host
-	}
 }
 
 func LoadConfiguration(configFile string, scheme *runtime.Scheme) NexusConfiguration {
@@ -143,10 +101,8 @@ backendDefault:
       protocol: TCP
       targetPort: server
   serverImage: ghcr.io/kdex-tech/backend-static:latest
-defaultNpmRegistry:
-  host: registry.npmjs.org
-defaultImageRegistry:
-  host: docker.io
+defaultNpmRegistry: registry.npmjs.org
+defaultImageRegistry: docker.io
 hostDefault:
   deployment:
     selector:
