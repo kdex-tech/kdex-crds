@@ -131,9 +131,10 @@ type KDexHostSpec struct {
 
 	// serviceAccountRef is a reference to the service account used by the host to access secrets.
 	//
-	// Each Secret must match one of the following:
+	// Each Secret must match one of the following cases:
 	//
 	// - is annotated with 'kdex.dev/secret-type = auth-client' (multiple)
+	//     An auth-client secret is used to define a OAuth2 client.
 	//     - must contain key 'client-id' OR 'client_id'
 	//     - may contain key 'public' (true|false, default: false)
 	//     - if not public, must contain key 'client-secret' OR 'client_secret'
@@ -144,7 +145,8 @@ type KDexHostSpec struct {
 	//     - may contain key 'name'
 	//     - may contain key 'description'
 	//
-	// - is annotated with 'kdex.dev/secret-type = git' (single)
+	// - is annotated with 'kdex.dev/secret-type = git' (first, sorted newest to oldest)
+	//     A git secret is used to define a Git repository.
 	//     - must contain key 'host'
 	//     - must contain key 'org'
 	//     - must contain key 'password'
@@ -152,10 +154,12 @@ type KDexHostSpec struct {
 	//     - must contain key 'username'
 	//
 	// - is annotated with 'kdex.dev/secret-type = jwt-keys' (multiple)
+	//     A jwt-keys secret is used to define a JWT key that will be used to sign tokens and served at '/.well-known/jwks.json'.
 	//     - must contain key 'private-key'
 	//     - may be annotated with 'kdex.dev/active-key = true'
 	//
-	// - is annotated with 'kdex.dev/secret-type = ldap' (single)
+	// - is annotated with 'kdex.dev/secret-type = ldap' (first, sorted newest to oldest)
+	//     A ldap secret is used to define a LDAP server connection that will be used to authenticate users.
 	//     - must contain key 'active-directory' (true|false)
 	//     - must contain key 'addr'
 	//     - must contain key 'base-dn'
@@ -165,22 +169,31 @@ type KDexHostSpec struct {
 	//     - must contain key 'user-filter'
 	//     - may contain key 'attributes' (comma separated list of attributes to retrieve)
 	//
-	// - is annotated with 'kdex.dev/secret-type = npm' (single)
+	// - is annotated with 'kdex.dev/secret-type = npm' (multiple)
+	//     A npm secret is used to define a npm registry connection that will be used to retrieve packages.
 	//     - must contain key '.npmrc' (formatted as a complete .npmrc file)
 	//
-	// - is annotated with 'kdex.dev/secret-type = oidc-client' (single)
+	// - is annotated with 'kdex.dev/secret-type = oidc-client' (first, sorted newest to oldest)
+	//     An oidc-client secret is used to define the OpenID Connect client configuration for the host.
 	//     - must contain key 'client-id' OR 'client_id'
 	//     - must contain key 'client-secret' OR 'client_secret'
 	//     - may contain key 'block-key' OR 'block_key'
 	//
 	// - is annotated with 'kdex.dev/secret-type = subject' (multiple)
+	//     A subject secret is used to define a subject that will be used to authenticate users. These are generaly used to define low level system accounts.
 	//     - must contain key 'sub'
 	//     - must contain key 'password'
 	//     - may contain arbitrary key(string)/value(string|yaml) pairs which can be mapped to the claims using the spec.auth.claimMappings
 	//
-	// - is of type 'kubernetes.io/dockerconfigjson' (multiple)
+	// - is of type 'kubernetes.io/dockerconfigjson'
+	//     A dockerconfigjson secret is used to define a docker registry connection that will be used to pull (or push) images.
+	//     - the pull scenario: (multiple)
+	//         - no additional annotations are required
+	//     - the push scenario: (first, sorted newest to oldest)
+	//         - must be annotated with 'kdex.dev/secret-type = docker-push'
 	//
-	// - is of type 'kubernetes.io/tls' (single)
+	// - is of type 'kubernetes.io/tls' (first, sorted newest to oldest)
+	//     A tls secret is used to define a TLS certificate that will be used to secure connections to the host.
 	//
 	// +kubebuilder:validation:Required
 	ServiceAccountRef corev1.LocalObjectReference `json:"serviceAccountRef" protobuf:"bytes,18,req,name=serviceAccountRef"`
