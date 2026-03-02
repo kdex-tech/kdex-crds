@@ -205,12 +205,12 @@ func ParseNpmrc(data string) ([]configuration.Registry, error) {
 				continue
 			}
 
-			url, err := url.Parse(key[:hostEnd])
+			hostURL, err := url.Parse(key[:hostEnd])
 			if err != nil {
 				continue
 			}
 
-			host := url.Host
+			host := hostURL.Host
 			prop := key[hostEnd+1:]
 
 			reg, ok := registryMap[host]
@@ -236,18 +236,18 @@ func ParseNpmrc(data string) ([]configuration.Registry, error) {
 				}
 			}
 		} else if strings.HasSuffix(key, "registry") {
-			url, err := url.Parse(value)
+			hostURL, err := url.Parse(value)
 			if err != nil {
 				continue
 			}
-			reg, ok := registryMap[url.Host]
+			reg, ok := registryMap[hostURL.Host]
 			if !ok {
-				registryMap[url.Host] = &configuration.Registry{
-					Host: url.Host,
+				registryMap[hostURL.Host] = &configuration.Registry{
+					Host: hostURL.Host,
 				}
-				reg = registryMap[url.Host]
+				reg = registryMap[hostURL.Host]
 			}
-			reg.InSecure = url.Scheme == "http"
+			reg.InSecure = hostURL.Scheme == "http"
 		}
 	}
 

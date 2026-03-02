@@ -583,6 +583,13 @@ type PackageReference struct {
 	Registry string `json:"registry,omitempty" protobuf:"bytes,2,opt,name=registry"`
 
 	// secretRef is a reference to a secret containing authentication credentials for the NPM registry that holds the package.
+	//
+	// The Secret must match the following:
+	//
+	// - is annotated with 'kdex.dev/secret-type = npm' (single)
+	//     - must contain key '.npmrc' (formatted as a complete .npmrc file)
+	//     - the .npmrc file must contain a credential entry for the registry specified in the PackageReference
+	//
 	// +kubebuilder:validation:Optional
 	SecretRef *corev1.LocalObjectReference `json:"secretRef,omitempty" protobuf:"bytes,4,opt,name=secretRef"`
 

@@ -140,9 +140,14 @@ spec:
                         the package. If not set the default registry will be used.
                       type: string
                     secretRef:
-                      description: secretRef is a reference to a secret containing
-                        authentication credentials for the NPM registry that holds
-                        the package.
+                      description: |-
+                        secretRef is a reference to a secret containing authentication credentials for the NPM registry that holds the package.
+
+                        The Secret must match the following:
+
+                        - is annotated with 'kdex.dev/secret-type = npm' (single)
+                            - must contain key '.npmrc' (formatted as a complete .npmrc file)
+                            - the .npmrc file must contain a credential entry for the registry specified in the PackageReference
                       properties:
                         name:
                           default: ""
