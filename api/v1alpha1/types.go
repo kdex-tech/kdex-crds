@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"fmt"
 	"regexp"
+	"slices"
 
 	openapi "github.com/getkin/kin-openapi/openapi3"
 	"github.com/kdex-tech/dmapper"
@@ -1177,6 +1178,11 @@ type SecurityRequirement map[string][]string
 type ServiceAccountSecrets []corev1.Secret
 
 func (s ServiceAccountSecrets) Filter(predicate func(corev1.Secret) bool) []corev1.Secret {
+	slices.SortFunc(s, func(a, b corev1.Secret) int {
+		// Sort to Descending - newest to oldest
+		return b.CreationTimestamp.Compare(a.CreationTimestamp.Time)
+	})
+
 	filtered := []corev1.Secret{}
 	for _, secret := range s {
 		if predicate(secret) {
@@ -1184,6 +1190,21 @@ func (s ServiceAccountSecrets) Filter(predicate func(corev1.Secret) bool) []core
 		}
 	}
 	return filtered
+}
+
+func (s ServiceAccountSecrets) Find(predicate func(corev1.Secret) bool) *corev1.Secret {
+	slices.SortFunc(s, func(a, b corev1.Secret) int {
+		// Sort to Descending - newest to oldest
+		return b.CreationTimestamp.Compare(a.CreationTimestamp.Time)
+	})
+
+	for _, secret := range s {
+		if predicate(secret) {
+			return &secret
+		}
+	}
+
+	return nil
 }
 
 // Source contains source information.
