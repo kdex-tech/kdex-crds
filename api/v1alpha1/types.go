@@ -441,10 +441,6 @@ type Git struct {
 
 type JWT struct {
 
-	// TODO: add "sliding window" token re-issue (as alternative to refresh tokens so that KDex remains stateless)
-	// OR add a caching layer for the tokens. This would allow us to store the tokens in the cache and only store the
-	// session id in the cookie. This would also allow us to revoke tokens on demand.
-
 	// cookieName is the name of the Cookie in which the JWT token will be stored. (default is "auth_token")
 	// +kubebuilder:validation:Optional
 	// +kubebuilder:default:="auth_token"
