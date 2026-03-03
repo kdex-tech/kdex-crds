@@ -165,6 +165,11 @@ type Auth struct {
 	// +kubebuilder:validation:Optional
 	AnonymousEntitlements []string `json:"anonymousEntitlements,omitempty" protobuf:"bytes,1,rep,name=anonymousEntitlements"`
 
+	// autoExtendSession should be set to true if the refresh token auto extension should be enabled.
+	// +kubebuilder:validation:Optional
+	// +kubebuilder:default:=true
+	AutoExtendSession bool `json:"autoExtendSession" protobuf:"bytes,2,opt,name=autoExtendSession"`
+
 	// claimMappings is an array of CEL expressions for extracting custom claims from
 	// identity sources and mapping the results onto the Primary Access Token (PAT).
 	// This is used to map OIDC claims but can also be used with external data
@@ -177,9 +182,19 @@ type Auth struct {
 	// +kubebuilder:validation:Optional
 	JWT JWT `json:"jwt,omitempty" protobuf:"bytes,2,opt,name=jwt"`
 
+	// maxSessionAge enforce a "hard" expiration of the session. This prevents a session from being maintained indefinitely.
+	// +kubebuilder:validation:Optional
+	// +kubebuilder:default:="24h"
+	MaxSessionAge string `json:"maxSessionAge" protobuf:"bytes,4,req,name=maxSessionAge"`
+
 	// oidcProvider is the configuration for an optional OIDC provider.
 	// +kubebuilder:validation:Optional
 	OIDCProvider *OIDCProvider `json:"oidcProvider,omitempty" protobuf:"bytes,4,opt,name=oidcProvider"`
+
+	// refreshTokenTTL indicates the maximum period of inactivity. If a user is inactive for longer than this they must re-authenticate.
+	// +kubebuilder:validation:Optional
+	// +kubebuilder:default:="12h"
+	RefreshTokenTTL string `json:"refreshTokenTTL" protobuf:"bytes,4,req,name=refreshTokenTTL"`
 }
 
 // Backend defines a deployment for serving resources specific to the refer.

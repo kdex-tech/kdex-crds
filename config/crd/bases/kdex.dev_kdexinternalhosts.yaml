@@ -122,6 +122,11 @@ spec:
                     items:
                       type: string
                     type: array
+                  autoExtendSession:
+                    default: true
+                    description: autoExtendSession should be set to true if the refresh
+                      token auto extension should be enabled.
+                    type: boolean
                   claimMappings:
                     description: |-
                       claimMappings is an array of CEL expressions for extracting custom claims from
@@ -173,6 +178,11 @@ spec:
                           token is valid
                         type: string
                     type: object
+                  maxSessionAge:
+                    default: 24h
+                    description: maxSessionAge enforce a "hard" expiration of the
+                      session. This prevents a session from being maintained indefinitely.
+                    type: string
                   oidcProvider:
                     description: oidcProvider is the configuration for an optional
                       OIDC provider.
@@ -190,6 +200,11 @@ spec:
                     required:
                     - oidcProviderURL
                     type: object
+                  refreshTokenTTL:
+                    default: 12h
+                    description: refreshTokenTTL indicates the maximum period of inactivity.
+                      If a user is inactive for longer than this they must re-authenticate.
+                    type: string
                 type: object
               brandName:
                 description: brandName is the name used when rendering pages belonging
