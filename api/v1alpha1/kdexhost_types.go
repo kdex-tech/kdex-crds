@@ -180,7 +180,7 @@ type KDexHostSpec struct {
 	//     - may contain key 'block-key' OR 'block_key'
 	//
 	// - is annotated with 'kdex.dev/secret-type = subject' (multiple)
-	//     A subject secret is used to define a subject that will be used to authenticate users. These are generaly used to define low level system accounts.
+	//     A subject secret is used to define a subject that will be used to authenticate users. These are generally used to define low level system accounts.
 	//     - must contain key 'sub'
 	//     - must contain key 'password'
 	//     - may contain arbitrary key(string)/value(string|yaml) pairs which can be mapped to the claims using the spec.auth.claimMappings
