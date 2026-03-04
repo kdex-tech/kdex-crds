@@ -177,6 +177,7 @@ type KDexHostSpec struct {
 	//     An oidc-client secret is used to define the OpenID Connect client configuration for the host.
 	//     - must contain key 'client-id' OR 'client_id'
 	//     - must contain key 'client-secret' OR 'client_secret'
+	//     - may contain a key 'name'
 	//     - may contain key 'block-key' OR 'block_key'
 	//
 	// - is annotated with 'kdex.dev/secret-type = subject' (multiple)
