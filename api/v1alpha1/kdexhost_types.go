@@ -133,6 +133,12 @@ type KDexHostSpec struct {
 	//
 	// Each Secret must match one of the following cases:
 	//
+	// - is annotated with 'kdex.dev/secret-type = api-key' (multiple)
+	//     An api-key secret is used to define a PASETO key that will be used to sign api tokens and served at '/.well-known/pks.json'.
+	//     - must contain key 'private-key'
+	//     - may contain key 'public-key'
+	//     - may be annotated with 'kdex.dev/active-key = true'
+	//
 	// - is annotated with 'kdex.dev/secret-type = auth-client' (multiple)
 	//     An auth-client secret is used to define a OAuth2 client.
 	//     - must contain key 'client-id' OR 'client_id'
