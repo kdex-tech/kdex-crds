@@ -69,6 +69,8 @@ type KDexRoleList struct {
 // rule applies to.
 type PolicyRule struct {
 	// resourceNames is an optional allow list of names that the rule applies to. An empty set means the rule applies to all instances of the resources.
+	// Note: If a resource name contains colons (':'), it must be URL-encoded (e.g., 'foo:bar' -> 'foo%3Abar') to prevent misinterpretation
+	// by the entitlement pattern splitting logic.
 	// +kubebuilder:validation:Optional
 	ResourceNames []string `json:"resourceNames,omitempty" protobuf:"bytes,1,rep,name=resourceNames"`
 

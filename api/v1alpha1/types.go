@@ -1184,6 +1184,10 @@ func (s *ScriptDef) ToTag() string {
 	return buffer.String()
 }
 
+// SecurityRequirement maps a security scheme name (e.g., 'bearer', 'oauth2') to a list of required scopes.
+// Scopes follow the 'resource:resourceName:verb' format.
+// Note: resourceName must be URL-encoded if it contains colons (':') to prevent misinterpretation
+// by the entitlement pattern splitting logic.
 type SecurityRequirement map[string][]string
 
 type ServiceAccountSecrets []corev1.Secret
