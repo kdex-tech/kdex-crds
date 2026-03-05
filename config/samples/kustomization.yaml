@@ -16,7 +16,7 @@ resources:
 - v1alpha1_kdexinternaltranslation.yaml
 - v1alpha1_kdexinternalutilitypage.yaml
 - v1alpha1_kdexpagearchetype.yaml
-- v1alpha1_kdexpagebinding.yaml
+- v1alpha1_kdexpage.yaml
 - v1alpha1_kdexpagefooter.yaml
 - v1alpha1_kdexpageheader.yaml
 - v1alpha1_kdexpagenavigation.yaml

@@ -71,9 +71,10 @@ spec:
                     rule applies to.
                   properties:
                     resourceNames:
-                      description: resourceNames is an optional allow list of names
-                        that the rule applies to. An empty set means the rule applies
-                        to all instances of the resources.
+                      description: |-
+                        resourceNames is an optional allow list of names that the rule applies to. An empty set means the rule applies to all instances of the resources.
+                        Note: If a resource name contains colons (':'), it must be URL-encoded (e.g., 'foo:bar' -> 'foo%3Abar') to prevent misinterpretation
+                        by the entitlement pattern splitting logic.
                       items:
                         type: string
                       type: array

@@ -26,7 +26,7 @@ import (
 
 // KDexPageFooter is the Schema for the kdexpagefooters API
 //
-// A KDexPageFooter is a reusable footer component for composing KDexPageBindings. It can specify a content template and
+// A KDexPageFooter is a reusable footer component for composing KDexPages. It can specify a content template and
 // an associated KDexScriptLibrary for driving imperative logic that might be necessary to implement the footer.
 //
 // +kubebuilder:printcolumn:name="Ready",type=string,JSONPath=`.status.conditions[?(@.type=="Ready")].status`,description="The state of the Ready condition"

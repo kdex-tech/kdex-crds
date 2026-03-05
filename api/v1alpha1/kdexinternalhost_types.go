@@ -57,7 +57,7 @@ type KDexInternalHostSpec struct {
 // KDexInternalHost is the Schema for the kdexinternalhosts API
 //
 // A KDexInternalHost is the resource used to instantiate and manage a unique controller focused on a single KDexHost
-// resource. This focused controller serves to aggregate the host specific resources, primarily KDexPageBindings but
+// resource. This focused controller serves to aggregate the host specific resources, primarily KDexPages but
 // also as the main web server handling page rendering and page serving. In order to isolate the resources consumed by
 // those operations from other hosts a unique controller is necessary. This resource is internally generated and managed
 // and not meant for end users.

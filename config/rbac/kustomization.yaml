@@ -85,9 +85,9 @@ resources:
 - kdexpagearchetype_admin_role.yaml
 - kdexpagearchetype_editor_role.yaml
 - kdexpagearchetype_viewer_role.yaml
-- kdexpagebinding_admin_role.yaml
-- kdexpagebinding_editor_role.yaml
-- kdexpagebinding_viewer_role.yaml
+- kdexpage_admin_role.yaml
+- kdexpage_editor_role.yaml
+- kdexpage_viewer_role.yaml
 - kdexpagefooter_admin_role.yaml
 - kdexpagefooter_editor_role.yaml
 - kdexpagefooter_viewer_role.yaml

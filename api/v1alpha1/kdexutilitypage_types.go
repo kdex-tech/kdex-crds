@@ -40,7 +40,7 @@ const (
 // KDexUtilityPage is the Schema for the kdexutilitypages API
 //
 // A KDexUtilityPage defines a utility page (Announcement, Error, Login) that can be referenced by a KDexHost.
-// It shares much of its structure with KDexPageBinding but is specialized for system-level pages that do not
+// It shares much of its structure with KDexPage but is specialized for system-level pages that do not
 // necessarily sit within the standard site navigation tree.
 //
 // +kubebuilder:printcolumn:name="Ready",type=string,JSONPath=`.status.conditions[?(@.type=="Ready")].status`,description="The state of the Ready condition"

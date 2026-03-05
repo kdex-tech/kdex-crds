@@ -27,7 +27,7 @@ erDiagram
         string content
     }
 
-    KDexPageBinding {
+    KDexPage {
         string label
         string path
     }
@@ -59,24 +59,24 @@ erDiagram
         string scripts
     }
 
-    KDexPageArchetype ||--o{ KDexPageBinding : "archetype"
+    KDexPageArchetype ||--o{ KDexPage : "archetype"
     KDexPageArchetype ||--o{ KDexPageFooter : "default footer"
     KDexPageArchetype ||--o{ KDexPageHeader : "default header"
     KDexPageArchetype ||--o{ KDexPageNavigation : "default navigations"
     KDexPageArchetype ||--o{ KDexScriptLibrary : "script library"
 
-    KDexHost ||--o{ KDexPageBinding : "hosts"
+    KDexHost ||--o{ KDexPage : "hosts"
     KDexHost ||--o{ KDexScriptLibrary : "script library"
     KDexHost ||--o{ KDexTheme : "theme"
     KDexHost ||--o{ KDexTranslation : "hosts"
 
 
-    KDexPageBinding ||--o{ KDexApp : "uses"
-    KDexPageBinding ||--o{ KDexPageBinding : "parent page"
-    KDexPageBinding ||--o{ KDexPageFooter : "override footer"
-    KDexPageBinding ||--o{ KDexPageHeader : "override header"
-    KDexPageBinding ||--o{ KDexPageNavigation : "override navigations"
-    KDexPageBinding ||--o{ KDexScriptLibrary : "script library"
+    KDexPage ||--o{ KDexApp : "uses"
+    KDexPage ||--o{ KDexPage : "parent page"
+    KDexPage ||--o{ KDexPageFooter : "override footer"
+    KDexPage ||--o{ KDexPageHeader : "override header"
+    KDexPage ||--o{ KDexPageNavigation : "override navigations"
+    KDexPage ||--o{ KDexScriptLibrary : "script library"
 
     KDexPageFooter ||--o{ KDexScriptLibrary : "script library"
 

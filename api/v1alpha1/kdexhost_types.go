@@ -29,7 +29,7 @@ import (
 //
 // A KDexHost is the central actor in the "KDex Cloud Native Application Server" model. It specifies the basic metadata
 // that defines a web property; a set of domain names, TLS certificates, routing strategy and so on. From this central
-// point a distinct web property is establish to which are bound KDexPageBindings (i.e. web pages) that provide the web
+// point a distinct web property is establish to which are bound KDexPages (i.e. web pages) that provide the web
 // properties content in the form of either raw HTML content or applications from KDexApps.s
 //
 // +kubebuilder:printcolumn:name="Ready",type=string,JSONPath=`.status.conditions[?(@.type=="Ready")].status`,description="The state of the Ready condition"

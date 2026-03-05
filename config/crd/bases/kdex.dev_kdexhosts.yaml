@@ -40,7 +40,7 @@ spec:
 
           A KDexHost is the central actor in the "KDex Cloud Native Application Server" model. It specifies the basic metadata
           that defines a web property; a set of domain names, TLS certificates, routing strategy and so on. From this central
-          point a distinct web property is establish to which are bound KDexPageBindings (i.e. web pages) that provide the web
+          point a distinct web property is establish to which are bound KDexPages (i.e. web pages) that provide the web
           properties content in the form of either raw HTML content or applications from KDexApps.s
         properties:
           apiVersion:
@@ -609,6 +609,11 @@ spec:
                     items:
                       type: string
                     type: array
+                  description: |-
+                    SecurityRequirement maps a security scheme name (e.g., 'bearer', 'oauth2') to a list of required scopes.
+                    Scopes follow the 'resource:resourceName:verb' format.
+                    Note: resourceName must be URL-encoded if it contains colons (':') to prevent misinterpretation
+                    by the entitlement pattern splitting logic.
                   type: object
                 type: array
               serverImage:
@@ -630,6 +635,12 @@ spec:
                   serviceAccountRef is a reference to the service account used by the host to access secrets.
 
                   Each Secret must match one of the following cases:
+
+                  - is annotated with 'kdex.dev/secret-type = api-key' (multiple)
+                      An api-key secret is used to define a PASETO key that will be used to sign api tokens and served at '/.well-known/pks.json'.
+                      - must contain key 'private-key'
+                      - may contain key 'public-key'
+                      - may be annotated with 'kdex.dev/active-key = true'
 
                   - is annotated with 'kdex.dev/secret-type = auth-client' (multiple)
                       An auth-client secret is used to define a OAuth2 client.

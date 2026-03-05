@@ -1,10 +1,10 @@
 apiVersion: kdex.dev/v1alpha1
-kind: KDexPageBinding
+kind: KDexPage
 metadata:
   labels:
     app.kubernetes.io/name: kdex-crds
     app.kubernetes.io/managed-by: kustomize
-  name: kdexpagebinding-sample
+  name: kdexpage-sample
 spec:
   basePath: /my-app-page
   contentEntries:

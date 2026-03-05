@@ -38,7 +38,7 @@ spec:
         description: |-
           KDexPageArchetype is the Schema for the kdexpagearchetypes API
 
-          A KDexPageArchetype defines a reusable archetype from which web pages can be derived. When creating a KDexPageBinding
+          A KDexPageArchetype defines a reusable archetype from which web pages can be derived. When creating a KDexPage
           (i.e. a web page) a developer states which archetype is to be used. This allows the structure to be decoupled from
           the content.
         properties:

@@ -4,19 +4,19 @@ kind: CustomResourceDefinition
 metadata:
   annotations:
     controller-gen.kubebuilder.io/version: v0.20.1
-  name: kdexpagebindings.kdex.dev
+  name: kdexpages.kdex.dev
 spec:
   group: kdex.dev
   names:
     categories:
     - all
     - kdex
-    kind: KDexPageBinding
-    listKind: KDexPageBindingList
-    plural: kdexpagebindings
+    kind: KDexPage
+    listKind: KDexPageList
+    plural: kdexpages
     shortNames:
-    - kdex-pb
-    singular: kdexpagebinding
+    - kdex-pg
+    singular: kdexpage
   scope: Namespaced
   versions:
   - additionalPrinterColumns:
@@ -36,9 +36,9 @@ spec:
     schema:
       openAPIV3Schema:
         description: |-
-          KDexPageBinding is the Schema for the kdexpagebindings API
+          KDexPage is the Schema for the kdexpages API
 
-          A KDexPageBinding defines a web page under a KDexHost. It brings together various reusable components like
+          A KDexPage defines a web page under a KDexHost. It brings together various reusable components like
           KDexPageArchetype, KDexPageFooter, KDexPageHeader, KDexPageNavigation, KDexScriptLibrary, KDexTheme and content
           components like raw HTML or KDexApps and KDexTranslations to produce internationalized, rendered HTML pages.
         properties:
@@ -60,7 +60,7 @@ spec:
           metadata:
             type: object
           spec:
-            description: spec defines the desired state of KDexPageBinding
+            description: spec defines the desired state of KDexPage
             properties:
               basePath:
                 description: basePath is the shortest path by which the page may be
@@ -313,9 +313,9 @@ spec:
                 - message: '''kind'' must be either KDexPageArchetype or KDexClusterPageArchetype'
                   rule: self.kind == "KDexPageArchetype" || self.kind == "KDexClusterPageArchetype"
               parentPageRef:
-                description: parentPageRef is a reference to the KDexPageBinding bellow
-                  which this page will appear in the main navigation. If not set,
-                  the page will be placed in the top level of the navigation.
+                description: parentPageRef is a reference to the KDexPage bellow which
+                  this page will appear in the main navigation. If not set, the page
+                  will be placed in the top level of the navigation.
                 properties:
                   name:
                     default: ""
@@ -368,6 +368,11 @@ spec:
                     items:
                       type: string
                     type: array
+                  description: |-
+                    SecurityRequirement maps a security scheme name (e.g., 'bearer', 'oauth2') to a list of required scopes.
+                    Scopes follow the 'resource:resourceName:verb' format.
+                    Note: resourceName must be URL-encoded if it contains colons (':') to prevent misinterpretation
+                    by the entitlement pattern splitting logic.
                   type: object
                 type: array
               tags:

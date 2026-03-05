@@ -32,7 +32,7 @@ const (
 
 // KDexScriptLibrary is the Schema for the kdexscriptlibraries API
 //
-// A KDexScriptLibrary is a reusable collection of JavaScript for powering the imperative aspects of KDexPageBindings.
+// A KDexScriptLibrary is a reusable collection of JavaScript for powering the imperative aspects of KDexPages.
 // Most other components of the model are able to reference KDexScriptLibrary as well in order to encapsulate component
 // specific logic.
 //

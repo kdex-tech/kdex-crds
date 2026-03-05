@@ -26,7 +26,7 @@ import (
 
 // KDexPageNavigation is the Schema for the kdexpagenavigations API
 //
-// A KDexPageNavigation is a reusable navigation component for composing KDexPageBindings. It can specify a content
+// A KDexPageNavigation is a reusable navigation component for composing KDexPages. It can specify a content
 // template and an associated KDexScriptLibrary for driving imperative logic that might be necessary to implement the
 // navigation.
 //

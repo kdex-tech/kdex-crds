@@ -38,7 +38,7 @@ spec:
           KDexInternalHost is the Schema for the kdexinternalhosts API
 
           A KDexInternalHost is the resource used to instantiate and manage a unique controller focused on a single KDexHost
-          resource. This focused controller serves to aggregate the host specific resources, primarily KDexPageBindings but
+          resource. This focused controller serves to aggregate the host specific resources, primarily KDexPages but
           also as the main web server handling page rendering and page serving. In order to isolate the resources consumed by
           those operations from other hosts a unique controller is necessary. This resource is internally generated and managed
           and not meant for end users.
@@ -705,6 +705,11 @@ spec:
                     items:
                       type: string
                     type: array
+                  description: |-
+                    SecurityRequirement maps a security scheme name (e.g., 'bearer', 'oauth2') to a list of required scopes.
+                    Scopes follow the 'resource:resourceName:verb' format.
+                    Note: resourceName must be URL-encoded if it contains colons (':') to prevent misinterpretation
+                    by the entitlement pattern splitting logic.
                   type: object
                 type: array
               serverImage:
@@ -726,6 +731,12 @@ spec:
                   serviceAccountRef is a reference to the service account used by the host to access secrets.
 
                   Each Secret must match one of the following cases:
+
+                  - is annotated with 'kdex.dev/secret-type = api-key' (multiple)
+                      An api-key secret is used to define a PASETO key that will be used to sign api tokens and served at '/.well-known/pks.json'.
+                      - must contain key 'private-key'
+                      - may contain key 'public-key'
+                      - may be annotated with 'kdex.dev/active-key = true'
 
                   - is annotated with 'kdex.dev/secret-type = auth-client' (multiple)
                       An auth-client secret is used to define a OAuth2 client.

@@ -45,14 +45,14 @@ Package v1alpha1 contains API Schema definitions for the  v1alpha1 API group.
 - [KDexInternalTranslationList](#kdexinternaltranslationlist)
 - [KDexInternalUtilityPage](#kdexinternalutilitypage)
 - [KDexInternalUtilityPageList](#kdexinternalutilitypagelist)
+- [KDexPage](#kdexpage)
 - [KDexPageArchetype](#kdexpagearchetype)
 - [KDexPageArchetypeList](#kdexpagearchetypelist)
-- [KDexPageBinding](#kdexpagebinding)
-- [KDexPageBindingList](#kdexpagebindinglist)
 - [KDexPageFooter](#kdexpagefooter)
 - [KDexPageFooterList](#kdexpagefooterlist)
 - [KDexPageHeader](#kdexpageheader)
 - [KDexPageHeaderList](#kdexpageheaderlist)
+- [KDexPageList](#kdexpagelist)
 - [KDexPageNavigation](#kdexpagenavigation)
 - [KDexPageNavigationList](#kdexpagenavigationlist)
 - [KDexRole](#kdexrole)
@@ -218,7 +218,7 @@ ContactInfo defines contact details.
 
 _Appears in:_
 - [KDexFunctionMetadata](#kdexfunctionmetadata)
-- [KDexPageBindingSpec](#kdexpagebindingspec)
+- [KDexPageSpec](#kdexpagespec)
 - [Metadata](#metadata)
 
 | Field | Description | Default | Validation |
@@ -238,7 +238,7 @@ _Validation:_
 
 _Appears in:_
 - [KDexInternalUtilityPageSpec](#kdexinternalutilitypagespec)
-- [KDexPageBindingSpec](#kdexpagebindingspec)
+- [KDexPageSpec](#kdexpagespec)
 - [KDexUtilityPageSpec](#kdexutilitypagespec)
 
 | Field | Description | Default | Validation |
@@ -434,7 +434,7 @@ the resource developers implement to extend to user interface with a new feature
 Component based and the packaging follows the NPM packaging model the contents of which are ES modules. There are no
 container images to build. Merely package the application code and publish it to an NPM compatible repository,
 configure the KDexApp with the necessary metadata and deploy to Kubernetes. The app can then be consumed and composed
-by KDexPageBindings to produce actual user experiences.
+by KDexPages to produce actual user experiences.
 
 
 
@@ -1043,7 +1043,7 @@ KDexHost is the Schema for the kdexhosts API
 
 A KDexHost is the central actor in the "KDex Cloud Native Application Server" model. It specifies the basic metadata
 that defines a web property; a set of domain names, TLS certificates, routing strategy and so on. From this central
-point a distinct web property is establish to which are bound KDexPageBindings (i.e. web pages) that provide the web
+point a distinct web property is establish to which are bound KDexPages (i.e. web pages) that provide the web
 properties content in the form of either raw HTML content or applications from KDexApps.s
 
 
@@ -1113,7 +1113,7 @@ _Appears in:_
 | `routing` _[Routing](#routing)_ | routing defines the desired routing configuration for the host. |  | Required: \{\} <br /> |
 | `scriptLibraryRef` _[KDexObjectReference](#kdexobjectreference)_ | scriptLibraryRef is an optional reference to a KDexScriptLibrary resource. |  | Optional: \{\} <br /> |
 | `security` _[SecurityRequirement](#securityrequirement)_ | Optional top level security requirements. |  |  |
-| `serviceAccountRef` _[LocalObjectReference](https://kubernetes.io/docs/reference/generated/kubernetes-api/v/#localobjectreference-v1-core)_ | serviceAccountRef is a reference to the service account used by the host to access secrets.<br />Each Secret must match one of the following cases:<br />- is annotated with 'kdex.dev/secret-type = auth-client' (multiple)<br />    An auth-client secret is used to define a OAuth2 client.<br />    - must contain key 'client-id' OR 'client_id'<br />    - may contain key 'public' (true\|false, default: false)<br />    - if not public, must contain key 'client-secret' OR 'client_secret'<br />    - must contain key 'redirect-uris' OR 'redirect_uris' (comma separated list)<br />    - may contain key 'allowed-grant-types' OR 'allowed_grant_types' (comma separated list)<br />    - may contain key 'allowed-scopes' OR 'allowed_scopes' (comma separated list)<br />    - may contain key 'require-pkce' OR 'require_pkce' (true\|false, default: false)<br />    - may contain key 'name'<br />    - may contain key 'description'<br />- is annotated with 'kdex.dev/secret-type = git' (first, sorted newest to oldest)<br />    A git secret is used to define a Git repository.<br />    - must contain key 'host'<br />    - must contain key 'org'<br />    - must contain key 'password'<br />    - must contain key 'repo'<br />    - must contain key 'username'<br />- is annotated with 'kdex.dev/secret-type = jwt-keys' (multiple)<br />    A jwt-keys secret is used to define a JWT key that will be used to sign tokens and served at '/.well-known/jwks.json'.<br />    - must contain key 'private-key'<br />    - may be annotated with 'kdex.dev/active-key = true'<br />- is annotated with 'kdex.dev/secret-type = ldap' (first, sorted newest to oldest)<br />    A ldap secret is used to define a LDAP server connection that will be used to authenticate users.<br />    - must contain key 'active-directory' (true\|false)<br />    - must contain key 'addr'<br />    - must contain key 'base-dn'<br />    - must contain key 'bind-dn'<br />    - must contain key 'bind-user'<br />    - must contain key 'bind-pass'<br />    - must contain key 'user-filter'<br />    - may contain key 'attributes' (comma separated list of attributes to retrieve)<br />- is annotated with 'kdex.dev/secret-type = npm' (multiple)<br />    A npm secret is used to define a npm registry connection that will be used to retrieve packages.<br />    - must contain key '.npmrc' (formatted as a complete .npmrc file)<br />- is annotated with 'kdex.dev/secret-type = oidc-client' (first, sorted newest to oldest)<br />    An oidc-client secret is used to define the OpenID Connect client configuration for the host.<br />    - must contain key 'client-id' OR 'client_id'<br />    - must contain key 'client-secret' OR 'client_secret'<br />    - may contain key 'block-key' OR 'block_key'<br />- is annotated with 'kdex.dev/secret-type = subject' (multiple)<br />    A subject secret is used to define a subject that will be used to authenticate users. These are generally used to define low level system accounts.<br />    - must contain key 'sub'<br />    - must contain key 'password'<br />    - may contain arbitrary key(string)/value(string\|yaml) pairs which can be mapped to the claims using the spec.auth.claimMappings<br />- is of type 'kubernetes.io/dockerconfigjson'<br />    A dockerconfigjson secret is used to define a docker registry connection that will be used to pull (or push) images.<br />    - the pull scenario: (multiple)<br />        - no additional annotations are required<br />    - the push scenario: (first, sorted newest to oldest)<br />        - must be annotated with 'kdex.dev/secret-type = docker-push'<br />- is of type 'kubernetes.io/tls' (first, sorted newest to oldest)<br />    A tls secret is used to define a TLS certificate that will be used to secure connections to the host. |  | Required: \{\} <br /> |
+| `serviceAccountRef` _[LocalObjectReference](https://kubernetes.io/docs/reference/generated/kubernetes-api/v/#localobjectreference-v1-core)_ | serviceAccountRef is a reference to the service account used by the host to access secrets.<br />Each Secret must match one of the following cases:<br />- is annotated with 'kdex.dev/secret-type = api-key' (multiple)<br />    An api-key secret is used to define a PASETO key that will be used to sign api tokens and served at '/.well-known/pks.json'.<br />    - must contain key 'private-key'<br />    - may contain key 'public-key'<br />    - may be annotated with 'kdex.dev/active-key = true'<br />- is annotated with 'kdex.dev/secret-type = auth-client' (multiple)<br />    An auth-client secret is used to define a OAuth2 client.<br />    - must contain key 'client-id' OR 'client_id'<br />    - may contain key 'public' (true\|false, default: false)<br />    - if not public, must contain key 'client-secret' OR 'client_secret'<br />    - must contain key 'redirect-uris' OR 'redirect_uris' (comma separated list)<br />    - may contain key 'allowed-grant-types' OR 'allowed_grant_types' (comma separated list)<br />    - may contain key 'allowed-scopes' OR 'allowed_scopes' (comma separated list)<br />    - may contain key 'require-pkce' OR 'require_pkce' (true\|false, default: false)<br />    - may contain key 'name'<br />    - may contain key 'description'<br />- is annotated with 'kdex.dev/secret-type = git' (first, sorted newest to oldest)<br />    A git secret is used to define a Git repository.<br />    - must contain key 'host'<br />    - must contain key 'org'<br />    - must contain key 'password'<br />    - must contain key 'repo'<br />    - must contain key 'username'<br />- is annotated with 'kdex.dev/secret-type = jwt-keys' (multiple)<br />    A jwt-keys secret is used to define a JWT key that will be used to sign tokens and served at '/.well-known/jwks.json'.<br />    - must contain key 'private-key'<br />    - may be annotated with 'kdex.dev/active-key = true'<br />- is annotated with 'kdex.dev/secret-type = ldap' (first, sorted newest to oldest)<br />    A ldap secret is used to define a LDAP server connection that will be used to authenticate users.<br />    - must contain key 'active-directory' (true\|false)<br />    - must contain key 'addr'<br />    - must contain key 'base-dn'<br />    - must contain key 'bind-dn'<br />    - must contain key 'bind-user'<br />    - must contain key 'bind-pass'<br />    - must contain key 'user-filter'<br />    - may contain key 'attributes' (comma separated list of attributes to retrieve)<br />- is annotated with 'kdex.dev/secret-type = npm' (multiple)<br />    A npm secret is used to define a npm registry connection that will be used to retrieve packages.<br />    - must contain key '.npmrc' (formatted as a complete .npmrc file)<br />- is annotated with 'kdex.dev/secret-type = oidc-client' (first, sorted newest to oldest)<br />    An oidc-client secret is used to define the OpenID Connect client configuration for the host.<br />    - must contain key 'client-id' OR 'client_id'<br />    - must contain key 'client-secret' OR 'client_secret'<br />    - may contain a key 'name'<br />    - may contain key 'block-key' OR 'block_key'<br />- is annotated with 'kdex.dev/secret-type = subject' (multiple)<br />    A subject secret is used to define a subject that will be used to authenticate users. These are generally used to define low level system accounts.<br />    - must contain key 'sub'<br />    - must contain key 'password'<br />    - may contain arbitrary key(string)/value(string\|yaml) pairs which can be mapped to the claims using the spec.auth.claimMappings<br />- is of type 'kubernetes.io/dockerconfigjson'<br />    A dockerconfigjson secret is used to define a docker registry connection that will be used to pull (or push) images.<br />    - the pull scenario: (multiple)<br />        - no additional annotations are required<br />    - the push scenario: (first, sorted newest to oldest)<br />        - must be annotated with 'kdex.dev/secret-type = docker-push'<br />- is of type 'kubernetes.io/tls' (first, sorted newest to oldest)<br />    A tls secret is used to define a TLS certificate that will be used to secure connections to the host. |  | Required: \{\} <br /> |
 | `themeRef` _[KDexObjectReference](#kdexobjectreference)_ | themeRef is a reference to the theme that should apply to all pages bound to this host. |  | Optional: \{\} <br /> |
 | `translationRefs` _[KDexObjectReference](#kdexobjectreference) array_ | translationRefs is an array of references to KDexTranslation or KDexClusterTranslation resources that define the translations that should apply to this host. |  | Optional: \{\} <br /> |
 | `utilityPages` _[UtilityPages](#utilitypages)_ | utilityPages defines the utility pages (announcement, error, login) for the host. |  | Optional: \{\} <br /> |
@@ -1126,7 +1126,7 @@ _Appears in:_
 KDexInternalHost is the Schema for the kdexinternalhosts API
 
 A KDexInternalHost is the resource used to instantiate and manage a unique controller focused on a single KDexHost
-resource. This focused controller serves to aggregate the host specific resources, primarily KDexPageBindings but
+resource. This focused controller serves to aggregate the host specific resources, primarily KDexPages but
 also as the main web server handling page rendering and page serving. In order to isolate the resources consumed by
 those operations from other hosts a unique controller is necessary. This resource is internally generated and managed
 and not meant for end users.
@@ -1197,7 +1197,7 @@ _Appears in:_
 | `routing` _[Routing](#routing)_ | routing defines the desired routing configuration for the host. |  | Required: \{\} <br /> |
 | `scriptLibraryRef` _[KDexObjectReference](#kdexobjectreference)_ | scriptLibraryRef is an optional reference to a KDexScriptLibrary resource. |  | Optional: \{\} <br /> |
 | `security` _[SecurityRequirement](#securityrequirement)_ | Optional top level security requirements. |  |  |
-| `serviceAccountRef` _[LocalObjectReference](https://kubernetes.io/docs/reference/generated/kubernetes-api/v/#localobjectreference-v1-core)_ | serviceAccountRef is a reference to the service account used by the host to access secrets.<br />Each Secret must match one of the following cases:<br />- is annotated with 'kdex.dev/secret-type = auth-client' (multiple)<br />    An auth-client secret is used to define a OAuth2 client.<br />    - must contain key 'client-id' OR 'client_id'<br />    - may contain key 'public' (true\|false, default: false)<br />    - if not public, must contain key 'client-secret' OR 'client_secret'<br />    - must contain key 'redirect-uris' OR 'redirect_uris' (comma separated list)<br />    - may contain key 'allowed-grant-types' OR 'allowed_grant_types' (comma separated list)<br />    - may contain key 'allowed-scopes' OR 'allowed_scopes' (comma separated list)<br />    - may contain key 'require-pkce' OR 'require_pkce' (true\|false, default: false)<br />    - may contain key 'name'<br />    - may contain key 'description'<br />- is annotated with 'kdex.dev/secret-type = git' (first, sorted newest to oldest)<br />    A git secret is used to define a Git repository.<br />    - must contain key 'host'<br />    - must contain key 'org'<br />    - must contain key 'password'<br />    - must contain key 'repo'<br />    - must contain key 'username'<br />- is annotated with 'kdex.dev/secret-type = jwt-keys' (multiple)<br />    A jwt-keys secret is used to define a JWT key that will be used to sign tokens and served at '/.well-known/jwks.json'.<br />    - must contain key 'private-key'<br />    - may be annotated with 'kdex.dev/active-key = true'<br />- is annotated with 'kdex.dev/secret-type = ldap' (first, sorted newest to oldest)<br />    A ldap secret is used to define a LDAP server connection that will be used to authenticate users.<br />    - must contain key 'active-directory' (true\|false)<br />    - must contain key 'addr'<br />    - must contain key 'base-dn'<br />    - must contain key 'bind-dn'<br />    - must contain key 'bind-user'<br />    - must contain key 'bind-pass'<br />    - must contain key 'user-filter'<br />    - may contain key 'attributes' (comma separated list of attributes to retrieve)<br />- is annotated with 'kdex.dev/secret-type = npm' (multiple)<br />    A npm secret is used to define a npm registry connection that will be used to retrieve packages.<br />    - must contain key '.npmrc' (formatted as a complete .npmrc file)<br />- is annotated with 'kdex.dev/secret-type = oidc-client' (first, sorted newest to oldest)<br />    An oidc-client secret is used to define the OpenID Connect client configuration for the host.<br />    - must contain key 'client-id' OR 'client_id'<br />    - must contain key 'client-secret' OR 'client_secret'<br />    - may contain key 'block-key' OR 'block_key'<br />- is annotated with 'kdex.dev/secret-type = subject' (multiple)<br />    A subject secret is used to define a subject that will be used to authenticate users. These are generally used to define low level system accounts.<br />    - must contain key 'sub'<br />    - must contain key 'password'<br />    - may contain arbitrary key(string)/value(string\|yaml) pairs which can be mapped to the claims using the spec.auth.claimMappings<br />- is of type 'kubernetes.io/dockerconfigjson'<br />    A dockerconfigjson secret is used to define a docker registry connection that will be used to pull (or push) images.<br />    - the pull scenario: (multiple)<br />        - no additional annotations are required<br />    - the push scenario: (first, sorted newest to oldest)<br />        - must be annotated with 'kdex.dev/secret-type = docker-push'<br />- is of type 'kubernetes.io/tls' (first, sorted newest to oldest)<br />    A tls secret is used to define a TLS certificate that will be used to secure connections to the host. |  | Required: \{\} <br /> |
+| `serviceAccountRef` _[LocalObjectReference](https://kubernetes.io/docs/reference/generated/kubernetes-api/v/#localobjectreference-v1-core)_ | serviceAccountRef is a reference to the service account used by the host to access secrets.<br />Each Secret must match one of the following cases:<br />- is annotated with 'kdex.dev/secret-type = api-key' (multiple)<br />    An api-key secret is used to define a PASETO key that will be used to sign api tokens and served at '/.well-known/pks.json'.<br />    - must contain key 'private-key'<br />    - may contain key 'public-key'<br />    - may be annotated with 'kdex.dev/active-key = true'<br />- is annotated with 'kdex.dev/secret-type = auth-client' (multiple)<br />    An auth-client secret is used to define a OAuth2 client.<br />    - must contain key 'client-id' OR 'client_id'<br />    - may contain key 'public' (true\|false, default: false)<br />    - if not public, must contain key 'client-secret' OR 'client_secret'<br />    - must contain key 'redirect-uris' OR 'redirect_uris' (comma separated list)<br />    - may contain key 'allowed-grant-types' OR 'allowed_grant_types' (comma separated list)<br />    - may contain key 'allowed-scopes' OR 'allowed_scopes' (comma separated list)<br />    - may contain key 'require-pkce' OR 'require_pkce' (true\|false, default: false)<br />    - may contain key 'name'<br />    - may contain key 'description'<br />- is annotated with 'kdex.dev/secret-type = git' (first, sorted newest to oldest)<br />    A git secret is used to define a Git repository.<br />    - must contain key 'host'<br />    - must contain key 'org'<br />    - must contain key 'password'<br />    - must contain key 'repo'<br />    - must contain key 'username'<br />- is annotated with 'kdex.dev/secret-type = jwt-keys' (multiple)<br />    A jwt-keys secret is used to define a JWT key that will be used to sign tokens and served at '/.well-known/jwks.json'.<br />    - must contain key 'private-key'<br />    - may be annotated with 'kdex.dev/active-key = true'<br />- is annotated with 'kdex.dev/secret-type = ldap' (first, sorted newest to oldest)<br />    A ldap secret is used to define a LDAP server connection that will be used to authenticate users.<br />    - must contain key 'active-directory' (true\|false)<br />    - must contain key 'addr'<br />    - must contain key 'base-dn'<br />    - must contain key 'bind-dn'<br />    - must contain key 'bind-user'<br />    - must contain key 'bind-pass'<br />    - must contain key 'user-filter'<br />    - may contain key 'attributes' (comma separated list of attributes to retrieve)<br />- is annotated with 'kdex.dev/secret-type = npm' (multiple)<br />    A npm secret is used to define a npm registry connection that will be used to retrieve packages.<br />    - must contain key '.npmrc' (formatted as a complete .npmrc file)<br />- is annotated with 'kdex.dev/secret-type = oidc-client' (first, sorted newest to oldest)<br />    An oidc-client secret is used to define the OpenID Connect client configuration for the host.<br />    - must contain key 'client-id' OR 'client_id'<br />    - must contain key 'client-secret' OR 'client_secret'<br />    - may contain a key 'name'<br />    - may contain key 'block-key' OR 'block_key'<br />- is annotated with 'kdex.dev/secret-type = subject' (multiple)<br />    A subject secret is used to define a subject that will be used to authenticate users. These are generally used to define low level system accounts.<br />    - must contain key 'sub'<br />    - must contain key 'password'<br />    - may contain arbitrary key(string)/value(string\|yaml) pairs which can be mapped to the claims using the spec.auth.claimMappings<br />- is of type 'kubernetes.io/dockerconfigjson'<br />    A dockerconfigjson secret is used to define a docker registry connection that will be used to pull (or push) images.<br />    - the pull scenario: (multiple)<br />        - no additional annotations are required<br />    - the push scenario: (first, sorted newest to oldest)<br />        - must be annotated with 'kdex.dev/secret-type = docker-push'<br />- is of type 'kubernetes.io/tls' (first, sorted newest to oldest)<br />    A tls secret is used to define a TLS certificate that will be used to secure connections to the host. |  | Required: \{\} <br /> |
 | `themeRef` _[KDexObjectReference](#kdexobjectreference)_ | themeRef is a reference to the theme that should apply to all pages bound to this host. |  | Optional: \{\} <br /> |
 | `translationRefs` _[KDexObjectReference](#kdexobjectreference) array_ | translationRefs is an array of references to KDexTranslation or KDexClusterTranslation resources that define the translations that should apply to this host. |  | Optional: \{\} <br /> |
 | `utilityPages` _[UtilityPages](#utilitypages)_ | utilityPages defines the utility pages (announcement, error, login) for the host. |  | Optional: \{\} <br /> |
@@ -1400,10 +1400,10 @@ _Appears in:_
 - [KDexInternalHostSpec](#kdexinternalhostspec)
 - [KDexInternalUtilityPageSpec](#kdexinternalutilitypagespec)
 - [KDexPageArchetypeSpec](#kdexpagearchetypespec)
-- [KDexPageBindingSpec](#kdexpagebindingspec)
 - [KDexPageFooterSpec](#kdexpagefooterspec)
 - [KDexPageHeaderSpec](#kdexpageheaderspec)
 - [KDexPageNavigationSpec](#kdexpagenavigationspec)
+- [KDexPageSpec](#kdexpagespec)
 - [KDexThemeSpec](#kdexthemespec)
 - [KDexUtilityPageSpec](#kdexutilitypagespec)
 - [PackageReference](#packagereference)
@@ -1435,13 +1435,36 @@ _Appears in:_
 | `attributes` _object (keys:string, values:string)_ | attributes hold state of the resource as key/value pairs. |  | MaxProperties: 10 <br />Optional: \{\} <br /> |
 
 
+#### KDexPage
+
+
+
+KDexPage is the Schema for the kdexpages API
+
+A KDexPage defines a web page under a KDexHost. It brings together various reusable components like
+KDexPageArchetype, KDexPageFooter, KDexPageHeader, KDexPageNavigation, KDexScriptLibrary, KDexTheme and content
+components like raw HTML or KDexApps and KDexTranslations to produce internationalized, rendered HTML pages.
+
+
+
+_Appears in:_
+- [KDexPageList](#kdexpagelist)
+
+| Field | Description | Default | Validation |
+| --- | --- | --- | --- |
+| `apiVersion` _string_ | `kdex.dev/v1alpha1` | | |
+| `kind` _string_ | `KDexPage` | | |
+| `metadata` _[ObjectMeta](https://kubernetes.io/docs/reference/generated/kubernetes-api/v/#objectmeta-v1-meta)_ | Refer to Kubernetes API documentation for fields of `metadata`. |  | Optional: \{\} <br /> |
+| `spec` _[KDexPageSpec](#kdexpagespec)_ | spec defines the desired state of KDexPage |  | Required: \{\} <br /> |
+
+
 #### KDexPageArchetype
 
 
 
 KDexPageArchetype is the Schema for the kdexpagearchetypes API
 
-A KDexPageArchetype defines a reusable archetype from which web pages can be derived. When creating a KDexPageBinding
+A KDexPageArchetype defines a reusable archetype from which web pages can be derived. When creating a KDexPage
 (i.e. a web page) a developer states which archetype is to be used. This allows the structure to be decoupled from
 the content.
 
@@ -1497,84 +1520,13 @@ _Appears in:_
 | `scriptLibraryRef` _[KDexObjectReference](#kdexobjectreference)_ | scriptLibraryRef is an optional reference to a KDexScriptLibrary resource. |  | Optional: \{\} <br /> |
 
 
-#### KDexPageBinding
-
-
-
-KDexPageBinding is the Schema for the kdexpagebindings API
-
-A KDexPageBinding defines a web page under a KDexHost. It brings together various reusable components like
-KDexPageArchetype, KDexPageFooter, KDexPageHeader, KDexPageNavigation, KDexScriptLibrary, KDexTheme and content
-components like raw HTML or KDexApps and KDexTranslations to produce internationalized, rendered HTML pages.
-
-
-
-_Appears in:_
-- [KDexPageBindingList](#kdexpagebindinglist)
-
-| Field | Description | Default | Validation |
-| --- | --- | --- | --- |
-| `apiVersion` _string_ | `kdex.dev/v1alpha1` | | |
-| `kind` _string_ | `KDexPageBinding` | | |
-| `metadata` _[ObjectMeta](https://kubernetes.io/docs/reference/generated/kubernetes-api/v/#objectmeta-v1-meta)_ | Refer to Kubernetes API documentation for fields of `metadata`. |  | Optional: \{\} <br /> |
-| `spec` _[KDexPageBindingSpec](#kdexpagebindingspec)_ | spec defines the desired state of KDexPageBinding |  | Required: \{\} <br /> |
-
-
-#### KDexPageBindingList
-
-
-
-KDexPageBindingList contains a list of KDexPageBinding
-
-
-
-
-
-| Field | Description | Default | Validation |
-| --- | --- | --- | --- |
-| `apiVersion` _string_ | `kdex.dev/v1alpha1` | | |
-| `kind` _string_ | `KDexPageBindingList` | | |
-| `metadata` _[ListMeta](https://kubernetes.io/docs/reference/generated/kubernetes-api/v/#listmeta-v1-meta)_ | Refer to Kubernetes API documentation for fields of `metadata`. |  |  |
-| `items` _[KDexPageBinding](#kdexpagebinding) array_ |  |  |  |
-
-
-#### KDexPageBindingSpec
-
-
-
-KDexPageBindingSpec defines the desired state of KDexPageBinding
-
-
-
-_Appears in:_
-- [KDexPageBinding](#kdexpagebinding)
-
-| Field | Description | Default | Validation |
-| --- | --- | --- | --- |
-| `contentEntries` _[ContentEntry](#contententry) array_ | contentEntries is a set of content entries to bind to this page. They may be either raw HTML fragments or KDexApp references. |  | ExactlyOneOf: [appRef rawHTML] <br />MaxItems: 32 <br />MinItems: 1 <br />Required: \{\} <br /> |
-| `hostRef` _[LocalObjectReference](https://kubernetes.io/docs/reference/generated/kubernetes-api/v/#localobjectreference-v1-core)_ | hostRef is a reference to the KDexHost that this binding is for. |  | Required: \{\} <br /> |
-| `label` _string_ | label is the value used in menus and page titles before localization occurs (or when no translation exists for the current language). |  | MaxLength: 256 <br />MinLength: 3 <br />Required: \{\} <br /> |
-| `tags` _[Tag](#tag) array_ | Tags are used for grouping and searching functions. |  | MaxItems: 16 <br />Optional: \{\} <br /> |
-| `contact` _[ContactInfo](#contactinfo)_ | Contact provides contact information for the function's owner. |  | Optional: \{\} <br /> |
-| `navigationHints` _[NavigationHints](#navigationhints)_ | navigationHints are optional navigation properties that if omitted result in the page being hidden from the navigation. |  | Optional: \{\} <br /> |
-| `overrideFooterRef` _[KDexObjectReference](#kdexobjectreference)_ | overrideFooterRef is an optional reference to a KDexPageFooter resource. If not specified, the footer from the archetype will be used. |  | Optional: \{\} <br /> |
-| `overrideHeaderRef` _[KDexObjectReference](#kdexobjectreference)_ | overrideHeaderRef is an optional reference to a KDexPageHeader resource. If not specified, the header from the archetype will be used. |  | Optional: \{\} <br /> |
-| `overrideNavigationRefs` _object (keys:string, values:[KDexObjectReference](#kdexobjectreference))_ | overrideNavigationRefs is an optional map of keyed navigation object references. When not empty, the 'main' key must be specified. These navigations will be merged with the navigations from the archetype. |  | MaxProperties: 10 <br />Optional: \{\} <br /> |
-| `pageArchetypeRef` _[KDexObjectReference](#kdexobjectreference)_ | pageArchetypeRef is a reference to the KDexPageArchetype that this binding is for. |  | Required: \{\} <br /> |
-| `parentPageRef` _[LocalObjectReference](https://kubernetes.io/docs/reference/generated/kubernetes-api/v/#localobjectreference-v1-core)_ | parentPageRef is a reference to the KDexPageBinding bellow which this page will appear in the main navigation. If not set, the page will be placed in the top level of the navigation. |  | Optional: \{\} <br /> |
-| `basePath` _string_ | basePath is the shortest path by which the page may be accessed. It must not contain path parameters. This path will be used in site navigation. This path is subject to being prefixed for localization by `/\{l10n\}` and will be when the user selects a non-default language. |  | Pattern: `^/` <br />Required: \{\} <br /> |
-| `patternPath` _string_ | patternPath, which must be prefixed by BasePath, is an extension of basePath that adds pattern matching as defined by https://pkg.go.dev/net/http#hdr-Patterns-ServeMux. This path is subject to being prefixed for localization by `/\{l10n\}` such as when the user selects a non-default language. |  | Optional: \{\} <br /> |
-| `scriptLibraryRef` _[KDexObjectReference](#kdexobjectreference)_ | scriptLibraryRef is an optional reference to a KDexScriptLibrary resource. |  | Optional: \{\} <br /> |
-| `security` _[SecurityRequirement](#securityrequirement)_ | Optional security requirements that override top-level security. |  |  |
-
-
 #### KDexPageFooter
 
 
 
 KDexPageFooter is the Schema for the kdexpagefooters API
 
-A KDexPageFooter is a reusable footer component for composing KDexPageBindings. It can specify a content template and
+A KDexPageFooter is a reusable footer component for composing KDexPages. It can specify a content template and
 an associated KDexScriptLibrary for driving imperative logic that might be necessary to implement the footer.
 
 
@@ -1632,7 +1584,7 @@ _Appears in:_
 
 KDexPageHeader is the Schema for the kdexpageheaders API
 
-A KDexPageHeader is a reusable header component for composing KDexPageBindings. It can specify a content template and
+A KDexPageHeader is a reusable header component for composing KDexPages. It can specify a content template and
 an associated KDexScriptLibrary for driving imperative logic that might be necessary to implement the header.
 
 
@@ -1684,13 +1636,31 @@ _Appears in:_
 | `scriptLibraryRef` _[KDexObjectReference](#kdexobjectreference)_ | scriptLibraryRef is an optional reference to a KDexScriptLibrary resource. |  | Optional: \{\} <br /> |
 
 
+#### KDexPageList
+
+
+
+KDexPageList contains a list of KDexPage
+
+
+
+
+
+| Field | Description | Default | Validation |
+| --- | --- | --- | --- |
+| `apiVersion` _string_ | `kdex.dev/v1alpha1` | | |
+| `kind` _string_ | `KDexPageList` | | |
+| `metadata` _[ListMeta](https://kubernetes.io/docs/reference/generated/kubernetes-api/v/#listmeta-v1-meta)_ | Refer to Kubernetes API documentation for fields of `metadata`. |  |  |
+| `items` _[KDexPage](#kdexpage) array_ |  |  |  |
+
+
 #### KDexPageNavigation
 
 
 
 KDexPageNavigation is the Schema for the kdexpagenavigations API
 
-A KDexPageNavigation is a reusable navigation component for composing KDexPageBindings. It can specify a content
+A KDexPageNavigation is a reusable navigation component for composing KDexPages. It can specify a content
 template and an associated KDexScriptLibrary for driving imperative logic that might be necessary to implement the
 navigation.
 
@@ -1741,6 +1711,36 @@ _Appears in:_
 | --- | --- | --- | --- |
 | `content` _string_ | content is a Go HTML template (using delimiters '[[' and ']]') that defines the content of an App Server page navigation. Use the `.Navigation["<name>"]` property to position its content in the template. |  | MinLength: 5 <br />Required: \{\} <br /> |
 | `scriptLibraryRef` _[KDexObjectReference](#kdexobjectreference)_ | scriptLibraryRef is an optional reference to a KDexScriptLibrary resource. |  | Optional: \{\} <br /> |
+
+
+#### KDexPageSpec
+
+
+
+KDexPageSpec defines the desired state of KDexPage
+
+
+
+_Appears in:_
+- [KDexPage](#kdexpage)
+
+| Field | Description | Default | Validation |
+| --- | --- | --- | --- |
+| `contentEntries` _[ContentEntry](#contententry) array_ | contentEntries is a set of content entries to bind to this page. They may be either raw HTML fragments or KDexApp references. |  | ExactlyOneOf: [appRef rawHTML] <br />MaxItems: 32 <br />MinItems: 1 <br />Required: \{\} <br /> |
+| `hostRef` _[LocalObjectReference](https://kubernetes.io/docs/reference/generated/kubernetes-api/v/#localobjectreference-v1-core)_ | hostRef is a reference to the KDexHost that this binding is for. |  | Required: \{\} <br /> |
+| `label` _string_ | label is the value used in menus and page titles before localization occurs (or when no translation exists for the current language). |  | MaxLength: 256 <br />MinLength: 3 <br />Required: \{\} <br /> |
+| `tags` _[Tag](#tag) array_ | Tags are used for grouping and searching functions. |  | MaxItems: 16 <br />Optional: \{\} <br /> |
+| `contact` _[ContactInfo](#contactinfo)_ | Contact provides contact information for the function's owner. |  | Optional: \{\} <br /> |
+| `navigationHints` _[NavigationHints](#navigationhints)_ | navigationHints are optional navigation properties that if omitted result in the page being hidden from the navigation. |  | Optional: \{\} <br /> |
+| `overrideFooterRef` _[KDexObjectReference](#kdexobjectreference)_ | overrideFooterRef is an optional reference to a KDexPageFooter resource. If not specified, the footer from the archetype will be used. |  | Optional: \{\} <br /> |
+| `overrideHeaderRef` _[KDexObjectReference](#kdexobjectreference)_ | overrideHeaderRef is an optional reference to a KDexPageHeader resource. If not specified, the header from the archetype will be used. |  | Optional: \{\} <br /> |
+| `overrideNavigationRefs` _object (keys:string, values:[KDexObjectReference](#kdexobjectreference))_ | overrideNavigationRefs is an optional map of keyed navigation object references. When not empty, the 'main' key must be specified. These navigations will be merged with the navigations from the archetype. |  | MaxProperties: 10 <br />Optional: \{\} <br /> |
+| `pageArchetypeRef` _[KDexObjectReference](#kdexobjectreference)_ | pageArchetypeRef is a reference to the KDexPageArchetype that this binding is for. |  | Required: \{\} <br /> |
+| `parentPageRef` _[LocalObjectReference](https://kubernetes.io/docs/reference/generated/kubernetes-api/v/#localobjectreference-v1-core)_ | parentPageRef is a reference to the KDexPage bellow which this page will appear in the main navigation. If not set, the page will be placed in the top level of the navigation. |  | Optional: \{\} <br /> |
+| `basePath` _string_ | basePath is the shortest path by which the page may be accessed. It must not contain path parameters. This path will be used in site navigation. This path is subject to being prefixed for localization by `/\{l10n\}` and will be when the user selects a non-default language. |  | Pattern: `^/` <br />Required: \{\} <br /> |
+| `patternPath` _string_ | patternPath, which must be prefixed by BasePath, is an extension of basePath that adds pattern matching as defined by https://pkg.go.dev/net/http#hdr-Patterns-ServeMux. This path is subject to being prefixed for localization by `/\{l10n\}` such as when the user selects a non-default language. |  | Optional: \{\} <br /> |
+| `scriptLibraryRef` _[KDexObjectReference](#kdexobjectreference)_ | scriptLibraryRef is an optional reference to a KDexScriptLibrary resource. |  | Optional: \{\} <br /> |
+| `security` _[SecurityRequirement](#securityrequirement)_ | Optional security requirements that override top-level security. |  |  |
 
 
 #### KDexRole
@@ -1858,7 +1858,7 @@ _Appears in:_
 
 KDexScriptLibrary is the Schema for the kdexscriptlibraries API
 
-A KDexScriptLibrary is a reusable collection of JavaScript for powering the imperative aspects of KDexPageBindings.
+A KDexScriptLibrary is a reusable collection of JavaScript for powering the imperative aspects of KDexPages.
 Most other components of the model are able to reference KDexScriptLibrary as well in order to encapsulate component
 specific logic.
 
@@ -1926,7 +1926,7 @@ _Appears in:_
 KDexTheme is the Schema for the kdexthemes API
 
 A KDexTheme is a reusable collection of design styles and associated digital assets necessary for providing the
-visual aspects of KDexPageBindings decoupling appearance from structure and content.
+visual aspects of KDexPages decoupling appearance from structure and content.
 
 
 
@@ -1991,7 +1991,7 @@ _Appears in:_
 
 KDexTranslation is the Schema for the kdextranslations API
 
-KDexTranslations allow KDexPageBindings to be internationalized by making translations available in as many languages
+KDexTranslations allow KDexPages to be internationalized by making translations available in as many languages
 as necessary.
 
 
@@ -2050,7 +2050,7 @@ _Appears in:_
 KDexUtilityPage is the Schema for the kdexutilitypages API
 
 A KDexUtilityPage defines a utility page (Announcement, Error, Login) that can be referenced by a KDexHost.
-It shares much of its structure with KDexPageBinding but is specialized for system-level pages that do not
+It shares much of its structure with KDexPage but is specialized for system-level pages that do not
 necessarily sit within the standard site navigation tree.
 
 
@@ -2138,7 +2138,7 @@ KDexFunctionMetadata defines the metadata for the function.
 
 _Appears in:_
 - [KDexFunctionMetadata](#kdexfunctionmetadata)
-- [KDexPageBindingSpec](#kdexpagebindingspec)
+- [KDexPageSpec](#kdexpagespec)
 
 | Field | Description | Default | Validation |
 | --- | --- | --- | --- |
@@ -2176,7 +2176,7 @@ _Appears in:_
 
 
 _Appears in:_
-- [KDexPageBindingSpec](#kdexpagebindingspec)
+- [KDexPageSpec](#kdexpagespec)
 
 | Field | Description | Default | Validation |
 | --- | --- | --- | --- |
@@ -2300,7 +2300,7 @@ _Appears in:_
 
 
 _Appears in:_
-- [KDexPageBindingSpec](#kdexpagebindingspec)
+- [KDexPageSpec](#kdexpagespec)
 
 | Field | Description | Default | Validation |
 | --- | --- | --- | --- |
@@ -2323,7 +2323,7 @@ _Appears in:_
 
 | Field | Description | Default | Validation |
 | --- | --- | --- | --- |
-| `resourceNames` _string array_ | resourceNames is an optional allow list of names that the rule applies to. An empty set means the rule applies to all instances of the resources. |  | Optional: \{\} <br /> |
+| `resourceNames` _string array_ | resourceNames is an optional allow list of names that the rule applies to. An empty set means the rule applies to all instances of the resources.<br />Note: If a resource name contains colons (':'), it must be URL-encoded (e.g., 'foo:bar' -> 'foo%3Abar') to prevent misinterpretation<br />by the entitlement pattern splitting logic. |  | Optional: \{\} <br /> |
 | `resources` _string array_ | resources is a list of resources this rule applies to. '*' represents all resources. |  | MinItems: 1 <br />Required: \{\} <br /> |
 | `verbs` _string array_ | verbs is a list of verbs that apply to ALL the resources contained in this rule. '*' represents all verbs. |  | MinItems: 1 <br />Required: \{\} <br /> |
 
@@ -2459,14 +2459,17 @@ _Appears in:_
 
 _Underlying type:_ _object_
 
-
+SecurityRequirement maps a security scheme name (e.g., 'bearer', 'oauth2') to a list of required scopes.
+Scopes follow the 'resource:resourceName:verb' format.
+Note: resourceName must be URL-encoded if it contains colons (':') to prevent misinterpretation
+by the entitlement pattern splitting logic.
 
 
 
 _Appears in:_
 - [KDexHostSpec](#kdexhostspec)
 - [KDexInternalHostSpec](#kdexinternalhostspec)
-- [KDexPageBindingSpec](#kdexpagebindingspec)
+- [KDexPageSpec](#kdexpagespec)
 
 
 
@@ -2504,7 +2507,7 @@ _Appears in:_
 
 _Appears in:_
 - [KDexFunctionMetadata](#kdexfunctionmetadata)
-- [KDexPageBindingSpec](#kdexpagebindingspec)
+- [KDexPageSpec](#kdexpagespec)
 - [Metadata](#metadata)
 
 | Field | Description | Default | Validation |

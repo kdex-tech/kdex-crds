@@ -22,47 +22,45 @@ import (
 )
 
 // +kubebuilder:object:root=true
-// +kubebuilder:resource:scope=Namespaced,shortName=kdex-pb,categories=all;kdex
+// +kubebuilder:resource:scope=Namespaced,shortName=kdex-pg,categories=all;kdex
 // +kubebuilder:subresource:status
 
-// KDexPageBinding is the Schema for the kdexpagebindings API
+// KDexPage is the Schema for the kdexpages API
 //
-// A KDexPageBinding defines a web page under a KDexHost. It brings together various reusable components like
+// A KDexPage defines a web page under a KDexHost. It brings together various reusable components like
 // KDexPageArchetype, KDexPageFooter, KDexPageHeader, KDexPageNavigation, KDexScriptLibrary, KDexTheme and content
 // components like raw HTML or KDexApps and KDexTranslations to produce internationalized, rendered HTML pages.
 //
 // +kubebuilder:printcolumn:name="Ready",type=string,JSONPath=`.status.conditions[?(@.type=="Ready")].status`,description="The state of the Ready condition"
 // +kubebuilder:printcolumn:name="Gen",type="string",JSONPath=".metadata.generation",priority=1
 // +kubebuilder:printcolumn:name="Status Attributes",type="string",JSONPath=".status.attributes",priority=1
-type KDexPageBinding struct {
-	// TODO: Rename KDexPageBinding to KDexPage
-
+type KDexPage struct {
 	metav1.TypeMeta `json:",inline"`
 
 	// metadata is a standard object metadata
 	// +kubebuilder:validation:Optional
 	metav1.ObjectMeta `json:"metadata,omitempty,omitzero"`
 
+	// spec defines the desired state of KDexPage
+	// +kubebuilder:validation:Required
+	Spec KDexPageSpec `json:"spec"`
+
 	// status defines the observed state of KDexApp
 	// +kubebuilder:validation:Optional
 	Status KDexObjectStatus `json:"status,omitempty,omitzero"`
-
-	// spec defines the desired state of KDexPageBinding
-	// +kubebuilder:validation:Required
-	Spec KDexPageBindingSpec `json:"spec"`
 }
 
 // +kubebuilder:object:root=true
 
-// KDexPageBindingList contains a list of KDexPageBinding
-type KDexPageBindingList struct {
+// KDexPageList contains a list of KDexPage
+type KDexPageList struct {
 	metav1.TypeMeta `json:",inline"`
 	metav1.ListMeta `json:"metadata,omitempty"`
-	Items           []KDexPageBinding `json:"items"`
+	Items           []KDexPage `json:"items"`
 }
 
-// KDexPageBindingSpec defines the desired state of KDexPageBinding
-type KDexPageBindingSpec struct {
+// KDexPageSpec defines the desired state of KDexPage
+type KDexPageSpec struct {
 	// contentEntries is a set of content entries to bind to this page. They may be either raw HTML fragments or KDexApp references.
 	// +listType=map
 	// +listMapKey=slot
@@ -112,7 +110,7 @@ type KDexPageBindingSpec struct {
 	// +kubebuilder:validation:XValidation:rule=`self.kind == "KDexPageArchetype" || self.kind == "KDexClusterPageArchetype"`,message="'kind' must be either KDexPageArchetype or KDexClusterPageArchetype"
 	PageArchetypeRef KDexObjectReference `json:"pageArchetypeRef" protobuf:"bytes,9,req,name=pageArchetypeRef"`
 
-	// parentPageRef is a reference to the KDexPageBinding bellow which this page will appear in the main navigation. If not set, the page will be placed in the top level of the navigation.
+	// parentPageRef is a reference to the KDexPage bellow which this page will appear in the main navigation. If not set, the page will be placed in the top level of the navigation.
 	// +kubebuilder:validation:Optional
 	ParentPageRef *corev1.LocalObjectReference `json:"parentPageRef,omitempty" protobuf:"bytes,10,opt,name=parentPageRef"`
 
@@ -128,5 +126,5 @@ type KDexPageBindingSpec struct {
 }
 
 func init() {
-	SchemeBuilder.Register(&KDexPageBinding{}, &KDexPageBindingList{})
+	SchemeBuilder.Register(&KDexPage{}, &KDexPageList{})
 }

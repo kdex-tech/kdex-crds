@@ -27,7 +27,7 @@ import (
 // KDexTheme is the Schema for the kdexthemes API
 //
 // A KDexTheme is a reusable collection of design styles and associated digital assets necessary for providing the
-// visual aspects of KDexPageBindings decoupling appearance from structure and content.
+// visual aspects of KDexPages decoupling appearance from structure and content.
 //
 // +kubebuilder:printcolumn:name="Ready",type=string,JSONPath=`.status.conditions[?(@.type=="Ready")].status`,description="The state of the Ready condition"
 // +kubebuilder:printcolumn:name="Gen",type="string",JSONPath=".metadata.generation",priority=1

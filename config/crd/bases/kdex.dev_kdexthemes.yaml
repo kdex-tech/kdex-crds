@@ -39,7 +39,7 @@ spec:
           KDexTheme is the Schema for the kdexthemes API
 
           A KDexTheme is a reusable collection of design styles and associated digital assets necessary for providing the
-          visual aspects of KDexPageBindings decoupling appearance from structure and content.
+          visual aspects of KDexPages decoupling appearance from structure and content.
         properties:
           apiVersion:
             description: |-

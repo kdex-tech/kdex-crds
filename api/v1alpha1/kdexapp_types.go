@@ -31,7 +31,7 @@ import (
 // Component based and the packaging follows the NPM packaging model the contents of which are ES modules. There are no
 // container images to build. Merely package the application code and publish it to an NPM compatible repository,
 // configure the KDexApp with the necessary metadata and deploy to Kubernetes. The app can then be consumed and composed
-// by KDexPageBindings to produce actual user experiences.
+// by KDexPages to produce actual user experiences.
 //
 // +kubebuilder:printcolumn:name="Ready",type=string,JSONPath=`.status.conditions[?(@.type=="Ready")].status`,description="The state of the Ready condition"
 // +kubebuilder:printcolumn:name="Gen",type="string",JSONPath=".metadata.generation",priority=1
