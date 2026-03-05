@@ -202,8 +202,8 @@ type KDexHostSpec struct {
 	// - is of type 'kubernetes.io/tls' (first, sorted newest to oldest)
 	//     A tls secret is used to define a TLS certificate that will be used to secure connections to the host.
 	//
-	// +kubebuilder:validation:Required
-	ServiceAccountRef corev1.LocalObjectReference `json:"serviceAccountRef" protobuf:"bytes,18,req,name=serviceAccountRef"`
+	// +kubebuilder:validation:Optional
+	ServiceAccountRef *corev1.LocalObjectReference `json:"serviceAccountRef,omitempty" protobuf:"bytes,18,opt,name=serviceAccountRef"`
 
 	// ServiceAccountSecrets is an internal list of resolved secrets that are referenced by the service account.
 	ServiceAccountSecrets ServiceAccountSecrets `json:"-"`
