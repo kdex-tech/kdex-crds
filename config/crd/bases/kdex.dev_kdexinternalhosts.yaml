@@ -519,6 +519,14 @@ spec:
                   the host belongs.
                 minLength: 5
                 type: string
+              packagesImage:
+                description: |-
+                  packagesImage is an optionally specified pre-built image of NPM packages to be used in place of auto-generated image. This is intended for use in production once
+                  the set of required packages is known and stable. It is still safe to allow the packages to be assembled in production but some organizations may frown upon it.
+                  This is their escape hatch.
+
+                  Note that the image format is specialized. See https://github.com/kdex-tech/cli-tools/blob/main/README.md
+                type: string
               registries:
                 description: registries defines the registries that should be used
                   for this host. If not provided these will be inherited from the

@@ -113,6 +113,14 @@ type KDexHostSpec struct {
 	// +kubebuilder:validation:MinLength=5
 	Organization string `json:"organization" protobuf:"bytes,11,req,name=organization"`
 
+	// packagesImage is an optionally specified pre-built image of NPM packages to be used in place of auto-generated image. This is intended for use in production once
+	// the set of required packages is known and stable. It is still safe to allow the packages to be assembled in production but some organizations may frown upon it.
+	// This is their escape hatch.
+	//
+	// Note that the image format is specialized. See https://github.com/kdex-tech/cli-tools/blob/main/README.md
+	// +kubebuilder:validation:Optional
+	PackagesImage string `json:"packagesImage,omitempty" protobuf:"bytes,11,opt,name=packagesImage"`
+
 	// registries defines the registries that should be used for this host. If not provided these will be inherited from the default configuration.
 	// +kubebuilder:validation:Optional
 	Registries Registries `json:"registries,omitempty" protobuf:"bytes,12,opt,name=registries"`
