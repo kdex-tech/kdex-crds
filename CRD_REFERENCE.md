@@ -1434,7 +1434,7 @@ _Appears in:_
 | --- | --- | --- | --- |
 | `observedGeneration` _integer_ | observedGeneration is the most recent generation observed for this resource. It corresponds to the<br />resource's generation, which is updated on mutation by the API Server. |  | Optional: \{\} <br /> |
 | `conditions` _[Condition](https://kubernetes.io/docs/reference/generated/kubernetes-api/v/#condition-v1-meta) array_ | conditions represent the current state of the resource.<br />Each condition has a unique type and reflects the status of a specific aspect of the resource.<br />Standard condition types include:<br />- "Progressing": the resource is being created or updated<br />- "Ready": the resource is fully functional<br />- "Degraded": the resource failed to reach or maintain its desired state<br />The status of each condition is one of True, False, or Unknown. |  | Optional: \{\} <br /> |
-| `attributes` _object (keys:string, values:string)_ | attributes hold state of the resource as key/value pairs. |  | MaxProperties: 10 <br />Optional: \{\} <br /> |
+| `attributes` _object (keys:string, values:string)_ | attributes hold state of the resource as key/value pairs. |  | MaxProperties: 32 <br />Optional: \{\} <br /> |
 
 
 #### KDexPage

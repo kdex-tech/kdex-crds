@@ -101,7 +101,7 @@ spec:
                 additionalProperties:
                   type: string
                 description: attributes hold state of the resource as key/value pairs.
-                maxProperties: 10
+                maxProperties: 32
                 type: object
               conditions:
                 description: |-
