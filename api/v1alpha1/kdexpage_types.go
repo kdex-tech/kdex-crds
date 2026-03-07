@@ -104,6 +104,8 @@ type KDexPageSpec struct {
 	// +kubebuilder:validation:XValidation:rule="self.all(k, self[k].kind == 'KDexPageNavigation' || self[k].kind == 'KDexClusterPageNavigation')",message="all navigation kinds must be either KDexPageNavigation or KDexClusterPageNavigation"
 	OverrideNavigationRefs map[string]*KDexObjectReference `json:"overrideNavigationRefs,omitempty" protobuf:"bytes,8,rep,name=overrideNavigationRefs"`
 
+	// TODO: default to the standard page archetype
+
 	// pageArchetypeRef is a reference to the KDexPageArchetype that this binding is for.
 	// +kubebuilder:validation:Required
 	// +kubebuilder:validation:XValidation:rule="self.name.size() > 0",message="pageArchetypeRef.name must not be empty"
