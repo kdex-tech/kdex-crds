@@ -1,9 +1,7 @@
 package render
 
 import (
-	"fmt"
 	htmltemplate "html/template"
-	"strings"
 	"time"
 
 	"golang.org/x/text/language"
@@ -107,15 +105,7 @@ func DefaultTemplateData() TemplateData {
 func ValidateContent(
 	name string, content string,
 ) error {
-	rendered, err := renderer.RenderOne(name, content, DefaultTemplateData())
+	_, err := renderer.RenderOne(name, content, DefaultTemplateData())
 
-	if err != nil {
-		return err
-	}
-
-	if strings.Contains(rendered, "<script") || strings.Contains(rendered, "<style") {
-		return fmt.Errorf("content contains script or style, place scripts in KDex[Cluster]ScriptLibrary and styles in KDex[Cluster]Theme")
-	}
-
-	return nil
+	return err
 }
