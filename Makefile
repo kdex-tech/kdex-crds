@@ -59,8 +59,14 @@ coverage: test ## Generate and view test coverage report.
 	go tool cover -html=cover.out -o cover.html
 	@echo "--> Coverage report generated at file://$$(pwd)/cover.html"
 
+## Detect Kubernetes version from go.mod (v0.x.y -> 1.x)
+K8S_VERSION_MINOR := $(shell grep "k8s.io/api v" go.mod | head -n 1 | awk '{print $$2}' | sed 's/v0\.\([0-9]*\)\..*/\1/')
+K8S_VERSION := 1.$(K8S_VERSION_MINOR)
+
 .PHONY: docs
 docs: generate crd-ref-docs ## Generate CRD reference documentation.
+	@echo "Updating kubernetesVersion to $(K8S_VERSION) in crd-ref-docs-config.yaml"
+	@sed -i 's/kubernetesVersion: [0-9.]*/kubernetesVersion: $(K8S_VERSION)/' crd-ref-docs-config.yaml
 	$(CRD_REF_DOCS) --source-path=api/v1alpha1 --config=crd-ref-docs-config.yaml --renderer=markdown --output-path=CRD_REFERENCE.md
 
 .PHONY: lint

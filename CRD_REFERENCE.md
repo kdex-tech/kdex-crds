@@ -85,7 +85,7 @@ _Appears in:_
 | --- | --- | --- | --- |
 | `basePath` _string_ | basePath is the base URL path for the function. It must match the regex ^/\w+/\w+ (e.g., /v1/users). |  | Pattern: `^/\w+/\w+` <br />Required: \{\} <br /> |
 | `paths` _object (keys:string, values:[PathItem](#pathitem))_ | paths is a map of paths that exist below the basePath. All keys of the map must be paths prefixed by .spec.api.basePath. |  | MaxProperties: 16 <br />MinProperties: 1 <br />Required: \{\} <br /> |
-| `schemas` _object (keys:string, values:[RawExtension](https://kubernetes.io/docs/reference/generated/kubernetes-api/v/#rawextension-runtime-pkg))_ |  |  | MaxProperties: 6 <br />Optional: \{\} <br /> |
+| `schemas` _object (keys:string, values:[RawExtension](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.35/#rawextension-runtime-pkg))_ |  |  | MaxProperties: 6 <br />Optional: \{\} <br /> |
 
 
 #### Asset
@@ -172,13 +172,13 @@ _Appears in:_
 | Field | Description | Default | Validation |
 | --- | --- | --- | --- |
 | `ingressPath` _string_ | ingressPath is a prefix beginning with '/-/' plus additional characters. This indicates where in the Ingress/HTTPRoute the Backend will be mounted.<br />This value is determined by the implementation that embeds the Backend and cannot be changed. |  | Optional: \{\} <br />Pattern: `^/-/.+` <br /> |
-| `env` _[EnvVar](https://kubernetes.io/docs/reference/generated/kubernetes-api/v/#envvar-v1-core) array_ | env is an optional list of environment variables to set in the container. |  | Optional: \{\} <br /> |
+| `env` _[EnvVar](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.35/#envvar-v1-core) array_ | env is an optional list of environment variables to set in the container. |  | Optional: \{\} <br /> |
 | `replicas` _integer_ | replicas is the number of desired pods. This is a pointer to distinguish between explicit<br />zero and not specified. Defaults to 1. |  | Optional: \{\} <br /> |
-| `resources` _[ResourceRequirements](https://kubernetes.io/docs/reference/generated/kubernetes-api/v/#resourcerequirements-v1-core)_ | resources defines the compute resources required by the container.<br />More info: https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/ |  | Optional: \{\} <br /> |
+| `resources` _[ResourceRequirements](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.35/#resourcerequirements-v1-core)_ | resources defines the compute resources required by the container.<br />More info: https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/ |  | Optional: \{\} <br /> |
 | `serverImage` _string_ | serverImage is the name of Backend image.<br />More info: https://kubernetes.io/docs/concepts/containers/images |  | MinLength: 5 <br />Optional: \{\} <br /> |
-| `serverImagePullPolicy` _[PullPolicy](https://kubernetes.io/docs/reference/generated/kubernetes-api/v/#pullpolicy-v1-core)_ | Policy for pulling the Backend server image. Possible values are:<br />Always: the kubelet always attempts to pull the reference. Container creation will fail If the pull fails.<br />Never: the kubelet never pulls the reference and only uses a local image or artifact. Container creation will fail if the reference isn't present.<br />IfNotPresent: the kubelet pulls if the reference isn't already present on disk. Container creation will fail if the reference isn't present and the pull fails.<br />Defaults to Always if :latest tag is specified, or IfNotPresent otherwise. |  | Optional: \{\} <br /> |
+| `serverImagePullPolicy` _[PullPolicy](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.35/#pullpolicy-v1-core)_ | Policy for pulling the Backend server image. Possible values are:<br />Always: the kubelet always attempts to pull the reference. Container creation will fail If the pull fails.<br />Never: the kubelet never pulls the reference and only uses a local image or artifact. Container creation will fail if the reference isn't present.<br />IfNotPresent: the kubelet pulls if the reference isn't already present on disk. Container creation will fail if the reference isn't present and the pull fails.<br />Defaults to Always if :latest tag is specified, or IfNotPresent otherwise. |  | Optional: \{\} <br /> |
 | `staticImage` _string_ | staticImage is the name of an OCI image that contains static resources that will be served by the Backend. This may not apply if the serverImage is set to a custom implementation.<br />More info: https://kubernetes.io/docs/concepts/containers/images |  | MinLength: 5 <br />Optional: \{\} <br /> |
-| `staticImagePullPolicy` _[PullPolicy](https://kubernetes.io/docs/reference/generated/kubernetes-api/v/#pullpolicy-v1-core)_ | Policy for pulling the OCI theme image. Possible values are:<br />Always: the kubelet always attempts to pull the reference. Container creation will fail If the pull fails.<br />Never: the kubelet never pulls the reference and only uses a local image or artifact. Container creation will fail if the reference isn't present.<br />IfNotPresent: the kubelet pulls if the reference isn't already present on disk. Container creation will fail if the reference isn't present and the pull fails.<br />Defaults to Always if :latest tag is specified, or IfNotPresent otherwise. |  | Optional: \{\} <br /> |
+| `staticImagePullPolicy` _[PullPolicy](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.35/#pullpolicy-v1-core)_ | Policy for pulling the OCI theme image. Possible values are:<br />Always: the kubelet always attempts to pull the reference. Container creation will fail If the pull fails.<br />Never: the kubelet never pulls the reference and only uses a local image or artifact. Container creation will fail if the reference isn't present.<br />IfNotPresent: the kubelet pulls if the reference isn't already present on disk. Container creation will fail if the reference isn't present and the pull fails.<br />Defaults to Always if :latest tag is specified, or IfNotPresent otherwise. |  | Optional: \{\} <br /> |
 
 
 #### Builder
@@ -196,7 +196,7 @@ _Appears in:_
 | Field | Description | Default | Validation |
 | --- | --- | --- | --- |
 | `builderRef` _[KDexObjectReference](#kdexobjectreference)_ | builderRef is a reference to the kpack.io/v1alpha2/Builder or kpack.io/v1alpha2/ClusterBuilder to use for building the image. |  | Required: \{\} <br /> |
-| `env` _[EnvVar](https://kubernetes.io/docs/reference/generated/kubernetes-api/v/#envvar-v1-core) array_ | env is the environment variables to set in the builder. |  | Optional: \{\} <br /> |
+| `env` _[EnvVar](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.35/#envvar-v1-core) array_ | env is the environment variables to set in the builder. |  | Optional: \{\} <br /> |
 | `languages` _string array_ | Languages is a list of languages that this builder supports. |  | MinItems: 1 <br />Required: \{\} <br /> |
 | `name` _string_ | Name is the builder name (e.g., tiny, base, full). |  | Required: \{\} <br /> |
 | `serviceAccountName` _string_ | serviceAccountName is the name of the service account to use for building the image. |  | Optional: \{\} <br /> |
@@ -317,7 +317,7 @@ _Appears in:_
 | `args` _string array_ | args is an optional array of arguments that will be passed to the generator command. |  | Optional: \{\} <br /> |
 | `command` _string array_ | command is an optional array that contains the code generator command and any flags necessary. |  | Optional: \{\} <br /> |
 | `image` _string_ | image is the image to use for deploying executables into a FaaS runtime. |  | Required: \{\} <br /> |
-| `env` _[EnvVar](https://kubernetes.io/docs/reference/generated/kubernetes-api/v/#envvar-v1-core) array_ | env is the environment variables to set in the deployer. |  | Optional: \{\} <br /> |
+| `env` _[EnvVar](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.35/#envvar-v1-core) array_ | env is the environment variables to set in the deployer. |  | Optional: \{\} <br /> |
 | `serviceAccountName` _string_ | serviceAccountName is the name of the service account to use for deploying executables into a FaaS runtime. |  | Optional: \{\} <br /> |
 
 
@@ -445,7 +445,7 @@ _Appears in:_
 | --- | --- | --- | --- |
 | `apiVersion` _string_ | `kdex.dev/v1alpha1` | | |
 | `kind` _string_ | `KDexApp` | | |
-| `metadata` _[ObjectMeta](https://kubernetes.io/docs/reference/generated/kubernetes-api/v/#objectmeta-v1-meta)_ | Refer to Kubernetes API documentation for fields of `metadata`. |  | Optional: \{\} <br /> |
+| `metadata` _[ObjectMeta](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.35/#objectmeta-v1-meta)_ | Refer to Kubernetes API documentation for fields of `metadata`. |  | Optional: \{\} <br /> |
 | `spec` _[KDexAppSpec](#kdexappspec)_ | spec defines the desired state of KDexApp |  | Required: \{\} <br /> |
 
 
@@ -463,7 +463,7 @@ KDexAppList contains a list of KDexApp
 | --- | --- | --- | --- |
 | `apiVersion` _string_ | `kdex.dev/v1alpha1` | | |
 | `kind` _string_ | `KDexAppList` | | |
-| `metadata` _[ListMeta](https://kubernetes.io/docs/reference/generated/kubernetes-api/v/#listmeta-v1-meta)_ | Refer to Kubernetes API documentation for fields of `metadata`. |  |  |
+| `metadata` _[ListMeta](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.35/#listmeta-v1-meta)_ | Refer to Kubernetes API documentation for fields of `metadata`. |  |  |
 | `items` _[KDexApp](#kdexapp) array_ |  |  |  |
 
 
@@ -485,13 +485,13 @@ _Appears in:_
 | `packageReference` _[PackageReference](#packagereference)_ | packageReference specifies the name and version of an NPM package that contains the script. The package.json must describe an ES module. |  | Required: \{\} <br /> |
 | `scripts` _[ScriptDef](#scriptdef) array_ | scripts is a set of script references. They may contain URLs that point to resources hosted at some public address, npm module references or they may contain tag contents. |  | ExactlyOneOf: [script scriptSrc] <br />MaxItems: 8 <br />Optional: \{\} <br /> |
 | `ingressPath` _string_ | ingressPath is a prefix beginning with '/-/' plus additional characters. This indicates where in the Ingress/HTTPRoute the Backend will be mounted.<br />This value is determined by the implementation that embeds the Backend and cannot be changed. |  | Optional: \{\} <br />Pattern: `^/-/.+` <br /> |
-| `env` _[EnvVar](https://kubernetes.io/docs/reference/generated/kubernetes-api/v/#envvar-v1-core) array_ | env is an optional list of environment variables to set in the container. |  | Optional: \{\} <br /> |
+| `env` _[EnvVar](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.35/#envvar-v1-core) array_ | env is an optional list of environment variables to set in the container. |  | Optional: \{\} <br /> |
 | `replicas` _integer_ | replicas is the number of desired pods. This is a pointer to distinguish between explicit<br />zero and not specified. Defaults to 1. |  | Optional: \{\} <br /> |
-| `resources` _[ResourceRequirements](https://kubernetes.io/docs/reference/generated/kubernetes-api/v/#resourcerequirements-v1-core)_ | resources defines the compute resources required by the container.<br />More info: https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/ |  | Optional: \{\} <br /> |
+| `resources` _[ResourceRequirements](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.35/#resourcerequirements-v1-core)_ | resources defines the compute resources required by the container.<br />More info: https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/ |  | Optional: \{\} <br /> |
 | `serverImage` _string_ | serverImage is the name of Backend image.<br />More info: https://kubernetes.io/docs/concepts/containers/images |  | MinLength: 5 <br />Optional: \{\} <br /> |
-| `serverImagePullPolicy` _[PullPolicy](https://kubernetes.io/docs/reference/generated/kubernetes-api/v/#pullpolicy-v1-core)_ | Policy for pulling the Backend server image. Possible values are:<br />Always: the kubelet always attempts to pull the reference. Container creation will fail If the pull fails.<br />Never: the kubelet never pulls the reference and only uses a local image or artifact. Container creation will fail if the reference isn't present.<br />IfNotPresent: the kubelet pulls if the reference isn't already present on disk. Container creation will fail if the reference isn't present and the pull fails.<br />Defaults to Always if :latest tag is specified, or IfNotPresent otherwise. |  | Optional: \{\} <br /> |
+| `serverImagePullPolicy` _[PullPolicy](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.35/#pullpolicy-v1-core)_ | Policy for pulling the Backend server image. Possible values are:<br />Always: the kubelet always attempts to pull the reference. Container creation will fail If the pull fails.<br />Never: the kubelet never pulls the reference and only uses a local image or artifact. Container creation will fail if the reference isn't present.<br />IfNotPresent: the kubelet pulls if the reference isn't already present on disk. Container creation will fail if the reference isn't present and the pull fails.<br />Defaults to Always if :latest tag is specified, or IfNotPresent otherwise. |  | Optional: \{\} <br /> |
 | `staticImage` _string_ | staticImage is the name of an OCI image that contains static resources that will be served by the Backend. This may not apply if the serverImage is set to a custom implementation.<br />More info: https://kubernetes.io/docs/concepts/containers/images |  | MinLength: 5 <br />Optional: \{\} <br /> |
-| `staticImagePullPolicy` _[PullPolicy](https://kubernetes.io/docs/reference/generated/kubernetes-api/v/#pullpolicy-v1-core)_ | Policy for pulling the OCI theme image. Possible values are:<br />Always: the kubelet always attempts to pull the reference. Container creation will fail If the pull fails.<br />Never: the kubelet never pulls the reference and only uses a local image or artifact. Container creation will fail if the reference isn't present.<br />IfNotPresent: the kubelet pulls if the reference isn't already present on disk. Container creation will fail if the reference isn't present and the pull fails.<br />Defaults to Always if :latest tag is specified, or IfNotPresent otherwise. |  | Optional: \{\} <br /> |
+| `staticImagePullPolicy` _[PullPolicy](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.35/#pullpolicy-v1-core)_ | Policy for pulling the OCI theme image. Possible values are:<br />Always: the kubelet always attempts to pull the reference. Container creation will fail If the pull fails.<br />Never: the kubelet never pulls the reference and only uses a local image or artifact. Container creation will fail if the reference isn't present.<br />IfNotPresent: the kubelet pulls if the reference isn't already present on disk. Container creation will fail if the reference isn't present and the pull fails.<br />Defaults to Always if :latest tag is specified, or IfNotPresent otherwise. |  | Optional: \{\} <br /> |
 
 
 #### KDexClusterApp
@@ -509,7 +509,7 @@ _Appears in:_
 | --- | --- | --- | --- |
 | `apiVersion` _string_ | `kdex.dev/v1alpha1` | | |
 | `kind` _string_ | `KDexClusterApp` | | |
-| `metadata` _[ObjectMeta](https://kubernetes.io/docs/reference/generated/kubernetes-api/v/#objectmeta-v1-meta)_ | Refer to Kubernetes API documentation for fields of `metadata`. |  | Optional: \{\} <br /> |
+| `metadata` _[ObjectMeta](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.35/#objectmeta-v1-meta)_ | Refer to Kubernetes API documentation for fields of `metadata`. |  | Optional: \{\} <br /> |
 | `spec` _[KDexAppSpec](#kdexappspec)_ | spec defines the desired state of KDexClusterApp |  | Required: \{\} <br /> |
 
 
@@ -527,7 +527,7 @@ KDexClusterAppList contains a list of KDexClusterApp
 | --- | --- | --- | --- |
 | `apiVersion` _string_ | `kdex.dev/v1alpha1` | | |
 | `kind` _string_ | `KDexClusterAppList` | | |
-| `metadata` _[ListMeta](https://kubernetes.io/docs/reference/generated/kubernetes-api/v/#listmeta-v1-meta)_ | Refer to Kubernetes API documentation for fields of `metadata`. |  |  |
+| `metadata` _[ListMeta](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.35/#listmeta-v1-meta)_ | Refer to Kubernetes API documentation for fields of `metadata`. |  |  |
 | `items` _[KDexClusterApp](#kdexclusterapp) array_ |  |  |  |
 
 
@@ -546,7 +546,7 @@ _Appears in:_
 | --- | --- | --- | --- |
 | `apiVersion` _string_ | `kdex.dev/v1alpha1` | | |
 | `kind` _string_ | `KDexClusterFaaSAdaptor` | | |
-| `metadata` _[ObjectMeta](https://kubernetes.io/docs/reference/generated/kubernetes-api/v/#objectmeta-v1-meta)_ | Refer to Kubernetes API documentation for fields of `metadata`. |  | Optional: \{\} <br /> |
+| `metadata` _[ObjectMeta](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.35/#objectmeta-v1-meta)_ | Refer to Kubernetes API documentation for fields of `metadata`. |  | Optional: \{\} <br /> |
 | `spec` _[KDexFaaSAdaptorSpec](#kdexfaasadaptorspec)_ | spec defines the desired state of KDexClusterFaaSAdaptor |  | Required: \{\} <br /> |
 
 
@@ -564,7 +564,7 @@ KDexClusterFaaSAdaptorList contains a list of KDexClusterFaaSAdaptor
 | --- | --- | --- | --- |
 | `apiVersion` _string_ | `kdex.dev/v1alpha1` | | |
 | `kind` _string_ | `KDexClusterFaaSAdaptorList` | | |
-| `metadata` _[ListMeta](https://kubernetes.io/docs/reference/generated/kubernetes-api/v/#listmeta-v1-meta)_ | Refer to Kubernetes API documentation for fields of `metadata`. |  |  |
+| `metadata` _[ListMeta](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.35/#listmeta-v1-meta)_ | Refer to Kubernetes API documentation for fields of `metadata`. |  |  |
 | `items` _[KDexClusterFaaSAdaptor](#kdexclusterfaasadaptor) array_ |  |  |  |
 
 
@@ -583,7 +583,7 @@ _Appears in:_
 | --- | --- | --- | --- |
 | `apiVersion` _string_ | `kdex.dev/v1alpha1` | | |
 | `kind` _string_ | `KDexClusterPageArchetype` | | |
-| `metadata` _[ObjectMeta](https://kubernetes.io/docs/reference/generated/kubernetes-api/v/#objectmeta-v1-meta)_ | Refer to Kubernetes API documentation for fields of `metadata`. |  | Optional: \{\} <br /> |
+| `metadata` _[ObjectMeta](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.35/#objectmeta-v1-meta)_ | Refer to Kubernetes API documentation for fields of `metadata`. |  | Optional: \{\} <br /> |
 | `spec` _[KDexPageArchetypeSpec](#kdexpagearchetypespec)_ | spec defines the desired state of KDexClusterPageArchetype |  | Required: \{\} <br /> |
 
 
@@ -601,7 +601,7 @@ KDexClusterPageArchetypeList contains a list of KDexClusterPageArchetype
 | --- | --- | --- | --- |
 | `apiVersion` _string_ | `kdex.dev/v1alpha1` | | |
 | `kind` _string_ | `KDexClusterPageArchetypeList` | | |
-| `metadata` _[ListMeta](https://kubernetes.io/docs/reference/generated/kubernetes-api/v/#listmeta-v1-meta)_ | Refer to Kubernetes API documentation for fields of `metadata`. |  |  |
+| `metadata` _[ListMeta](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.35/#listmeta-v1-meta)_ | Refer to Kubernetes API documentation for fields of `metadata`. |  |  |
 | `items` _[KDexClusterPageArchetype](#kdexclusterpagearchetype) array_ |  |  |  |
 
 
@@ -620,7 +620,7 @@ _Appears in:_
 | --- | --- | --- | --- |
 | `apiVersion` _string_ | `kdex.dev/v1alpha1` | | |
 | `kind` _string_ | `KDexClusterPageFooter` | | |
-| `metadata` _[ObjectMeta](https://kubernetes.io/docs/reference/generated/kubernetes-api/v/#objectmeta-v1-meta)_ | Refer to Kubernetes API documentation for fields of `metadata`. |  | Optional: \{\} <br /> |
+| `metadata` _[ObjectMeta](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.35/#objectmeta-v1-meta)_ | Refer to Kubernetes API documentation for fields of `metadata`. |  | Optional: \{\} <br /> |
 | `spec` _[KDexPageFooterSpec](#kdexpagefooterspec)_ | spec defines the desired state of KDexClusterPageFooter |  | Required: \{\} <br /> |
 
 
@@ -638,7 +638,7 @@ KDexClusterPageFooterList contains a list of KDexClusterPageFooter
 | --- | --- | --- | --- |
 | `apiVersion` _string_ | `kdex.dev/v1alpha1` | | |
 | `kind` _string_ | `KDexClusterPageFooterList` | | |
-| `metadata` _[ListMeta](https://kubernetes.io/docs/reference/generated/kubernetes-api/v/#listmeta-v1-meta)_ | Refer to Kubernetes API documentation for fields of `metadata`. |  |  |
+| `metadata` _[ListMeta](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.35/#listmeta-v1-meta)_ | Refer to Kubernetes API documentation for fields of `metadata`. |  |  |
 | `items` _[KDexClusterPageFooter](#kdexclusterpagefooter) array_ |  |  |  |
 
 
@@ -657,7 +657,7 @@ _Appears in:_
 | --- | --- | --- | --- |
 | `apiVersion` _string_ | `kdex.dev/v1alpha1` | | |
 | `kind` _string_ | `KDexClusterPageHeader` | | |
-| `metadata` _[ObjectMeta](https://kubernetes.io/docs/reference/generated/kubernetes-api/v/#objectmeta-v1-meta)_ | Refer to Kubernetes API documentation for fields of `metadata`. |  | Optional: \{\} <br /> |
+| `metadata` _[ObjectMeta](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.35/#objectmeta-v1-meta)_ | Refer to Kubernetes API documentation for fields of `metadata`. |  | Optional: \{\} <br /> |
 | `spec` _[KDexPageHeaderSpec](#kdexpageheaderspec)_ | spec defines the desired state of KDexClusterPageHeader |  | Required: \{\} <br /> |
 
 
@@ -675,7 +675,7 @@ KDexClusterPageHeaderList contains a list of KDexClusterPageHeader
 | --- | --- | --- | --- |
 | `apiVersion` _string_ | `kdex.dev/v1alpha1` | | |
 | `kind` _string_ | `KDexClusterPageHeaderList` | | |
-| `metadata` _[ListMeta](https://kubernetes.io/docs/reference/generated/kubernetes-api/v/#listmeta-v1-meta)_ | Refer to Kubernetes API documentation for fields of `metadata`. |  |  |
+| `metadata` _[ListMeta](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.35/#listmeta-v1-meta)_ | Refer to Kubernetes API documentation for fields of `metadata`. |  |  |
 | `items` _[KDexClusterPageHeader](#kdexclusterpageheader) array_ |  |  |  |
 
 
@@ -694,7 +694,7 @@ _Appears in:_
 | --- | --- | --- | --- |
 | `apiVersion` _string_ | `kdex.dev/v1alpha1` | | |
 | `kind` _string_ | `KDexClusterPageNavigation` | | |
-| `metadata` _[ObjectMeta](https://kubernetes.io/docs/reference/generated/kubernetes-api/v/#objectmeta-v1-meta)_ | Refer to Kubernetes API documentation for fields of `metadata`. |  | Optional: \{\} <br /> |
+| `metadata` _[ObjectMeta](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.35/#objectmeta-v1-meta)_ | Refer to Kubernetes API documentation for fields of `metadata`. |  | Optional: \{\} <br /> |
 | `spec` _[KDexPageNavigationSpec](#kdexpagenavigationspec)_ | spec defines the desired state of KDexClusterPageNavigation |  | Required: \{\} <br /> |
 
 
@@ -712,7 +712,7 @@ KDexClusterPageNavigationList contains a list of KDexClusterPageNavigation
 | --- | --- | --- | --- |
 | `apiVersion` _string_ | `kdex.dev/v1alpha1` | | |
 | `kind` _string_ | `KDexClusterPageNavigationList` | | |
-| `metadata` _[ListMeta](https://kubernetes.io/docs/reference/generated/kubernetes-api/v/#listmeta-v1-meta)_ | Refer to Kubernetes API documentation for fields of `metadata`. |  |  |
+| `metadata` _[ListMeta](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.35/#listmeta-v1-meta)_ | Refer to Kubernetes API documentation for fields of `metadata`. |  |  |
 | `items` _[KDexClusterPageNavigation](#kdexclusterpagenavigation) array_ |  |  |  |
 
 
@@ -731,7 +731,7 @@ _Appears in:_
 | --- | --- | --- | --- |
 | `apiVersion` _string_ | `kdex.dev/v1alpha1` | | |
 | `kind` _string_ | `KDexClusterScriptLibrary` | | |
-| `metadata` _[ObjectMeta](https://kubernetes.io/docs/reference/generated/kubernetes-api/v/#objectmeta-v1-meta)_ | Refer to Kubernetes API documentation for fields of `metadata`. |  | Optional: \{\} <br /> |
+| `metadata` _[ObjectMeta](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.35/#objectmeta-v1-meta)_ | Refer to Kubernetes API documentation for fields of `metadata`. |  | Optional: \{\} <br /> |
 | `spec` _[KDexScriptLibrarySpec](#kdexscriptlibraryspec)_ | spec defines the desired state of KDexClusterScriptLibrary |  | Required: \{\} <br /> |
 
 
@@ -749,7 +749,7 @@ KDexClusterScriptLibraryList contains a list of KDexClusterScriptLibrary
 | --- | --- | --- | --- |
 | `apiVersion` _string_ | `kdex.dev/v1alpha1` | | |
 | `kind` _string_ | `KDexClusterScriptLibraryList` | | |
-| `metadata` _[ListMeta](https://kubernetes.io/docs/reference/generated/kubernetes-api/v/#listmeta-v1-meta)_ | Refer to Kubernetes API documentation for fields of `metadata`. |  |  |
+| `metadata` _[ListMeta](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.35/#listmeta-v1-meta)_ | Refer to Kubernetes API documentation for fields of `metadata`. |  |  |
 | `items` _[KDexClusterScriptLibrary](#kdexclusterscriptlibrary) array_ |  |  |  |
 
 
@@ -768,7 +768,7 @@ _Appears in:_
 | --- | --- | --- | --- |
 | `apiVersion` _string_ | `kdex.dev/v1alpha1` | | |
 | `kind` _string_ | `KDexClusterTheme` | | |
-| `metadata` _[ObjectMeta](https://kubernetes.io/docs/reference/generated/kubernetes-api/v/#objectmeta-v1-meta)_ | Refer to Kubernetes API documentation for fields of `metadata`. |  | Optional: \{\} <br /> |
+| `metadata` _[ObjectMeta](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.35/#objectmeta-v1-meta)_ | Refer to Kubernetes API documentation for fields of `metadata`. |  | Optional: \{\} <br /> |
 | `spec` _[KDexThemeSpec](#kdexthemespec)_ | spec defines the desired state of KDexClusterTheme |  | Required: \{\} <br /> |
 
 
@@ -786,7 +786,7 @@ KDexClusterThemeList contains a list of KDexClusterTheme
 | --- | --- | --- | --- |
 | `apiVersion` _string_ | `kdex.dev/v1alpha1` | | |
 | `kind` _string_ | `KDexClusterThemeList` | | |
-| `metadata` _[ListMeta](https://kubernetes.io/docs/reference/generated/kubernetes-api/v/#listmeta-v1-meta)_ | Refer to Kubernetes API documentation for fields of `metadata`. |  |  |
+| `metadata` _[ListMeta](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.35/#listmeta-v1-meta)_ | Refer to Kubernetes API documentation for fields of `metadata`. |  |  |
 | `items` _[KDexClusterTheme](#kdexclustertheme) array_ |  |  |  |
 
 
@@ -808,7 +808,7 @@ _Appears in:_
 | --- | --- | --- | --- |
 | `apiVersion` _string_ | `kdex.dev/v1alpha1` | | |
 | `kind` _string_ | `KDexClusterTranslation` | | |
-| `metadata` _[ObjectMeta](https://kubernetes.io/docs/reference/generated/kubernetes-api/v/#objectmeta-v1-meta)_ | Refer to Kubernetes API documentation for fields of `metadata`. |  | Optional: \{\} <br /> |
+| `metadata` _[ObjectMeta](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.35/#objectmeta-v1-meta)_ | Refer to Kubernetes API documentation for fields of `metadata`. |  | Optional: \{\} <br /> |
 | `spec` _[KDexTranslationSpec](#kdextranslationspec)_ | spec defines the desired state of KDexTranslation |  | Required: \{\} <br /> |
 
 
@@ -826,7 +826,7 @@ KDexClusterTranslationList contains a list of KDexClusterTranslation
 | --- | --- | --- | --- |
 | `apiVersion` _string_ | `kdex.dev/v1alpha1` | | |
 | `kind` _string_ | `KDexClusterTranslationList` | | |
-| `metadata` _[ListMeta](https://kubernetes.io/docs/reference/generated/kubernetes-api/v/#listmeta-v1-meta)_ | Refer to Kubernetes API documentation for fields of `metadata`. |  |  |
+| `metadata` _[ListMeta](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.35/#listmeta-v1-meta)_ | Refer to Kubernetes API documentation for fields of `metadata`. |  |  |
 | `items` _[KDexClusterTranslation](#kdexclustertranslation) array_ |  |  |  |
 
 
@@ -848,7 +848,7 @@ _Appears in:_
 | --- | --- | --- | --- |
 | `apiVersion` _string_ | `kdex.dev/v1alpha1` | | |
 | `kind` _string_ | `KDexClusterUtilityPage` | | |
-| `metadata` _[ObjectMeta](https://kubernetes.io/docs/reference/generated/kubernetes-api/v/#objectmeta-v1-meta)_ | Refer to Kubernetes API documentation for fields of `metadata`. |  | Optional: \{\} <br /> |
+| `metadata` _[ObjectMeta](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.35/#objectmeta-v1-meta)_ | Refer to Kubernetes API documentation for fields of `metadata`. |  | Optional: \{\} <br /> |
 | `spec` _[KDexUtilityPageSpec](#kdexutilitypagespec)_ | spec defines the desired state of KDexClusterUtilityPage |  | Required: \{\} <br /> |
 
 
@@ -866,7 +866,7 @@ KDexClusterUtilityPageList contains a list of KDexClusterUtilityPage
 | --- | --- | --- | --- |
 | `apiVersion` _string_ | `kdex.dev/v1alpha1` | | |
 | `kind` _string_ | `KDexClusterUtilityPageList` | | |
-| `metadata` _[ListMeta](https://kubernetes.io/docs/reference/generated/kubernetes-api/v/#listmeta-v1-meta)_ | Refer to Kubernetes API documentation for fields of `metadata`. |  |  |
+| `metadata` _[ListMeta](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.35/#listmeta-v1-meta)_ | Refer to Kubernetes API documentation for fields of `metadata`. |  |  |
 | `items` _[KDexClusterUtilityPage](#kdexclusterutilitypage) array_ |  |  |  |
 
 
@@ -885,7 +885,7 @@ _Appears in:_
 | --- | --- | --- | --- |
 | `apiVersion` _string_ | `kdex.dev/v1alpha1` | | |
 | `kind` _string_ | `KDexFaaSAdaptor` | | |
-| `metadata` _[ObjectMeta](https://kubernetes.io/docs/reference/generated/kubernetes-api/v/#objectmeta-v1-meta)_ | Refer to Kubernetes API documentation for fields of `metadata`. |  | Optional: \{\} <br /> |
+| `metadata` _[ObjectMeta](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.35/#objectmeta-v1-meta)_ | Refer to Kubernetes API documentation for fields of `metadata`. |  | Optional: \{\} <br /> |
 | `spec` _[KDexFaaSAdaptorSpec](#kdexfaasadaptorspec)_ | spec defines the desired state of KDexFaaSAdaptor |  | Required: \{\} <br /> |
 
 
@@ -903,7 +903,7 @@ KDexFaaSAdaptorList contains a list of KDexFaaSAdaptor
 | --- | --- | --- | --- |
 | `apiVersion` _string_ | `kdex.dev/v1alpha1` | | |
 | `kind` _string_ | `KDexFaaSAdaptorList` | | |
-| `metadata` _[ListMeta](https://kubernetes.io/docs/reference/generated/kubernetes-api/v/#listmeta-v1-meta)_ | Refer to Kubernetes API documentation for fields of `metadata`. |  |  |
+| `metadata` _[ListMeta](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.35/#listmeta-v1-meta)_ | Refer to Kubernetes API documentation for fields of `metadata`. |  |  |
 | `items` _[KDexFaaSAdaptor](#kdexfaasadaptor) array_ |  |  |  |
 
 
@@ -950,7 +950,7 @@ _Appears in:_
 | --- | --- | --- | --- |
 | `apiVersion` _string_ | `kdex.dev/v1alpha1` | | |
 | `kind` _string_ | `KDexFunction` | | |
-| `metadata` _[ObjectMeta](https://kubernetes.io/docs/reference/generated/kubernetes-api/v/#objectmeta-v1-meta)_ | Refer to Kubernetes API documentation for fields of `metadata`. |  | Optional: \{\} <br /> |
+| `metadata` _[ObjectMeta](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.35/#objectmeta-v1-meta)_ | Refer to Kubernetes API documentation for fields of `metadata`. |  | Optional: \{\} <br /> |
 | `spec` _[KDexFunctionSpec](#kdexfunctionspec)_ | spec defines the desired state of KDexFunction |  | Required: \{\} <br /> |
 
 
@@ -969,7 +969,7 @@ KDexFunctionList contains a list of KDexFunction
 | `apiVersion` _string_ | `kdex.dev/v1alpha1` | | |
 | `kind` _string_ | `KDexFunctionList` | | |
 | `items` _[KDexFunction](#kdexfunction) array_ |  |  |  |
-| `metadata` _[ListMeta](https://kubernetes.io/docs/reference/generated/kubernetes-api/v/#listmeta-v1-meta)_ | Refer to Kubernetes API documentation for fields of `metadata`. |  |  |
+| `metadata` _[ListMeta](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.35/#listmeta-v1-meta)_ | Refer to Kubernetes API documentation for fields of `metadata`. |  |  |
 
 
 #### KDexFunctionMetadata
@@ -1005,7 +1005,7 @@ _Appears in:_
 | --- | --- | --- | --- |
 | `api` _[API](#api)_ | api defines the OpenAPI contract for the function.<br />See https://github.com/OAI/OpenAPI-Specification/blob/main/versions/3.0.3.md#path-item-object<br />See https://github.com/OAI/OpenAPI-Specification/blob/main/versions/3.0.3.md#schema-object<br />The supported fields from 'path item object' are: summary, description, get, put, post, delete, options, head, patch, trace, parameters, and responses.<br />The field 'schemas' of type map[string]schema whose values are defined by 'schema object' is supported and can be referenced throughout operation definitions. References must be in the form "#/components/schemas/<name>". |  | Required: \{\} <br /> |
 | `claimMappings` _MappingRule array_ | claimMappings is an array of CEL expressions for extracting custom claims<br />from the current authorization context onto the Function Access Token (FAT).<br />This can be used to map Function specific claims like tenant, department_id,<br />strip_customer_id, etc. to the FAT. |  | MaxItems: 16 <br />Optional: \{\} <br /> |
-| `hostRef` _[LocalObjectReference](https://kubernetes.io/docs/reference/generated/kubernetes-api/v/#localobjectreference-v1-core)_ | hostRef is a reference to the KDexHost that this translation belongs to. |  | Required: \{\} <br /> |
+| `hostRef` _[LocalObjectReference](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.35/#localobjectreference-v1-core)_ | hostRef is a reference to the KDexHost that this translation belongs to. |  | Required: \{\} <br /> |
 | `metadata` _[KDexFunctionMetadata](#kdexfunctionmetadata)_ | Refer to Kubernetes API documentation for fields of `metadata`. |  | Optional: \{\} <br /> |
 | `origin` _[FunctionOrigin](#functionorigin)_ | origin defines the origin of the function implementation. |  | AtMostOneOf: [executable generator source] <br />Optional: \{\} <br /> |
 
@@ -1055,7 +1055,7 @@ _Appears in:_
 | --- | --- | --- | --- |
 | `apiVersion` _string_ | `kdex.dev/v1alpha1` | | |
 | `kind` _string_ | `KDexHost` | | |
-| `metadata` _[ObjectMeta](https://kubernetes.io/docs/reference/generated/kubernetes-api/v/#objectmeta-v1-meta)_ | Refer to Kubernetes API documentation for fields of `metadata`. |  | Optional: \{\} <br /> |
+| `metadata` _[ObjectMeta](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.35/#objectmeta-v1-meta)_ | Refer to Kubernetes API documentation for fields of `metadata`. |  | Optional: \{\} <br /> |
 | `spec` _[KDexHostSpec](#kdexhostspec)_ | spec defines the desired state of KDexHost |  | Required: \{\} <br /> |
 
 
@@ -1074,7 +1074,7 @@ KDexHostList contains a list of KDexHost
 | `apiVersion` _string_ | `kdex.dev/v1alpha1` | | |
 | `kind` _string_ | `KDexHostList` | | |
 | `items` _[KDexHost](#kdexhost) array_ | items contains a list of KDexHost |  |  |
-| `metadata` _[ListMeta](https://kubernetes.io/docs/reference/generated/kubernetes-api/v/#listmeta-v1-meta)_ | Refer to Kubernetes API documentation for fields of `metadata`. |  |  |
+| `metadata` _[ListMeta](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.35/#listmeta-v1-meta)_ | Refer to Kubernetes API documentation for fields of `metadata`. |  |  |
 
 
 #### KDexHostSpec
@@ -1094,13 +1094,13 @@ _Appears in:_
 | `assets` _[Assets](#assets)_ | assets is a set of elements that define a host specific HTML instructions (e.g. favicon, site logo, charset). |  | ExactlyOneOf: [linkHref metaId style] <br />MaxItems: 32 <br /> |
 | `auth` _[Auth](#auth)_ | auth holds the host's authentication configuration. |  | Optional: \{\} <br /> |
 | `ingressPath` _string_ | ingressPath is a prefix beginning with '/-/' plus additional characters. This indicates where in the Ingress/HTTPRoute the Backend will be mounted.<br />This value is determined by the implementation that embeds the Backend and cannot be changed. |  | Optional: \{\} <br />Pattern: `^/-/.+` <br /> |
-| `env` _[EnvVar](https://kubernetes.io/docs/reference/generated/kubernetes-api/v/#envvar-v1-core) array_ | env is an optional list of environment variables to set in the container. |  | Optional: \{\} <br /> |
+| `env` _[EnvVar](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.35/#envvar-v1-core) array_ | env is an optional list of environment variables to set in the container. |  | Optional: \{\} <br /> |
 | `replicas` _integer_ | replicas is the number of desired pods. This is a pointer to distinguish between explicit<br />zero and not specified. Defaults to 1. |  | Optional: \{\} <br /> |
-| `resources` _[ResourceRequirements](https://kubernetes.io/docs/reference/generated/kubernetes-api/v/#resourcerequirements-v1-core)_ | resources defines the compute resources required by the container.<br />More info: https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/ |  | Optional: \{\} <br /> |
+| `resources` _[ResourceRequirements](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.35/#resourcerequirements-v1-core)_ | resources defines the compute resources required by the container.<br />More info: https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/ |  | Optional: \{\} <br /> |
 | `serverImage` _string_ | serverImage is the name of Backend image.<br />More info: https://kubernetes.io/docs/concepts/containers/images |  | MinLength: 5 <br />Optional: \{\} <br /> |
-| `serverImagePullPolicy` _[PullPolicy](https://kubernetes.io/docs/reference/generated/kubernetes-api/v/#pullpolicy-v1-core)_ | Policy for pulling the Backend server image. Possible values are:<br />Always: the kubelet always attempts to pull the reference. Container creation will fail If the pull fails.<br />Never: the kubelet never pulls the reference and only uses a local image or artifact. Container creation will fail if the reference isn't present.<br />IfNotPresent: the kubelet pulls if the reference isn't already present on disk. Container creation will fail if the reference isn't present and the pull fails.<br />Defaults to Always if :latest tag is specified, or IfNotPresent otherwise. |  | Optional: \{\} <br /> |
+| `serverImagePullPolicy` _[PullPolicy](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.35/#pullpolicy-v1-core)_ | Policy for pulling the Backend server image. Possible values are:<br />Always: the kubelet always attempts to pull the reference. Container creation will fail If the pull fails.<br />Never: the kubelet never pulls the reference and only uses a local image or artifact. Container creation will fail if the reference isn't present.<br />IfNotPresent: the kubelet pulls if the reference isn't already present on disk. Container creation will fail if the reference isn't present and the pull fails.<br />Defaults to Always if :latest tag is specified, or IfNotPresent otherwise. |  | Optional: \{\} <br /> |
 | `staticImage` _string_ | staticImage is the name of an OCI image that contains static resources that will be served by the Backend. This may not apply if the serverImage is set to a custom implementation.<br />More info: https://kubernetes.io/docs/concepts/containers/images |  | MinLength: 5 <br />Optional: \{\} <br /> |
-| `staticImagePullPolicy` _[PullPolicy](https://kubernetes.io/docs/reference/generated/kubernetes-api/v/#pullpolicy-v1-core)_ | Policy for pulling the OCI theme image. Possible values are:<br />Always: the kubelet always attempts to pull the reference. Container creation will fail If the pull fails.<br />Never: the kubelet never pulls the reference and only uses a local image or artifact. Container creation will fail if the reference isn't present.<br />IfNotPresent: the kubelet pulls if the reference isn't already present on disk. Container creation will fail if the reference isn't present and the pull fails.<br />Defaults to Always if :latest tag is specified, or IfNotPresent otherwise. |  | Optional: \{\} <br /> |
+| `staticImagePullPolicy` _[PullPolicy](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.35/#pullpolicy-v1-core)_ | Policy for pulling the OCI theme image. Possible values are:<br />Always: the kubelet always attempts to pull the reference. Container creation will fail If the pull fails.<br />Never: the kubelet never pulls the reference and only uses a local image or artifact. Container creation will fail if the reference isn't present.<br />IfNotPresent: the kubelet pulls if the reference isn't already present on disk. Container creation will fail if the reference isn't present and the pull fails.<br />Defaults to Always if :latest tag is specified, or IfNotPresent otherwise. |  | Optional: \{\} <br /> |
 | `brandName` _string_ | brandName is the name used when rendering pages belonging to the host. For example, it may be used as alt text for the logo displayed in the page header. |  | Required: \{\} <br /> |
 | `defaultLang` _string_ | defaultLang is a string containing a BCP 47 language tag.<br />See https://developer.mozilla.org/en-US/docs/Glossary/BCP_47_language_tag.<br />When render page paths do not specify a 'lang' path parameter this will be the value used. When not set the default will be 'en'. |  | Optional: \{\} <br /> |
 | `devMode` _boolean_ | devMode is a boolean that enables development features like the Request Sniffer. |  | Optional: \{\} <br /> |
@@ -1114,7 +1114,7 @@ _Appears in:_
 | `routing` _[Routing](#routing)_ | routing defines the desired routing configuration for the host. |  | Required: \{\} <br /> |
 | `scriptLibraryRef` _[KDexObjectReference](#kdexobjectreference)_ | scriptLibraryRef is an optional reference to a KDexScriptLibrary resource. |  | Optional: \{\} <br /> |
 | `security` _[SecurityRequirement](#securityrequirement)_ | Optional top level security requirements. |  |  |
-| `serviceAccountRef` _[LocalObjectReference](https://kubernetes.io/docs/reference/generated/kubernetes-api/v/#localobjectreference-v1-core)_ | serviceAccountRef is a reference to the service account used by the host to access secrets.<br />Each Secret must match one of the following cases:<br />- is annotated with 'kdex.dev/secret-type = api-key' (multiple)<br />    An api-key secret is used to define a PASETO key that will be used to sign api tokens and served at '/.well-known/pks.json'.<br />    - must contain key 'private-key'<br />    - may contain key 'public-key'<br />    - may be annotated with 'kdex.dev/active-key = true'<br />- is annotated with 'kdex.dev/secret-type = auth-client' (multiple)<br />    An auth-client secret is used to define a OAuth2 client.<br />    - must contain key 'client-id' OR 'client_id'<br />    - may contain key 'public' (true\|false, default: false)<br />    - if not public, must contain key 'client-secret' OR 'client_secret'<br />    - must contain key 'redirect-uris' OR 'redirect_uris' (comma separated list)<br />    - may contain key 'allowed-grant-types' OR 'allowed_grant_types' (comma separated list)<br />    - may contain key 'allowed-scopes' OR 'allowed_scopes' (comma separated list)<br />    - may contain key 'require-pkce' OR 'require_pkce' (true\|false, default: false)<br />    - may contain key 'name'<br />    - may contain key 'description'<br />- is annotated with 'kdex.dev/secret-type = git' (first, sorted newest to oldest)<br />    A git secret is used to define a Git repository.<br />    - must contain key 'host'<br />    - must contain key 'org'<br />    - must contain key 'password'<br />    - must contain key 'repo'<br />    - must contain key 'username'<br />- is annotated with 'kdex.dev/secret-type = jwt-keys' (multiple)<br />    A jwt-keys secret is used to define a JWT key that will be used to sign tokens and served at '/.well-known/jwks.json'.<br />    - must contain key 'private-key'<br />    - may be annotated with 'kdex.dev/active-key = true'<br />- is annotated with 'kdex.dev/secret-type = ldap' (first, sorted newest to oldest)<br />    A ldap secret is used to define a LDAP server connection that will be used to authenticate users.<br />    - must contain key 'active-directory' (true\|false)<br />    - must contain key 'addr'<br />    - must contain key 'base-dn'<br />    - must contain key 'bind-dn'<br />    - must contain key 'bind-user'<br />    - must contain key 'bind-pass'<br />    - must contain key 'user-filter'<br />    - may contain key 'attributes' (comma separated list of attributes to retrieve)<br />- is annotated with 'kdex.dev/secret-type = npm' (multiple)<br />    A npm secret is used to define a npm registry connection that will be used to retrieve packages.<br />    - must contain key '.npmrc' (formatted as a complete .npmrc file)<br />- is annotated with 'kdex.dev/secret-type = oidc-client' (first, sorted newest to oldest)<br />    An oidc-client secret is used to define the OpenID Connect client configuration for the host.<br />    - must contain key 'client-id' OR 'client_id'<br />    - must contain key 'client-secret' OR 'client_secret'<br />    - may contain a key 'name'<br />    - may contain key 'block-key' OR 'block_key'<br />- is annotated with 'kdex.dev/secret-type = subject' (multiple)<br />    A subject secret is used to define a subject that will be used to authenticate users. These are generally used to define low level system accounts.<br />    - must contain key 'sub'<br />    - must contain key 'password'<br />    - may contain arbitrary key(string)/value(string\|yaml) pairs which can be mapped to the claims using the spec.auth.claimMappings<br />- is of type 'kubernetes.io/dockerconfigjson'<br />    A dockerconfigjson secret is used to define a docker registry connection that will be used to pull (or push) images.<br />    - the pull scenario: (multiple)<br />        - no additional annotations are required<br />    - the push scenario: (first, sorted newest to oldest)<br />        - must be annotated with 'kdex.dev/secret-type = docker-push'<br />- is of type 'kubernetes.io/tls' (first, sorted newest to oldest)<br />    A tls secret is used to define a TLS certificate that will be used to secure connections to the host. |  | Optional: \{\} <br /> |
+| `serviceAccountRef` _[LocalObjectReference](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.35/#localobjectreference-v1-core)_ | serviceAccountRef is a reference to the service account used by the host to access secrets.<br />Each Secret must match one of the following cases:<br />- is annotated with 'kdex.dev/secret-type = api-key' (multiple)<br />    An api-key secret is used to define a PASETO key that will be used to sign api tokens and served at '/.well-known/pks.json'.<br />    - must contain key 'private-key'<br />    - may contain key 'public-key'<br />    - may be annotated with 'kdex.dev/active-key = true'<br />- is annotated with 'kdex.dev/secret-type = auth-client' (multiple)<br />    An auth-client secret is used to define a OAuth2 client.<br />    - must contain key 'client-id' OR 'client_id'<br />    - may contain key 'public' (true\|false, default: false)<br />    - if not public, must contain key 'client-secret' OR 'client_secret'<br />    - must contain key 'redirect-uris' OR 'redirect_uris' (comma separated list)<br />    - may contain key 'allowed-grant-types' OR 'allowed_grant_types' (comma separated list)<br />    - may contain key 'allowed-scopes' OR 'allowed_scopes' (comma separated list)<br />    - may contain key 'require-pkce' OR 'require_pkce' (true\|false, default: false)<br />    - may contain key 'name'<br />    - may contain key 'description'<br />- is annotated with 'kdex.dev/secret-type = git' (first, sorted newest to oldest)<br />    A git secret is used to define a Git repository.<br />    - must contain key 'host'<br />    - must contain key 'org'<br />    - must contain key 'password'<br />    - must contain key 'repo'<br />    - must contain key 'username'<br />- is annotated with 'kdex.dev/secret-type = jwt-keys' (multiple)<br />    A jwt-keys secret is used to define a JWT key that will be used to sign tokens and served at '/.well-known/jwks.json'.<br />    - must contain key 'private-key'<br />    - may be annotated with 'kdex.dev/active-key = true'<br />- is annotated with 'kdex.dev/secret-type = ldap' (first, sorted newest to oldest)<br />    A ldap secret is used to define a LDAP server connection that will be used to authenticate users.<br />    - must contain key 'active-directory' (true\|false)<br />    - must contain key 'addr'<br />    - must contain key 'base-dn'<br />    - must contain key 'bind-dn'<br />    - must contain key 'bind-user'<br />    - must contain key 'bind-pass'<br />    - must contain key 'user-filter'<br />    - may contain key 'attributes' (comma separated list of attributes to retrieve)<br />- is annotated with 'kdex.dev/secret-type = npm' (multiple)<br />    A npm secret is used to define a npm registry connection that will be used to retrieve packages.<br />    - must contain key '.npmrc' (formatted as a complete .npmrc file)<br />- is annotated with 'kdex.dev/secret-type = oidc-client' (first, sorted newest to oldest)<br />    An oidc-client secret is used to define the OpenID Connect client configuration for the host.<br />    - must contain key 'client-id' OR 'client_id'<br />    - must contain key 'client-secret' OR 'client_secret'<br />    - may contain a key 'name'<br />    - may contain key 'block-key' OR 'block_key'<br />- is annotated with 'kdex.dev/secret-type = subject' (multiple)<br />    A subject secret is used to define a subject that will be used to authenticate users. These are generally used to define low level system accounts.<br />    - must contain key 'sub'<br />    - must contain key 'password'<br />    - may contain arbitrary key(string)/value(string\|yaml) pairs which can be mapped to the claims using the spec.auth.claimMappings<br />- is of type 'kubernetes.io/dockerconfigjson'<br />    A dockerconfigjson secret is used to define a docker registry connection that will be used to pull (or push) images.<br />    - the pull scenario: (multiple)<br />        - no additional annotations are required<br />    - the push scenario: (first, sorted newest to oldest)<br />        - must be annotated with 'kdex.dev/secret-type = docker-push'<br />- is of type 'kubernetes.io/tls' (first, sorted newest to oldest)<br />    A tls secret is used to define a TLS certificate that will be used to secure connections to the host. |  | Optional: \{\} <br /> |
 | `themeRef` _[KDexObjectReference](#kdexobjectreference)_ | themeRef is a reference to the theme that should apply to all pages bound to this host. |  | Optional: \{\} <br /> |
 | `translationRefs` _[KDexObjectReference](#kdexobjectreference) array_ | translationRefs is an array of references to KDexTranslation or KDexClusterTranslation resources that define the translations that should apply to this host. |  | Optional: \{\} <br /> |
 | `utilityPages` _[UtilityPages](#utilitypages)_ | utilityPages defines the utility pages (announcement, error, login) for the host. |  | Optional: \{\} <br /> |
@@ -1141,7 +1141,7 @@ _Appears in:_
 | --- | --- | --- | --- |
 | `apiVersion` _string_ | `kdex.dev/v1alpha1` | | |
 | `kind` _string_ | `KDexInternalHost` | | |
-| `metadata` _[ObjectMeta](https://kubernetes.io/docs/reference/generated/kubernetes-api/v/#objectmeta-v1-meta)_ | Refer to Kubernetes API documentation for fields of `metadata`. |  | Optional: \{\} <br /> |
+| `metadata` _[ObjectMeta](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.35/#objectmeta-v1-meta)_ | Refer to Kubernetes API documentation for fields of `metadata`. |  | Optional: \{\} <br /> |
 | `spec` _[KDexInternalHostSpec](#kdexinternalhostspec)_ | spec defines the desired state of KDexInternalHost |  | Required: \{\} <br /> |
 
 
@@ -1159,7 +1159,7 @@ KDexInternalHostList contains a list of KDexInternalHost
 | --- | --- | --- | --- |
 | `apiVersion` _string_ | `kdex.dev/v1alpha1` | | |
 | `kind` _string_ | `KDexInternalHostList` | | |
-| `metadata` _[ListMeta](https://kubernetes.io/docs/reference/generated/kubernetes-api/v/#listmeta-v1-meta)_ | Refer to Kubernetes API documentation for fields of `metadata`. |  |  |
+| `metadata` _[ListMeta](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.35/#listmeta-v1-meta)_ | Refer to Kubernetes API documentation for fields of `metadata`. |  |  |
 | `items` _[KDexInternalHost](#kdexinternalhost) array_ |  |  |  |
 
 
@@ -1179,13 +1179,13 @@ _Appears in:_
 | `assets` _[Assets](#assets)_ | assets is a set of elements that define a host specific HTML instructions (e.g. favicon, site logo, charset). |  | ExactlyOneOf: [linkHref metaId style] <br />MaxItems: 32 <br /> |
 | `auth` _[Auth](#auth)_ | auth holds the host's authentication configuration. |  | Optional: \{\} <br /> |
 | `ingressPath` _string_ | ingressPath is a prefix beginning with '/-/' plus additional characters. This indicates where in the Ingress/HTTPRoute the Backend will be mounted.<br />This value is determined by the implementation that embeds the Backend and cannot be changed. |  | Optional: \{\} <br />Pattern: `^/-/.+` <br /> |
-| `env` _[EnvVar](https://kubernetes.io/docs/reference/generated/kubernetes-api/v/#envvar-v1-core) array_ | env is an optional list of environment variables to set in the container. |  | Optional: \{\} <br /> |
+| `env` _[EnvVar](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.35/#envvar-v1-core) array_ | env is an optional list of environment variables to set in the container. |  | Optional: \{\} <br /> |
 | `replicas` _integer_ | replicas is the number of desired pods. This is a pointer to distinguish between explicit<br />zero and not specified. Defaults to 1. |  | Optional: \{\} <br /> |
-| `resources` _[ResourceRequirements](https://kubernetes.io/docs/reference/generated/kubernetes-api/v/#resourcerequirements-v1-core)_ | resources defines the compute resources required by the container.<br />More info: https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/ |  | Optional: \{\} <br /> |
+| `resources` _[ResourceRequirements](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.35/#resourcerequirements-v1-core)_ | resources defines the compute resources required by the container.<br />More info: https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/ |  | Optional: \{\} <br /> |
 | `serverImage` _string_ | serverImage is the name of Backend image.<br />More info: https://kubernetes.io/docs/concepts/containers/images |  | MinLength: 5 <br />Optional: \{\} <br /> |
-| `serverImagePullPolicy` _[PullPolicy](https://kubernetes.io/docs/reference/generated/kubernetes-api/v/#pullpolicy-v1-core)_ | Policy for pulling the Backend server image. Possible values are:<br />Always: the kubelet always attempts to pull the reference. Container creation will fail If the pull fails.<br />Never: the kubelet never pulls the reference and only uses a local image or artifact. Container creation will fail if the reference isn't present.<br />IfNotPresent: the kubelet pulls if the reference isn't already present on disk. Container creation will fail if the reference isn't present and the pull fails.<br />Defaults to Always if :latest tag is specified, or IfNotPresent otherwise. |  | Optional: \{\} <br /> |
+| `serverImagePullPolicy` _[PullPolicy](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.35/#pullpolicy-v1-core)_ | Policy for pulling the Backend server image. Possible values are:<br />Always: the kubelet always attempts to pull the reference. Container creation will fail If the pull fails.<br />Never: the kubelet never pulls the reference and only uses a local image or artifact. Container creation will fail if the reference isn't present.<br />IfNotPresent: the kubelet pulls if the reference isn't already present on disk. Container creation will fail if the reference isn't present and the pull fails.<br />Defaults to Always if :latest tag is specified, or IfNotPresent otherwise. |  | Optional: \{\} <br /> |
 | `staticImage` _string_ | staticImage is the name of an OCI image that contains static resources that will be served by the Backend. This may not apply if the serverImage is set to a custom implementation.<br />More info: https://kubernetes.io/docs/concepts/containers/images |  | MinLength: 5 <br />Optional: \{\} <br /> |
-| `staticImagePullPolicy` _[PullPolicy](https://kubernetes.io/docs/reference/generated/kubernetes-api/v/#pullpolicy-v1-core)_ | Policy for pulling the OCI theme image. Possible values are:<br />Always: the kubelet always attempts to pull the reference. Container creation will fail If the pull fails.<br />Never: the kubelet never pulls the reference and only uses a local image or artifact. Container creation will fail if the reference isn't present.<br />IfNotPresent: the kubelet pulls if the reference isn't already present on disk. Container creation will fail if the reference isn't present and the pull fails.<br />Defaults to Always if :latest tag is specified, or IfNotPresent otherwise. |  | Optional: \{\} <br /> |
+| `staticImagePullPolicy` _[PullPolicy](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.35/#pullpolicy-v1-core)_ | Policy for pulling the OCI theme image. Possible values are:<br />Always: the kubelet always attempts to pull the reference. Container creation will fail If the pull fails.<br />Never: the kubelet never pulls the reference and only uses a local image or artifact. Container creation will fail if the reference isn't present.<br />IfNotPresent: the kubelet pulls if the reference isn't already present on disk. Container creation will fail if the reference isn't present and the pull fails.<br />Defaults to Always if :latest tag is specified, or IfNotPresent otherwise. |  | Optional: \{\} <br /> |
 | `brandName` _string_ | brandName is the name used when rendering pages belonging to the host. For example, it may be used as alt text for the logo displayed in the page header. |  | Required: \{\} <br /> |
 | `defaultLang` _string_ | defaultLang is a string containing a BCP 47 language tag.<br />See https://developer.mozilla.org/en-US/docs/Glossary/BCP_47_language_tag.<br />When render page paths do not specify a 'lang' path parameter this will be the value used. When not set the default will be 'en'. |  | Optional: \{\} <br /> |
 | `devMode` _boolean_ | devMode is a boolean that enables development features like the Request Sniffer. |  | Optional: \{\} <br /> |
@@ -1199,15 +1199,15 @@ _Appears in:_
 | `routing` _[Routing](#routing)_ | routing defines the desired routing configuration for the host. |  | Required: \{\} <br /> |
 | `scriptLibraryRef` _[KDexObjectReference](#kdexobjectreference)_ | scriptLibraryRef is an optional reference to a KDexScriptLibrary resource. |  | Optional: \{\} <br /> |
 | `security` _[SecurityRequirement](#securityrequirement)_ | Optional top level security requirements. |  |  |
-| `serviceAccountRef` _[LocalObjectReference](https://kubernetes.io/docs/reference/generated/kubernetes-api/v/#localobjectreference-v1-core)_ | serviceAccountRef is a reference to the service account used by the host to access secrets.<br />Each Secret must match one of the following cases:<br />- is annotated with 'kdex.dev/secret-type = api-key' (multiple)<br />    An api-key secret is used to define a PASETO key that will be used to sign api tokens and served at '/.well-known/pks.json'.<br />    - must contain key 'private-key'<br />    - may contain key 'public-key'<br />    - may be annotated with 'kdex.dev/active-key = true'<br />- is annotated with 'kdex.dev/secret-type = auth-client' (multiple)<br />    An auth-client secret is used to define a OAuth2 client.<br />    - must contain key 'client-id' OR 'client_id'<br />    - may contain key 'public' (true\|false, default: false)<br />    - if not public, must contain key 'client-secret' OR 'client_secret'<br />    - must contain key 'redirect-uris' OR 'redirect_uris' (comma separated list)<br />    - may contain key 'allowed-grant-types' OR 'allowed_grant_types' (comma separated list)<br />    - may contain key 'allowed-scopes' OR 'allowed_scopes' (comma separated list)<br />    - may contain key 'require-pkce' OR 'require_pkce' (true\|false, default: false)<br />    - may contain key 'name'<br />    - may contain key 'description'<br />- is annotated with 'kdex.dev/secret-type = git' (first, sorted newest to oldest)<br />    A git secret is used to define a Git repository.<br />    - must contain key 'host'<br />    - must contain key 'org'<br />    - must contain key 'password'<br />    - must contain key 'repo'<br />    - must contain key 'username'<br />- is annotated with 'kdex.dev/secret-type = jwt-keys' (multiple)<br />    A jwt-keys secret is used to define a JWT key that will be used to sign tokens and served at '/.well-known/jwks.json'.<br />    - must contain key 'private-key'<br />    - may be annotated with 'kdex.dev/active-key = true'<br />- is annotated with 'kdex.dev/secret-type = ldap' (first, sorted newest to oldest)<br />    A ldap secret is used to define a LDAP server connection that will be used to authenticate users.<br />    - must contain key 'active-directory' (true\|false)<br />    - must contain key 'addr'<br />    - must contain key 'base-dn'<br />    - must contain key 'bind-dn'<br />    - must contain key 'bind-user'<br />    - must contain key 'bind-pass'<br />    - must contain key 'user-filter'<br />    - may contain key 'attributes' (comma separated list of attributes to retrieve)<br />- is annotated with 'kdex.dev/secret-type = npm' (multiple)<br />    A npm secret is used to define a npm registry connection that will be used to retrieve packages.<br />    - must contain key '.npmrc' (formatted as a complete .npmrc file)<br />- is annotated with 'kdex.dev/secret-type = oidc-client' (first, sorted newest to oldest)<br />    An oidc-client secret is used to define the OpenID Connect client configuration for the host.<br />    - must contain key 'client-id' OR 'client_id'<br />    - must contain key 'client-secret' OR 'client_secret'<br />    - may contain a key 'name'<br />    - may contain key 'block-key' OR 'block_key'<br />- is annotated with 'kdex.dev/secret-type = subject' (multiple)<br />    A subject secret is used to define a subject that will be used to authenticate users. These are generally used to define low level system accounts.<br />    - must contain key 'sub'<br />    - must contain key 'password'<br />    - may contain arbitrary key(string)/value(string\|yaml) pairs which can be mapped to the claims using the spec.auth.claimMappings<br />- is of type 'kubernetes.io/dockerconfigjson'<br />    A dockerconfigjson secret is used to define a docker registry connection that will be used to pull (or push) images.<br />    - the pull scenario: (multiple)<br />        - no additional annotations are required<br />    - the push scenario: (first, sorted newest to oldest)<br />        - must be annotated with 'kdex.dev/secret-type = docker-push'<br />- is of type 'kubernetes.io/tls' (first, sorted newest to oldest)<br />    A tls secret is used to define a TLS certificate that will be used to secure connections to the host. |  | Optional: \{\} <br /> |
+| `serviceAccountRef` _[LocalObjectReference](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.35/#localobjectreference-v1-core)_ | serviceAccountRef is a reference to the service account used by the host to access secrets.<br />Each Secret must match one of the following cases:<br />- is annotated with 'kdex.dev/secret-type = api-key' (multiple)<br />    An api-key secret is used to define a PASETO key that will be used to sign api tokens and served at '/.well-known/pks.json'.<br />    - must contain key 'private-key'<br />    - may contain key 'public-key'<br />    - may be annotated with 'kdex.dev/active-key = true'<br />- is annotated with 'kdex.dev/secret-type = auth-client' (multiple)<br />    An auth-client secret is used to define a OAuth2 client.<br />    - must contain key 'client-id' OR 'client_id'<br />    - may contain key 'public' (true\|false, default: false)<br />    - if not public, must contain key 'client-secret' OR 'client_secret'<br />    - must contain key 'redirect-uris' OR 'redirect_uris' (comma separated list)<br />    - may contain key 'allowed-grant-types' OR 'allowed_grant_types' (comma separated list)<br />    - may contain key 'allowed-scopes' OR 'allowed_scopes' (comma separated list)<br />    - may contain key 'require-pkce' OR 'require_pkce' (true\|false, default: false)<br />    - may contain key 'name'<br />    - may contain key 'description'<br />- is annotated with 'kdex.dev/secret-type = git' (first, sorted newest to oldest)<br />    A git secret is used to define a Git repository.<br />    - must contain key 'host'<br />    - must contain key 'org'<br />    - must contain key 'password'<br />    - must contain key 'repo'<br />    - must contain key 'username'<br />- is annotated with 'kdex.dev/secret-type = jwt-keys' (multiple)<br />    A jwt-keys secret is used to define a JWT key that will be used to sign tokens and served at '/.well-known/jwks.json'.<br />    - must contain key 'private-key'<br />    - may be annotated with 'kdex.dev/active-key = true'<br />- is annotated with 'kdex.dev/secret-type = ldap' (first, sorted newest to oldest)<br />    A ldap secret is used to define a LDAP server connection that will be used to authenticate users.<br />    - must contain key 'active-directory' (true\|false)<br />    - must contain key 'addr'<br />    - must contain key 'base-dn'<br />    - must contain key 'bind-dn'<br />    - must contain key 'bind-user'<br />    - must contain key 'bind-pass'<br />    - must contain key 'user-filter'<br />    - may contain key 'attributes' (comma separated list of attributes to retrieve)<br />- is annotated with 'kdex.dev/secret-type = npm' (multiple)<br />    A npm secret is used to define a npm registry connection that will be used to retrieve packages.<br />    - must contain key '.npmrc' (formatted as a complete .npmrc file)<br />- is annotated with 'kdex.dev/secret-type = oidc-client' (first, sorted newest to oldest)<br />    An oidc-client secret is used to define the OpenID Connect client configuration for the host.<br />    - must contain key 'client-id' OR 'client_id'<br />    - must contain key 'client-secret' OR 'client_secret'<br />    - may contain a key 'name'<br />    - may contain key 'block-key' OR 'block_key'<br />- is annotated with 'kdex.dev/secret-type = subject' (multiple)<br />    A subject secret is used to define a subject that will be used to authenticate users. These are generally used to define low level system accounts.<br />    - must contain key 'sub'<br />    - must contain key 'password'<br />    - may contain arbitrary key(string)/value(string\|yaml) pairs which can be mapped to the claims using the spec.auth.claimMappings<br />- is of type 'kubernetes.io/dockerconfigjson'<br />    A dockerconfigjson secret is used to define a docker registry connection that will be used to pull (or push) images.<br />    - the pull scenario: (multiple)<br />        - no additional annotations are required<br />    - the push scenario: (first, sorted newest to oldest)<br />        - must be annotated with 'kdex.dev/secret-type = docker-push'<br />- is of type 'kubernetes.io/tls' (first, sorted newest to oldest)<br />    A tls secret is used to define a TLS certificate that will be used to secure connections to the host. |  | Optional: \{\} <br /> |
 | `themeRef` _[KDexObjectReference](#kdexobjectreference)_ | themeRef is a reference to the theme that should apply to all pages bound to this host. |  | Optional: \{\} <br /> |
 | `translationRefs` _[KDexObjectReference](#kdexobjectreference) array_ | translationRefs is an array of references to KDexTranslation or KDexClusterTranslation resources that define the translations that should apply to this host. |  | Optional: \{\} <br /> |
 | `utilityPages` _[UtilityPages](#utilitypages)_ | utilityPages defines the utility pages (announcement, error, login) for the host. |  | Optional: \{\} <br /> |
-| `announcementRef` _[LocalObjectReference](https://kubernetes.io/docs/reference/generated/kubernetes-api/v/#localobjectreference-v1-core)_ | announcementRef is a reference to the KDexInternalUtilityPage that provides the announcement page. |  | Optional: \{\} <br /> |
-| `errorRef` _[LocalObjectReference](https://kubernetes.io/docs/reference/generated/kubernetes-api/v/#localobjectreference-v1-core)_ | errorRef is a reference to the KDexInternalUtilityPage that provides the error page. |  | Optional: \{\} <br /> |
-| `loginRef` _[LocalObjectReference](https://kubernetes.io/docs/reference/generated/kubernetes-api/v/#localobjectreference-v1-core)_ | loginRef is a reference to the KDexInternalUtilityPage that provides the login page. |  | Optional: \{\} <br /> |
+| `announcementRef` _[LocalObjectReference](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.35/#localobjectreference-v1-core)_ | announcementRef is a reference to the KDexInternalUtilityPage that provides the announcement page. |  | Optional: \{\} <br /> |
+| `errorRef` _[LocalObjectReference](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.35/#localobjectreference-v1-core)_ | errorRef is a reference to the KDexInternalUtilityPage that provides the error page. |  | Optional: \{\} <br /> |
+| `loginRef` _[LocalObjectReference](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.35/#localobjectreference-v1-core)_ | loginRef is a reference to the KDexInternalUtilityPage that provides the login page. |  | Optional: \{\} <br /> |
 | `requiredBackends` _[KDexObjectReference](#kdexobjectreference) array_ | requiredBackends is a set of references to KDexApp or KDexScriptLibrary resources that specify a backend. |  | Optional: \{\} <br /> |
-| `internalTranslationRefs` _[LocalObjectReference](https://kubernetes.io/docs/reference/generated/kubernetes-api/v/#localobjectreference-v1-core) array_ | internalTranslationRefs is a set of references to KDexInternalTranslation resources that specify a translation. |  | Optional: \{\} <br /> |
+| `internalTranslationRefs` _[LocalObjectReference](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.35/#localobjectreference-v1-core) array_ | internalTranslationRefs is a set of references to KDexInternalTranslation resources that specify a translation. |  | Optional: \{\} <br /> |
 
 
 #### KDexInternalPackageReferences
@@ -1229,7 +1229,7 @@ _Appears in:_
 | --- | --- | --- | --- |
 | `apiVersion` _string_ | `kdex.dev/v1alpha1` | | |
 | `kind` _string_ | `KDexInternalPackageReferences` | | |
-| `metadata` _[ObjectMeta](https://kubernetes.io/docs/reference/generated/kubernetes-api/v/#objectmeta-v1-meta)_ | Refer to Kubernetes API documentation for fields of `metadata`. |  | Optional: \{\} <br /> |
+| `metadata` _[ObjectMeta](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.35/#objectmeta-v1-meta)_ | Refer to Kubernetes API documentation for fields of `metadata`. |  | Optional: \{\} <br /> |
 | `spec` _[KDexInternalPackageReferencesSpec](#kdexinternalpackagereferencesspec)_ | spec defines the desired state of KDexInternalPackageReferences |  | Required: \{\} <br /> |
 
 
@@ -1247,7 +1247,7 @@ KDexInternalPackageReferencesList contains a list of KDexInternalPackageReferenc
 | --- | --- | --- | --- |
 | `apiVersion` _string_ | `kdex.dev/v1alpha1` | | |
 | `kind` _string_ | `KDexInternalPackageReferencesList` | | |
-| `metadata` _[ListMeta](https://kubernetes.io/docs/reference/generated/kubernetes-api/v/#listmeta-v1-meta)_ | Refer to Kubernetes API documentation for fields of `metadata`. |  |  |
+| `metadata` _[ListMeta](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.35/#listmeta-v1-meta)_ | Refer to Kubernetes API documentation for fields of `metadata`. |  |  |
 | `items` _[KDexInternalPackageReferences](#kdexinternalpackagereferences) array_ |  |  |  |
 
 
@@ -1264,7 +1264,7 @@ _Appears in:_
 
 | Field | Description | Default | Validation |
 | --- | --- | --- | --- |
-| `hostRef` _[LocalObjectReference](https://kubernetes.io/docs/reference/generated/kubernetes-api/v/#localobjectreference-v1-core)_ | hostRef is a reference to the KDexHost that this internal package references is for. |  | Required: \{\} <br /> |
+| `hostRef` _[LocalObjectReference](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.35/#localobjectreference-v1-core)_ | hostRef is a reference to the KDexHost that this internal package references is for. |  | Required: \{\} <br /> |
 | `packageReferences` _[PackageReference](#packagereference) array_ |  |  | MinItems: 1 <br /> |
 
 
@@ -1283,7 +1283,7 @@ _Appears in:_
 | --- | --- | --- | --- |
 | `apiVersion` _string_ | `kdex.dev/v1alpha1` | | |
 | `kind` _string_ | `KDexInternalTranslation` | | |
-| `metadata` _[ObjectMeta](https://kubernetes.io/docs/reference/generated/kubernetes-api/v/#objectmeta-v1-meta)_ | Refer to Kubernetes API documentation for fields of `metadata`. |  | Optional: \{\} <br /> |
+| `metadata` _[ObjectMeta](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.35/#objectmeta-v1-meta)_ | Refer to Kubernetes API documentation for fields of `metadata`. |  | Optional: \{\} <br /> |
 | `spec` _[KDexInternalTranslationSpec](#kdexinternaltranslationspec)_ | spec defines the desired state of KDexInternalTranslation |  | Required: \{\} <br /> |
 
 
@@ -1301,7 +1301,7 @@ KDexInternalTranslationList contains a list of KDexInternalTranslation
 | --- | --- | --- | --- |
 | `apiVersion` _string_ | `kdex.dev/v1alpha1` | | |
 | `kind` _string_ | `KDexInternalTranslationList` | | |
-| `metadata` _[ListMeta](https://kubernetes.io/docs/reference/generated/kubernetes-api/v/#listmeta-v1-meta)_ | Refer to Kubernetes API documentation for fields of `metadata`. |  |  |
+| `metadata` _[ListMeta](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.35/#listmeta-v1-meta)_ | Refer to Kubernetes API documentation for fields of `metadata`. |  |  |
 | `items` _[KDexInternalTranslation](#kdexinternaltranslation) array_ |  |  |  |
 
 
@@ -1319,7 +1319,7 @@ _Appears in:_
 | Field | Description | Default | Validation |
 | --- | --- | --- | --- |
 | `translations` _[Translation](#translation) array_ | translations is an array of objects where each one specifies a language (lang) and a map (keysAndValues) consisting of key/value pairs. If the lang property is not unique in the array and its keysAndValues map contains the same keys, the last one takes precedence. |  | MaxItems: 32 <br />MinItems: 1 <br />Required: \{\} <br /> |
-| `hostRef` _[LocalObjectReference](https://kubernetes.io/docs/reference/generated/kubernetes-api/v/#localobjectreference-v1-core)_ | hostRef is a reference to the KDexInternalHost that this translation belongs to. |  | Required: \{\} <br /> |
+| `hostRef` _[LocalObjectReference](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.35/#localobjectreference-v1-core)_ | hostRef is a reference to the KDexInternalHost that this translation belongs to. |  | Required: \{\} <br /> |
 
 
 #### KDexInternalUtilityPage
@@ -1341,7 +1341,7 @@ _Appears in:_
 | --- | --- | --- | --- |
 | `apiVersion` _string_ | `kdex.dev/v1alpha1` | | |
 | `kind` _string_ | `KDexInternalUtilityPage` | | |
-| `metadata` _[ObjectMeta](https://kubernetes.io/docs/reference/generated/kubernetes-api/v/#objectmeta-v1-meta)_ | Refer to Kubernetes API documentation for fields of `metadata`. |  | Optional: \{\} <br /> |
+| `metadata` _[ObjectMeta](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.35/#objectmeta-v1-meta)_ | Refer to Kubernetes API documentation for fields of `metadata`. |  | Optional: \{\} <br /> |
 | `spec` _[KDexInternalUtilityPageSpec](#kdexinternalutilitypagespec)_ | spec defines the desired state of KDexInternalUtilityPage |  | Required: \{\} <br /> |
 
 
@@ -1359,7 +1359,7 @@ KDexInternalUtilityPageList contains a list of KDexInternalUtilityPage
 | --- | --- | --- | --- |
 | `apiVersion` _string_ | `kdex.dev/v1alpha1` | | |
 | `kind` _string_ | `KDexInternalUtilityPageList` | | |
-| `metadata` _[ListMeta](https://kubernetes.io/docs/reference/generated/kubernetes-api/v/#listmeta-v1-meta)_ | Refer to Kubernetes API documentation for fields of `metadata`. |  |  |
+| `metadata` _[ListMeta](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.35/#listmeta-v1-meta)_ | Refer to Kubernetes API documentation for fields of `metadata`. |  |  |
 | `items` _[KDexInternalUtilityPage](#kdexinternalutilitypage) array_ |  |  |  |
 
 
@@ -1383,7 +1383,7 @@ _Appears in:_
 | `overrideNavigationRefs` _object (keys:string, values:[KDexObjectReference](#kdexobjectreference))_ | overrideNavigationRefs is an optional map of keyed navigation object references. When not empty, the 'main' key must be specified. These navigations will be merged with the navigations from the archetype. |  | MaxProperties: 10 <br />Optional: \{\} <br /> |
 | `pageArchetypeRef` _[KDexObjectReference](#kdexobjectreference)_ | pageArchetypeRef is a reference to the KDexPageArchetype that this binding is for. |  | Required: \{\} <br /> |
 | `scriptLibraryRef` _[KDexObjectReference](#kdexobjectreference)_ | scriptLibraryRef is an optional reference to a KDexScriptLibrary resource. |  | Optional: \{\} <br /> |
-| `hostRef` _[LocalObjectReference](https://kubernetes.io/docs/reference/generated/kubernetes-api/v/#localobjectreference-v1-core)_ | hostRef is a reference to the KDexInternalHost that this utility page belongs to. |  | Required: \{\} <br /> |
+| `hostRef` _[LocalObjectReference](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.35/#localobjectreference-v1-core)_ | hostRef is a reference to the KDexInternalHost that this utility page belongs to. |  | Required: \{\} <br /> |
 
 
 #### KDexObjectReference
@@ -1433,7 +1433,7 @@ _Appears in:_
 | Field | Description | Default | Validation |
 | --- | --- | --- | --- |
 | `observedGeneration` _integer_ | observedGeneration is the most recent generation observed for this resource. It corresponds to the<br />resource's generation, which is updated on mutation by the API Server. |  | Optional: \{\} <br /> |
-| `conditions` _[Condition](https://kubernetes.io/docs/reference/generated/kubernetes-api/v/#condition-v1-meta) array_ | conditions represent the current state of the resource.<br />Each condition has a unique type and reflects the status of a specific aspect of the resource.<br />Standard condition types include:<br />- "Progressing": the resource is being created or updated<br />- "Ready": the resource is fully functional<br />- "Degraded": the resource failed to reach or maintain its desired state<br />The status of each condition is one of True, False, or Unknown. |  | Optional: \{\} <br /> |
+| `conditions` _[Condition](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.35/#condition-v1-meta) array_ | conditions represent the current state of the resource.<br />Each condition has a unique type and reflects the status of a specific aspect of the resource.<br />Standard condition types include:<br />- "Progressing": the resource is being created or updated<br />- "Ready": the resource is fully functional<br />- "Degraded": the resource failed to reach or maintain its desired state<br />The status of each condition is one of True, False, or Unknown. |  | Optional: \{\} <br /> |
 | `attributes` _object (keys:string, values:string)_ | attributes hold state of the resource as key/value pairs. |  | MaxProperties: 32 <br />Optional: \{\} <br /> |
 
 
@@ -1456,7 +1456,7 @@ _Appears in:_
 | --- | --- | --- | --- |
 | `apiVersion` _string_ | `kdex.dev/v1alpha1` | | |
 | `kind` _string_ | `KDexPage` | | |
-| `metadata` _[ObjectMeta](https://kubernetes.io/docs/reference/generated/kubernetes-api/v/#objectmeta-v1-meta)_ | Refer to Kubernetes API documentation for fields of `metadata`. |  | Optional: \{\} <br /> |
+| `metadata` _[ObjectMeta](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.35/#objectmeta-v1-meta)_ | Refer to Kubernetes API documentation for fields of `metadata`. |  | Optional: \{\} <br /> |
 | `spec` _[KDexPageSpec](#kdexpagespec)_ | spec defines the desired state of KDexPage |  | Required: \{\} <br /> |
 
 
@@ -1479,7 +1479,7 @@ _Appears in:_
 | --- | --- | --- | --- |
 | `apiVersion` _string_ | `kdex.dev/v1alpha1` | | |
 | `kind` _string_ | `KDexPageArchetype` | | |
-| `metadata` _[ObjectMeta](https://kubernetes.io/docs/reference/generated/kubernetes-api/v/#objectmeta-v1-meta)_ | Refer to Kubernetes API documentation for fields of `metadata`. |  | Optional: \{\} <br /> |
+| `metadata` _[ObjectMeta](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.35/#objectmeta-v1-meta)_ | Refer to Kubernetes API documentation for fields of `metadata`. |  | Optional: \{\} <br /> |
 | `spec` _[KDexPageArchetypeSpec](#kdexpagearchetypespec)_ | spec defines the desired state of KDexPageArchetype |  | Required: \{\} <br /> |
 
 
@@ -1497,7 +1497,7 @@ KDexPageArchetypeList contains a list of KDexPageArchetype
 | --- | --- | --- | --- |
 | `apiVersion` _string_ | `kdex.dev/v1alpha1` | | |
 | `kind` _string_ | `KDexPageArchetypeList` | | |
-| `metadata` _[ListMeta](https://kubernetes.io/docs/reference/generated/kubernetes-api/v/#listmeta-v1-meta)_ | Refer to Kubernetes API documentation for fields of `metadata`. |  |  |
+| `metadata` _[ListMeta](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.35/#listmeta-v1-meta)_ | Refer to Kubernetes API documentation for fields of `metadata`. |  |  |
 | `items` _[KDexPageArchetype](#kdexpagearchetype) array_ |  |  |  |
 
 
@@ -1540,7 +1540,7 @@ _Appears in:_
 | --- | --- | --- | --- |
 | `apiVersion` _string_ | `kdex.dev/v1alpha1` | | |
 | `kind` _string_ | `KDexPageFooter` | | |
-| `metadata` _[ObjectMeta](https://kubernetes.io/docs/reference/generated/kubernetes-api/v/#objectmeta-v1-meta)_ | Refer to Kubernetes API documentation for fields of `metadata`. |  | Optional: \{\} <br /> |
+| `metadata` _[ObjectMeta](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.35/#objectmeta-v1-meta)_ | Refer to Kubernetes API documentation for fields of `metadata`. |  | Optional: \{\} <br /> |
 | `spec` _[KDexPageFooterSpec](#kdexpagefooterspec)_ | spec defines the desired state of KDexPageFooter |  | Required: \{\} <br /> |
 
 
@@ -1558,7 +1558,7 @@ KDexPageFooterList contains a list of KDexPageFooter
 | --- | --- | --- | --- |
 | `apiVersion` _string_ | `kdex.dev/v1alpha1` | | |
 | `kind` _string_ | `KDexPageFooterList` | | |
-| `metadata` _[ListMeta](https://kubernetes.io/docs/reference/generated/kubernetes-api/v/#listmeta-v1-meta)_ | Refer to Kubernetes API documentation for fields of `metadata`. |  |  |
+| `metadata` _[ListMeta](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.35/#listmeta-v1-meta)_ | Refer to Kubernetes API documentation for fields of `metadata`. |  |  |
 | `items` _[KDexPageFooter](#kdexpagefooter) array_ |  |  |  |
 
 
@@ -1598,7 +1598,7 @@ _Appears in:_
 | --- | --- | --- | --- |
 | `apiVersion` _string_ | `kdex.dev/v1alpha1` | | |
 | `kind` _string_ | `KDexPageHeader` | | |
-| `metadata` _[ObjectMeta](https://kubernetes.io/docs/reference/generated/kubernetes-api/v/#objectmeta-v1-meta)_ | Refer to Kubernetes API documentation for fields of `metadata`. |  | Optional: \{\} <br /> |
+| `metadata` _[ObjectMeta](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.35/#objectmeta-v1-meta)_ | Refer to Kubernetes API documentation for fields of `metadata`. |  | Optional: \{\} <br /> |
 | `spec` _[KDexPageHeaderSpec](#kdexpageheaderspec)_ | spec defines the desired state of KDexPageHeader |  | Required: \{\} <br /> |
 
 
@@ -1616,7 +1616,7 @@ KDexPageHeaderList contains a list of KDexPageHeader
 | --- | --- | --- | --- |
 | `apiVersion` _string_ | `kdex.dev/v1alpha1` | | |
 | `kind` _string_ | `KDexPageHeaderList` | | |
-| `metadata` _[ListMeta](https://kubernetes.io/docs/reference/generated/kubernetes-api/v/#listmeta-v1-meta)_ | Refer to Kubernetes API documentation for fields of `metadata`. |  |  |
+| `metadata` _[ListMeta](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.35/#listmeta-v1-meta)_ | Refer to Kubernetes API documentation for fields of `metadata`. |  |  |
 | `items` _[KDexPageHeader](#kdexpageheader) array_ |  |  |  |
 
 
@@ -1652,7 +1652,7 @@ KDexPageList contains a list of KDexPage
 | --- | --- | --- | --- |
 | `apiVersion` _string_ | `kdex.dev/v1alpha1` | | |
 | `kind` _string_ | `KDexPageList` | | |
-| `metadata` _[ListMeta](https://kubernetes.io/docs/reference/generated/kubernetes-api/v/#listmeta-v1-meta)_ | Refer to Kubernetes API documentation for fields of `metadata`. |  |  |
+| `metadata` _[ListMeta](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.35/#listmeta-v1-meta)_ | Refer to Kubernetes API documentation for fields of `metadata`. |  |  |
 | `items` _[KDexPage](#kdexpage) array_ |  |  |  |
 
 
@@ -1675,7 +1675,7 @@ _Appears in:_
 | --- | --- | --- | --- |
 | `apiVersion` _string_ | `kdex.dev/v1alpha1` | | |
 | `kind` _string_ | `KDexPageNavigation` | | |
-| `metadata` _[ObjectMeta](https://kubernetes.io/docs/reference/generated/kubernetes-api/v/#objectmeta-v1-meta)_ | Refer to Kubernetes API documentation for fields of `metadata`. |  | Optional: \{\} <br /> |
+| `metadata` _[ObjectMeta](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.35/#objectmeta-v1-meta)_ | Refer to Kubernetes API documentation for fields of `metadata`. |  | Optional: \{\} <br /> |
 | `spec` _[KDexPageNavigationSpec](#kdexpagenavigationspec)_ | spec defines the desired state of KDexPageNavigation |  | Required: \{\} <br /> |
 
 
@@ -1693,7 +1693,7 @@ KDexPageNavigationList contains a list of KDexPageNavigation
 | --- | --- | --- | --- |
 | `apiVersion` _string_ | `kdex.dev/v1alpha1` | | |
 | `kind` _string_ | `KDexPageNavigationList` | | |
-| `metadata` _[ListMeta](https://kubernetes.io/docs/reference/generated/kubernetes-api/v/#listmeta-v1-meta)_ | Refer to Kubernetes API documentation for fields of `metadata`. |  |  |
+| `metadata` _[ListMeta](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.35/#listmeta-v1-meta)_ | Refer to Kubernetes API documentation for fields of `metadata`. |  |  |
 | `items` _[KDexPageNavigation](#kdexpagenavigation) array_ |  |  |  |
 
 
@@ -1729,7 +1729,7 @@ _Appears in:_
 | Field | Description | Default | Validation |
 | --- | --- | --- | --- |
 | `contentEntries` _[ContentEntry](#contententry) array_ | contentEntries is a set of content entries to bind to this page. They may be either raw HTML fragments or KDexApp references. |  | ExactlyOneOf: [appRef rawHTML] <br />MaxItems: 32 <br />MinItems: 1 <br />Required: \{\} <br /> |
-| `hostRef` _[LocalObjectReference](https://kubernetes.io/docs/reference/generated/kubernetes-api/v/#localobjectreference-v1-core)_ | hostRef is a reference to the KDexHost that this binding is for. |  | Required: \{\} <br /> |
+| `hostRef` _[LocalObjectReference](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.35/#localobjectreference-v1-core)_ | hostRef is a reference to the KDexHost that this binding is for. |  | Required: \{\} <br /> |
 | `label` _string_ | label is the value used in menus and page titles before localization occurs (or when no translation exists for the current language). |  | MaxLength: 256 <br />MinLength: 3 <br />Required: \{\} <br /> |
 | `tags` _[Tag](#tag) array_ | Tags are used for grouping and searching functions. |  | MaxItems: 16 <br />Optional: \{\} <br /> |
 | `contact` _[ContactInfo](#contactinfo)_ | Contact provides contact information for the function's owner. |  | Optional: \{\} <br /> |
@@ -1738,7 +1738,7 @@ _Appears in:_
 | `overrideHeaderRef` _[KDexObjectReference](#kdexobjectreference)_ | overrideHeaderRef is an optional reference to a KDexPageHeader resource. If not specified, the header from the archetype will be used. |  | Optional: \{\} <br /> |
 | `overrideNavigationRefs` _object (keys:string, values:[KDexObjectReference](#kdexobjectreference))_ | overrideNavigationRefs is an optional map of keyed navigation object references. When not empty, the 'main' key must be specified. These navigations will be merged with the navigations from the archetype. |  | MaxProperties: 10 <br />Optional: \{\} <br /> |
 | `pageArchetypeRef` _[KDexObjectReference](#kdexobjectreference)_ | pageArchetypeRef is a reference to the KDexPageArchetype that this binding is for. |  | Required: \{\} <br /> |
-| `parentPageRef` _[LocalObjectReference](https://kubernetes.io/docs/reference/generated/kubernetes-api/v/#localobjectreference-v1-core)_ | parentPageRef is a reference to the KDexPage bellow which this page will appear in the main navigation. If not set, the page will be placed in the top level of the navigation. |  | Optional: \{\} <br /> |
+| `parentPageRef` _[LocalObjectReference](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.35/#localobjectreference-v1-core)_ | parentPageRef is a reference to the KDexPage bellow which this page will appear in the main navigation. If not set, the page will be placed in the top level of the navigation. |  | Optional: \{\} <br /> |
 | `basePath` _string_ | basePath is the shortest path by which the page may be accessed. It must not contain path parameters. This path will be used in site navigation. This path is subject to being prefixed for localization by `/\{l10n\}` and will be when the user selects a non-default language. |  | Pattern: `^/` <br />Required: \{\} <br /> |
 | `patternPath` _string_ | patternPath, which must be prefixed by BasePath, is an extension of basePath that adds pattern matching as defined by https://pkg.go.dev/net/http#hdr-Patterns-ServeMux. This path is subject to being prefixed for localization by `/\{l10n\}` such as when the user selects a non-default language. |  | Optional: \{\} <br /> |
 | `scriptLibraryRef` _[KDexObjectReference](#kdexobjectreference)_ | scriptLibraryRef is an optional reference to a KDexScriptLibrary resource. |  | Optional: \{\} <br /> |
@@ -1760,7 +1760,7 @@ _Appears in:_
 | --- | --- | --- | --- |
 | `apiVersion` _string_ | `kdex.dev/v1alpha1` | | |
 | `kind` _string_ | `KDexRole` | | |
-| `metadata` _[ObjectMeta](https://kubernetes.io/docs/reference/generated/kubernetes-api/v/#objectmeta-v1-meta)_ | Refer to Kubernetes API documentation for fields of `metadata`. |  | Optional: \{\} <br /> |
+| `metadata` _[ObjectMeta](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.35/#objectmeta-v1-meta)_ | Refer to Kubernetes API documentation for fields of `metadata`. |  | Optional: \{\} <br /> |
 | `spec` _[KDexRoleSpec](#kdexrolespec)_ | spec defines the desired state of KDexRole |  | Required: \{\} <br /> |
 
 
@@ -1779,7 +1779,7 @@ _Appears in:_
 | --- | --- | --- | --- |
 | `apiVersion` _string_ | `kdex.dev/v1alpha1` | | |
 | `kind` _string_ | `KDexRoleBinding` | | |
-| `metadata` _[ObjectMeta](https://kubernetes.io/docs/reference/generated/kubernetes-api/v/#objectmeta-v1-meta)_ | Refer to Kubernetes API documentation for fields of `metadata`. |  | Optional: \{\} <br /> |
+| `metadata` _[ObjectMeta](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.35/#objectmeta-v1-meta)_ | Refer to Kubernetes API documentation for fields of `metadata`. |  | Optional: \{\} <br /> |
 | `spec` _[KDexRoleBindingSpec](#kdexrolebindingspec)_ | spec defines the desired state of KDexRoleBinding |  | Required: \{\} <br /> |
 
 
@@ -1797,7 +1797,7 @@ KDexRoleBindingList contains a list of KDexRoleBinding
 | --- | --- | --- | --- |
 | `apiVersion` _string_ | `kdex.dev/v1alpha1` | | |
 | `kind` _string_ | `KDexRoleBindingList` | | |
-| `metadata` _[ListMeta](https://kubernetes.io/docs/reference/generated/kubernetes-api/v/#listmeta-v1-meta)_ | Refer to Kubernetes API documentation for fields of `metadata`. |  |  |
+| `metadata` _[ListMeta](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.35/#listmeta-v1-meta)_ | Refer to Kubernetes API documentation for fields of `metadata`. |  |  |
 | `items` _[KDexRoleBinding](#kdexrolebinding) array_ |  |  |  |
 
 
@@ -1814,7 +1814,7 @@ _Appears in:_
 
 | Field | Description | Default | Validation |
 | --- | --- | --- | --- |
-| `hostRef` _[LocalObjectReference](https://kubernetes.io/docs/reference/generated/kubernetes-api/v/#localobjectreference-v1-core)_ | hostRef is a reference to the KDexHost that this binding is for. |  | Required: \{\} <br /> |
+| `hostRef` _[LocalObjectReference](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.35/#localobjectreference-v1-core)_ | hostRef is a reference to the KDexHost that this binding is for. |  | Required: \{\} <br /> |
 | `roles` _string array_ | roles is a list of KDexRole names bound to this subject. |  | MinItems: 1 <br />Required: \{\} <br /> |
 | `subject` _string_ | subject is the subject identifier. It should be from the OIDC provider (e.g. Google).<br />However, if the ServiceAccount referenced by the host has secrets attached labelled with<br />"kdex.dev/secret-type=subject" then it contains a local identity managed<br />through the Secret. |  | MinLength: 5 <br />Required: \{\} <br /> |
 
@@ -1833,7 +1833,7 @@ KDexRoleList contains a list of KDexRole
 | --- | --- | --- | --- |
 | `apiVersion` _string_ | `kdex.dev/v1alpha1` | | |
 | `kind` _string_ | `KDexRoleList` | | |
-| `metadata` _[ListMeta](https://kubernetes.io/docs/reference/generated/kubernetes-api/v/#listmeta-v1-meta)_ | Refer to Kubernetes API documentation for fields of `metadata`. |  |  |
+| `metadata` _[ListMeta](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.35/#listmeta-v1-meta)_ | Refer to Kubernetes API documentation for fields of `metadata`. |  |  |
 | `items` _[KDexRole](#kdexrole) array_ |  |  |  |
 
 
@@ -1850,7 +1850,7 @@ _Appears in:_
 
 | Field | Description | Default | Validation |
 | --- | --- | --- | --- |
-| `hostRef` _[LocalObjectReference](https://kubernetes.io/docs/reference/generated/kubernetes-api/v/#localobjectreference-v1-core)_ | hostRef is a reference to the KDexHost that this binding is for. |  | Required: \{\} <br /> |
+| `hostRef` _[LocalObjectReference](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.35/#localobjectreference-v1-core)_ | hostRef is a reference to the KDexHost that this binding is for. |  | Required: \{\} <br /> |
 | `rules` _[PolicyRule](#policyrule) array_ | Rules holds all the PolicyRules for this KDexRole |  | MinItems: 1 <br />Required: \{\} <br /> |
 
 
@@ -1873,7 +1873,7 @@ _Appears in:_
 | --- | --- | --- | --- |
 | `apiVersion` _string_ | `kdex.dev/v1alpha1` | | |
 | `kind` _string_ | `KDexScriptLibrary` | | |
-| `metadata` _[ObjectMeta](https://kubernetes.io/docs/reference/generated/kubernetes-api/v/#objectmeta-v1-meta)_ | Refer to Kubernetes API documentation for fields of `metadata`. |  | Optional: \{\} <br /> |
+| `metadata` _[ObjectMeta](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.35/#objectmeta-v1-meta)_ | Refer to Kubernetes API documentation for fields of `metadata`. |  | Optional: \{\} <br /> |
 | `spec` _[KDexScriptLibrarySpec](#kdexscriptlibraryspec)_ | spec defines the desired state of KDexScriptLibrary |  | Required: \{\} <br /> |
 
 
@@ -1891,7 +1891,7 @@ KDexScriptLibraryList contains a list of KDexScriptLibrary
 | --- | --- | --- | --- |
 | `apiVersion` _string_ | `kdex.dev/v1alpha1` | | |
 | `kind` _string_ | `KDexScriptLibraryList` | | |
-| `metadata` _[ListMeta](https://kubernetes.io/docs/reference/generated/kubernetes-api/v/#listmeta-v1-meta)_ | Refer to Kubernetes API documentation for fields of `metadata`. |  |  |
+| `metadata` _[ListMeta](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.35/#listmeta-v1-meta)_ | Refer to Kubernetes API documentation for fields of `metadata`. |  |  |
 | `items` _[KDexScriptLibrary](#kdexscriptlibrary) array_ |  |  |  |
 
 
@@ -1912,13 +1912,13 @@ _Appears in:_
 | `packageReference` _[PackageReference](#packagereference)_ | packageReference specifies the name and version of an NPM package that contains the script. The package.json must describe an ES module. |  | Optional: \{\} <br /> |
 | `scripts` _[ScriptDef](#scriptdef) array_ | scripts is a set of script references. They may contain URLs that point to resources hosted at some public address, npm module references or they may contain tag contents. |  | ExactlyOneOf: [script scriptSrc] <br />MaxItems: 8 <br />Optional: \{\} <br /> |
 | `ingressPath` _string_ | ingressPath is a prefix beginning with '/-/' plus additional characters. This indicates where in the Ingress/HTTPRoute the Backend will be mounted.<br />This value is determined by the implementation that embeds the Backend and cannot be changed. |  | Optional: \{\} <br />Pattern: `^/-/.+` <br /> |
-| `env` _[EnvVar](https://kubernetes.io/docs/reference/generated/kubernetes-api/v/#envvar-v1-core) array_ | env is an optional list of environment variables to set in the container. |  | Optional: \{\} <br /> |
+| `env` _[EnvVar](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.35/#envvar-v1-core) array_ | env is an optional list of environment variables to set in the container. |  | Optional: \{\} <br /> |
 | `replicas` _integer_ | replicas is the number of desired pods. This is a pointer to distinguish between explicit<br />zero and not specified. Defaults to 1. |  | Optional: \{\} <br /> |
-| `resources` _[ResourceRequirements](https://kubernetes.io/docs/reference/generated/kubernetes-api/v/#resourcerequirements-v1-core)_ | resources defines the compute resources required by the container.<br />More info: https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/ |  | Optional: \{\} <br /> |
+| `resources` _[ResourceRequirements](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.35/#resourcerequirements-v1-core)_ | resources defines the compute resources required by the container.<br />More info: https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/ |  | Optional: \{\} <br /> |
 | `serverImage` _string_ | serverImage is the name of Backend image.<br />More info: https://kubernetes.io/docs/concepts/containers/images |  | MinLength: 5 <br />Optional: \{\} <br /> |
-| `serverImagePullPolicy` _[PullPolicy](https://kubernetes.io/docs/reference/generated/kubernetes-api/v/#pullpolicy-v1-core)_ | Policy for pulling the Backend server image. Possible values are:<br />Always: the kubelet always attempts to pull the reference. Container creation will fail If the pull fails.<br />Never: the kubelet never pulls the reference and only uses a local image or artifact. Container creation will fail if the reference isn't present.<br />IfNotPresent: the kubelet pulls if the reference isn't already present on disk. Container creation will fail if the reference isn't present and the pull fails.<br />Defaults to Always if :latest tag is specified, or IfNotPresent otherwise. |  | Optional: \{\} <br /> |
+| `serverImagePullPolicy` _[PullPolicy](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.35/#pullpolicy-v1-core)_ | Policy for pulling the Backend server image. Possible values are:<br />Always: the kubelet always attempts to pull the reference. Container creation will fail If the pull fails.<br />Never: the kubelet never pulls the reference and only uses a local image or artifact. Container creation will fail if the reference isn't present.<br />IfNotPresent: the kubelet pulls if the reference isn't already present on disk. Container creation will fail if the reference isn't present and the pull fails.<br />Defaults to Always if :latest tag is specified, or IfNotPresent otherwise. |  | Optional: \{\} <br /> |
 | `staticImage` _string_ | staticImage is the name of an OCI image that contains static resources that will be served by the Backend. This may not apply if the serverImage is set to a custom implementation.<br />More info: https://kubernetes.io/docs/concepts/containers/images |  | MinLength: 5 <br />Optional: \{\} <br /> |
-| `staticImagePullPolicy` _[PullPolicy](https://kubernetes.io/docs/reference/generated/kubernetes-api/v/#pullpolicy-v1-core)_ | Policy for pulling the OCI theme image. Possible values are:<br />Always: the kubelet always attempts to pull the reference. Container creation will fail If the pull fails.<br />Never: the kubelet never pulls the reference and only uses a local image or artifact. Container creation will fail if the reference isn't present.<br />IfNotPresent: the kubelet pulls if the reference isn't already present on disk. Container creation will fail if the reference isn't present and the pull fails.<br />Defaults to Always if :latest tag is specified, or IfNotPresent otherwise. |  | Optional: \{\} <br /> |
+| `staticImagePullPolicy` _[PullPolicy](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.35/#pullpolicy-v1-core)_ | Policy for pulling the OCI theme image. Possible values are:<br />Always: the kubelet always attempts to pull the reference. Container creation will fail If the pull fails.<br />Never: the kubelet never pulls the reference and only uses a local image or artifact. Container creation will fail if the reference isn't present.<br />IfNotPresent: the kubelet pulls if the reference isn't already present on disk. Container creation will fail if the reference isn't present and the pull fails.<br />Defaults to Always if :latest tag is specified, or IfNotPresent otherwise. |  | Optional: \{\} <br /> |
 
 
 #### KDexTheme
@@ -1939,7 +1939,7 @@ _Appears in:_
 | --- | --- | --- | --- |
 | `apiVersion` _string_ | `kdex.dev/v1alpha1` | | |
 | `kind` _string_ | `KDexTheme` | | |
-| `metadata` _[ObjectMeta](https://kubernetes.io/docs/reference/generated/kubernetes-api/v/#objectmeta-v1-meta)_ | Refer to Kubernetes API documentation for fields of `metadata`. |  | Optional: \{\} <br /> |
+| `metadata` _[ObjectMeta](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.35/#objectmeta-v1-meta)_ | Refer to Kubernetes API documentation for fields of `metadata`. |  | Optional: \{\} <br /> |
 | `spec` _[KDexThemeSpec](#kdexthemespec)_ | spec defines the desired state of KDexTheme |  | Required: \{\} <br /> |
 
 
@@ -1957,7 +1957,7 @@ KDexThemeList contains a list of KDexTheme
 | --- | --- | --- | --- |
 | `apiVersion` _string_ | `kdex.dev/v1alpha1` | | |
 | `kind` _string_ | `KDexThemeList` | | |
-| `metadata` _[ListMeta](https://kubernetes.io/docs/reference/generated/kubernetes-api/v/#listmeta-v1-meta)_ | Refer to Kubernetes API documentation for fields of `metadata`. |  |  |
+| `metadata` _[ListMeta](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.35/#listmeta-v1-meta)_ | Refer to Kubernetes API documentation for fields of `metadata`. |  |  |
 | `items` _[KDexTheme](#kdextheme) array_ |  |  |  |
 
 
@@ -1978,13 +1978,13 @@ _Appears in:_
 | `assets` _[Assets](#assets)_ | assets is a set of elements that define a portable set of design rules. |  | ExactlyOneOf: [linkHref metaId style] <br />MaxItems: 32 <br /> |
 | `scriptLibraryRef` _[KDexObjectReference](#kdexobjectreference)_ | scriptLibraryRef is an optional reference to a KDexScriptLibrary resource. |  | Optional: \{\} <br /> |
 | `ingressPath` _string_ | ingressPath is a prefix beginning with '/-/' plus additional characters. This indicates where in the Ingress/HTTPRoute the Backend will be mounted.<br />This value is determined by the implementation that embeds the Backend and cannot be changed. |  | Optional: \{\} <br />Pattern: `^/-/.+` <br /> |
-| `env` _[EnvVar](https://kubernetes.io/docs/reference/generated/kubernetes-api/v/#envvar-v1-core) array_ | env is an optional list of environment variables to set in the container. |  | Optional: \{\} <br /> |
+| `env` _[EnvVar](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.35/#envvar-v1-core) array_ | env is an optional list of environment variables to set in the container. |  | Optional: \{\} <br /> |
 | `replicas` _integer_ | replicas is the number of desired pods. This is a pointer to distinguish between explicit<br />zero and not specified. Defaults to 1. |  | Optional: \{\} <br /> |
-| `resources` _[ResourceRequirements](https://kubernetes.io/docs/reference/generated/kubernetes-api/v/#resourcerequirements-v1-core)_ | resources defines the compute resources required by the container.<br />More info: https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/ |  | Optional: \{\} <br /> |
+| `resources` _[ResourceRequirements](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.35/#resourcerequirements-v1-core)_ | resources defines the compute resources required by the container.<br />More info: https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/ |  | Optional: \{\} <br /> |
 | `serverImage` _string_ | serverImage is the name of Backend image.<br />More info: https://kubernetes.io/docs/concepts/containers/images |  | MinLength: 5 <br />Optional: \{\} <br /> |
-| `serverImagePullPolicy` _[PullPolicy](https://kubernetes.io/docs/reference/generated/kubernetes-api/v/#pullpolicy-v1-core)_ | Policy for pulling the Backend server image. Possible values are:<br />Always: the kubelet always attempts to pull the reference. Container creation will fail If the pull fails.<br />Never: the kubelet never pulls the reference and only uses a local image or artifact. Container creation will fail if the reference isn't present.<br />IfNotPresent: the kubelet pulls if the reference isn't already present on disk. Container creation will fail if the reference isn't present and the pull fails.<br />Defaults to Always if :latest tag is specified, or IfNotPresent otherwise. |  | Optional: \{\} <br /> |
+| `serverImagePullPolicy` _[PullPolicy](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.35/#pullpolicy-v1-core)_ | Policy for pulling the Backend server image. Possible values are:<br />Always: the kubelet always attempts to pull the reference. Container creation will fail If the pull fails.<br />Never: the kubelet never pulls the reference and only uses a local image or artifact. Container creation will fail if the reference isn't present.<br />IfNotPresent: the kubelet pulls if the reference isn't already present on disk. Container creation will fail if the reference isn't present and the pull fails.<br />Defaults to Always if :latest tag is specified, or IfNotPresent otherwise. |  | Optional: \{\} <br /> |
 | `staticImage` _string_ | staticImage is the name of an OCI image that contains static resources that will be served by the Backend. This may not apply if the serverImage is set to a custom implementation.<br />More info: https://kubernetes.io/docs/concepts/containers/images |  | MinLength: 5 <br />Optional: \{\} <br /> |
-| `staticImagePullPolicy` _[PullPolicy](https://kubernetes.io/docs/reference/generated/kubernetes-api/v/#pullpolicy-v1-core)_ | Policy for pulling the OCI theme image. Possible values are:<br />Always: the kubelet always attempts to pull the reference. Container creation will fail If the pull fails.<br />Never: the kubelet never pulls the reference and only uses a local image or artifact. Container creation will fail if the reference isn't present.<br />IfNotPresent: the kubelet pulls if the reference isn't already present on disk. Container creation will fail if the reference isn't present and the pull fails.<br />Defaults to Always if :latest tag is specified, or IfNotPresent otherwise. |  | Optional: \{\} <br /> |
+| `staticImagePullPolicy` _[PullPolicy](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.35/#pullpolicy-v1-core)_ | Policy for pulling the OCI theme image. Possible values are:<br />Always: the kubelet always attempts to pull the reference. Container creation will fail If the pull fails.<br />Never: the kubelet never pulls the reference and only uses a local image or artifact. Container creation will fail if the reference isn't present.<br />IfNotPresent: the kubelet pulls if the reference isn't already present on disk. Container creation will fail if the reference isn't present and the pull fails.<br />Defaults to Always if :latest tag is specified, or IfNotPresent otherwise. |  | Optional: \{\} <br /> |
 
 
 #### KDexTranslation
@@ -2005,7 +2005,7 @@ _Appears in:_
 | --- | --- | --- | --- |
 | `apiVersion` _string_ | `kdex.dev/v1alpha1` | | |
 | `kind` _string_ | `KDexTranslation` | | |
-| `metadata` _[ObjectMeta](https://kubernetes.io/docs/reference/generated/kubernetes-api/v/#objectmeta-v1-meta)_ | Refer to Kubernetes API documentation for fields of `metadata`. |  | Optional: \{\} <br /> |
+| `metadata` _[ObjectMeta](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.35/#objectmeta-v1-meta)_ | Refer to Kubernetes API documentation for fields of `metadata`. |  | Optional: \{\} <br /> |
 | `spec` _[KDexTranslationSpec](#kdextranslationspec)_ | spec defines the desired state of KDexTranslation |  | Required: \{\} <br /> |
 
 
@@ -2023,7 +2023,7 @@ KDexTranslationList contains a list of KDexTranslation
 | --- | --- | --- | --- |
 | `apiVersion` _string_ | `kdex.dev/v1alpha1` | | |
 | `kind` _string_ | `KDexTranslationList` | | |
-| `metadata` _[ListMeta](https://kubernetes.io/docs/reference/generated/kubernetes-api/v/#listmeta-v1-meta)_ | Refer to Kubernetes API documentation for fields of `metadata`. |  |  |
+| `metadata` _[ListMeta](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.35/#listmeta-v1-meta)_ | Refer to Kubernetes API documentation for fields of `metadata`. |  |  |
 | `items` _[KDexTranslation](#kdextranslation) array_ |  |  |  |
 
 
@@ -2064,7 +2064,7 @@ _Appears in:_
 | --- | --- | --- | --- |
 | `apiVersion` _string_ | `kdex.dev/v1alpha1` | | |
 | `kind` _string_ | `KDexUtilityPage` | | |
-| `metadata` _[ObjectMeta](https://kubernetes.io/docs/reference/generated/kubernetes-api/v/#objectmeta-v1-meta)_ | Refer to Kubernetes API documentation for fields of `metadata`. |  | Optional: \{\} <br /> |
+| `metadata` _[ObjectMeta](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.35/#objectmeta-v1-meta)_ | Refer to Kubernetes API documentation for fields of `metadata`. |  | Optional: \{\} <br /> |
 | `spec` _[KDexUtilityPageSpec](#kdexutilitypagespec)_ | spec defines the desired state of KDexUtilityPage |  | Required: \{\} <br /> |
 
 
@@ -2082,7 +2082,7 @@ KDexUtilityPageList contains a list of KDexUtilityPage
 | --- | --- | --- | --- |
 | `apiVersion` _string_ | `kdex.dev/v1alpha1` | | |
 | `kind` _string_ | `KDexUtilityPageList` | | |
-| `metadata` _[ListMeta](https://kubernetes.io/docs/reference/generated/kubernetes-api/v/#listmeta-v1-meta)_ | Refer to Kubernetes API documentation for fields of `metadata`. |  |  |
+| `metadata` _[ListMeta](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.35/#listmeta-v1-meta)_ | Refer to Kubernetes API documentation for fields of `metadata`. |  |  |
 | `items` _[KDexUtilityPage](#kdexutilitypage) array_ |  |  |  |
 
 
@@ -2183,7 +2183,7 @@ _Appears in:_
 | Field | Description | Default | Validation |
 | --- | --- | --- | --- |
 | `icon` _string_ | icon is the name of the icon to display next to the menu entry for this page. |  | Optional: \{\} <br /> |
-| `weight` _[Quantity](https://kubernetes.io/docs/reference/generated/kubernetes-api/v/#quantity-resource-api)_ | weight is a property that influences the position of the page menu entry. Items at each level are sorted first by ascending weight and then ascending lexicographically. |  | Optional: \{\} <br /> |
+| `weight` _[Quantity](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.35/#quantity-resource-api)_ | weight is a property that influences the position of the page menu entry. Items at each level are sorted first by ascending weight and then ascending lexicographically. |  | Optional: \{\} <br /> |
 
 
 #### OIDCProvider
@@ -2219,7 +2219,7 @@ _Appears in:_
 | `args` _string array_ | args is an optional array of arguments that will be passed to the generator command. |  | Optional: \{\} <br /> |
 | `command` _string array_ | command is an optional array that contains the code generator command and any flags necessary. |  | Optional: \{\} <br /> |
 | `image` _string_ | image is the image to use for observing the function state. |  | Required: \{\} <br /> |
-| `env` _[EnvVar](https://kubernetes.io/docs/reference/generated/kubernetes-api/v/#envvar-v1-core) array_ | env is the environment variables to set in the observer. |  | Optional: \{\} <br /> |
+| `env` _[EnvVar](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.35/#envvar-v1-core) array_ | env is the environment variables to set in the observer. |  | Optional: \{\} <br /> |
 | `schedule` _string_ | schedule is the schedule in Cron format, see https://en.wikipedia.org/wiki/Cron. | */5 * * * * | Optional: \{\} <br /> |
 | `serviceAccountName` _string_ | serviceAccountName is the name of the service account to use for observing the function state. |  | Optional: \{\} <br /> |
 
@@ -2279,18 +2279,18 @@ _Appears in:_
 
 | Field | Description | Default | Validation |
 | --- | --- | --- | --- |
-| `connect` _[RawExtension](https://kubernetes.io/docs/reference/generated/kubernetes-api/v/#rawextension-runtime-pkg)_ |  |  | Optional: \{\} <br />Type: object <br /> |
-| `delete` _[RawExtension](https://kubernetes.io/docs/reference/generated/kubernetes-api/v/#rawextension-runtime-pkg)_ |  |  | Optional: \{\} <br />Type: object <br /> |
+| `connect` _[RawExtension](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.35/#rawextension-runtime-pkg)_ |  |  | Optional: \{\} <br />Type: object <br /> |
+| `delete` _[RawExtension](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.35/#rawextension-runtime-pkg)_ |  |  | Optional: \{\} <br />Type: object <br /> |
 | `description` _string_ |  |  | Optional: \{\} <br /> |
-| `get` _[RawExtension](https://kubernetes.io/docs/reference/generated/kubernetes-api/v/#rawextension-runtime-pkg)_ |  |  | Optional: \{\} <br />Type: object <br /> |
-| `head` _[RawExtension](https://kubernetes.io/docs/reference/generated/kubernetes-api/v/#rawextension-runtime-pkg)_ |  |  | Optional: \{\} <br />Type: object <br /> |
-| `options` _[RawExtension](https://kubernetes.io/docs/reference/generated/kubernetes-api/v/#rawextension-runtime-pkg)_ |  |  | Optional: \{\} <br />Type: object <br /> |
-| `parameters` _[RawExtension](https://kubernetes.io/docs/reference/generated/kubernetes-api/v/#rawextension-runtime-pkg) array_ |  |  | Optional: \{\} <br /> |
-| `patch` _[RawExtension](https://kubernetes.io/docs/reference/generated/kubernetes-api/v/#rawextension-runtime-pkg)_ |  |  | Optional: \{\} <br />Type: object <br /> |
-| `post` _[RawExtension](https://kubernetes.io/docs/reference/generated/kubernetes-api/v/#rawextension-runtime-pkg)_ |  |  | Optional: \{\} <br />Type: object <br /> |
-| `put` _[RawExtension](https://kubernetes.io/docs/reference/generated/kubernetes-api/v/#rawextension-runtime-pkg)_ |  |  | Optional: \{\} <br />Type: object <br /> |
+| `get` _[RawExtension](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.35/#rawextension-runtime-pkg)_ |  |  | Optional: \{\} <br />Type: object <br /> |
+| `head` _[RawExtension](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.35/#rawextension-runtime-pkg)_ |  |  | Optional: \{\} <br />Type: object <br /> |
+| `options` _[RawExtension](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.35/#rawextension-runtime-pkg)_ |  |  | Optional: \{\} <br />Type: object <br /> |
+| `parameters` _[RawExtension](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.35/#rawextension-runtime-pkg) array_ |  |  | Optional: \{\} <br /> |
+| `patch` _[RawExtension](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.35/#rawextension-runtime-pkg)_ |  |  | Optional: \{\} <br />Type: object <br /> |
+| `post` _[RawExtension](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.35/#rawextension-runtime-pkg)_ |  |  | Optional: \{\} <br />Type: object <br /> |
+| `put` _[RawExtension](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.35/#rawextension-runtime-pkg)_ |  |  | Optional: \{\} <br />Type: object <br /> |
 | `summary` _string_ |  |  | Optional: \{\} <br /> |
-| `trace` _[RawExtension](https://kubernetes.io/docs/reference/generated/kubernetes-api/v/#rawextension-runtime-pkg)_ |  |  | Optional: \{\} <br />Type: object <br /> |
+| `trace` _[RawExtension](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.35/#rawextension-runtime-pkg)_ |  |  | Optional: \{\} <br />Type: object <br /> |
 
 
 #### Paths
@@ -2404,9 +2404,9 @@ _Appears in:_
 
 | Field | Description | Default | Validation |
 | --- | --- | --- | --- |
-| `env` _[EnvVar](https://kubernetes.io/docs/reference/generated/kubernetes-api/v/#envvar-v1-core) array_ | env is an optional list of environment variables to set in the container. |  | Optional: \{\} <br /> |
+| `env` _[EnvVar](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.35/#envvar-v1-core) array_ | env is an optional list of environment variables to set in the container. |  | Optional: \{\} <br /> |
 | `replicas` _integer_ | replicas is the number of desired pods. This is a pointer to distinguish between explicit<br />zero and not specified. Defaults to 1. |  | Optional: \{\} <br /> |
-| `resources` _[ResourceRequirements](https://kubernetes.io/docs/reference/generated/kubernetes-api/v/#resourcerequirements-v1-core)_ | resources defines the compute resources required by the container.<br />More info: https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/ |  | Optional: \{\} <br /> |
+| `resources` _[ResourceRequirements](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.35/#resourcerequirements-v1-core)_ | resources defines the compute resources required by the container.<br />More info: https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/ |  | Optional: \{\} <br /> |
 
 
 #### ScalingConfig
@@ -2429,9 +2429,9 @@ _Appears in:_
 | `minScale` _integer_ | minScale controls the minimum number of replicas that each Function<br />should have. The autoscaler will attempt to never have less than this<br />number of replicas at any one point in time. | 0 | Optional: \{\} <br /> |
 | `panicThresholdPercentage` _integer_ | panicThresholdPercentage defines when the Autoscaler will move from stable<br />mode into panic mode. | 200 | Maximum: 1000 <br />Minimum: 110 <br />Optional: \{\} <br /> |
 | `panicWindowPercentage` _integer_ | The panic window is defined as a percentage of the stable window to<br />assure that both are relative to each other in a working way.<br />panicWindowPercentage indicates how the window over which historical<br />data is evaluated will shrink upon entering panic mode. For example,<br />a value of 10.0 means that in panic mode the window will be 10% of the<br />stable window size. | 10 | Maximum: 100 <br />Minimum: 1 <br />Optional: \{\} <br /> |
-| `scaleDownDelay` _[Duration](https://kubernetes.io/docs/reference/generated/kubernetes-api/v/#duration-v1-meta)_ | scaleDownDelay specifies a time window which must pass at reduced<br />concurrency before a scale-down decision is applied. This can be useful,<br />for example, to keep containers around for a configurable duration to<br />avoid a cold start penalty if new requests come in. Unlike setting a lower<br />bound, the revision will eventually be scaled down if reduced concurrency<br />is maintained for the delay period. | 0s | Optional: \{\} <br /> |
-| `scaleToZeroPodRetentionPeriod` _[Duration](https://kubernetes.io/docs/reference/generated/kubernetes-api/v/#duration-v1-meta)_ | scaleToZeroPodRetentionPeriod determines the minimum amount of time that<br />the last pod will remain active after the Autoscaler decides to scale pods<br />to zero. This can be useful to avoid a cold start penalty if new requests<br />come in. Unlike setting a lower bound, the revision will eventually be<br />scaled down if reduced concurrency is maintained for the delay period. | 0s | Optional: \{\} <br /> |
-| `stableWindow` _[Duration](https://kubernetes.io/docs/reference/generated/kubernetes-api/v/#duration-v1-meta)_ | stableWindow defines the sliding time window over which metrics are<br />averaged to provide the input for scaling decisions when the autoscaler<br />is not in Panic mode. | 60s | Optional: \{\} <br /> |
+| `scaleDownDelay` _[Duration](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.35/#duration-v1-meta)_ | scaleDownDelay specifies a time window which must pass at reduced<br />concurrency before a scale-down decision is applied. This can be useful,<br />for example, to keep containers around for a configurable duration to<br />avoid a cold start penalty if new requests come in. Unlike setting a lower<br />bound, the revision will eventually be scaled down if reduced concurrency<br />is maintained for the delay period. | 0s | Optional: \{\} <br /> |
+| `scaleToZeroPodRetentionPeriod` _[Duration](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.35/#duration-v1-meta)_ | scaleToZeroPodRetentionPeriod determines the minimum amount of time that<br />the last pod will remain active after the Autoscaler decides to scale pods<br />to zero. This can be useful to avoid a cold start penalty if new requests<br />come in. Unlike setting a lower bound, the revision will eventually be<br />scaled down if reduced concurrency is maintained for the delay period. | 0s | Optional: \{\} <br /> |
+| `stableWindow` _[Duration](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.35/#duration-v1-meta)_ | stableWindow defines the sliding time window over which metrics are<br />averaged to provide the input for scaling decisions when the autoscaler<br />is not in Panic mode. | 60s | Optional: \{\} <br /> |
 | `target` _integer_ | target provides the Autoscaler with a target value that it tries to<br />maintain for the configured metric. This value is metric agnostic. This<br />means the target is simply an integer value, which can be applied for any<br />metric type. |  | Optional: \{\} <br /> |
 | `targetUtilizationPercentage` _integer_ | targetUtilizationPercentage specifies what percentage of the previously<br />specified target should actually be targeted by the Autoscaler. This is<br />also known as specifying the hotness at which a replica runs, which causes<br />the Autoscaler to scale up before the defined hard limit is reached. | 70 | Optional: \{\} <br /> |
 

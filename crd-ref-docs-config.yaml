@@ -1,5 +1,6 @@
-
 processor:
   ignoreFields:
-    - "status$"
-    - "TypeMeta$"
+  - "status$"
+  - "TypeMeta$"
+render:
+  kubernetesVersion: 1.35
