@@ -39,12 +39,14 @@ type NexusConfiguration struct {
 	DefaultImageRegistry string         `json:"defaultImageRegistry" yaml:"defaultImageRegistry"`
 	DefaultNpmRegistry   string         `json:"defaultNpmRegistry" yaml:"defaultNpmRegistry"`
 	HostDefault          HostDefault    `json:"hostDefault" yaml:"hostDefault"`
-	PackageBuilder       PackageBuilder `json:"packageBuilder" yaml:"packageBuilder"`
+	Packages             Packages       `json:"packages" yaml:"packages"`
 }
 
-type PackageBuilder struct {
-	Image           string            `json:"image" yaml:"image"`
-	ImagePullPolicy corev1.PullPolicy `json:"imagePullPolicy" yaml:"imagePullPolicy"`
+type Packages struct {
+	PackagerImage           string            `json:"packagerImage" yaml:"packagerImage"`
+	PackagerImagePullPolicy corev1.PullPolicy `json:"packagerImagePullPolicy" yaml:"packagerImagePullPolicy"`
+	ToolsImage              string            `json:"toolsImage" yaml:"toolsImage"`
+	ToolsImagePullPolicy    corev1.PullPolicy `json:"toolsImagePullPolicy" yaml:"toolsImagePullPolicy"`
 }
 
 func LoadConfiguration(configFile string, scheme *runtime.Scheme) NexusConfiguration {
@@ -101,6 +103,7 @@ backendDefault:
       protocol: TCP
       targetPort: server
   serverImage: ghcr.io/kdex-tech/backend-static:latest
+  serverImagePullPolicy: Always
 defaultImageRegistry: docker.io
 defaultNpmRegistry: registry.npmjs.org
 hostDefault:
@@ -120,6 +123,7 @@ hostDefault:
           command:
           - /manager
           image: ghcr.io/kdex-tech/host-manager:latest
+          imagePullPolicy: Always
           livenessProbe:
             httpGet:
               path: /healthz
@@ -168,8 +172,11 @@ hostDefault:
       port: 8090
       protocol: TCP
       targetPort: server
-packageBuilder:
-  image: ghcr.io/kdex-tech/cli-tools:latest
+packages:
+  packagerImage: ghcr.io/kdex-tech/cli-tools:latest
+  packagerImagePullPolicy: Always
+  toolsImage: ghcr.io/kdex-tech/node-tools:latest
+  toolsImagePullPolicy: Always
 `)
 	gvk := GroupVersion.WithKind("NexusConfiguration")
 	decoder := serializer.NewCodecFactory(scheme).UniversalDeserializer()
