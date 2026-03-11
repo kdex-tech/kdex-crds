@@ -569,9 +569,9 @@ spec:
                       reasons, ingress controllers should still honor that annotation if present.
                     type: string
                   scheme:
-                    default: http
+                    default: https
                     description: scheme is the scheme to use for the host. If not
-                      specified http is assumed.
+                      specified https is assumed.
                     type: string
                   strategy:
                     default: Ingress

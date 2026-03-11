@@ -954,9 +954,9 @@ type Routing struct {
 	// +kubebuilder:validation:Optional
 	IngressClassName *string `json:"ingressClassName,omitempty" protobuf:"bytes,2,opt,name=ingressClassName"`
 
-	// scheme is the scheme to use for the host. If not specified http is assumed.
+	// scheme is the scheme to use for the host. If not specified https is assumed.
 	// +kubebuilder:validation:Optional
-	// +kubebuilder:default:="http"
+	// +kubebuilder:default:="https"
 	Scheme string `json:"scheme" protobuf:"bytes,3,opt,name=scheme"`
 
 	// strategy is the routing strategy to use. If not specified Ingress is assumed.
