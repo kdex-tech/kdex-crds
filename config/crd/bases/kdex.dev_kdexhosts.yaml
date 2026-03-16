@@ -400,6 +400,48 @@ spec:
                   holding other host details. The rendered output will be cached and
                   served at "/favicon.ico" as "image/svg+xml".
                 type: string
+              helm:
+                description: helm holds the Helm configuration for the host.
+                properties:
+                  companionCharts:
+                    description: companionCharts is a list of companion Helm charts
+                      to be deployed with the host.
+                    items:
+                      description: CompanionChart defines a companion Helm chart to
+                        be deployed with the host.
+                      properties:
+                        chart:
+                          description: chart is the name of the Helm chart.
+                          minLength: 5
+                          type: string
+                        name:
+                          description: name is the name of the Helm release.
+                          minLength: 5
+                          type: string
+                        repository:
+                          description: repository is the URL of the Helm repository.
+                          type: string
+                        values:
+                          description: values is the inline YAML values for the Helm
+                            chart.
+                          type: string
+                        version:
+                          description: version is the version of the Helm chart.
+                          type: string
+                      required:
+                      - chart
+                      - name
+                      type: object
+                    type: array
+                  hostManager:
+                    description: hostManager overrides for the kdex-host-manager chart.
+                    properties:
+                      values:
+                        description: values is the inline YAML values for the kdex-host-manager
+                          chart.
+                        type: string
+                    type: object
+                type: object
               ingressPath:
                 description: |-
                   ingressPath is a prefix beginning with '/-/' plus additional characters. This indicates where in the Ingress/HTTPRoute the Backend will be mounted.

@@ -228,9 +228,56 @@ type KDexHostSpec struct {
 	// +kubebuilder:validation:XValidation:rule="self.all(k, k.kind == 'KDexTranslation' || k.kind == 'KDexClusterTranslation')",message="all translation refs must have kind KDexTranslation or KDexClusterTranslation"
 	TranslationRefs []KDexObjectReference `json:"translationRefs,omitempty" protobuf:"bytes,16,rep,name=translationRefs"`
 
+	// helm holds the Helm configuration for the host.
+	// +kubebuilder:validation:Optional
+	Helm *HelmConfig `json:"helm,omitempty" protobuf:"bytes,19,opt,name=helm"`
+
 	// utilityPages defines the utility pages (announcement, error, login) for the host.
 	// +kubebuilder:validation:Optional
 	UtilityPages *UtilityPages `json:"utilityPages,omitempty" protobuf:"bytes,17,opt,name=utilityPages"`
+}
+
+// CompanionChart defines a companion Helm chart to be deployed with the host.
+type CompanionChart struct {
+	// chart is the name of the Helm chart.
+	// +kubebuilder:validation:Required
+	// +kubebuilder:validation:MinLength=5
+	Chart string `json:"chart" protobuf:"bytes,1,req,name=chart"`
+
+	// name is the name of the Helm release.
+	// +kubebuilder:validation:Required
+	// +kubebuilder:validation:MinLength=5
+	Name string `json:"name" protobuf:"bytes,2,req,name=name"`
+
+	// repository is the URL of the Helm repository.
+	// +kubebuilder:validation:Optional
+	Repository string `json:"repository,omitempty" protobuf:"bytes,3,opt,name=repository"`
+
+	// values is the inline YAML values for the Helm chart.
+	// +kubebuilder:validation:Optional
+	Values string `json:"values,omitempty" protobuf:"bytes,4,opt,name=values"`
+
+	// version is the version of the Helm chart.
+	// +kubebuilder:validation:Optional
+	Version string `json:"version,omitempty" protobuf:"bytes,5,opt,name=version"`
+}
+
+// HelmConfig defines the Helm configuration for a host.
+type HelmConfig struct {
+	// companionCharts is a list of companion Helm charts to be deployed with the host.
+	// +kubebuilder:validation:Optional
+	CompanionCharts []CompanionChart `json:"companionCharts,omitempty" protobuf:"bytes,1,rep,name=companionCharts"`
+
+	// hostManager overrides for the kdex-host-manager chart.
+	// +kubebuilder:validation:Optional
+	HostManager *HostManagerHelmConfig `json:"hostManager,omitempty" protobuf:"bytes,2,opt,name=hostManager"`
+}
+
+// HostManagerHelmConfig defines the overrides for the kdex-host-manager chart.
+type HostManagerHelmConfig struct {
+	// values is the inline YAML values for the kdex-host-manager chart.
+	// +kubebuilder:validation:Optional
+	Values string `json:"values,omitempty" protobuf:"bytes,1,opt,name=values"`
 }
 
 func (a *KDexHostSpec) GetResourceImage() string {
