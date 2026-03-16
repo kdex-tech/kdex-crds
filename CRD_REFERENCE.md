@@ -458,6 +458,7 @@ _Appears in:_
 | Field | Description | Default | Validation |
 | --- | --- | --- | --- |
 | `values` _string_ | values is the inline YAML values for the kdex-host-manager chart. |  | Optional: \{\} <br /> |
+| `version` _string_ | version is the version of the kdex-host-manager chart. |  | Optional: \{\} <br /> |
 
 
 #### JWT

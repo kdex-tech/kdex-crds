@@ -470,6 +470,10 @@ spec:
                         description: values is the inline YAML values for the kdex-host-manager
                           chart.
                         type: string
+                      version:
+                        description: version is the version of the kdex-host-manager
+                          chart.
+                        type: string
                     type: object
                 type: object
               ingressPath:

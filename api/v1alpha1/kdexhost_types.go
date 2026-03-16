@@ -278,6 +278,10 @@ type HostManagerHelmConfig struct {
 	// values is the inline YAML values for the kdex-host-manager chart.
 	// +kubebuilder:validation:Optional
 	Values string `json:"values,omitempty" protobuf:"bytes,1,opt,name=values"`
+
+	// version is the version of the kdex-host-manager chart.
+	// +kubebuilder:validation:Optional
+	Version string `json:"version,omitempty" protobuf:"bytes,2,opt,name=version"`
 }
 
 func (a *KDexHostSpec) GetResourceImage() string {
