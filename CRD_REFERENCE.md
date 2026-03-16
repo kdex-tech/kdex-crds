@@ -202,6 +202,26 @@ _Appears in:_
 | `serviceAccountName` _string_ | serviceAccountName is the name of the service account to use for building the image. |  | Optional: \{\} <br /> |
 
 
+#### CompanionChart
+
+
+
+CompanionChart defines a companion Helm chart to be deployed with the host.
+
+
+
+_Appears in:_
+- [HelmConfig](#helmconfig)
+
+| Field | Description | Default | Validation |
+| --- | --- | --- | --- |
+| `chart` _string_ | chart is the name of the Helm chart. |  | MinLength: 5 <br />Required: \{\} <br /> |
+| `name` _string_ | name is the name of the Helm release. |  | MinLength: 5 <br />Required: \{\} <br /> |
+| `repository` _string_ | repository is the URL of the Helm repository. |  | Optional: \{\} <br /> |
+| `values` _string_ | values is the inline YAML values for the Helm chart. |  | Optional: \{\} <br /> |
+| `version` _string_ | version is the version of the Helm chart. |  | Optional: \{\} <br /> |
+
+
 
 
 
@@ -404,6 +424,40 @@ _Appears in:_
 | `image` _string_ | image is the name of the container image to run for git. |  | Required: \{\} <br /> |
 | `committerEmail` _string_ | committerEmail is the email address that will be used for git commits. |  | Required: \{\} <br /> |
 | `committerName` _string_ | committerName is the name that will be used for git commits. |  | Required: \{\} <br /> |
+
+
+#### HelmConfig
+
+
+
+HelmConfig defines the Helm configuration for a host.
+
+
+
+_Appears in:_
+- [KDexHostSpec](#kdexhostspec)
+- [KDexInternalHostSpec](#kdexinternalhostspec)
+
+| Field | Description | Default | Validation |
+| --- | --- | --- | --- |
+| `companionCharts` _[CompanionChart](#companionchart) array_ | companionCharts is a list of companion Helm charts to be deployed with the host. |  | Optional: \{\} <br /> |
+| `hostManager` _[HostManagerHelmConfig](#hostmanagerhelmconfig)_ | hostManager overrides for the kdex-host-manager chart. |  | Optional: \{\} <br /> |
+
+
+#### HostManagerHelmConfig
+
+
+
+HostManagerHelmConfig defines the overrides for the kdex-host-manager chart.
+
+
+
+_Appears in:_
+- [HelmConfig](#helmconfig)
+
+| Field | Description | Default | Validation |
+| --- | --- | --- | --- |
+| `values` _string_ | values is the inline YAML values for the kdex-host-manager chart. |  | Optional: \{\} <br /> |
 
 
 #### JWT
@@ -1117,6 +1171,7 @@ _Appears in:_
 | `serviceAccountRef` _[LocalObjectReference](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.35/#localobjectreference-v1-core)_ | serviceAccountRef is a reference to the service account used by the host to access secrets.<br />Each Secret must match one of the following cases:<br />- is annotated with 'kdex.dev/secret-type = api-key' (multiple)<br />    An api-key secret is used to define a PASETO key that will be used to sign api tokens and served at '/.well-known/pks.json'.<br />    - must contain key 'private-key'<br />    - may contain key 'public-key'<br />    - may be annotated with 'kdex.dev/active-key = true'<br />- is annotated with 'kdex.dev/secret-type = auth-client' (multiple)<br />    An auth-client secret is used to define a OAuth2 client.<br />    - must contain key 'client-id' OR 'client_id'<br />    - may contain key 'public' (true\|false, default: false)<br />    - if not public, must contain key 'client-secret' OR 'client_secret'<br />    - must contain key 'redirect-uris' OR 'redirect_uris' (comma separated list)<br />    - may contain key 'allowed-grant-types' OR 'allowed_grant_types' (comma separated list)<br />    - may contain key 'allowed-scopes' OR 'allowed_scopes' (comma separated list)<br />    - may contain key 'require-pkce' OR 'require_pkce' (true\|false, default: false)<br />    - may contain key 'name'<br />    - may contain key 'description'<br />- is annotated with 'kdex.dev/secret-type = git' (first, sorted newest to oldest)<br />    A git secret is used to define a Git repository.<br />    - must contain key 'host'<br />    - must contain key 'org'<br />    - must contain key 'password'<br />    - must contain key 'repo'<br />    - must contain key 'username'<br />- is annotated with 'kdex.dev/secret-type = jwt-keys' (multiple)<br />    A jwt-keys secret is used to define a JWT key that will be used to sign tokens and served at '/.well-known/jwks.json'.<br />    - must contain key 'private-key'<br />    - may be annotated with 'kdex.dev/active-key = true'<br />- is annotated with 'kdex.dev/secret-type = ldap' (first, sorted newest to oldest)<br />    A ldap secret is used to define a LDAP server connection that will be used to authenticate users.<br />    - must contain key 'active-directory' (true\|false)<br />    - must contain key 'addr'<br />    - must contain key 'base-dn'<br />    - must contain key 'bind-dn'<br />    - must contain key 'bind-user'<br />    - must contain key 'bind-pass'<br />    - must contain key 'user-filter'<br />    - may contain key 'attributes' (comma separated list of attributes to retrieve)<br />- is annotated with 'kdex.dev/secret-type = npm' (multiple)<br />    A npm secret is used to define a npm registry connection that will be used to retrieve packages.<br />    - must contain key '.npmrc' (formatted as a complete .npmrc file)<br />- is annotated with 'kdex.dev/secret-type = oidc-client' (first, sorted newest to oldest)<br />    An oidc-client secret is used to define the OpenID Connect client configuration for the host.<br />    - must contain key 'client-id' OR 'client_id'<br />    - must contain key 'client-secret' OR 'client_secret'<br />    - may contain a key 'name'<br />    - may contain key 'block-key' OR 'block_key'<br />- is annotated with 'kdex.dev/secret-type = subject' (multiple)<br />    A subject secret is used to define a subject that will be used to authenticate users. These are generally used to define low level system accounts.<br />    - must contain key 'sub'<br />    - must contain key 'password'<br />    - may contain arbitrary key(string)/value(string\|yaml) pairs which can be mapped to the claims using the spec.auth.claimMappings<br />- is of type 'kubernetes.io/dockerconfigjson'<br />    A dockerconfigjson secret is used to define a docker registry connection that will be used to pull (or push) images.<br />    - the pull scenario: (multiple)<br />        - no additional annotations are required<br />    - the push scenario: (first, sorted newest to oldest)<br />        - must be annotated with 'kdex.dev/secret-type = docker-push'<br />- is of type 'kubernetes.io/tls' (first, sorted newest to oldest)<br />    A tls secret is used to define a TLS certificate that will be used to secure connections to the host. |  | Optional: \{\} <br /> |
 | `themeRef` _[KDexObjectReference](#kdexobjectreference)_ | themeRef is a reference to the theme that should apply to all pages bound to this host. |  | Optional: \{\} <br /> |
 | `translationRefs` _[KDexObjectReference](#kdexobjectreference) array_ | translationRefs is an array of references to KDexTranslation or KDexClusterTranslation resources that define the translations that should apply to this host. |  | Optional: \{\} <br /> |
+| `helm` _[HelmConfig](#helmconfig)_ | helm holds the Helm configuration for the host. |  | Optional: \{\} <br /> |
 | `utilityPages` _[UtilityPages](#utilitypages)_ | utilityPages defines the utility pages (announcement, error, login) for the host. |  | Optional: \{\} <br /> |
 
 
@@ -1202,6 +1257,7 @@ _Appears in:_
 | `serviceAccountRef` _[LocalObjectReference](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.35/#localobjectreference-v1-core)_ | serviceAccountRef is a reference to the service account used by the host to access secrets.<br />Each Secret must match one of the following cases:<br />- is annotated with 'kdex.dev/secret-type = api-key' (multiple)<br />    An api-key secret is used to define a PASETO key that will be used to sign api tokens and served at '/.well-known/pks.json'.<br />    - must contain key 'private-key'<br />    - may contain key 'public-key'<br />    - may be annotated with 'kdex.dev/active-key = true'<br />- is annotated with 'kdex.dev/secret-type = auth-client' (multiple)<br />    An auth-client secret is used to define a OAuth2 client.<br />    - must contain key 'client-id' OR 'client_id'<br />    - may contain key 'public' (true\|false, default: false)<br />    - if not public, must contain key 'client-secret' OR 'client_secret'<br />    - must contain key 'redirect-uris' OR 'redirect_uris' (comma separated list)<br />    - may contain key 'allowed-grant-types' OR 'allowed_grant_types' (comma separated list)<br />    - may contain key 'allowed-scopes' OR 'allowed_scopes' (comma separated list)<br />    - may contain key 'require-pkce' OR 'require_pkce' (true\|false, default: false)<br />    - may contain key 'name'<br />    - may contain key 'description'<br />- is annotated with 'kdex.dev/secret-type = git' (first, sorted newest to oldest)<br />    A git secret is used to define a Git repository.<br />    - must contain key 'host'<br />    - must contain key 'org'<br />    - must contain key 'password'<br />    - must contain key 'repo'<br />    - must contain key 'username'<br />- is annotated with 'kdex.dev/secret-type = jwt-keys' (multiple)<br />    A jwt-keys secret is used to define a JWT key that will be used to sign tokens and served at '/.well-known/jwks.json'.<br />    - must contain key 'private-key'<br />    - may be annotated with 'kdex.dev/active-key = true'<br />- is annotated with 'kdex.dev/secret-type = ldap' (first, sorted newest to oldest)<br />    A ldap secret is used to define a LDAP server connection that will be used to authenticate users.<br />    - must contain key 'active-directory' (true\|false)<br />    - must contain key 'addr'<br />    - must contain key 'base-dn'<br />    - must contain key 'bind-dn'<br />    - must contain key 'bind-user'<br />    - must contain key 'bind-pass'<br />    - must contain key 'user-filter'<br />    - may contain key 'attributes' (comma separated list of attributes to retrieve)<br />- is annotated with 'kdex.dev/secret-type = npm' (multiple)<br />    A npm secret is used to define a npm registry connection that will be used to retrieve packages.<br />    - must contain key '.npmrc' (formatted as a complete .npmrc file)<br />- is annotated with 'kdex.dev/secret-type = oidc-client' (first, sorted newest to oldest)<br />    An oidc-client secret is used to define the OpenID Connect client configuration for the host.<br />    - must contain key 'client-id' OR 'client_id'<br />    - must contain key 'client-secret' OR 'client_secret'<br />    - may contain a key 'name'<br />    - may contain key 'block-key' OR 'block_key'<br />- is annotated with 'kdex.dev/secret-type = subject' (multiple)<br />    A subject secret is used to define a subject that will be used to authenticate users. These are generally used to define low level system accounts.<br />    - must contain key 'sub'<br />    - must contain key 'password'<br />    - may contain arbitrary key(string)/value(string\|yaml) pairs which can be mapped to the claims using the spec.auth.claimMappings<br />- is of type 'kubernetes.io/dockerconfigjson'<br />    A dockerconfigjson secret is used to define a docker registry connection that will be used to pull (or push) images.<br />    - the pull scenario: (multiple)<br />        - no additional annotations are required<br />    - the push scenario: (first, sorted newest to oldest)<br />        - must be annotated with 'kdex.dev/secret-type = docker-push'<br />- is of type 'kubernetes.io/tls' (first, sorted newest to oldest)<br />    A tls secret is used to define a TLS certificate that will be used to secure connections to the host. |  | Optional: \{\} <br /> |
 | `themeRef` _[KDexObjectReference](#kdexobjectreference)_ | themeRef is a reference to the theme that should apply to all pages bound to this host. |  | Optional: \{\} <br /> |
 | `translationRefs` _[KDexObjectReference](#kdexobjectreference) array_ | translationRefs is an array of references to KDexTranslation or KDexClusterTranslation resources that define the translations that should apply to this host. |  | Optional: \{\} <br /> |
+| `helm` _[HelmConfig](#helmconfig)_ | helm holds the Helm configuration for the host. |  | Optional: \{\} <br /> |
 | `utilityPages` _[UtilityPages](#utilitypages)_ | utilityPages defines the utility pages (announcement, error, login) for the host. |  | Optional: \{\} <br /> |
 | `announcementRef` _[LocalObjectReference](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.35/#localobjectreference-v1-core)_ | announcementRef is a reference to the KDexInternalUtilityPage that provides the announcement page. |  | Optional: \{\} <br /> |
 | `errorRef` _[LocalObjectReference](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.35/#localobjectreference-v1-core)_ | errorRef is a reference to the KDexInternalUtilityPage that provides the error page. |  | Optional: \{\} <br /> |

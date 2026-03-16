@@ -35,7 +35,7 @@ helm:
 	assert.NotNil(t, spec.Helm)
 	assert.NotNil(t, spec.Helm.HostManager)
 	assert.Equal(t, "replicaCount: 2\nvalkey:\n  enabled: false\n", spec.Helm.HostManager.Values)
-	
+
 	assert.Len(t, spec.Helm.CompanionCharts, 1)
 	assert.Equal(t, "my-companion", spec.Helm.CompanionCharts[0].Name)
 	assert.Equal(t, "some-chart", spec.Helm.CompanionCharts[0].Chart)
