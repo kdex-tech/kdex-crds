@@ -28,42 +28,12 @@ func TestLoadConfiguration(t *testing.T) {
 		want       any
 	}{
 		{
-			name:       "replicas",
-			configFile: "/config.yaml",
-			find: func(config NexusConfiguration) any {
-				return config.HostDefault.Deployment.Replicas
-			},
-			want: func() *int32 {
-				replicas := int32(1)
-				return &replicas
-			}(),
-		},
-		{
-			name:       "configmap volume name",
-			configFile: "/config.yaml",
-			find: func(config NexusConfiguration) any {
-				return config.HostDefault.Deployment.Template.Spec.Volumes[0].ConfigMap.Name
-			},
-			want: "controller-manager",
-		},
-		{
-			name:       "override replicas from file",
+			name:       "chart name",
 			configFile: "../test_fixtures/1_config.yaml",
 			find: func(config NexusConfiguration) any {
-				return config.HostDefault.Deployment.Replicas
+				return config.HostDefault.Chart.Name
 			},
-			want: func() *int32 {
-				replicas := int32(4)
-				return &replicas
-			}(),
-		},
-		{
-			name:       "override selector from file",
-			configFile: "../test_fixtures/1_config.yaml",
-			find: func(config NexusConfiguration) any {
-				return config.HostDefault.Deployment.Selector.MatchLabels["control-plane"]
-			},
-			want: "controller-manager",
+			want: "oci://ghcr.io/kdex-tech/charts/host-manager",
 		},
 	}
 	for _, tt := range tests {

@@ -22,10 +22,15 @@ type BackendDefault struct {
 	ServerImagePullPolicy corev1.PullPolicy        `json:"serverImagePullPolicy" yaml:"serverImagePullPolicy"`
 }
 
+type Chart struct {
+	Name    string `json:"name" yaml:"name"`
+	Version string `json:"version" yaml:"version"`
+}
+
 type HostDefault struct {
-	Deployment appsv1.DeploymentSpec `json:"deployment" yaml:"deployment"`
-	RoleRef    rbacv1.RoleRef        `json:"roleRef" yaml:"roleRef"`
-	Service    corev1.ServiceSpec    `json:"service" yaml:"service"`
+	Chart   Chart              `json:"chart" yaml:"chart"`
+	RoleRef rbacv1.RoleRef     `json:"roleRef" yaml:"roleRef"`
+	Service corev1.ServiceSpec `json:"service" yaml:"service"`
 }
 
 // +kubebuilder:object:root=true
@@ -107,71 +112,13 @@ backendDefault:
 defaultImageRegistry: docker.io
 defaultNpmRegistry: registry.npmjs.org
 hostDefault:
-  deployment:
-    selector:
-      matchLabels: {}
-    replicas: 1
-    template:
-      metadata:
-      annotations: {}
-      labels: {}
-      spec:
-        containers:
-        - args:
-          - --health-probe-bind-address=:8081
-          - --webserver-bind-address=:8090
-          command:
-          - /manager
-          image: ghcr.io/kdex-tech/host-manager:latest
-          imagePullPolicy: Always
-          livenessProbe:
-            httpGet:
-              path: /healthz
-              port: 8081
-            initialDelaySeconds: 15
-            periodSeconds: 20
-          name: manager
-          ports:
-          - containerPort: 8090
-            name: server
-            protocol: TCP
-          readinessProbe:
-            httpGet:
-              path: /readyz
-              port: 8081
-            initialDelaySeconds: 5
-            periodSeconds: 10
-          securityContext:
-            allowPrivilegeEscalation: false
-            capabilities:
-              drop:
-              - "ALL"
-            readOnlyRootFilesystem: true
-          volumeMounts:
-          - mountPath: /config.yaml
-            name: config
-            subPath: config.yaml
-        securityContext:
-          runAsNonRoot: true
-          seccompProfile:
-            type: RuntimeDefault
-        serviceAccountName: controller-manager
-        terminationGracePeriodSeconds: 10
-        volumes:
-        - name: config
-          configMap:
-            name: controller-manager
+  chart:
+    name: oci://ghcr.io/kdex-tech/charts/host-manager
+    version: ""
   roleRef:
     apiGroup: rbac.authorization.k8s.io
     kind: ClusterRole
     name: host-controller-role
-  service:
-    selector: {}
-    ports:
-    - name: server
-      port: 8090
-      protocol: TCP
-      targetPort: server
 packages:
   packagerImage: ghcr.io/kdex-tech/cli-tools:latest
   packagerImagePullPolicy: Always
