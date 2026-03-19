@@ -6,7 +6,6 @@ import (
 	appsv1 "k8s.io/api/apps/v1"
 	corev1 "k8s.io/api/core/v1"
 	networkingv1 "k8s.io/api/networking/v1"
-	rbacv1 "k8s.io/api/rbac/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	runtime "k8s.io/apimachinery/pkg/runtime"
 	"k8s.io/apimachinery/pkg/runtime/serializer"
@@ -28,9 +27,7 @@ type Chart struct {
 }
 
 type HostDefault struct {
-	Chart   Chart              `json:"chart" yaml:"chart"`
-	RoleRef rbacv1.RoleRef     `json:"roleRef" yaml:"roleRef"`
-	Service corev1.ServiceSpec `json:"service" yaml:"service"`
+	Chart Chart `json:"chart" yaml:"chart"`
 }
 
 // +kubebuilder:object:root=true
@@ -115,10 +112,6 @@ hostDefault:
   chart:
     name: oci://ghcr.io/kdex-tech/charts/host-manager
     version: ""
-  roleRef:
-    apiGroup: rbac.authorization.k8s.io
-    kind: ClusterRole
-    name: host-controller-role
 packages:
   packagerImage: ghcr.io/kdex-tech/cli-tools:latest
   packagerImagePullPolicy: Always
