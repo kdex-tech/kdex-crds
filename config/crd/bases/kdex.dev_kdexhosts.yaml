@@ -418,6 +418,10 @@ spec:
                           description: name is the name of the Helm release.
                           minLength: 5
                           type: string
+                        plainHTTP:
+                          description: plainHTTP should be set to true in order to
+                            use a non-https repository (largely for testing)
+                          type: boolean
                         repository:
                           description: repository is the URL of the Helm repository.
                           type: string
@@ -436,6 +440,10 @@ spec:
                   hostManager:
                     description: hostManager overrides for the kdex-host-manager chart.
                     properties:
+                      plainHTTP:
+                        description: plainHTTP should be set to true in order to use
+                          a non-https repository (largely for testing)
+                        type: boolean
                       values:
                         description: values is the inline YAML values for the kdex-host-manager
                           chart.

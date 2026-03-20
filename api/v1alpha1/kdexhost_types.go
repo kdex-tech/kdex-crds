@@ -249,17 +249,21 @@ type CompanionChart struct {
 	// +kubebuilder:validation:MinLength=5
 	Name string `json:"name" protobuf:"bytes,2,req,name=name"`
 
+	// plainHTTP should be set to true in order to use a non-https repository (largely for testing)
+	// +kubebuilder:validation:Optional
+	PlainHTTP bool `json:"plainHTTP,omitempty" protobuf:"bytes,3,opt,name=plainHTTP"`
+
 	// repository is the URL of the Helm repository.
 	// +kubebuilder:validation:Optional
-	Repository string `json:"repository,omitempty" protobuf:"bytes,3,opt,name=repository"`
+	Repository string `json:"repository,omitempty" protobuf:"bytes,4,opt,name=repository"`
 
 	// values is the inline YAML values for the Helm chart.
 	// +kubebuilder:validation:Optional
-	Values string `json:"values,omitempty" protobuf:"bytes,4,opt,name=values"`
+	Values string `json:"values,omitempty" protobuf:"bytes,5,opt,name=values"`
 
 	// version is the version of the Helm chart.
 	// +kubebuilder:validation:Optional
-	Version string `json:"version,omitempty" protobuf:"bytes,5,opt,name=version"`
+	Version string `json:"version,omitempty" protobuf:"bytes,6,opt,name=version"`
 }
 
 // HelmConfig defines the Helm configuration for a host.
@@ -275,13 +279,17 @@ type HelmConfig struct {
 
 // HostManagerHelmConfig defines the overrides for the kdex-host-manager chart.
 type HostManagerHelmConfig struct {
+	// plainHTTP should be set to true in order to use a non-https repository (largely for testing)
+	// +kubebuilder:validation:Optional
+	PlainHTTP bool `json:"plainHTTP,omitempty" protobuf:"bytes,1,opt,name=plainHTTP"`
+
 	// values is the inline YAML values for the kdex-host-manager chart.
 	// +kubebuilder:validation:Optional
-	Values string `json:"values,omitempty" protobuf:"bytes,1,opt,name=values"`
+	Values string `json:"values,omitempty" protobuf:"bytes,2,opt,name=values"`
 
 	// version is the version of the kdex-host-manager chart.
 	// +kubebuilder:validation:Optional
-	Version string `json:"version,omitempty" protobuf:"bytes,2,opt,name=version"`
+	Version string `json:"version,omitempty" protobuf:"bytes,3,opt,name=version"`
 }
 
 func (a *KDexHostSpec) GetResourceImage() string {

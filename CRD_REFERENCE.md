@@ -217,6 +217,7 @@ _Appears in:_
 | --- | --- | --- | --- |
 | `chart` _string_ | chart is the name of the Helm chart. |  | MinLength: 5 <br />Required: \{\} <br /> |
 | `name` _string_ | name is the name of the Helm release. |  | MinLength: 5 <br />Required: \{\} <br /> |
+| `plainHTTP` _boolean_ | plainHTTP should be set to true in order to use a non-https repository (largely for testing) |  | Optional: \{\} <br /> |
 | `repository` _string_ | repository is the URL of the Helm repository. |  | Optional: \{\} <br /> |
 | `values` _string_ | values is the inline YAML values for the Helm chart. |  | Optional: \{\} <br /> |
 | `version` _string_ | version is the version of the Helm chart. |  | Optional: \{\} <br /> |
@@ -457,6 +458,7 @@ _Appears in:_
 
 | Field | Description | Default | Validation |
 | --- | --- | --- | --- |
+| `plainHTTP` _boolean_ | plainHTTP should be set to true in order to use a non-https repository (largely for testing) |  | Optional: \{\} <br /> |
 | `values` _string_ | values is the inline YAML values for the kdex-host-manager chart. |  | Optional: \{\} <br /> |
 | `version` _string_ | version is the version of the kdex-host-manager chart. |  | Optional: \{\} <br /> |
 
