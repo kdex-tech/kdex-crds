@@ -448,10 +448,6 @@ spec:
                           description: name is the name of the Helm release.
                           minLength: 5
                           type: string
-                        plainHTTP:
-                          description: plainHTTP should be set to true in order to
-                            use a non-https repository (largely for testing)
-                          type: boolean
                         repository:
                           description: repository is the URL of the Helm repository.
                           type: string
@@ -470,10 +466,6 @@ spec:
                   hostManager:
                     description: hostManager overrides for the kdex-host-manager chart.
                     properties:
-                      plainHTTP:
-                        description: plainHTTP should be set to true in order to use
-                          a non-https repository (largely for testing)
-                        type: boolean
                       values:
                         description: values is the inline YAML values for the kdex-host-manager
                           chart.
@@ -819,6 +811,13 @@ spec:
                       - must contain key 'password'
                       - must contain key 'repo'
                       - must contain key 'username'
+
+                  - is annotated with 'kdex.dev/secret-type = helm' (multiple)
+                      A helm secret is used to define a set of Helm repository credentials.
+                      - must contain key 'password'
+                      - must contain key 'repository' (the hostname, port and base path of the repository)
+                      - must contain key 'username'
+                      - may contain key 'insecure' (true|false, default false)
 
                   - is annotated with 'kdex.dev/secret-type = jwt-keys' (multiple)
                       A jwt-keys secret is used to define a JWT key that will be used to sign tokens and served at '/.well-known/jwks.json'.

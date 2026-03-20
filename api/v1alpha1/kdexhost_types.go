@@ -167,6 +167,13 @@ type KDexHostSpec struct {
 	//     - must contain key 'repo'
 	//     - must contain key 'username'
 	//
+	// - is annotated with 'kdex.dev/secret-type = helm' (multiple)
+	//     A helm secret is used to define a set of Helm repository credentials.
+	//     - must contain key 'password'
+	//     - must contain key 'repository' (the hostname, port and base path of the repository)
+	//     - must contain key 'username'
+	//     - may contain key 'insecure' (true|false, default false)
+	//
 	// - is annotated with 'kdex.dev/secret-type = jwt-keys' (multiple)
 	//     A jwt-keys secret is used to define a JWT key that will be used to sign tokens and served at '/.well-known/jwks.json'.
 	//     - must contain key 'private-key'
@@ -249,10 +256,6 @@ type CompanionChart struct {
 	// +kubebuilder:validation:MinLength=5
 	Name string `json:"name" protobuf:"bytes,2,req,name=name"`
 
-	// plainHTTP should be set to true in order to use a non-https repository (largely for testing)
-	// +kubebuilder:validation:Optional
-	PlainHTTP bool `json:"plainHTTP,omitempty" protobuf:"bytes,3,opt,name=plainHTTP"`
-
 	// repository is the URL of the Helm repository.
 	// +kubebuilder:validation:Optional
 	Repository string `json:"repository,omitempty" protobuf:"bytes,4,opt,name=repository"`
@@ -279,10 +282,6 @@ type HelmConfig struct {
 
 // HostManagerHelmConfig defines the overrides for the kdex-host-manager chart.
 type HostManagerHelmConfig struct {
-	// plainHTTP should be set to true in order to use a non-https repository (largely for testing)
-	// +kubebuilder:validation:Optional
-	PlainHTTP bool `json:"plainHTTP,omitempty" protobuf:"bytes,1,opt,name=plainHTTP"`
-
 	// values is the inline YAML values for the kdex-host-manager chart.
 	// +kubebuilder:validation:Optional
 	Values string `json:"values,omitempty" protobuf:"bytes,2,opt,name=values"`
