@@ -817,7 +817,7 @@ spec:
                       - must contain key 'password'
                       - must contain key 'repository' (the hostname, port and base path of the repository)
                       - must contain key 'username'
-                      - may contain key 'insecure' (true|false, default false)
+                      - may contain key 'plainHTTP' (true|false, default false)
 
                   - is annotated with 'kdex.dev/secret-type = jwt-keys' (multiple)
                       A jwt-keys secret is used to define a JWT key that will be used to sign tokens and served at '/.well-known/jwks.json'.
