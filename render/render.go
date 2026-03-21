@@ -191,10 +191,10 @@ func (r *Renderer) RenderOne(
 					val1, val2 = val2, val1
 				}
 
-				if val1.Kind() == reflect.Ptr {
+				if val1.Kind() == reflect.Pointer {
 					val1 = val1.Elem()
 				}
-				if val2.Kind() == reflect.Ptr {
+				if val2.Kind() == reflect.Pointer {
 					val2 = val2.Elem()
 				}
 
