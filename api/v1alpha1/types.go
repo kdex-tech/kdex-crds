@@ -1213,12 +1213,11 @@ func (s ServiceAccountSecrets) Find(predicate func(corev1.Secret) bool) *corev1.
 		return b.CreationTimestamp.Compare(a.CreationTimestamp.Time)
 	})
 
-	for _, secret := range s {
-		if predicate(secret) {
-			return &secret
+	for i := range s {
+		if predicate(s[i]) {
+			return &s[i]
 		}
 	}
-
 	return nil
 }
 
