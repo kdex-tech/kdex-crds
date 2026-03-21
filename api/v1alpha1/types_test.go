@@ -2,9 +2,46 @@ package v1alpha1
 
 import (
 	"testing"
+	"time"
 
 	"github.com/stretchr/testify/assert"
+	corev1 "k8s.io/api/core/v1"
+	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
+
+func TestServiceAccountSecrets_Find(t *testing.T) {
+	now := time.Now()
+	s1 := corev1.Secret{
+		ObjectMeta: metav1.ObjectMeta{
+			Name:              "s1",
+			CreationTimestamp: metav1.NewTime(now.Add(-1 * time.Hour)),
+		},
+	}
+	s2 := corev1.Secret{
+		ObjectMeta: metav1.ObjectMeta{
+			Name:              "s2",
+			CreationTimestamp: metav1.NewTime(now),
+		},
+	}
+
+	secrets := ServiceAccountSecrets{s1, s2}
+
+	// Should find s2 because it's newer and we sort descending
+	found := secrets.Find(func(s corev1.Secret) bool {
+		return true
+	})
+
+	assert.NotNil(t, found)
+	assert.Equal(t, "s2", found.Name)
+
+	// Verify it's not a pointer to a loop variable by checking the address
+	// In the original buggy version, it might return the same address for different finds if they were in the same loop,
+	// but here we just want to ensure it's pointing into the slice.
+	found.Annotations = map[string]string{"modified": "true"}
+	// Find again - if it was a copy, the original in the slice wouldn't be modified.
+	// Note: Find sorts the slice in place! So s2 is at secrets[0] now.
+	assert.Equal(t, "true", secrets[0].Annotations["modified"])
+}
 
 func TestAssets_String(t *testing.T) {
 	tests := []struct {
