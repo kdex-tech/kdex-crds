@@ -493,7 +493,7 @@ type KDexObjectStatus struct {
 	Conditions []metav1.Condition `json:"conditions,omitempty" patchStrategy:"merge" patchMergeKey:"type" protobuf:"bytes,2,rep,name=conditions"`
 
 	// attributes hold state of the resource as key/value pairs.
-	// +kubebuilder:validation:MaxProperties=32
+	// +kubebuilder:validation:MaxProperties=64
 	// +kubebuilder:validation:Optional
 	Attributes map[string]string `json:"attributes,omitempty" protobuf:"bytes,3,rep,name=attributes"`
 }
