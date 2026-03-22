@@ -24,7 +24,7 @@ func TestServiceAccountSecrets_Find(t *testing.T) {
 		},
 	}
 
-	secrets := ServiceAccountSecrets{s1, s2}
+	secrets := Secrets{s1, s2}
 
 	// Should find s2 because it's newer and we sort descending
 	found := secrets.Find(func(s corev1.Secret) bool {

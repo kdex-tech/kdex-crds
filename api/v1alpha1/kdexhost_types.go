@@ -136,7 +136,7 @@ type KDexHostSpec struct {
 	// Optional top level security requirements.
 	Security *[]SecurityRequirement `json:"security,omitempty" yaml:"security,omitempty" protobuf:"bytes,15,rep,name=security"`
 
-	// ServiceAccountSecrets is a list of secrets needed by the host.
+	// Secrets is an optional array of names of secret referenced by the host.
 	//
 	// Each Secret must match one of the following cases:
 	//
@@ -217,7 +217,7 @@ type KDexHostSpec struct {
 	//     A tls secret is used to define a TLS certificate that will be used to secure connections to the host.
 	//
 	// +kubebuilder:validation:Optional
-	ServiceAccountSecrets ServiceAccountSecrets `json:"serviceAccountSecrets,omitempty" protobuf:"bytes,20,opt,name=serviceAccountSecrets"`
+	Secrets []string `json:"secrets,omitempty" protobuf:"bytes,20,rep,name=secrets"`
 
 	// themeRef is a reference to the theme that should apply to all pages bound to this host.
 	// +kubebuilder:validation:Optional

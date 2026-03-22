@@ -1184,15 +1184,9 @@ func (s *ScriptDef) ToTag() string {
 	return buffer.String()
 }
 
-// SecurityRequirement maps a security scheme name (e.g., 'bearer', 'oauth2') to a list of required scopes.
-// Scopes follow the 'resource:resourceName:verb' format.
-// Note: resourceName must be URL-encoded if it contains colons (':') to prevent misinterpretation
-// by the entitlement pattern splitting logic.
-type SecurityRequirement map[string][]string
+type Secrets []corev1.Secret
 
-type ServiceAccountSecrets []corev1.Secret
-
-func (s ServiceAccountSecrets) Filter(predicate func(corev1.Secret) bool) []corev1.Secret {
+func (s Secrets) Filter(predicate func(corev1.Secret) bool) []corev1.Secret {
 	slices.SortFunc(s, func(a, b corev1.Secret) int {
 		// Sort to Descending - newest to oldest
 		return b.CreationTimestamp.Compare(a.CreationTimestamp.Time)
@@ -1207,7 +1201,7 @@ func (s ServiceAccountSecrets) Filter(predicate func(corev1.Secret) bool) []core
 	return filtered
 }
 
-func (s ServiceAccountSecrets) Find(predicate func(corev1.Secret) bool) *corev1.Secret {
+func (s Secrets) Find(predicate func(corev1.Secret) bool) *corev1.Secret {
 	slices.SortFunc(s, func(a, b corev1.Secret) int {
 		// Sort to Descending - newest to oldest
 		return b.CreationTimestamp.Compare(a.CreationTimestamp.Time)
@@ -1220,6 +1214,12 @@ func (s ServiceAccountSecrets) Find(predicate func(corev1.Secret) bool) *corev1.
 	}
 	return nil
 }
+
+// SecurityRequirement maps a security scheme name (e.g., 'bearer', 'oauth2') to a list of required scopes.
+// Scopes follow the 'resource:resourceName:verb' format.
+// Note: resourceName must be URL-encoded if it contains colons (':') to prevent misinterpretation
+// by the entitlement pattern splitting logic.
+type SecurityRequirement map[string][]string
 
 // Source contains source information.
 type Source struct {
