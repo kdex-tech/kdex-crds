@@ -135,7 +135,7 @@ func (r *Renderer) RenderOne(
 		res := []any{}
 		for i := 0; i < rv.Len(); i++ {
 			itemValue := rv.Index(i)
-			for itemValue.Kind() == reflect.Interface || itemValue.Kind() == reflect.Ptr {
+			for itemValue.Kind() == reflect.Interface || itemValue.Kind() == reflect.Pointer {
 				itemValue = itemValue.Elem()
 			}
 			if itemValue.Kind() != reflect.Struct {
