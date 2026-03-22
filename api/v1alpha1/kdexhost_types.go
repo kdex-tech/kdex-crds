@@ -17,7 +17,6 @@ limitations under the License.
 package v1alpha1
 
 import (
-	corev1 "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
 
@@ -137,7 +136,7 @@ type KDexHostSpec struct {
 	// Optional top level security requirements.
 	Security *[]SecurityRequirement `json:"security,omitempty" yaml:"security,omitempty" protobuf:"bytes,15,rep,name=security"`
 
-	// serviceAccountRef is a reference to the service account used by the host to access secrets.
+	// ServiceAccountSecrets is a list of secrets needed by the host.
 	//
 	// Each Secret must match one of the following cases:
 	//
@@ -218,10 +217,7 @@ type KDexHostSpec struct {
 	//     A tls secret is used to define a TLS certificate that will be used to secure connections to the host.
 	//
 	// +kubebuilder:validation:Optional
-	ServiceAccountRef *corev1.LocalObjectReference `json:"serviceAccountRef,omitempty" protobuf:"bytes,18,opt,name=serviceAccountRef"`
-
-	// ServiceAccountSecrets is an internal list of resolved secrets that are referenced by the service account.
-	ServiceAccountSecrets ServiceAccountSecrets `json:"-"`
+	ServiceAccountSecrets ServiceAccountSecrets `json:"serviceAccountSecrets,omitempty" protobuf:"bytes,20,opt,name=serviceAccountSecrets"`
 
 	// themeRef is a reference to the theme that should apply to all pages bound to this host.
 	// +kubebuilder:validation:Optional
