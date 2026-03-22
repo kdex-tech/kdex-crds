@@ -1343,6 +1343,13 @@ func (in *KDexFunctionSpec) DeepCopyInto(out *KDexFunctionSpec) {
 		*out = make([]dmapper.MappingRule, len(*in))
 		copy(*out, *in)
 	}
+	if in.Env != nil {
+		in, out := &in.Env, &out.Env
+		*out = make([]v1.EnvVar, len(*in))
+		for i := range *in {
+			(*in)[i].DeepCopyInto(&(*out)[i])
+		}
+	}
 	out.HostRef = in.HostRef
 	in.Metadata.DeepCopyInto(&out.Metadata)
 	in.Origin.DeepCopyInto(&out.Origin)

@@ -90,18 +90,22 @@ type KDexFunctionSpec struct {
 	// +kubebuilder:validation:MaxItems=16
 	ClaimMappings []dmapper.MappingRule `json:"claimMappings,omitempty" protobuf:"bytes,2,rep,name=claimMappings"`
 
+	// env is the environment variables to set in the function's runtime.
+	// +kubebuilder:validation:Optional
+	Env []corev1.EnvVar `json:"env,omitempty" protobuf:"bytes,3,rep,name=env"`
+
 	// hostRef is a reference to the KDexHost that this translation belongs to.
 	// +kubebuilder:validation:Required
 	// +kubebuilder:validation:XValidation:rule="self.name.size() > 0",message="hostRef.name must not be empty"
-	HostRef corev1.LocalObjectReference `json:"hostRef" protobuf:"bytes,3,req,name=hostRef"`
+	HostRef corev1.LocalObjectReference `json:"hostRef" protobuf:"bytes,4,req,name=hostRef"`
 
 	// metadata defines the metadata for the function for cataloging and discovery purposes.
 	// +kubebuilder:validation:Optional
-	Metadata KDexFunctionMetadata `json:"metadata,omitempty" protobuf:"bytes,4,opt,name=metadata"`
+	Metadata KDexFunctionMetadata `json:"metadata,omitempty" protobuf:"bytes,5,opt,name=metadata"`
 
 	// origin defines the origin of the function implementation.
 	// +kubebuilder:validation:Optional
-	Origin FunctionOrigin `json:"origin,omitempty" protobuf:"bytes,5,opt,name=origin"`
+	Origin FunctionOrigin `json:"origin,omitempty" protobuf:"bytes,6,opt,name=origin"`
 }
 
 // KDexFunctionState reflects the current state of a KDexFunction.
