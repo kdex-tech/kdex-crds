@@ -2362,7 +2362,11 @@ func (in *KDexPageSpec) DeepCopyInto(out *KDexPageSpec) {
 			(*out)[key] = outVal
 		}
 	}
-	out.PageArchetypeRef = in.PageArchetypeRef
+	if in.PageArchetypeRef != nil {
+		in, out := &in.PageArchetypeRef, &out.PageArchetypeRef
+		*out = new(KDexObjectReference)
+		**out = **in
+	}
 	if in.ParentPageRef != nil {
 		in, out := &in.ParentPageRef, &out.ParentPageRef
 		*out = new(v1.LocalObjectReference)
@@ -2924,7 +2928,11 @@ func (in *KDexUtilityPageSpec) DeepCopyInto(out *KDexUtilityPageSpec) {
 			(*out)[key] = outVal
 		}
 	}
-	out.PageArchetypeRef = in.PageArchetypeRef
+	if in.PageArchetypeRef != nil {
+		in, out := &in.PageArchetypeRef, &out.PageArchetypeRef
+		*out = new(KDexObjectReference)
+		**out = **in
+	}
 	if in.ScriptLibraryRef != nil {
 		in, out := &in.ScriptLibraryRef, &out.ScriptLibraryRef
 		*out = new(KDexObjectReference)

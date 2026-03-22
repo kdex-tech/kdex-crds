@@ -286,7 +286,8 @@ spec:
                     == 'KDexClusterPageNavigation')
               pageArchetypeRef:
                 description: pageArchetypeRef is a reference to the KDexPageArchetype
-                  that this binding is for.
+                  that this binding is for. If not specified a default will be used.
+                  If no default is found the page will be considered degraded.
                 properties:
                   kind:
                     description: Kind is the type of resource being referenced
@@ -398,7 +399,6 @@ spec:
             - contentEntries
             - hostRef
             - label
-            - pageArchetypeRef
             type: object
             x-kubernetes-validations:
             - message: if patternPath is specified, basePath must be a prefix of patternPath

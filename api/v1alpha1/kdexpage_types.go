@@ -104,13 +104,11 @@ type KDexPageSpec struct {
 	// +kubebuilder:validation:XValidation:rule="self.all(k, self[k].kind == 'KDexPageNavigation' || self[k].kind == 'KDexClusterPageNavigation')",message="all navigation kinds must be either KDexPageNavigation or KDexClusterPageNavigation"
 	OverrideNavigationRefs map[string]*KDexObjectReference `json:"overrideNavigationRefs,omitempty" protobuf:"bytes,8,rep,name=overrideNavigationRefs"`
 
-	// TODO: default to the standard page archetype
-
-	// pageArchetypeRef is a reference to the KDexPageArchetype that this binding is for.
-	// +kubebuilder:validation:Required
+	// pageArchetypeRef is a reference to the KDexPageArchetype that this binding is for. If not specified a default will be used. If no default is found the page will be considered degraded.
+	// +kubebuilder:validation:Optional
 	// +kubebuilder:validation:XValidation:rule="self.name.size() > 0",message="pageArchetypeRef.name must not be empty"
 	// +kubebuilder:validation:XValidation:rule=`self.kind == "KDexPageArchetype" || self.kind == "KDexClusterPageArchetype"`,message="'kind' must be either KDexPageArchetype or KDexClusterPageArchetype"
-	PageArchetypeRef KDexObjectReference `json:"pageArchetypeRef" protobuf:"bytes,9,req,name=pageArchetypeRef"`
+	PageArchetypeRef *KDexObjectReference `json:"pageArchetypeRef,omitempty" protobuf:"bytes,9,opt,name=pageArchetypeRef"`
 
 	// parentPageRef is a reference to the KDexPage bellow which this page will appear in the main navigation. If not set, the page will be placed in the top level of the navigation.
 	// +kubebuilder:validation:Optional

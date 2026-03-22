@@ -222,7 +222,8 @@ spec:
                     == 'KDexClusterPageNavigation')
               pageArchetypeRef:
                 description: pageArchetypeRef is a reference to the KDexPageArchetype
-                  that this binding is for.
+                  that this binding is for. If not specified a default will be used.
+                  If no default is found the page will be considered degraded.
                 properties:
                   kind:
                     description: Kind is the type of resource being referenced
@@ -288,7 +289,6 @@ spec:
                 type: string
             required:
             - contentEntries
-            - pageArchetypeRef
             - type
             type: object
           status:

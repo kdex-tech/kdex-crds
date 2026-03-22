@@ -104,11 +104,11 @@ type KDexUtilityPageSpec struct {
 	// +kubebuilder:validation:XValidation:rule="self.all(k, self[k].kind == 'KDexPageNavigation' || self[k].kind == 'KDexClusterPageNavigation')",message="all navigation kinds must be either KDexPageNavigation or KDexClusterPageNavigation"
 	OverrideNavigationRefs map[string]*KDexObjectReference `json:"overrideNavigationRefs,omitempty" protobuf:"bytes,7,rep,name=overrideNavigationRefs"`
 
-	// pageArchetypeRef is a reference to the KDexPageArchetype that this binding is for.
-	// +kubebuilder:validation:Required
+	// pageArchetypeRef is a reference to the KDexPageArchetype that this binding is for. If not specified a default will be used. If no default is found the page will be considered degraded.
+	// +kubebuilder:validation:Optional
 	// +kubebuilder:validation:XValidation:rule="self.name.size() > 0",message="pageArchetypeRef.name must not be empty"
 	// +kubebuilder:validation:XValidation:rule=`self.kind == "KDexPageArchetype" || self.kind == "KDexClusterPageArchetype"`,message="'kind' must be either KDexPageArchetype or KDexClusterPageArchetype"
-	PageArchetypeRef KDexObjectReference `json:"pageArchetypeRef" protobuf:"bytes,8,req,name=pageArchetypeRef"`
+	PageArchetypeRef *KDexObjectReference `json:"pageArchetypeRef,omitempty" protobuf:"bytes,8,opt,name=pageArchetypeRef"`
 
 	// scriptLibraryRef is an optional reference to a KDexScriptLibrary resource.
 	// +kubebuilder:validation:Optional
