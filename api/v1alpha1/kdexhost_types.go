@@ -202,9 +202,11 @@ type KDexHostSpec struct {
 	//
 	// - is annotated with 'kdex.dev/secret-type = subject' (multiple)
 	//     A subject secret is used to define a subject that will be used to authenticate users. These are generally used to define low level system accounts.
-	//     - must contain key 'sub'
+	//     - must contain key 'sub' (used as the username or unique identifier)
 	//     - must contain key 'password'
+	//     - may contain key 'email' (if present, can also be used as the login username)
 	//     - may contain arbitrary key(string)/value(string|yaml) pairs which can be mapped to the claims using the spec.auth.claimMappings
+
 	//
 	// - is of type 'kubernetes.io/dockerconfigjson'
 	//     A dockerconfigjson secret is used to define a docker registry connection that will be used to pull (or push) images.
