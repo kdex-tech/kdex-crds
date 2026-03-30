@@ -48,11 +48,11 @@ jobs:
         name: crd-installer
         path: dist/install.yaml
 
-    - name: Create Release
-      uses: softprops/action-gh-release@v2
-      with:
-        files: dist/install.yaml
-        generate_release_notes: true
+    - env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      name: Create Release
+      run: |
+        gh release create ${{ github.ref_name }} dist/install.yaml --generate-notes
 
 name: CI
 
