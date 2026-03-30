@@ -48,6 +48,12 @@ jobs:
         name: crd-installer
         path: dist/install.yaml
 
+    - name: Create Release
+      uses: softprops/action-gh-release@v2
+      with:
+        files: dist/install.yaml
+        generate_release_notes: true
+
 name: CI
 
 on:
@@ -65,5 +71,5 @@ on:
     - "v*"
 
 permissions:
-  contents: read
+  contents: write
   packages: write
