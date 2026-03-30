@@ -89,6 +89,11 @@ modernizer: ## Run modernizer
 modernizer-fix: ## Run modernizer and perform fixes
 	go run golang.org/x/tools/go/analysis/passes/modernize/cmd/modernize@latest -fix ./...
 
+.PHONY: build-installer
+build-installer: manifests generate kustomize ## Generate a consolidated YAML with CRDs and deployment.
+	mkdir -p dist
+	"$(KUSTOMIZE)" build config/default > dist/install.yaml
+
 ##@ Deployment
 
 ifndef ignore-not-found
