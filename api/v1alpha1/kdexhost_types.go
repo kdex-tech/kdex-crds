@@ -290,6 +290,9 @@ type HostManagerHelmConfig struct {
 }
 
 func (a *KDexHostSpec) GetResourceImage() string {
+	if a.ServerImage != "" {
+		return a.ServerImage
+	}
 	return a.StaticImage
 }
 

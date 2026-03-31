@@ -83,6 +83,9 @@ type KDexAppSpec struct {
 }
 
 func (a *KDexAppSpec) GetResourceImage() string {
+	if a.ServerImage != "" {
+		return a.ServerImage
+	}
 	return a.StaticImage
 }
 

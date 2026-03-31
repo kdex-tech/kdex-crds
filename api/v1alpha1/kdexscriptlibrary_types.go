@@ -80,6 +80,9 @@ type KDexScriptLibrarySpec struct {
 }
 
 func (a *KDexScriptLibrarySpec) GetResourceImage() string {
+	if a.ServerImage != "" {
+		return a.ServerImage
+	}
 	return a.StaticImage
 }
 

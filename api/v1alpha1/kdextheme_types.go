@@ -72,6 +72,9 @@ type KDexThemeSpec struct {
 }
 
 func (a *KDexThemeSpec) GetResourceImage() string {
+	if a.ServerImage != "" {
+		return a.ServerImage
+	}
 	return a.StaticImage
 }
 
