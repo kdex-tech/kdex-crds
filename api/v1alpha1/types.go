@@ -12,6 +12,7 @@ import (
 	"k8s.io/apimachinery/pkg/api/resource"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	runtime "k8s.io/apimachinery/pkg/runtime"
+	gatewayv1 "sigs.k8s.io/gateway-api/apis/v1"
 )
 
 const (
@@ -963,6 +964,15 @@ type Routing struct {
 	// +kubebuilder:validation:Optional
 	// +kubebuilder:default:="Ingress"
 	Strategy RoutingStrategy `json:"strategy,omitempty" protobuf:"bytes,4,opt,name=strategy,casttype=RoutingStrategy"`
+
+	// parentRefs is the list of Gateways the generated HTTPRoute attaches to
+	// when strategy is HTTPRoute. Each entry follows the
+	// gateway.networking.k8s.io/v1 ParentReference shape (name, namespace,
+	// sectionName, port, kind, group). Ignored when strategy is Ingress.
+	// When unset under HTTPRoute strategy, the host-manager falls back to
+	// the operator's chart-level default parent Gateway.
+	// +kubebuilder:validation:Optional
+	ParentRefs []gatewayv1.ParentReference `json:"parentRefs,omitempty" protobuf:"bytes,5,rep,name=parentRefs"`
 }
 
 // RoutingStrategy defines the routing strategy to use.
