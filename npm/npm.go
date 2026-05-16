@@ -1,6 +1,8 @@
 package npm
 
 import (
+	"archive/tar"
+	"compress/gzip"
 	"encoding/base64"
 	"encoding/json"
 	"errors"
@@ -69,7 +71,85 @@ func (r *Registry) ValidatePackage(packageName string, packageVersion string) er
 		return fmt.Errorf("npm: version of package not found %s at %s", packageName+"@"+packageVersion, r.GetAddress())
 	}
 
-	return versionPackageJSON.hasESModule()
+	if err := versionPackageJSON.hasESModule(); err == nil {
+		return nil
+	} else if versionPackageJSON.Dist.Tarball == "" {
+		return err
+	} else {
+		// The registry's per-version manifest is missing the fields
+		// hasESModule consults (type/main/module/exports/browser).
+		// GitLab's npm registry is the canonical offender: it omits
+		// those fields entirely. Fall back to the tarball, which always
+		// carries a complete package.json. This is what `npm install`
+		// itself does - it never trusts registry metadata for the shape
+		// of the package being installed.
+		tarPkg, terr := r.fetchTarballPackageJSON(versionPackageJSON.Dist.Tarball)
+		if terr != nil {
+			return errors.Join(err, terr)
+		}
+		return tarPkg.hasESModule()
+	}
+}
+
+// fetchTarballPackageJSON downloads the package tarball at tarballURL,
+// locates the canonical `package/package.json` entry, and decodes it
+// into a PackageJSON. Returns an error if the tarball can't be fetched,
+// gunzipped, or scanned, or if no package.json entry exists.
+func (r *Registry) fetchTarballPackageJSON(tarballURL string) (p *PackageJSON, e error) {
+	req, err := http.NewRequest("GET", tarballURL, nil)
+	if err != nil {
+		return nil, errors.Join(fmt.Errorf("failed to create tarball request: %s", tarballURL), err)
+	}
+
+	if auth := r.EncodeAuthorization(); auth != "" {
+		req.Header.Set("Authorization", auth)
+	}
+
+	client := &http.Client{}
+	resp, err := client.Do(req)
+	if err != nil {
+		return nil, errors.Join(fmt.Errorf("failed to fetch tarball: %s", tarballURL), err)
+	}
+	defer func() {
+		if err := resp.Body.Close(); err != nil {
+			e = errors.Join(e, errors.Join(fmt.Errorf("failed to close tarball response body: %s", tarballURL), err))
+		}
+	}()
+
+	if resp.StatusCode != http.StatusOK {
+		return nil, fmt.Errorf("failed to fetch tarball: %s for %s", resp.Status, tarballURL)
+	}
+
+	gz, err := gzip.NewReader(resp.Body)
+	if err != nil {
+		return nil, errors.Join(fmt.Errorf("failed to gunzip tarball: %s", tarballURL), err)
+	}
+	defer func() {
+		if err := gz.Close(); err != nil {
+			e = errors.Join(e, errors.Join(fmt.Errorf("failed to close gunzip reader: %s", tarballURL), err))
+		}
+	}()
+
+	tr := tar.NewReader(gz)
+	for {
+		hdr, err := tr.Next()
+		if err == io.EOF {
+			break
+		}
+		if err != nil {
+			return nil, errors.Join(fmt.Errorf("failed to read tarball entry: %s", tarballURL), err)
+		}
+		// npm packs everything under a top-level "package/" directory.
+		if hdr.Name == "package/package.json" {
+			pkg := &PackageJSON{}
+			if err := json.NewDecoder(tr).Decode(pkg); err != nil {
+				return nil, errors.Join(fmt.Errorf("failed to decode tarball package.json: %s", tarballURL), err)
+			}
+			return pkg, nil
+		}
+	}
+
+	return nil, fmt.Errorf("tarball missing package/package.json: %s", tarballURL)
 }
 
 func (r *Registry) GetPackageInfo(packageName string) (p *PackageInfo, e error) {

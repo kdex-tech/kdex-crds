@@ -1,6 +1,9 @@
 package npm_test
 
 import (
+	"archive/tar"
+	"bytes"
+	"compress/gzip"
 	"encoding/base64"
 	"encoding/json"
 	"net/http"
@@ -13,6 +16,33 @@ import (
 	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"kdex.dev/crds/npm"
 )
+
+// gzippedTarball returns a gzipped tar containing a single
+// "package/package.json" entry with the supplied content. Mimics the
+// shape of an npm pack output for use in tarball-fallback tests.
+func gzippedTarball(t *testing.T, packageJSON []byte) []byte {
+	t.Helper()
+	var buf bytes.Buffer
+	gz := gzip.NewWriter(&buf)
+	tw := tar.NewWriter(gz)
+	if err := tw.WriteHeader(&tar.Header{
+		Name: "package/package.json",
+		Mode: 0o644,
+		Size: int64(len(packageJSON)),
+	}); err != nil {
+		t.Fatalf("tar header: %v", err)
+	}
+	if _, err := tw.Write(packageJSON); err != nil {
+		t.Fatalf("tar write: %v", err)
+	}
+	if err := tw.Close(); err != nil {
+		t.Fatalf("tar close: %v", err)
+	}
+	if err := gz.Close(); err != nil {
+		t.Fatalf("gz close: %v", err)
+	}
+	return buf.Bytes()
+}
 
 func MockServer(setup func(mux *http.ServeMux)) *httptest.Server {
 	mux := http.NewServeMux()
@@ -473,6 +503,129 @@ func TestRegistry_ValidatePackage(t *testing.T) {
 			}
 		})
 	}
+}
+
+// TestRegistry_ValidatePackage_TarballFallback covers the case where
+// the registry returns a sparse per-version manifest (no type/main/
+// module/exports/browser). The validator must fetch the tarball and
+// inspect its package.json. Regression for the GitLab npm registry
+// behaviour observed against gitlab.com SaaS (May 2026) - the
+// /api/v4/{groups,projects}/.../packages/npm/<pkg> endpoint returns
+// only {name, version, dist, devDependencies} per version.
+func TestRegistry_ValidatePackage_TarballFallback(t *testing.T) {
+	tests := []struct {
+		name        string
+		tarballPkg  string // package.json content inside the tarball
+		wantErr     string
+		omitTarball bool // simulate manifest with no dist.tarball
+	}{
+		{
+			name:       "tarball has type:module",
+			tarballPkg: `{"name":"@scope/pkg","version":"1.0.0","type":"module","main":"dist/index.js"}`,
+			wantErr:    "",
+		},
+		{
+			name:       "tarball has main:.mjs",
+			tarballPkg: `{"name":"@scope/pkg","version":"1.0.0","main":"dist/index.mjs"}`,
+			wantErr:    "",
+		},
+		{
+			name:       "tarball also lacks ESM markers - still rejected",
+			tarballPkg: `{"name":"@scope/pkg","version":"1.0.0","main":"dist/index.js"}`,
+			wantErr:    "package does not contain an ES module",
+		},
+		{
+			name:        "sparse manifest with no dist.tarball - rejected without fallback",
+			omitTarball: true,
+			wantErr:     "package does not contain an ES module",
+		},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			var server *httptest.Server
+			server = MockServer(func(mux *http.ServeMux) {
+				// Sparse manifest - no ESM markers at the per-version
+				// level. dist.tarball points back at the same mock
+				// server's /tarball/... handler.
+				mux.HandleFunc("/@scope/pkg", func(w http.ResponseWriter, r *http.Request) {
+					version := npm.PackageJSON{Name: "@scope/pkg", Version: "1.0.0"}
+					if !tt.omitTarball {
+						version.Dist = npm.PackageDist{
+							Tarball: server.URL + "/tarball/@scope/pkg-1.0.0.tgz",
+						}
+					}
+					info := npm.PackageInfo{
+						DistTags: npm.DistTags{Latest: "1.0.0"},
+						Versions: map[string]npm.PackageJSON{"1.0.0": version},
+					}
+					w.Header().Set("Content-Type", "application/vnd.npm.formats+json")
+					w.WriteHeader(http.StatusOK)
+					_ = json.NewEncoder(w).Encode(info)
+				})
+				if !tt.omitTarball {
+					mux.HandleFunc("/tarball/@scope/pkg-1.0.0.tgz", func(w http.ResponseWriter, r *http.Request) {
+						w.Header().Set("Content-Type", "application/octet-stream")
+						w.WriteHeader(http.StatusOK)
+						_, _ = w.Write(gzippedTarball(t, []byte(tt.tarballPkg)))
+					})
+				}
+			})
+			defer server.Close()
+
+			registry := &npm.Registry{
+				Host:     strings.Split(server.URL, "://")[1],
+				InSecure: true,
+			}
+
+			gotErr := registry.ValidatePackage("@scope/pkg", "1.0.0")
+			if tt.wantErr == "" {
+				assert.NoError(t, gotErr)
+			} else {
+				assert.Error(t, gotErr)
+				assert.Contains(t, gotErr.Error(), tt.wantErr)
+			}
+		})
+	}
+}
+
+// TestRegistry_ValidatePackage_TarballFetchError covers the case where
+// the manifest is sparse and the tarball URL itself fails (network
+// error, 404, corrupt body). The original "no ESM module" error must
+// be joined with the tarball error so the operator log surfaces both.
+func TestRegistry_ValidatePackage_TarballFetchError(t *testing.T) {
+	var server *httptest.Server
+	server = MockServer(func(mux *http.ServeMux) {
+		mux.HandleFunc("/@scope/pkg", func(w http.ResponseWriter, r *http.Request) {
+			info := npm.PackageInfo{
+				DistTags: npm.DistTags{Latest: "1.0.0"},
+				Versions: map[string]npm.PackageJSON{
+					"1.0.0": {
+						Name:    "@scope/pkg",
+						Version: "1.0.0",
+						Dist:    npm.PackageDist{Tarball: server.URL + "/tarball/missing.tgz"},
+					},
+				},
+			}
+			w.Header().Set("Content-Type", "application/vnd.npm.formats+json")
+			w.WriteHeader(http.StatusOK)
+			_ = json.NewEncoder(w).Encode(info)
+		})
+		mux.HandleFunc("/tarball/missing.tgz", func(w http.ResponseWriter, r *http.Request) {
+			w.WriteHeader(http.StatusNotFound)
+		})
+	})
+	defer server.Close()
+
+	registry := &npm.Registry{
+		Host:     strings.Split(server.URL, "://")[1],
+		InSecure: true,
+	}
+
+	err := registry.ValidatePackage("@scope/pkg", "1.0.0")
+	assert.Error(t, err)
+	assert.Contains(t, err.Error(), "package does not contain an ES module")
+	assert.Contains(t, err.Error(), "404")
 }
 
 // TestRegistry_ValidatePackage_SubPath asserts that the package-info
