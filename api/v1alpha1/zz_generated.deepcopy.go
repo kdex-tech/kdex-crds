@@ -1511,10 +1511,10 @@ func (in *KDexHostSpec) DeepCopyInto(out *KDexHostSpec) {
 			}
 		}
 	}
-	if in.Secrets != nil {
-		in, out := &in.Secrets, &out.Secrets
-		*out = make([]string, len(*in))
-		copy(*out, *in)
+	if in.SecretSelector != nil {
+		in, out := &in.SecretSelector, &out.SecretSelector
+		*out = new(metav1.LabelSelector)
+		(*in).DeepCopyInto(*out)
 	}
 	if in.ThemeRef != nil {
 		in, out := &in.ThemeRef, &out.ThemeRef

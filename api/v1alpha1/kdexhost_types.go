@@ -136,9 +136,23 @@ type KDexHostSpec struct {
 	// Optional top level security requirements.
 	Security *[]SecurityRequirement `json:"security,omitempty" yaml:"security,omitempty" protobuf:"bytes,15,rep,name=security"`
 
-	// Secrets is an optional array of names of secret referenced by the host.
+	// SecretSelector is an optional label selector matching Secrets in
+	// the host's namespace that participate in the host's auth,
+	// credential, and registry-pull configuration. When nil, no Secrets
+	// are resolved. When non-nil, standard metav1.LabelSelector
+	// semantics apply — an explicit empty selector `{}` matches every
+	// Secret in the namespace, so prefer a `matchLabels` clause scoped
+	// to the host.
 	//
-	// Each Secret must match one of the following cases:
+	// Recommended convention: label rotation-managed Secrets with
+	// `kdex.dev/host: <hostName>` and use a `matchLabels` selector on
+	// that key. The controller does not enforce this convention —
+	// selectors may legitimately match Secrets across multiple hosts in
+	// the same namespace (e.g. a shared docker-pull Secret).
+	//
+	// Per-Secret role within the matched set is determined by Secret
+	// type and by the `kdex.dev/secret-type` annotation. Each matched
+	// Secret must match one of the following cases:
 	//
 	// - is annotated with 'kdex.dev/secret-type = api-key' (multiple)
 	//     An api-key secret is used to define a PASETO key that will be used to sign api tokens and served at '/.well-known/pks.json'.
@@ -206,7 +220,6 @@ type KDexHostSpec struct {
 	//     - must contain key 'password'
 	//     - may contain key 'email' (if present, can also be used as the login username)
 	//     - may contain arbitrary key(string)/value(string|yaml) pairs which can be mapped to the claims using the spec.auth.claimMappings
-
 	//
 	// - is of type 'kubernetes.io/dockerconfigjson'
 	//     A dockerconfigjson secret is used to define a docker registry connection that will be used to pull (or push) images.
@@ -219,7 +232,7 @@ type KDexHostSpec struct {
 	//     A tls secret is used to define a TLS certificate that will be used to secure connections to the host.
 	//
 	// +kubebuilder:validation:Optional
-	Secrets []string `json:"secrets,omitempty" protobuf:"bytes,20,rep,name=secrets"`
+	SecretSelector *metav1.LabelSelector `json:"secretSelector,omitempty" protobuf:"bytes,20,opt,name=secretSelector"`
 
 	// themeRef is a reference to the theme that should apply to all pages bound to this host.
 	// +kubebuilder:validation:Optional
