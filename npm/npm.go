@@ -16,6 +16,11 @@ import (
 	corev1 "k8s.io/api/core/v1"
 )
 
+const (
+	schemeHTTP  = "http"
+	schemeHTTPS = "https"
+)
+
 var scopedPackageRegex = regexp.MustCompile(`^@[a-z0-9-~][a-z0-9-._~]*\/[a-z0-9-~][a-z0-9-._~]*$`)
 
 func (c *Registry) EncodeAuthorization() string {
@@ -33,11 +38,18 @@ func (c *Registry) EncodeAuthorization() string {
 }
 
 func (c *Registry) GetAddress() string {
+	scheme := schemeHTTPS
 	if c.InSecure {
-		return "http://" + c.Host
-	} else {
-		return "https://" + c.Host
+		scheme = schemeHTTP
 	}
+	return scheme + "://" + c.Host + c.Path
+}
+
+// normalizeRegistryPath strips a single trailing slash so registry paths
+// compare consistently regardless of whether the configured URL ends in "/".
+// Empty path stays empty (bare-host registries like registry.npmjs.org).
+func normalizeRegistryPath(p string) string {
+	return strings.TrimSuffix(p, "/")
 }
 
 func (r *Registry) ValidatePackage(packageName string, packageVersion string) error {
@@ -113,8 +125,14 @@ func NewRegistry(host string, secret *corev1.Secret) (*Registry, error) {
 }
 
 func ParseNpmrc(data string) []Registry {
-	// Map to group properties by registry host
-	registryMap := make(map[string]*Registry)
+	// Map registries by host+path. Keying on host alone collapsed
+	// distinct sub-path registries served from the same DNS host (e.g.
+	// two GitLab groups under gitlab.com), losing auth.
+	type regKey struct {
+		host string
+		path string
+	}
+	registryMap := make(map[regKey]*Registry)
 
 	for line := range strings.SplitSeq(data, "\n") {
 		line = strings.TrimSpace(line)
@@ -130,7 +148,8 @@ func ParseNpmrc(data string) []Registry {
 		key := strings.TrimSpace(parts[0])
 		value := strings.TrimSpace(parts[1])
 
-		// Handle the registry host part of the key (e.g., //npm.test/:_authToken)
+		// Handle the registry host part of the key (e.g.,
+		// //npm.test/:_authToken or //gitlab.com/api/v4/groups/g/-/packages/npm/:_authToken)
 		if strings.HasPrefix(key, "//") {
 			hostEnd := strings.LastIndex(key, ":")
 			if hostEnd == -1 {
@@ -143,14 +162,17 @@ func ParseNpmrc(data string) []Registry {
 			}
 
 			host := hostURL.Host
+			path := normalizeRegistryPath(hostURL.Path)
 			prop := key[hostEnd+1:]
 
-			reg, ok := registryMap[host]
+			k := regKey{host: host, path: path}
+			reg, ok := registryMap[k]
 			if !ok {
-				registryMap[host] = &Registry{
+				registryMap[k] = &Registry{
 					Host: host,
+					Path: path,
 				}
-				reg = registryMap[host]
+				reg = registryMap[k]
 			}
 
 			switch prop {
@@ -172,20 +194,29 @@ func ParseNpmrc(data string) []Registry {
 			if err != nil {
 				continue
 			}
-			reg, ok := registryMap[hostURL.Host]
+			host := hostURL.Host
+			path := normalizeRegistryPath(hostURL.Path)
+			k := regKey{host: host, path: path}
+			reg, ok := registryMap[k]
 			if !ok {
-				registryMap[hostURL.Host] = &Registry{
-					Host: hostURL.Host,
+				registryMap[k] = &Registry{
+					Host: host,
+					Path: path,
 				}
-				reg = registryMap[hostURL.Host]
+				reg = registryMap[k]
 			}
-			reg.InSecure = hostURL.Scheme == "http"
+			reg.InSecure = hostURL.Scheme == schemeHTTP
 		}
 	}
 
-	// Convert map to slice
+	// Stable order: host first, then path.
 	keys := slices.Collect(maps.Keys(registryMap))
-	slices.Sort(keys)
+	slices.SortFunc(keys, func(a, b regKey) int {
+		if a.host != b.host {
+			return strings.Compare(a.host, b.host)
+		}
+		return strings.Compare(a.path, b.path)
+	})
 
 	registries := make([]Registry, len(keys))
 	for i, key := range keys {
@@ -211,10 +242,12 @@ func newRegistry(
 		return nil, fmt.Errorf("failed to parse host: %s", host)
 	}
 
-	insecure := hostURL.Scheme == "http"
+	insecure := hostURL.Scheme == schemeHTTP
+	path := normalizeRegistryPath(hostURL.Path)
 
 	reg := &Registry{
 		Host:     hostURL.Host,
+		Path:     path,
 		InSecure: insecure,
 	}
 
@@ -233,8 +266,10 @@ func newRegistry(
 
 	registries := ParseNpmrc(string(npmrc))
 
+	// Exact match on host+path so registries served from different
+	// sub-paths on the same host don't share auth credentials.
 	for _, r := range registries {
-		if r.Host == hostURL.Host {
+		if r.Host == hostURL.Host && r.Path == path {
 			reg = &r
 		}
 	}

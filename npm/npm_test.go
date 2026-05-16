@@ -98,6 +98,24 @@ func TestRegistry_GetAddress(t *testing.T) {
 			},
 			want: "https://host",
 		},
+		{
+			name: "with sub-path",
+			regConfig: npm.Registry{
+				Host:     "gitlab.com",
+				Path:     "/api/v4/groups/recoursellm-group/-/packages/npm",
+				InSecure: false,
+			},
+			want: "https://gitlab.com/api/v4/groups/recoursellm-group/-/packages/npm",
+		},
+		{
+			name: "insecure with sub-path",
+			regConfig: npm.Registry{
+				Host:     "registry.internal:8080",
+				Path:     "/npm",
+				InSecure: true,
+			},
+			want: "http://registry.internal:8080/npm",
+		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
@@ -457,6 +475,48 @@ func TestRegistry_ValidatePackage(t *testing.T) {
 	}
 }
 
+// TestRegistry_ValidatePackage_SubPath asserts that the package-info
+// fetch URL is constructed as <scheme>://<host><path>/<packageName>
+// when the registry is hosted on a URL sub-path. Regression for the
+// "GitLab npm registry 403" bug where Registry stored only host and
+// the fetch URL collapsed to <scheme>://<host>/<package>.
+func TestRegistry_ValidatePackage_SubPath(t *testing.T) {
+	const subPath = "/api/v4/groups/g/-/packages/npm"
+
+	var gotPath string
+	server := MockServer(func(mux *http.ServeMux) {
+		mux.HandleFunc(subPath+"/@scope/pkg", func(w http.ResponseWriter, r *http.Request) {
+			gotPath = r.URL.Path
+			packageInfo := npm.PackageInfo{
+				DistTags: npm.DistTags{Latest: "1.0.0"},
+				Versions: map[string]npm.PackageJSON{
+					"1.0.0": {
+						Name:    "@scope/pkg",
+						Type:    "module",
+						Version: "1.0.0",
+					},
+				},
+			}
+			w.Header().Set("Content-Type", "application/vnd.npm.formats+json")
+			w.WriteHeader(http.StatusOK)
+			_ = json.NewEncoder(w).Encode(packageInfo)
+		})
+	})
+	defer server.Close()
+
+	hostPort := strings.Split(server.URL, "://")[1]
+	registry := &npm.Registry{
+		Host:     hostPort,
+		Path:     subPath,
+		InSecure: true,
+	}
+
+	err := registry.ValidatePackage("@scope/pkg", "1.0.0")
+	assert.NoError(t, err)
+	assert.Equal(t, subPath+"/@scope/pkg", gotPath,
+		"expected fetch URL to include the registry path prefix")
+}
+
 func TestNewRegistry(t *testing.T) {
 	tests := []struct {
 		name         string
@@ -595,6 +655,52 @@ func TestNewRegistry(t *testing.T) {
 				assert.False(t, got.InSecure)
 			},
 		},
+		{
+			name:         "sub-path registry with matching auth",
+			registryHost: "https://gitlab.com/api/v4/groups/g/-/packages/npm/",
+			secret: &corev1.Secret{
+				ObjectMeta: v1.ObjectMeta{
+					Annotations: map[string]string{
+						"kdex.dev/secret-type": "npm",
+					},
+				},
+				Data: map[string][]byte{
+					".npmrc": []byte(`@scope:registry=https://gitlab.com/api/v4/groups/g/-/packages/npm/
+//gitlab.com/api/v4/groups/g/-/packages/npm/:_authToken=glpat-xyz`),
+				},
+			},
+			assertions: func(t *testing.T, got *npm.Registry, err error) {
+				assert.NoError(t, err)
+				assert.NotNil(t, got)
+				assert.Equal(t, "gitlab.com", got.Host)
+				assert.Equal(t, "/api/v4/groups/g/-/packages/npm", got.Path)
+				assert.False(t, got.InSecure)
+				assert.Equal(t, "glpat-xyz", got.AuthData.Token)
+				assert.Equal(t, "https://gitlab.com/api/v4/groups/g/-/packages/npm", got.GetAddress())
+			},
+		},
+		{
+			name:         "sub-path registry does not pick up other host's auth",
+			registryHost: "https://gitlab.com/api/v4/groups/a/-/packages/npm/",
+			secret: &corev1.Secret{
+				ObjectMeta: v1.ObjectMeta{
+					Annotations: map[string]string{
+						"kdex.dev/secret-type": "npm",
+					},
+				},
+				Data: map[string][]byte{
+					// auth scoped to a *different* sub-path on the same host
+					".npmrc": []byte(`//gitlab.com/api/v4/groups/b/-/packages/npm/:_authToken=glpat-other`),
+				},
+			},
+			assertions: func(t *testing.T, got *npm.Registry, err error) {
+				assert.NoError(t, err)
+				assert.NotNil(t, got)
+				assert.Equal(t, "gitlab.com", got.Host)
+				assert.Equal(t, "/api/v4/groups/a/-/packages/npm", got.Path)
+				assert.Empty(t, got.AuthData.Token, "auth for /b/ must not leak to /a/")
+			},
+		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
@@ -685,6 +791,35 @@ registry=https://npm3.test
 				assert.Equal(t, "", got[2].AuthData.Token)
 				assert.Equal(t, "", got[2].AuthData.Username)
 				assert.Equal(t, "", got[2].AuthData.Password)
+			},
+		},
+		{
+			name: "sub-path registry preserves path and auth",
+			data: `@recourse-software:registry=https://gitlab.com/api/v4/groups/recoursellm-group/-/packages/npm/
+//gitlab.com/api/v4/groups/recoursellm-group/-/packages/npm/:_authToken=glpat-xyz`,
+			assertions: func(t *testing.T, got []npm.Registry) {
+				assert.Len(t, got, 1)
+				assert.Equal(t, "gitlab.com", got[0].Host)
+				assert.Equal(t, "/api/v4/groups/recoursellm-group/-/packages/npm", got[0].Path)
+				assert.False(t, got[0].InSecure)
+				assert.Equal(t, "glpat-xyz", got[0].AuthData.Token)
+			},
+		},
+		{
+			name: "two sub-paths on the same host stay distinct",
+			data: `@a:registry=https://gitlab.com/api/v4/groups/a/-/packages/npm/
+@b:registry=https://gitlab.com/api/v4/groups/b/-/packages/npm/
+//gitlab.com/api/v4/groups/a/-/packages/npm/:_authToken=token-a
+//gitlab.com/api/v4/groups/b/-/packages/npm/:_authToken=token-b`,
+			assertions: func(t *testing.T, got []npm.Registry) {
+				assert.Len(t, got, 2)
+				// Sorted by host then path
+				assert.Equal(t, "gitlab.com", got[0].Host)
+				assert.Equal(t, "/api/v4/groups/a/-/packages/npm", got[0].Path)
+				assert.Equal(t, "token-a", got[0].AuthData.Token)
+				assert.Equal(t, "gitlab.com", got[1].Host)
+				assert.Equal(t, "/api/v4/groups/b/-/packages/npm", got[1].Path)
+				assert.Equal(t, "token-b", got[1].AuthData.Token)
 			},
 		},
 	}

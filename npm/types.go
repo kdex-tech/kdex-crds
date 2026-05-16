@@ -73,6 +73,12 @@ type Registry struct {
 	AuthData AuthData `json:"authData,omitempty" yaml:"authData,omitempty"`
 	// +required
 	Host string `json:"host" yaml:"host"`
+	// Path is the URL path prefix where the npm registry is served (e.g.
+	// "/api/v4/groups/<group>/-/packages/npm" for a GitLab group registry).
+	// Stored without a trailing slash so URL construction is unambiguous.
+	// Empty for bare-host registries such as registry.npmjs.org.
+	// +kubebuilder:validation:Optional
+	Path string `json:"path,omitempty" yaml:"path,omitempty"`
 	// +kubebuilder:validation:Optional
 	InSecure bool `json:"insecure,omitempty" yaml:"insecure,omitempty"`
 }
