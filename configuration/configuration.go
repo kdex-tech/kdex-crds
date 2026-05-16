@@ -63,6 +63,13 @@ backendDefault:
         annotations: {}
         labels: {}
       spec:
+        securityContext:
+          runAsNonRoot: true
+          runAsUser: 65532
+          runAsGroup: 65532
+          fsGroup: 65532
+          seccompProfile:
+            type: RuntimeDefault
         containers:
         - env:
           - name: POD_NAME
@@ -79,7 +86,7 @@ backendDefault:
                 fieldPath: status.podIP
           name: server
           ports:
-          - containerPort: 80
+          - containerPort: 8080
             name: server
             protocol: TCP
           resources:
@@ -89,6 +96,12 @@ backendDefault:
             requests:
               cpu: 100m
               memory: 128Mi
+          securityContext:
+            allowPrivilegeEscalation: false
+            readOnlyRootFilesystem: true
+            capabilities:
+              drop:
+              - ALL
           volumeMounts:
           - mountPath: /etc/caddy.d
             name: scratch
