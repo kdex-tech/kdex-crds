@@ -187,6 +187,63 @@ type KDexHostSpec struct {
 	//     - must contain key 'username'
 	//     - may contain key 'plainHTTP' (true|false, default false)
 	//
+	// - is annotated with 'kdex.dev/secret-type = http-lookup-auth' (first, sorted newest to oldest, filtered by kdex.dev/active-key=true)
+	//     An http-lookup-auth secret defines an external HTTP credential-check
+	//     endpoint that the host-manager's auth.Lookup chain calls during
+	//     /-/login. Discovered by the controller alongside the existing
+	//     secret-driven and LDAP lookups; slotted into the chain after
+	//     SecretLookup (preserving bootstrap-admin) and before LDAP.
+	//     - must contain key 'url' (full URL of the credential-check endpoint)
+	//     - must contain key 'shared-secret' (>= 32 raw bytes; HMAC-SHA256 key)
+	//     - may contain key 'timeout-ms' (integer milliseconds; default 2000)
+	//     - must be annotated with 'kdex.dev/active-key = true' to be picked up
+	//
+	//     The endpoint contract (mirrored by the credential-check function):
+	//
+	//     Request:
+	//         POST <url>
+	//         Content-Type: application/json
+	//         X-K-CNAS-Lookup-Timestamp: <unix-millis>
+	//         X-K-CNAS-Lookup-Signature: hex(hmac-sha256(shared-secret, timestamp + "." + body))
+	//         { "subject": "<login-identifier>", "password": "<plaintext>" }
+	//
+	//     The endpoint MUST verify the HMAC over (timestamp + "." + body) and
+	//     reject requests with stale timestamps (>5s old recommended).
+	//
+	//     Response on success (HTTP 200):
+	//         {
+	//             "ok": true,
+	//             "claims": {
+	//                 "sub": "<canonical-subject-id>",
+	//                 "email": "...", "given_name": "...", "family_name": "...",
+	//                 "amr": ["pwd"], "acr": "1"
+	//             },
+	//             "next_step": null
+	//         }
+	//
+	//     Response on failure (HTTP 200):
+	//         { "ok": false, "reason": "invalid_credentials" }
+	//
+	//     The 'claims' map becomes the JWT claims (entitlements/roles layered
+	//     on by KDexRoleBinding resolution). The 'next_step' field is reserved
+	//     for future multi-step (MFA) extensions; today the host-manager
+	//     ignores its value but the field shape must be preserved. An empty
+	//     string is treated identically to null - never set "next_step": "".
+	//
+	//     A sniffer-shaped curl that generates a KDexFunction CR matching this
+	//     contract when posted to a devMode KDexHost (granted functions:create):
+	//
+	//         curl -L -X POST \
+	//           -H "Authorization: Bearer $TOKEN" \
+	//           -H "Content-Type: application/json" \
+	//           -H "X-KDex-Function-Name: user-credential-check" \
+	//           -H "X-KDex-Function-Pattern-Path: /v1/credential-check" \
+	//           -H "X-KDex-Function-Operation-ID: credentialCheck" \
+	//           -H "X-KDex-Function-Tags: auth-internal" \
+	//           -H "X-KDex-Function-Summary: Verify subject+password, return JWT claims" \
+	//           -d '{"subject":"alice@example.com","password":"hunter2"}' \
+	//           https://<dev-host>/v1/credential-check
+	//
 	// - is annotated with 'kdex.dev/secret-type = jwt-keys' (multiple)
 	//     A jwt-keys secret is used to define a JWT key that will be used to sign tokens and served at '/.well-known/jwks.json'.
 	//     - must contain key 'private-key'
