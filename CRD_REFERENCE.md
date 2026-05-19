@@ -1064,6 +1064,7 @@ _Appears in:_
 | `hostRef` _[LocalObjectReference](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.35/#localobjectreference-v1-core)_ | hostRef is a reference to the KDexHost that this translation belongs to. |  | Required: \{\} <br /> |
 | `metadata` _[KDexFunctionMetadata](#kdexfunctionmetadata)_ | Refer to Kubernetes API documentation for fields of `metadata`. |  | Optional: \{\} <br /> |
 | `origin` _[FunctionOrigin](#functionorigin)_ | origin defines the origin of the function implementation. |  | AtMostOneOf: [executable generator source] <br />Optional: \{\} <br /> |
+| `serviceAccountName` _string_ | serviceAccountName is the name of the ServiceAccount the function's<br />runtime pod runs as. If empty, the namespace's default ServiceAccount<br />is used. The referenced ServiceAccount must exist in the same<br />namespace as the KDexFunction CR. Used to give the runtime pod scoped<br />IAM access (e.g. Workload Identity binding to a GCP service account). |  | Optional: \{\} <br /> |
 
 
 #### KDexFunctionState
