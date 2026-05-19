@@ -106,6 +106,14 @@ type KDexFunctionSpec struct {
 	// origin defines the origin of the function implementation.
 	// +kubebuilder:validation:Optional
 	Origin FunctionOrigin `json:"origin,omitempty" protobuf:"bytes,6,opt,name=origin"`
+
+	// serviceAccountName is the name of the ServiceAccount the function's
+	// runtime pod runs as. If empty, the namespace's default ServiceAccount
+	// is used. The referenced ServiceAccount must exist in the same
+	// namespace as the KDexFunction CR. Used to give the runtime pod scoped
+	// IAM access (e.g. Workload Identity binding to a GCP service account).
+	// +kubebuilder:validation:Optional
+	ServiceAccountName string `json:"serviceAccountName,omitempty" protobuf:"bytes,7,opt,name=serviceAccountName"`
 }
 
 // KDexFunctionState reflects the current state of a KDexFunction.
