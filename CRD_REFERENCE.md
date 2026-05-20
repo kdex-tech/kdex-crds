@@ -200,6 +200,9 @@ _Appears in:_
 | `languages` _string array_ | Languages is a list of languages that this builder supports. |  | MinItems: 1 <br />Required: \{\} <br /> |
 | `name` _string_ | Name is the builder name (e.g., tiny, base, full). |  | Required: \{\} <br /> |
 | `serviceAccountName` _string_ | serviceAccountName is the name of the service account to use for building the image. |  | Optional: \{\} <br /> |
+| `tolerations` _[Toleration](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.35/#toleration-v1-core) array_ | tolerations are forwarded onto the kpack.io/Image's<br />spec.build.tolerations, which kpack passes onto the per-build<br />Pod. Use to land BUILD pods on a tainted node pool, e.g. a<br />GKE Spot pool that auto-applies cloud.google.com/gke-spot=true:NoSchedule. |  | Optional: \{\} <br /> |
+| `nodeSelector` _object (keys:string, values:string)_ | nodeSelector is forwarded onto the kpack.io/Image's<br />spec.build.nodeSelector. Use to pin BUILD pods to a specific<br />node pool when more than one pool can satisfy the build's<br />architecture requirement. |  | Optional: \{\} <br /> |
+| `resources` _[ResourceRequirements](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.35/#resourcerequirements-v1-core)_ | resources are forwarded onto the kpack.io/Image's<br />spec.build.resources. Use to cap or guarantee CPU/memory for<br />the BUILD pod; especially relevant for compile-heavy languages<br />(Go, Rust) whose link/compile steps can exceed the default<br />best-effort QoS budget and trigger node-level OOM kills. |  | Optional: \{\} <br /> |
 
 
 #### CompanionChart
@@ -2281,6 +2284,8 @@ _Appears in:_
 | `env` _[EnvVar](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.35/#envvar-v1-core) array_ | env is the environment variables to set in the observer. |  | Optional: \{\} <br /> |
 | `schedule` _string_ | schedule is the schedule in Cron format, see https://en.wikipedia.org/wiki/Cron. | */5 * * * * | Optional: \{\} <br /> |
 | `serviceAccountName` _string_ | serviceAccountName is the name of the service account to use for observing the function state. |  | Optional: \{\} <br /> |
+| `maxBuildRetries` _integer_ | maxBuildRetries caps the number of auto-retries the observer<br />will fire for kpack Build pods that died from preemption signals<br />(spot eviction, node shutdown, voluntary disruption). Defaults<br />to 3 when nil. Set to 0 to disable observer-driven retries. |  | Minimum: 0 <br />Optional: \{\} <br /> |
+| `retryCooldown` _[Duration](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.35/#duration-v1-meta)_ | retryCooldown is the minimum interval between consecutive<br />observer-driven Build retries for the same KDexFunction.<br />Defaults to 4 * schedule (~20 min at the default "*/5 * * * *"<br />schedule). Use to dampen retry storms during a regional<br />preemption event. |  | Optional: \{\} <br /> |
 
 
 #### OpenAPI

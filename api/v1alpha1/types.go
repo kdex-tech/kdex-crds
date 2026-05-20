@@ -278,6 +278,28 @@ type Builder struct {
 	// serviceAccountName is the name of the service account to use for building the image.
 	// +kubebuilder:validation:Optional
 	ServiceAccountName string `json:"serviceAccountName,omitempty" protobuf:"bytes,5,opt,name=serviceAccountName"`
+
+	// tolerations are forwarded onto the kpack.io/Image's
+	// spec.build.tolerations, which kpack passes onto the per-build
+	// Pod. Use to land BUILD pods on a tainted node pool, e.g. a
+	// GKE Spot pool that auto-applies cloud.google.com/gke-spot=true:NoSchedule.
+	// +kubebuilder:validation:Optional
+	Tolerations []corev1.Toleration `json:"tolerations,omitempty" protobuf:"bytes,6,rep,name=tolerations"`
+
+	// nodeSelector is forwarded onto the kpack.io/Image's
+	// spec.build.nodeSelector. Use to pin BUILD pods to a specific
+	// node pool when more than one pool can satisfy the build's
+	// architecture requirement.
+	// +kubebuilder:validation:Optional
+	NodeSelector map[string]string `json:"nodeSelector,omitempty" protobuf:"bytes,7,rep,name=nodeSelector"`
+
+	// resources are forwarded onto the kpack.io/Image's
+	// spec.build.resources. Use to cap or guarantee CPU/memory for
+	// the BUILD pod; especially relevant for compile-heavy languages
+	// (Go, Rust) whose link/compile steps can exceed the default
+	// best-effort QoS budget and trigger node-level OOM kills.
+	// +kubebuilder:validation:Optional
+	Resources *corev1.ResourceRequirements `json:"resources,omitempty" protobuf:"bytes,8,opt,name=resources"`
 }
 
 type ContentEntryApp struct {
@@ -372,6 +394,22 @@ type Observer struct {
 	// serviceAccountName is the name of the service account to use for observing the function state.
 	// +kubebuilder:validation:Optional
 	ServiceAccountName string `json:"serviceAccountName,omitempty" protobuf:"bytes,4,opt,name=serviceAccountName"`
+
+	// maxBuildRetries caps the number of auto-retries the observer
+	// will fire for kpack Build pods that died from preemption signals
+	// (spot eviction, node shutdown, voluntary disruption). Defaults
+	// to 3 when nil. Set to 0 to disable observer-driven retries.
+	// +kubebuilder:validation:Optional
+	// +kubebuilder:validation:Minimum=0
+	MaxBuildRetries *int32 `json:"maxBuildRetries,omitempty" protobuf:"varint,5,opt,name=maxBuildRetries"`
+
+	// retryCooldown is the minimum interval between consecutive
+	// observer-driven Build retries for the same KDexFunction.
+	// Defaults to 4 * schedule (~20 min at the default "*/5 * * * *"
+	// schedule). Use to dampen retry storms during a regional
+	// preemption event.
+	// +kubebuilder:validation:Optional
+	RetryCooldown *metav1.Duration `json:"retryCooldown,omitempty" protobuf:"bytes,6,opt,name=retryCooldown"`
 }
 
 type Executable struct {
