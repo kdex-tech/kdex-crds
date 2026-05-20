@@ -114,6 +114,25 @@ type KDexFunctionSpec struct {
 	// IAM access (e.g. Workload Identity binding to a GCP service account).
 	// +kubebuilder:validation:Optional
 	ServiceAccountName string `json:"serviceAccountName,omitempty" protobuf:"bytes,7,opt,name=serviceAccountName"`
+
+	// tolerations, when non-empty, REPLACES the consuming
+	// FaaSAdaptor.Deployer.Tolerations defaults for this specific
+	// function's Knative Service runtime pod. Use for outlier
+	// functions whose scheduling needs diverge from the cluster-wide
+	// deployer default (e.g. a function that must land on a
+	// high-memory pool while the rest of the fleet uses the default
+	// workload pool). Requires the cluster to enable Knative's
+	// kubernetes.podspec-tolerations feature flag.
+	// +kubebuilder:validation:Optional
+	Tolerations []corev1.Toleration `json:"tolerations,omitempty" protobuf:"bytes,8,rep,name=tolerations"`
+
+	// nodeSelector, when non-empty, REPLACES the consuming
+	// FaaSAdaptor.Deployer.NodeSelector defaults for this specific
+	// function's Knative Service runtime pod. Same REPLACE semantics
+	// as Tolerations above. Requires the cluster to enable Knative's
+	// kubernetes.podspec-nodeselector feature flag.
+	// +kubebuilder:validation:Optional
+	NodeSelector map[string]string `json:"nodeSelector,omitempty" protobuf:"bytes,9,rep,name=nodeSelector"`
 }
 
 // KDexFunctionState reflects the current state of a KDexFunction.

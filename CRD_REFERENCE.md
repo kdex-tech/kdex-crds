@@ -342,6 +342,8 @@ _Appears in:_
 | `image` _string_ | image is the image to use for deploying executables into a FaaS runtime. |  | Required: \{\} <br /> |
 | `env` _[EnvVar](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.35/#envvar-v1-core) array_ | env is the environment variables to set in the deployer. |  | Optional: \{\} <br /> |
 | `serviceAccountName` _string_ | serviceAccountName is the name of the service account to use for deploying executables into a FaaS runtime. |  | Optional: \{\} <br /> |
+| `tolerations` _[Toleration](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.35/#toleration-v1-core) array_ | tolerations applied to every Knative Service runtime pod<br />spawned by this deployer. Forwarded onto the runtime pod's<br />spec.template.spec.tolerations. Use when the cluster steers<br />function workloads to a tainted pool (e.g.<br />cloud.google.com/gke-spot=true:NoSchedule,<br />kubernetes.io/arch=arm64:NoSchedule, a custom<br />component=workload taint). REPLACE semantics: when a<br />KDexFunction sets its own spec.tolerations the per-function<br />value is used; otherwise this default applies. Requires the<br />cluster to enable Knative's kubernetes.podspec-tolerations<br />feature flag. |  | Optional: \{\} <br /> |
+| `nodeSelector` _object (keys:string, values:string)_ | nodeSelector applied to every Knative Service runtime pod<br />spawned by this deployer. Forwarded onto the runtime pod's<br />spec.template.spec.nodeSelector. REPLACE semantics like<br />Tolerations above. Requires the cluster to enable Knative's<br />kubernetes.podspec-nodeselector feature flag. |  | Optional: \{\} <br /> |
 
 
 #### Executable
@@ -1068,6 +1070,8 @@ _Appears in:_
 | `metadata` _[KDexFunctionMetadata](#kdexfunctionmetadata)_ | Refer to Kubernetes API documentation for fields of `metadata`. |  | Optional: \{\} <br /> |
 | `origin` _[FunctionOrigin](#functionorigin)_ | origin defines the origin of the function implementation. |  | AtMostOneOf: [executable generator source] <br />Optional: \{\} <br /> |
 | `serviceAccountName` _string_ | serviceAccountName is the name of the ServiceAccount the function's<br />runtime pod runs as. If empty, the namespace's default ServiceAccount<br />is used. The referenced ServiceAccount must exist in the same<br />namespace as the KDexFunction CR. Used to give the runtime pod scoped<br />IAM access (e.g. Workload Identity binding to a GCP service account). |  | Optional: \{\} <br /> |
+| `tolerations` _[Toleration](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.35/#toleration-v1-core) array_ | tolerations, when non-empty, REPLACES the consuming<br />FaaSAdaptor.Deployer.Tolerations defaults for this specific<br />function's Knative Service runtime pod. Use for outlier<br />functions whose scheduling needs diverge from the cluster-wide<br />deployer default (e.g. a function that must land on a<br />high-memory pool while the rest of the fleet uses the default<br />workload pool). Requires the cluster to enable Knative's<br />kubernetes.podspec-tolerations feature flag. |  | Optional: \{\} <br /> |
+| `nodeSelector` _object (keys:string, values:string)_ | nodeSelector, when non-empty, REPLACES the consuming<br />FaaSAdaptor.Deployer.NodeSelector defaults for this specific<br />function's Knative Service runtime pod. Same REPLACE semantics<br />as Tolerations above. Requires the cluster to enable Knative's<br />kubernetes.podspec-nodeselector feature flag. |  | Optional: \{\} <br /> |
 
 
 #### KDexFunctionState

@@ -559,10 +559,71 @@ spec:
                     description: image is the image to use for deploying executables
                       into a FaaS runtime.
                     type: string
+                  nodeSelector:
+                    additionalProperties:
+                      type: string
+                    description: |-
+                      nodeSelector applied to every Knative Service runtime pod
+                      spawned by this deployer. Forwarded onto the runtime pod's
+                      spec.template.spec.nodeSelector. REPLACE semantics like
+                      Tolerations above. Requires the cluster to enable Knative's
+                      kubernetes.podspec-nodeselector feature flag.
+                    type: object
                   serviceAccountName:
                     description: serviceAccountName is the name of the service account
                       to use for deploying executables into a FaaS runtime.
                     type: string
+                  tolerations:
+                    description: |-
+                      tolerations applied to every Knative Service runtime pod
+                      spawned by this deployer. Forwarded onto the runtime pod's
+                      spec.template.spec.tolerations. Use when the cluster steers
+                      function workloads to a tainted pool (e.g.
+                      cloud.google.com/gke-spot=true:NoSchedule,
+                      kubernetes.io/arch=arm64:NoSchedule, a custom
+                      component=workload taint). REPLACE semantics: when a
+                      KDexFunction sets its own spec.tolerations the per-function
+                      value is used; otherwise this default applies. Requires the
+                      cluster to enable Knative's kubernetes.podspec-tolerations
+                      feature flag.
+                    items:
+                      description: |-
+                        The pod this Toleration is attached to tolerates any taint that matches
+                        the triple <key,value,effect> using the matching operator <operator>.
+                      properties:
+                        effect:
+                          description: |-
+                            Effect indicates the taint effect to match. Empty means match all taint effects.
+                            When specified, allowed values are NoSchedule, PreferNoSchedule and NoExecute.
+                          type: string
+                        key:
+                          description: |-
+                            Key is the taint key that the toleration applies to. Empty means match all taint keys.
+                            If the key is empty, operator must be Exists; this combination means to match all values and all keys.
+                          type: string
+                        operator:
+                          description: |-
+                            Operator represents a key's relationship to the value.
+                            Valid operators are Exists, Equal, Lt, and Gt. Defaults to Equal.
+                            Exists is equivalent to wildcard for value, so that a pod can
+                            tolerate all taints of a particular category.
+                            Lt and Gt perform numeric comparisons (requires feature gate TaintTolerationComparisonOperators).
+                          type: string
+                        tolerationSeconds:
+                          description: |-
+                            TolerationSeconds represents the period of time the toleration (which must be
+                            of effect NoExecute, otherwise this field is ignored) tolerates the taint. By default,
+                            it is not set, which means tolerate the taint forever (do not evict). Zero and
+                            negative values will be treated as 0 (evict immediately) by the system.
+                          format: int64
+                          type: integer
+                        value:
+                          description: |-
+                            Value is the taint value the toleration matches to.
+                            If the operator is Exists, the value should be empty, otherwise just a regular string.
+                          type: string
+                      type: object
+                    type: array
                 required:
                 - image
                 type: object

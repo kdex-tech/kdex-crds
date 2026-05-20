@@ -387,6 +387,16 @@ spec:
                     - name
                     x-kubernetes-list-type: map
                 type: object
+              nodeSelector:
+                additionalProperties:
+                  type: string
+                description: |-
+                  nodeSelector, when non-empty, REPLACES the consuming
+                  FaaSAdaptor.Deployer.NodeSelector defaults for this specific
+                  function's Knative Service runtime pod. Same REPLACE semantics
+                  as Tolerations above. Requires the cluster to enable Knative's
+                  kubernetes.podspec-nodeselector feature flag.
+                type: object
               origin:
                 description: origin defines the origin of the function implementation.
                 properties:
@@ -948,6 +958,54 @@ spec:
                   namespace as the KDexFunction CR. Used to give the runtime pod scoped
                   IAM access (e.g. Workload Identity binding to a GCP service account).
                 type: string
+              tolerations:
+                description: |-
+                  tolerations, when non-empty, REPLACES the consuming
+                  FaaSAdaptor.Deployer.Tolerations defaults for this specific
+                  function's Knative Service runtime pod. Use for outlier
+                  functions whose scheduling needs diverge from the cluster-wide
+                  deployer default (e.g. a function that must land on a
+                  high-memory pool while the rest of the fleet uses the default
+                  workload pool). Requires the cluster to enable Knative's
+                  kubernetes.podspec-tolerations feature flag.
+                items:
+                  description: |-
+                    The pod this Toleration is attached to tolerates any taint that matches
+                    the triple <key,value,effect> using the matching operator <operator>.
+                  properties:
+                    effect:
+                      description: |-
+                        Effect indicates the taint effect to match. Empty means match all taint effects.
+                        When specified, allowed values are NoSchedule, PreferNoSchedule and NoExecute.
+                      type: string
+                    key:
+                      description: |-
+                        Key is the taint key that the toleration applies to. Empty means match all taint keys.
+                        If the key is empty, operator must be Exists; this combination means to match all values and all keys.
+                      type: string
+                    operator:
+                      description: |-
+                        Operator represents a key's relationship to the value.
+                        Valid operators are Exists, Equal, Lt, and Gt. Defaults to Equal.
+                        Exists is equivalent to wildcard for value, so that a pod can
+                        tolerate all taints of a particular category.
+                        Lt and Gt perform numeric comparisons (requires feature gate TaintTolerationComparisonOperators).
+                      type: string
+                    tolerationSeconds:
+                      description: |-
+                        TolerationSeconds represents the period of time the toleration (which must be
+                        of effect NoExecute, otherwise this field is ignored) tolerates the taint. By default,
+                        it is not set, which means tolerate the taint forever (do not evict). Zero and
+                        negative values will be treated as 0 (evict immediately) by the system.
+                      format: int64
+                      type: integer
+                    value:
+                      description: |-
+                        Value is the taint value the toleration matches to.
+                        If the operator is Exists, the value should be empty, otherwise just a regular string.
+                      type: string
+                  type: object
+                type: array
             required:
             - api
             - hostRef

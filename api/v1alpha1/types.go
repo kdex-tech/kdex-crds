@@ -367,6 +367,28 @@ type Deployer struct {
 	// serviceAccountName is the name of the service account to use for deploying executables into a FaaS runtime.
 	// +kubebuilder:validation:Optional
 	ServiceAccountName string `json:"serviceAccountName,omitempty" protobuf:"bytes,3,opt,name=serviceAccountName"`
+
+	// tolerations applied to every Knative Service runtime pod
+	// spawned by this deployer. Forwarded onto the runtime pod's
+	// spec.template.spec.tolerations. Use when the cluster steers
+	// function workloads to a tainted pool (e.g.
+	// cloud.google.com/gke-spot=true:NoSchedule,
+	// kubernetes.io/arch=arm64:NoSchedule, a custom
+	// component=workload taint). REPLACE semantics: when a
+	// KDexFunction sets its own spec.tolerations the per-function
+	// value is used; otherwise this default applies. Requires the
+	// cluster to enable Knative's kubernetes.podspec-tolerations
+	// feature flag.
+	// +kubebuilder:validation:Optional
+	Tolerations []corev1.Toleration `json:"tolerations,omitempty" protobuf:"bytes,4,rep,name=tolerations"`
+
+	// nodeSelector applied to every Knative Service runtime pod
+	// spawned by this deployer. Forwarded onto the runtime pod's
+	// spec.template.spec.nodeSelector. REPLACE semantics like
+	// Tolerations above. Requires the cluster to enable Knative's
+	// kubernetes.podspec-nodeselector feature flag.
+	// +kubebuilder:validation:Optional
+	NodeSelector map[string]string `json:"nodeSelector,omitempty" protobuf:"bytes,5,rep,name=nodeSelector"`
 }
 
 type Observer struct {
