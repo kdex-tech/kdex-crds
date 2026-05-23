@@ -10,6 +10,7 @@ import (
 	"time"
 
 	"github.com/Masterminds/sprig/v3"
+	"golang.org/x/text/language"
 	"k8s.io/apimachinery/pkg/api/resource"
 )
 
@@ -154,6 +155,27 @@ func (r *Renderer) RenderOne(
 			return key
 		}
 		return r.MessagePrinter.Sprintf(key, args...)
+	}
+
+	tag, err := language.Parse(r.Language)
+	if err != nil {
+		tag = language.English
+	}
+
+	funcs["number"] = func(v any) string {
+		return formatNumber(tag, v)
+	}
+	funcs["currency"] = func(v float64, code string) string {
+		return formatCurrency(tag, v, code)
+	}
+	funcs["percent"] = func(v float64) string {
+		return formatPercent(tag, v)
+	}
+	funcs["bytes"] = func(v float64, baseUnit string) string {
+		return formatBytes(tag, v, baseUnit)
+	}
+	funcs["date"] = func(t time.Time, style string) string {
+		return formatDate(tag, t, style)
 	}
 	funcs["pop"] = func(v any, key string) any {
 		rv := reflect.ValueOf(v)
