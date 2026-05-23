@@ -85,7 +85,9 @@ func formatBytes(tag language.Tag, v float64, baseUnit string) string {
 // Supports "year" (locale-neutral numeric year) and "short" (ISO 8601);
 // any other style returns RFC3339. medium/long/full are deferred pending
 // a CLDR-driven date pattern dep (x/text does not yet provide one).
-func formatDate(tag language.Tag, t time.Time, style string) string {
+// tag is accepted for signature symmetry with the other helpers and for
+// future use when CLDR date patterns land; intentionally unused today.
+func formatDate(_ language.Tag, t time.Time, style string) string {
 	switch style {
 	case "year":
 		return fmt.Sprintf("%d", t.Year())
