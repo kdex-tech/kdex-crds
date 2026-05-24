@@ -131,6 +131,7 @@ type ServiceBackend struct {
 	Path string `json:"path,omitempty" protobuf:"bytes,5,opt,name=path"`
 }
 
+// +kubebuilder:validation:XValidation:rule="!(has(self.origin) && has(self.backend))",message="spec.origin and spec.backend are mutually exclusive"
 // KDexFunctionSpec defines the desired state of KDexFunction
 type KDexFunctionSpec struct {
 	// api defines the OpenAPI contract for the function.
@@ -166,6 +167,11 @@ type KDexFunctionSpec struct {
 	// origin defines the origin of the function implementation.
 	// +kubebuilder:validation:Optional
 	Origin FunctionOrigin `json:"origin,omitempty" protobuf:"bytes,6,opt,name=origin"`
+
+	// Backend selects an existing backend to serve this function's API,
+	// bypassing the FaaS build/deploy pipeline. Mutually exclusive with Origin.
+	// +kubebuilder:validation:Optional
+	Backend *FunctionBackend `json:"backend,omitempty" protobuf:"bytes,10,opt,name=backend"`
 
 	// serviceAccountName is the name of the ServiceAccount the function's
 	// runtime pod runs as. If empty, the namespace's default ServiceAccount
