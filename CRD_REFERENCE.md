@@ -364,6 +364,43 @@ _Appears in:_
 | `scaling` _[ScalingConfig](#scalingconfig)_ | Scaling allows configuration for min/max replicas and autoscaler type. |  | Optional: \{\} <br /> |
 
 
+#### FunctionBackend
+
+
+
+FunctionBackend selects an existing backend to serve this function's API,
+bypassing the FaaS build/deploy pipeline. Today only the Service variant
+exists; adding new variants is additive (new enum value + new sibling
+field + new XValidation pairing).
+
+
+
+_Appears in:_
+- [KDexFunctionSpec](#kdexfunctionspec)
+
+| Field | Description | Default | Validation |
+| --- | --- | --- | --- |
+| `type` _[FunctionBackendType](#functionbackendtype)_ | Type discriminates which backend sibling is read. |  | Enum: [Service] <br />Required: \{\} <br /> |
+| `service` _[ServiceBackend](#servicebackend)_ | Service references an existing Kubernetes Service to serve this function.<br />Required when Type is Service. |  | Optional: \{\} <br /> |
+
+
+#### FunctionBackendType
+
+_Underlying type:_ _string_
+
+FunctionBackendType selects which backend variant is in use.
+
+_Validation:_
+- Enum: [Service]
+
+_Appears in:_
+- [FunctionBackend](#functionbackend)
+
+| Field | Description |
+| --- | --- |
+| `Service` | FunctionBackendTypeService means the function is served by an existing<br />Kubernetes Service. spec.backend.service must be set.<br /> |
+
+
 #### FunctionOrigin
 
 
@@ -1069,6 +1106,7 @@ _Appears in:_
 | `hostRef` _[LocalObjectReference](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.35/#localobjectreference-v1-core)_ | hostRef is a reference to the KDexHost that this translation belongs to. |  | Required: \{\} <br /> |
 | `metadata` _[KDexFunctionMetadata](#kdexfunctionmetadata)_ | Refer to Kubernetes API documentation for fields of `metadata`. |  | Optional: \{\} <br /> |
 | `origin` _[FunctionOrigin](#functionorigin)_ | origin defines the origin of the function implementation. |  | AtMostOneOf: [executable generator source] <br />Optional: \{\} <br /> |
+| `backend` _[FunctionBackend](#functionbackend)_ | Backend selects an existing backend to serve this function's API,<br />bypassing the FaaS build/deploy pipeline. Mutually exclusive with Origin. |  | Optional: \{\} <br /> |
 | `serviceAccountName` _string_ | serviceAccountName is the name of the ServiceAccount the function's<br />runtime pod runs as. If empty, the namespace's default ServiceAccount<br />is used. The referenced ServiceAccount must exist in the same<br />namespace as the KDexFunction CR. Used to give the runtime pod scoped<br />IAM access (e.g. Workload Identity binding to a GCP service account). |  | Optional: \{\} <br /> |
 | `tolerations` _[Toleration](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.35/#toleration-v1-core) array_ | tolerations, when non-empty, REPLACES the consuming<br />FaaSAdaptor.Deployer.Tolerations defaults for this specific<br />function's Knative Service runtime pod. Use for outlier<br />functions whose scheduling needs diverge from the cluster-wide<br />deployer default (e.g. a function that must land on a<br />high-memory pool while the rest of the fleet uses the default<br />workload pool). Requires the cluster to enable Knative's<br />kubernetes.podspec-tolerations feature flag. |  | Optional: \{\} <br /> |
 | `nodeSelector` _object (keys:string, values:string)_ | nodeSelector, when non-empty, REPLACES the consuming<br />FaaSAdaptor.Deployer.NodeSelector defaults for this specific<br />function's Knative Service runtime pod. Same REPLACE semantics<br />as Tolerations above. Requires the cluster to enable Knative's<br />kubernetes.podspec-nodeselector feature flag. |  | Optional: \{\} <br /> |
@@ -2544,6 +2582,30 @@ _Appears in:_
 - [KDexInternalHostSpec](#kdexinternalhostspec)
 - [KDexPageSpec](#kdexpagespec)
 
+
+
+#### ServiceBackend
+
+
+
+ServiceBackend points at an existing Kubernetes Service. The function's
+basePath is stripped from incoming requests before they are forwarded;
+Path (default "/") is prepended on the upstream side. Cross-namespace
+references are permitted by the schema and gated at runtime by
+NetworkPolicy.
+
+
+
+_Appears in:_
+- [FunctionBackend](#functionbackend)
+
+| Field | Description | Default | Validation |
+| --- | --- | --- | --- |
+| `name` _string_ | Name of the target Service. |  | MinLength: 1 <br />Required: \{\} <br /> |
+| `namespace` _string_ | Namespace of the target Service. Defaults to the KDexFunction's namespace. |  | Optional: \{\} <br /> |
+| `port` _[IntOrString](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.35/#intorstring-intstr-util)_ | Port on the target Service. Accepts either a numeric port or a Service<br />named port (resolved against Service.Spec.Ports at reconcile time). |  | Required: \{\} <br /> |
+| `scheme` _string_ | Scheme is the URL scheme used to reach the Service. Defaults to http. | http | Enum: [http https] <br />Optional: \{\} <br /> |
+| `path` _string_ | Path prefix prepended to the upstream request after the function's<br />basePath is stripped. Defaults to "/". |  | Optional: \{\} <br />Pattern: `^/.*` <br /> |
 
 
 #### Source
