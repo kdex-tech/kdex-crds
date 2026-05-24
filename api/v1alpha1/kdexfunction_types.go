@@ -19,8 +19,8 @@ package v1alpha1
 import (
 	"github.com/kdex-tech/dmapper"
 	corev1 "k8s.io/api/core/v1"
-	"k8s.io/apimachinery/pkg/util/intstr"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
+	"k8s.io/apimachinery/pkg/util/intstr"
 )
 
 // +kubebuilder:object:root=true
