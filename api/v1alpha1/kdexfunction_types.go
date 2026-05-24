@@ -94,7 +94,7 @@ type FunctionBackend struct {
 
 	// Service references an existing Kubernetes Service to serve this function.
 	// Required when Type is Service.
-	// +optional
+	// +kubebuilder:validation:Optional
 	Service *ServiceBackend `json:"service,omitempty" protobuf:"bytes,2,opt,name=service"`
 }
 
@@ -110,7 +110,7 @@ type ServiceBackend struct {
 	Name string `json:"name" protobuf:"bytes,1,req,name=name"`
 
 	// Namespace of the target Service. Defaults to the KDexFunction's namespace.
-	// +optional
+	// +kubebuilder:validation:Optional
 	Namespace string `json:"namespace,omitempty" protobuf:"bytes,2,opt,name=namespace"`
 
 	// Port on the target Service. Accepts either a numeric port or a Service
@@ -121,13 +121,13 @@ type ServiceBackend struct {
 	// Scheme is the URL scheme used to reach the Service. Defaults to http.
 	// +kubebuilder:validation:Enum=http;https
 	// +kubebuilder:default=http
-	// +optional
+	// +kubebuilder:validation:Optional
 	Scheme string `json:"scheme,omitempty" protobuf:"bytes,4,opt,name=scheme"`
 
 	// Path prefix prepended to the upstream request after the function's
 	// basePath is stripped. Defaults to "/".
 	// +kubebuilder:validation:Pattern="^/.*"
-	// +optional
+	// +kubebuilder:validation:Optional
 	Path string `json:"path,omitempty" protobuf:"bytes,5,opt,name=path"`
 }
 
