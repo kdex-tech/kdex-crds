@@ -131,7 +131,7 @@ type ServiceBackend struct {
 	Path string `json:"path,omitempty" protobuf:"bytes,5,opt,name=path"`
 }
 
-// +kubebuilder:validation:XValidation:rule="!(has(self.origin) && has(self.backend))",message="spec.origin and spec.backend are mutually exclusive"
+// +kubebuilder:validation:XValidation:rule="!((has(self.origin.executable) || has(self.origin.generator) || has(self.origin.source)) && has(self.backend))",message="spec.origin and spec.backend are mutually exclusive"
 // KDexFunctionSpec defines the desired state of KDexFunction
 type KDexFunctionSpec struct {
 	// api defines the OpenAPI contract for the function.

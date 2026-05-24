@@ -1067,7 +1067,8 @@ spec:
             type: object
             x-kubernetes-validations:
             - message: spec.origin and spec.backend are mutually exclusive
-              rule: '!(has(self.origin) && has(self.backend))'
+              rule: '!((has(self.origin.executable) || has(self.origin.generator)
+                || has(self.origin.source)) && has(self.backend))'
           status:
             description: status defines the observed state of KDexFunction
             properties:
