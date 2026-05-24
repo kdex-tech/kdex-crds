@@ -21,6 +21,8 @@ import (
 	"testing"
 
 	"github.com/stretchr/testify/assert"
+	corev1 "k8s.io/api/core/v1"
+	"k8s.io/apimachinery/pkg/util/intstr"
 )
 
 func TestAPI_Regex(t *testing.T) {
@@ -113,4 +115,53 @@ func TestAPI_Regex(t *testing.T) {
 			tt.assertions(t, tt.re)
 		})
 	}
+}
+
+func TestServiceBackend_RoundTrip(t *testing.T) {
+	in := &ServiceBackend{
+		Name:      "knowdb",
+		Namespace: "data",
+		Port:      intstr.FromInt(8080),
+		Scheme:    "http",
+		Path:      "/api",
+	}
+	out := in.DeepCopy()
+	assert.Equal(t, in.Name, out.Name)
+	assert.Equal(t, in.Namespace, out.Namespace)
+	assert.Equal(t, in.Port.IntValue(), out.Port.IntValue())
+	assert.Equal(t, in.Scheme, out.Scheme)
+	assert.Equal(t, in.Path, out.Path)
+	// Confirm DeepCopy actually copies (not shares).
+	out.Name = "mutated"
+	assert.Equal(t, "knowdb", in.Name)
+}
+
+func TestServiceBackend_NamedPort(t *testing.T) {
+	sb := &ServiceBackend{
+		Name: "knowdb",
+		Port: intstr.FromString("http"),
+	}
+	assert.Equal(t, intstr.String, sb.Port.Type)
+	assert.Equal(t, "http", sb.Port.StrVal)
+}
+
+func TestFunctionBackend_ServiceVariant(t *testing.T) {
+	fb := &FunctionBackend{
+		Type:    FunctionBackendTypeService,
+		Service: &ServiceBackend{Name: "knowdb", Port: intstr.FromInt(8080)},
+	}
+	assert.Equal(t, FunctionBackendTypeService, fb.Type)
+	assert.NotNil(t, fb.Service)
+}
+
+func TestKDexFunctionSpec_BackendIsOptional(t *testing.T) {
+	spec := &KDexFunctionSpec{
+		HostRef: corev1.LocalObjectReference{Name: "h"},
+	}
+	assert.Nil(t, spec.Backend)
+	spec.Backend = &FunctionBackend{
+		Type:    FunctionBackendTypeService,
+		Service: &ServiceBackend{Name: "knowdb", Port: intstr.FromInt(8080)},
+	}
+	assert.NotNil(t, spec.Backend)
 }
