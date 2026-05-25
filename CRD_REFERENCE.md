@@ -181,6 +181,22 @@ _Appears in:_
 | `staticImagePullPolicy` _[PullPolicy](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.35/#pullpolicy-v1-core)_ | Policy for pulling the OCI theme image. Possible values are:<br />Always: the kubelet always attempts to pull the reference. Container creation will fail If the pull fails.<br />Never: the kubelet never pulls the reference and only uses a local image or artifact. Container creation will fail if the reference isn't present.<br />IfNotPresent: the kubelet pulls if the reference isn't already present on disk. Container creation will fail if the reference isn't present and the pull fails.<br />Defaults to Always if :latest tag is specified, or IfNotPresent otherwise. |  | Optional: \{\} <br /> |
 
 
+#### BuildCache
+
+
+
+BuildCache configures the kpack build cache PVC for a Builder.
+
+
+
+_Appears in:_
+- [Builder](#builder)
+
+| Field | Description | Default | Validation |
+| --- | --- | --- | --- |
+| `volumeSize` _[Quantity](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.35/#quantity-resource-api)_ | volumeSize is the requested PVC size for the kpack build cache.<br />Forwarded onto the kpack.io/Image's spec.cache.volume.size. | 10Gi | Required: \{\} <br /> |
+
+
 #### Builder
 
 
@@ -203,6 +219,7 @@ _Appears in:_
 | `tolerations` _[Toleration](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.35/#toleration-v1-core) array_ | tolerations are forwarded onto the kpack.io/Image's<br />spec.build.tolerations, which kpack passes onto the per-build<br />Pod. Use to land BUILD pods on a tainted node pool, e.g. a<br />GKE Spot pool that auto-applies cloud.google.com/gke-spot=true:NoSchedule. |  | Optional: \{\} <br /> |
 | `nodeSelector` _object (keys:string, values:string)_ | nodeSelector is forwarded onto the kpack.io/Image's<br />spec.build.nodeSelector. Use to pin BUILD pods to a specific<br />node pool when more than one pool can satisfy the build's<br />architecture requirement. |  | Optional: \{\} <br /> |
 | `resources` _[ResourceRequirements](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.35/#resourcerequirements-v1-core)_ | resources are forwarded onto the kpack.io/Image's<br />spec.build.resources. Use to cap or guarantee CPU/memory for<br />the BUILD pod; especially relevant for compile-heavy languages<br />(Go, Rust) whose link/compile steps can exceed the default<br />best-effort QoS budget and trigger node-level OOM kills. |  | Optional: \{\} <br /> |
+| `cache` _[BuildCache](#buildcache)_ | cache configures the kpack build cache PVC sized per Builder.<br />Forwarded onto the kpack.io/Image's spec.cache.volume.size.<br />kpack's own default when this field is unset on the Image is "2G",<br />which is too small for typical Go/Rust dep trees; host-manager<br />falls back to "10Gi" when this field is nil so that the default<br />is reasonable without per-function tuning. The PVC's StorageClass<br />is the cluster default. Once a PVC is provisioned at a given size,<br />k8s forbids shrinking it (the kpack controller will error out<br />every reconcile until the field is bumped back up or the PVC is<br />deleted); bump this value up freely, never down. |  | Optional: \{\} <br /> |
 
 
 #### CompanionChart
