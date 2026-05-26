@@ -1330,6 +1330,16 @@ type Source struct {
 	// revision is the git revision (tag, branch or commit hash) to the source code.
 	// +kubebuilder:validation:Required
 	Revision string `json:"revision" protobuf:"bytes,4,req,name=revision"`
+
+	// regenerate, when true, instructs the host-manager controller
+	// to run the codegen Job on every reconcile even though source
+	// is set — matching the behavior when source is unset. The
+	// Job pushes regenerated handler stubs to a gen/<host>/<func>
+	// branch in the source repository so the developer can review
+	// and merge. Default false: source is treated as authoritative
+	// and no codegen runs.
+	// +kubebuilder:validation:Optional
+	Regenerate *bool `json:"regenerate,omitempty" protobuf:"varint,5,opt,name=regenerate"`
 }
 
 type StyleDef struct {

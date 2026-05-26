@@ -1013,6 +1013,16 @@ spec:
                       path:
                         description: path is the path to the source code in the repository.
                         type: string
+                      regenerate:
+                        description: |-
+                          regenerate, when true, instructs the host-manager controller
+                          to run the codegen Job on every reconcile even though source
+                          is set — matching the behavior when source is unset. The
+                          Job pushes regenerated handler stubs to a gen/<host>/<func>
+                          branch in the source repository so the developer can review
+                          and merge. Default false: source is treated as authoritative
+                          and no codegen runs.
+                        type: boolean
                       repository:
                         description: repository is the git repository address to the
                           source code.
@@ -1748,6 +1758,16 @@ spec:
                   path:
                     description: path is the path to the source code in the repository.
                     type: string
+                  regenerate:
+                    description: |-
+                      regenerate, when true, instructs the host-manager controller
+                      to run the codegen Job on every reconcile even though source
+                      is set — matching the behavior when source is unset. The
+                      Job pushes regenerated handler stubs to a gen/<host>/<func>
+                      branch in the source repository so the developer can review
+                      and merge. Default false: source is treated as authoritative
+                      and no codegen runs.
+                    type: boolean
                   repository:
                     description: repository is the git repository address to the source
                       code.
