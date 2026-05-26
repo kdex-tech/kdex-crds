@@ -2643,6 +2643,7 @@ _Appears in:_
 | `path` _string_ | path is the path to the source code in the repository. |  | Optional: \{\} <br /> |
 | `repository` _string_ | repository is the git repository address to the source code. |  | Required: \{\} <br /> |
 | `revision` _string_ | revision is the git revision (tag, branch or commit hash) to the source code. |  | Required: \{\} <br /> |
+| `regenerate` _boolean_ | regenerate, when true, instructs the host-manager controller<br />to run the codegen Job on every reconcile even though source<br />is set — matching the behavior when source is unset. The<br />Job pushes regenerated handler stubs to a gen/<host>/<func><br />branch in the source repository so the developer can review<br />and merge. Default false: source is treated as authoritative<br />and no codegen runs. |  | Optional: \{\} <br /> |
 
 
 
