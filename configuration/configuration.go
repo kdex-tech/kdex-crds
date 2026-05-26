@@ -30,6 +30,14 @@ type HostDefault struct {
 	Chart Chart `json:"chart" yaml:"chart"`
 }
 
+// CodegenConfig holds resource constraints for the codegen Job's heavyweight init container.
+type CodegenConfig struct {
+	// Resources are applied to the generate-code init container so that
+	// go mod tidy survives heavy-dep function trees without being OOM-killed
+	// by the namespace LimitRange default.
+	Resources corev1.ResourceRequirements `json:"resources" yaml:"resources"`
+}
+
 // +kubebuilder:object:root=true
 type NexusConfiguration struct {
 	metav1.TypeMeta `json:",inline"`
@@ -38,6 +46,7 @@ type NexusConfiguration struct {
 	metav1.ObjectMeta `json:"metadata,omitempty,omitzero"`
 
 	BackendDefault       BackendDefault `json:"backendDefault" yaml:"backendDefault"`
+	Codegen              CodegenConfig  `json:"codegen" yaml:"codegen"`
 	DefaultImageRegistry string         `json:"defaultImageRegistry" yaml:"defaultImageRegistry"`
 	DefaultNpmRegistry   string         `json:"defaultNpmRegistry" yaml:"defaultNpmRegistry"`
 	HostDefault          HostDefault    `json:"hostDefault" yaml:"hostDefault"`
@@ -119,6 +128,12 @@ backendDefault:
       targetPort: server
   serverImage: ghcr.io/kdex-tech/backend-static:latest
   serverImagePullPolicy: Always
+codegen:
+  resources:
+    requests:
+      memory: 2Gi
+    limits:
+      memory: 4Gi
 defaultImageRegistry: docker.io
 defaultNpmRegistry: registry.npmjs.org
 hostDefault:
