@@ -149,14 +149,14 @@ spec:
                             sourceExpression is CEL program to compute a transformation of input into
                             a new form.
                           example: self.oidc.groups.filter(g, g.startsWith('app_')).join(',')
-                          minLength: 5
+                          minLength: 2
                           type: string
                         targetPropPath:
                           description: |-
                             targetPropPath is a dot-separated property path for where the result
                             should be attached in the output.
                           example: auth.internal_groups
-                          minLength: 5
+                          minLength: 2
                           type: string
                       required:
                       - sourceExpression
