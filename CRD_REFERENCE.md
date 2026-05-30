@@ -88,6 +88,29 @@ _Appears in:_
 | `schemas` _object (keys:string, values:[RawExtension](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.35/#rawextension-runtime-pkg))_ |  |  | MaxProperties: 6 <br />Optional: \{\} <br /> |
 
 
+#### APIToken
+
+
+
+APIToken is the per-host configuration for PASETO API tokens. It enables
+white-labelling: the host's minted API tokens carry a brand-specific prefix
+in place of the PASETO "v4.public." protocol header, so distinct domains
+hosted by the same K-CNAS deployment present clearly separated, branded
+tokens. The prefix is a transport-only substitution applied outside the
+cryptographic envelope (the original header is restored before verification),
+so it never affects the signature. Verifiers (functions bound to the host)
+receive the prefix via host-injected metadata to reconstruct the header.
+
+
+
+_Appears in:_
+- [Auth](#auth)
+
+| Field | Description | Default | Validation |
+| --- | --- | --- | --- |
+| `tokenPrefix` _string_ | tokenPrefix replaces the PASETO "v4.public." header on this host's minted<br />API tokens with the given brand prefix (e.g. "acme_pat_"). When empty,<br />tokens are emitted as bare "v4.public." PASETO strings (no prefixing).<br />The pattern forbids "." and whitespace so the prefix can never collide<br />with the header it replaces. |  | MaxLength: 32 <br />Optional: \{\} <br />Pattern: `^[A-Za-z0-9_-]+$` <br /> |
+
+
 #### Asset
 
 
@@ -146,6 +169,7 @@ _Appears in:_
 | Field | Description | Default | Validation |
 | --- | --- | --- | --- |
 | `anonymousEntitlements` _string array_ | anonymousEntitlements is an array of entitlements granted in anonymous (not logged in) access scenarios.<br />In the spirit of least privilege security no entitlements are granted by default. However, in order to make<br />a host's pages generally accessible the scope `page:read` should be granted. |  | Optional: \{\} <br /> |
+| `apiToken` _[APIToken](#apitoken)_ | apiToken is the configuration for this host's PASETO API tokens. |  | Optional: \{\} <br /> |
 | `autoExtendSession` _boolean_ | autoExtendSession should be set to true if the refresh token auto extension should be enabled. | true | Optional: \{\} <br /> |
 | `claimMappings` _MappingRule array_ | claimMappings is an array of CEL expressions for extracting custom claims from<br />identity sources and mapping the results onto the Primary Access Token (PAT).<br />This is used to map OIDC claims but can also be used with external data<br />sources like LDAP or others via identity integration. |  | MaxItems: 16 <br />Optional: \{\} <br /> |
 | `jwt` _[JWT](#jwt)_ | jwt is the configuation for JWT token support. |  | Optional: \{\} <br /> |

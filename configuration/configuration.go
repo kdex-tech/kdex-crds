@@ -38,6 +38,15 @@ type CodegenConfig struct {
 	Resources corev1.ResourceRequirements `json:"resources" yaml:"resources"`
 }
 
+// APITokenConfig holds the framework-default PASETO API token prefix inherited
+// by every host whose own KDexHost.spec.auth.apiToken.tokenPrefix is empty.
+// Empty means hosts emit bare "v4.public." tokens unless they opt in per host.
+type APITokenConfig struct {
+	// TokenPrefix is the cluster-wide default brand prefix that replaces the
+	// PASETO "v4.public." header on minted API tokens (white-label default).
+	TokenPrefix string `json:"tokenPrefix" yaml:"tokenPrefix"`
+}
+
 // +kubebuilder:object:root=true
 type NexusConfiguration struct {
 	metav1.TypeMeta `json:",inline"`
@@ -45,6 +54,7 @@ type NexusConfiguration struct {
 	// +kubebuilder:validation:Optional
 	metav1.ObjectMeta `json:"metadata,omitempty,omitzero"`
 
+	APIToken             APITokenConfig `json:"apiToken" yaml:"apiToken"`
 	BackendDefault       BackendDefault `json:"backendDefault" yaml:"backendDefault"`
 	Codegen              CodegenConfig  `json:"codegen" yaml:"codegen"`
 	DefaultImageRegistry string         `json:"defaultImageRegistry" yaml:"defaultImageRegistry"`
@@ -62,6 +72,8 @@ type Packages struct {
 
 func LoadConfiguration(configFile string, scheme *runtime.Scheme) NexusConfiguration {
 	defaultContent := []byte(`
+apiToken:
+  tokenPrefix: ""
 backendDefault:
   deployment:
     replicas: 1

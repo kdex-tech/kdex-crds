@@ -166,6 +166,10 @@ type Auth struct {
 	// +kubebuilder:validation:Optional
 	AnonymousEntitlements []string `json:"anonymousEntitlements,omitempty" protobuf:"bytes,1,rep,name=anonymousEntitlements"`
 
+	// apiToken is the configuration for this host's PASETO API tokens.
+	// +kubebuilder:validation:Optional
+	APIToken *APIToken `json:"apiToken,omitempty" protobuf:"bytes,8,opt,name=apiToken"`
+
 	// autoExtendSession should be set to true if the refresh token auto extension should be enabled.
 	// +kubebuilder:validation:Optional
 	// +kubebuilder:default:=true
@@ -196,6 +200,26 @@ type Auth struct {
 	// +kubebuilder:validation:Optional
 	// +kubebuilder:default:="12h"
 	RefreshTokenTTL string `json:"refreshTokenTTL" protobuf:"bytes,4,req,name=refreshTokenTTL"`
+}
+
+// APIToken is the per-host configuration for PASETO API tokens. It enables
+// white-labelling: the host's minted API tokens carry a brand-specific prefix
+// in place of the PASETO "v4.public." protocol header, so distinct domains
+// hosted by the same K-CNAS deployment present clearly separated, branded
+// tokens. The prefix is a transport-only substitution applied outside the
+// cryptographic envelope (the original header is restored before verification),
+// so it never affects the signature. Verifiers (functions bound to the host)
+// receive the prefix via host-injected metadata to reconstruct the header.
+type APIToken struct {
+	// tokenPrefix replaces the PASETO "v4.public." header on this host's minted
+	// API tokens with the given brand prefix (e.g. "acme_pat_"). When empty,
+	// tokens are emitted as bare "v4.public." PASETO strings (no prefixing).
+	// The pattern forbids "." and whitespace so the prefix can never collide
+	// with the header it replaces.
+	// +kubebuilder:validation:Optional
+	// +kubebuilder:validation:Pattern=`^[A-Za-z0-9_-]+$`
+	// +kubebuilder:validation:MaxLength=32
+	TokenPrefix string `json:"tokenPrefix,omitempty" protobuf:"bytes,1,opt,name=tokenPrefix"`
 }
 
 // Backend defines a deployment for serving resources specific to the refer.

@@ -107,6 +107,21 @@ spec:
                     items:
                       type: string
                     type: array
+                  apiToken:
+                    description: apiToken is the configuration for this host's PASETO
+                      API tokens.
+                    properties:
+                      tokenPrefix:
+                        description: |-
+                          tokenPrefix replaces the PASETO "v4.public." header on this host's minted
+                          API tokens with the given brand prefix (e.g. "acme_pat_"). When empty,
+                          tokens are emitted as bare "v4.public." PASETO strings (no prefixing).
+                          The pattern forbids "." and whitespace so the prefix can never collide
+                          with the header it replaces.
+                        maxLength: 32
+                        pattern: ^[A-Za-z0-9_-]+$
+                        type: string
+                    type: object
                   autoExtendSession:
                     default: true
                     description: autoExtendSession should be set to true if the refresh
