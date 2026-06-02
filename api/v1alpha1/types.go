@@ -1123,8 +1123,14 @@ type ScalingConfig struct {
 	// When the Function is created, the larger of activation scale and lower
 	// bound is automatically chosen as the initial target scale.
 	//
+	// Knative's autoscaling webhook requires activation-scale >= 2 when set.
+	// The CRD therefore carries NO default (a baked default of 1 made every
+	// scaling-block CR un-deployable) and a Minimum of 2. When unset, the
+	// pointer stays nil, host-manager omits the
+	// autoscaling.knative.dev/activation-scale annotation, and Knative falls
+	// back to its own behavior. See kdex-tech/kdex-crds#8.
 	// +kubebuilder:validation:Optional
-	// +kubebuilder:default:=1
+	// +kubebuilder:validation:Minimum=2
 	ActivationScale *int32 `json:"activationScale,omitempty" protobuf:"varint,1,opt,name=activationScale"`
 
 	// initialScale controls the initial target scale a Function must reach

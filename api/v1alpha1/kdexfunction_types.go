@@ -199,6 +199,37 @@ type KDexFunctionSpec struct {
 	// kubernetes.podspec-nodeselector feature flag.
 	// +kubebuilder:validation:Optional
 	NodeSelector map[string]string `json:"nodeSelector,omitempty" protobuf:"bytes,9,rep,name=nodeSelector"`
+
+	// volumes are pod-level volumes attached to the function's runtime pod.
+	// Forwarded verbatim onto the rendered Knative Service's
+	// spec.template.spec.volumes. Use to project ConfigMap/Secret file config
+	// (e.g. an app that requires a --config file, or secret/key material that
+	// can't survive env injection's UTF-8 constraints) into executable/
+	// source-built functions. Requires the cluster to enable the matching
+	// Knative kubernetes.podspec-volumes-* feature flag for non-default
+	// volume sources. See kdex-tech/kdex-crds#10.
+	// +kubebuilder:validation:Optional
+	Volumes []corev1.Volume `json:"volumes,omitempty" protobuf:"bytes,11,rep,name=volumes"`
+
+	// volumeMounts mount the entries from Volumes into the function's runtime
+	// container. Forwarded verbatim onto the Knative Service container's
+	// volumeMounts. Pairs with Volumes above. See kdex-tech/kdex-crds#10.
+	// +kubebuilder:validation:Optional
+	VolumeMounts []corev1.VolumeMount `json:"volumeMounts,omitempty" protobuf:"bytes,12,rep,name=volumeMounts"`
+
+	// internal, when true, prevents EXTERNAL exposure of this function: its
+	// OpenAPI paths are omitted from the host's /-/openapi catalog, no route
+	// is registered on the host mux for its basePath, and (as defense-in-
+	// depth) the rendered Knative Service is labeled
+	// networking.knative.dev/visibility=cluster-local. The function stays
+	// reachable at its Knative Service cluster-local URL
+	// (<name>.<namespace>.svc.cluster.local) for in-cluster callers (e.g.
+	// host-manager auth.HTTPLookup credential checks, backend-for-backend
+	// RPCs, internal webhooks). Defaults to false (existing external-exposure
+	// behavior). See kdex-tech/kdex-crds#6.
+	// +kubebuilder:validation:Optional
+	// +kubebuilder:default=false
+	Internal bool `json:"internal,omitempty" protobuf:"varint,13,opt,name=internal"`
 }
 
 // KDexFunctionState reflects the current state of a KDexFunction.

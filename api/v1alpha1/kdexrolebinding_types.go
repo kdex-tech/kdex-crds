@@ -37,8 +37,15 @@ type KDexRoleBindingSpec struct {
 	// However, if the ServiceAccount referenced by the host has secrets attached labelled with
 	// "kdex.dev/secret-type=subject" then it contains a local identity managed
 	// through the Secret.
+	//
+	// subject must be non-empty. It accepts the host-manager matcher's three
+	// forms: an exact identifier (OIDC/local "sub"), the "*" wildcard (match
+	// any subject), or a "/regex/" slash-delimited Go regex. minLength=1
+	// admits "*" and short identifiers; the previous minLength=5 wrongly
+	// rejected the documented "*" wildcard and any sub-5-char username.
+	// See kdex-tech/kdex-crds#3.
 	// +kubebuilder:validation:Required
-	// +kubebuilder:validation:MinLength=5
+	// +kubebuilder:validation:MinLength=1
 	Subject string `json:"subject" protobuf:"bytes,5,req,name=subject"`
 }
 
