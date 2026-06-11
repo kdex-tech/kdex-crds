@@ -478,6 +478,21 @@ type Observer struct {
 	// preemption event.
 	// +kubebuilder:validation:Optional
 	RetryCooldown *metav1.Duration `json:"retryCooldown,omitempty" protobuf:"bytes,6,opt,name=retryCooldown"`
+
+	// nodeSelector is an optional map of node labels the observer
+	// Job pods must match. When unset, observer pods schedule
+	// wherever the cluster scheduler picks — typically wherever an
+	// untainted amd64 node happens to be available, which may not
+	// align with operator intent.
+	// +kubebuilder:validation:Optional
+	NodeSelector map[string]string `json:"nodeSelector,omitempty" protobuf:"bytes,7,rep,name=nodeSelector"`
+
+	// tolerations is an optional list of tolerations to apply to
+	// observer Job pods. Use with NodeSelector to steer observers
+	// to a specific tainted node pool (e.g. a per-env Spot
+	// workload pool).
+	// +kubebuilder:validation:Optional
+	Tolerations []corev1.Toleration `json:"tolerations,omitempty" protobuf:"bytes,8,rep,name=tolerations"`
 }
 
 type Executable struct {

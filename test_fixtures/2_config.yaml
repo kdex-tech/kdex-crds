@@ -1,0 +1,20 @@
+defaultImageRegistry: artifactregistry.example.com
+defaultImageSecretRef:
+  kind: Secret
+  name: cluster-default-image-credentials
+defaultNpmRegistry: npm.example.com
+defaultNpmSecretRef:
+  kind: Secret
+  name: cluster-default-npm-credentials
+hostDefault:
+  chart:
+    name: oci://ghcr.io/kdex-tech/charts/host-manager
+    version: "1.2.3"
+    values:
+      resources:
+        requests:
+          cpu: 250m
+          memory: 256Mi
+        limits:
+          cpu: "1"
+          memory: 512Mi

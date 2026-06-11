@@ -2372,6 +2372,8 @@ _Appears in:_
 | `serviceAccountName` _string_ | serviceAccountName is the name of the service account to use for observing the function state. |  | Optional: \{\} <br /> |
 | `maxBuildRetries` _integer_ | maxBuildRetries caps the number of auto-retries the observer<br />will fire for kpack Build pods that died from preemption signals<br />(spot eviction, node shutdown, voluntary disruption). Defaults<br />to 3 when nil. Set to 0 to disable observer-driven retries. |  | Minimum: 0 <br />Optional: \{\} <br /> |
 | `retryCooldown` _[Duration](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.35/#duration-v1-meta)_ | retryCooldown is the minimum interval between consecutive<br />observer-driven Build retries for the same KDexFunction.<br />Defaults to 4 * schedule (~20 min at the default "*/5 * * * *"<br />schedule). Use to dampen retry storms during a regional<br />preemption event. |  | Optional: \{\} <br /> |
+| `nodeSelector` _object (keys:string, values:string)_ | nodeSelector is an optional map of node labels the observer<br />Job pods must match. When unset, observer pods schedule<br />wherever the cluster scheduler picks — typically wherever an<br />untainted amd64 node happens to be available, which may not<br />align with operator intent. |  | Optional: \{\} <br /> |
+| `tolerations` _[Toleration](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.35/#toleration-v1-core) array_ | tolerations is an optional list of tolerations to apply to<br />observer Job pods. Use with NodeSelector to steer observers<br />to a specific tainted node pool (e.g. a per-env Spot<br />workload pool). |  | Optional: \{\} <br /> |
 
 
 #### OpenAPI

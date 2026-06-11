@@ -9,6 +9,7 @@ import (
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	runtime "k8s.io/apimachinery/pkg/runtime"
 	"k8s.io/apimachinery/pkg/runtime/serializer"
+	apiv1alpha1 "kdex.dev/crds/api/v1alpha1"
 	gatewayv1 "sigs.k8s.io/gateway-api/apis/v1"
 )
 
@@ -24,6 +25,11 @@ type BackendDefault struct {
 type Chart struct {
 	Name    string `json:"name" yaml:"name"`
 	Version string `json:"version" yaml:"version"`
+	// Values are cluster-wide default top-level Helm values for the host-manager
+	// chart, merged UNDER per-host spec.helm.hostManager.values (per-host wins).
+	// +kubebuilder:pruning:PreserveUnknownFields
+	// +optional
+	Values *runtime.RawExtension `json:"values,omitempty" yaml:"values,omitempty"`
 }
 
 type HostDefault struct {
@@ -58,9 +64,19 @@ type NexusConfiguration struct {
 	BackendDefault       BackendDefault `json:"backendDefault" yaml:"backendDefault"`
 	Codegen              CodegenConfig  `json:"codegen" yaml:"codegen"`
 	DefaultImageRegistry string         `json:"defaultImageRegistry" yaml:"defaultImageRegistry"`
-	DefaultNpmRegistry   string         `json:"defaultNpmRegistry" yaml:"defaultNpmRegistry"`
-	HostDefault          HostDefault    `json:"hostDefault" yaml:"hostDefault"`
-	Packages             Packages       `json:"packages" yaml:"packages"`
+	// DefaultImageSecretRef is the cluster-default credential the consuming
+	// operator applies as a fallback when a resource's PackageReference targets
+	// the DefaultImageRegistry but carries no secretRef of its own.
+	// +kubebuilder:validation:Optional
+	DefaultImageSecretRef *apiv1alpha1.KDexObjectReference `json:"defaultImageSecretRef,omitempty" yaml:"defaultImageSecretRef,omitempty"`
+	DefaultNpmRegistry    string                           `json:"defaultNpmRegistry" yaml:"defaultNpmRegistry"`
+	// DefaultNpmSecretRef is the cluster-default credential the consuming
+	// operator applies as a fallback when a resource's PackageReference targets
+	// the DefaultNpmRegistry but carries no secretRef of its own.
+	// +kubebuilder:validation:Optional
+	DefaultNpmSecretRef *apiv1alpha1.KDexObjectReference `json:"defaultNpmSecretRef,omitempty" yaml:"defaultNpmSecretRef,omitempty"`
+	HostDefault         HostDefault                      `json:"hostDefault" yaml:"hostDefault"`
+	Packages            Packages                         `json:"packages" yaml:"packages"`
 }
 
 type Packages struct {

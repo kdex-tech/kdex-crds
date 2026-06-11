@@ -1,6 +1,7 @@
 package configuration
 
 import (
+	"encoding/json"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
@@ -34,6 +35,35 @@ func TestLoadConfiguration(t *testing.T) {
 				return config.HostDefault.Chart.Name
 			},
 			want: "oci://ghcr.io/kdex-tech/charts/host-manager",
+		},
+		{
+			name:       "default npm secret ref round-trips",
+			configFile: "../test_fixtures/2_config.yaml",
+			find: func(config NexusConfiguration) any {
+				return config.DefaultNpmSecretRef.Name
+			},
+			want: "cluster-default-npm-credentials",
+		},
+		{
+			name:       "default image secret ref round-trips",
+			configFile: "../test_fixtures/2_config.yaml",
+			find: func(config NexusConfiguration) any {
+				return config.DefaultImageSecretRef.Name
+			},
+			want: "cluster-default-image-credentials",
+		},
+		{
+			name:       "chart values round-trip (top-level resources key)",
+			configFile: "../test_fixtures/2_config.yaml",
+			find: func(config NexusConfiguration) any {
+				var values map[string]any
+				if err := json.Unmarshal(config.HostDefault.Chart.Values.Raw, &values); err != nil {
+					return err
+				}
+				_, ok := values["resources"]
+				return ok
+			},
+			want: true,
 		},
 	}
 	for _, tt := range tests {
