@@ -170,6 +170,7 @@ _Appears in:_
 | --- | --- | --- | --- |
 | `anonymousEntitlements` _string array_ | anonymousEntitlements is an array of entitlements granted in anonymous (not logged in) access scenarios.<br />In the spirit of least privilege security no entitlements are granted by default. However, in order to make<br />a host's pages generally accessible the scope `page:read` should be granted. |  | Optional: \{\} <br /> |
 | `apiToken` _[APIToken](#apitoken)_ | apiToken is the configuration for this host's PASETO API tokens. |  | Optional: \{\} <br /> |
+| `dynamicClientRegistration` _[DynamicClientRegistration](#dynamicclientregistration)_ | dynamicClientRegistration enables RFC 7591 OAuth 2.0 Dynamic Client<br />Registration for this host (the /-/oauth/register endpoint and the<br />registration_endpoint advertisement in the authorization-server<br />metadata). When nil or enabled=false, DCR is OFF and the endpoint<br />returns 404 — existing hosts are unaffected. Required for zero-touch<br />MCP-client onboarding. |  | Optional: \{\} <br /> |
 | `autoExtendSession` _boolean_ | autoExtendSession should be set to true if the refresh token auto extension should be enabled. | true | Optional: \{\} <br /> |
 | `claimMappings` _MappingRule array_ | claimMappings is an array of CEL expressions for extracting custom claims from<br />identity sources and mapping the results onto the Primary Access Token (PAT).<br />This is used to map OIDC claims but can also be used with external data<br />sources like LDAP or others via identity integration. |  | MaxItems: 16 <br />Optional: \{\} <br /> |
 | `jwt` _[JWT](#jwt)_ | jwt is the configuation for JWT token support. |  | Optional: \{\} <br /> |
@@ -385,6 +386,29 @@ _Appears in:_
 | `serviceAccountName` _string_ | serviceAccountName is the name of the service account to use for deploying executables into a FaaS runtime. |  | Optional: \{\} <br /> |
 | `tolerations` _[Toleration](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.35/#toleration-v1-core) array_ | tolerations applied to every Knative Service runtime pod<br />spawned by this deployer. Forwarded onto the runtime pod's<br />spec.template.spec.tolerations. Use when the cluster steers<br />function workloads to a tainted pool (e.g.<br />cloud.google.com/gke-spot=true:NoSchedule,<br />kubernetes.io/arch=arm64:NoSchedule, a custom<br />component=workload taint). REPLACE semantics: when a<br />KDexFunction sets its own spec.tolerations the per-function<br />value is used; otherwise this default applies. Requires the<br />cluster to enable Knative's kubernetes.podspec-tolerations<br />feature flag. |  | Optional: \{\} <br /> |
 | `nodeSelector` _object (keys:string, values:string)_ | nodeSelector applied to every Knative Service runtime pod<br />spawned by this deployer. Forwarded onto the runtime pod's<br />spec.template.spec.nodeSelector. REPLACE semantics like<br />Tolerations above. Requires the cluster to enable Knative's<br />kubernetes.podspec-nodeselector feature flag. |  | Optional: \{\} <br /> |
+
+
+#### DynamicClientRegistration
+
+
+
+DynamicClientRegistration is the per-host configuration for RFC 7591 OAuth
+2.0 Dynamic Client Registration. Dynamically-registered clients are public
+(PKCE-required, no client secret) and are persisted in the host's bundled
+Valkey with a TTL rather than as Secrets, so a public /-/oauth/register
+endpoint never writes cluster objects.
+
+
+
+_Appears in:_
+- [Auth](#auth)
+
+| Field | Description | Default | Validation |
+| --- | --- | --- | --- |
+| `enabled` _boolean_ | enabled turns on the /-/oauth/register endpoint and advertises a<br />registration_endpoint in the authorization-server metadata. | false | Optional: \{\} <br /> |
+| `clientTTL` _string_ | clientTTL is how long a dynamically-registered client record lives in<br />Valkey, refreshed on each use. Go duration string. | 720h | Optional: \{\} <br /> |
+| `maxClients` _integer_ | maxClients caps the number of live dynamically-registered clients per<br />host; registrations past this are rejected (TTL eviction reclaims slots). | 1000 | Minimum: 1 <br />Optional: \{\} <br /> |
+| `allowedRedirectSchemes` _string array_ | allowedRedirectSchemes restricts redirect_uri schemes accepted at<br />registration. "https" allows any https URI; "http-loopback" allows<br />http://127.0.0.1 and http://localhost (native-app loopback per RFC 8252). | [https http-loopback] | Optional: \{\} <br /> |
 
 
 #### Executable
