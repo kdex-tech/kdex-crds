@@ -170,6 +170,15 @@ type Auth struct {
 	// +kubebuilder:validation:Optional
 	APIToken *APIToken `json:"apiToken,omitempty" protobuf:"bytes,8,opt,name=apiToken"`
 
+	// dynamicClientRegistration enables RFC 7591 OAuth 2.0 Dynamic Client
+	// Registration for this host (the /-/oauth/register endpoint and the
+	// registration_endpoint advertisement in the authorization-server
+	// metadata). When nil or enabled=false, DCR is OFF and the endpoint
+	// returns 404 — existing hosts are unaffected. Required for zero-touch
+	// MCP-client onboarding.
+	// +kubebuilder:validation:Optional
+	DynamicClientRegistration *DynamicClientRegistration `json:"dynamicClientRegistration,omitempty" protobuf:"bytes,9,opt,name=dynamicClientRegistration"`
+
 	// autoExtendSession should be set to true if the refresh token auto extension should be enabled.
 	// +kubebuilder:validation:Optional
 	// +kubebuilder:default:=true
@@ -220,6 +229,39 @@ type APIToken struct {
 	// +kubebuilder:validation:Pattern=`^[A-Za-z0-9_-]+$`
 	// +kubebuilder:validation:MaxLength=32
 	TokenPrefix string `json:"tokenPrefix,omitempty" protobuf:"bytes,1,opt,name=tokenPrefix"`
+}
+
+// DynamicClientRegistration is the per-host configuration for RFC 7591 OAuth
+// 2.0 Dynamic Client Registration. Dynamically-registered clients are public
+// (PKCE-required, no client secret) and are persisted in the host's bundled
+// Valkey with a TTL rather than as Secrets, so a public /-/oauth/register
+// endpoint never writes cluster objects.
+type DynamicClientRegistration struct {
+	// enabled turns on the /-/oauth/register endpoint and advertises a
+	// registration_endpoint in the authorization-server metadata.
+	// +kubebuilder:validation:Optional
+	// +kubebuilder:default:=false
+	Enabled bool `json:"enabled" protobuf:"varint,1,opt,name=enabled"`
+
+	// clientTTL is how long a dynamically-registered client record lives in
+	// Valkey, refreshed on each use. Go duration string.
+	// +kubebuilder:validation:Optional
+	// +kubebuilder:default:="720h"
+	ClientTTL string `json:"clientTTL,omitempty" protobuf:"bytes,2,opt,name=clientTTL"`
+
+	// maxClients caps the number of live dynamically-registered clients per
+	// host; registrations past this are rejected (TTL eviction reclaims slots).
+	// +kubebuilder:validation:Optional
+	// +kubebuilder:default:=1000
+	// +kubebuilder:validation:Minimum=1
+	MaxClients int32 `json:"maxClients,omitempty" protobuf:"varint,3,opt,name=maxClients"`
+
+	// allowedRedirectSchemes restricts redirect_uri schemes accepted at
+	// registration. "https" allows any https URI; "http-loopback" allows
+	// http://127.0.0.1 and http://localhost (native-app loopback per RFC 8252).
+	// +kubebuilder:validation:Optional
+	// +kubebuilder:default:={"https","http-loopback"}
+	AllowedRedirectSchemes []string `json:"allowedRedirectSchemes,omitempty" protobuf:"bytes,4,rep,name=allowedRedirectSchemes"`
 }
 
 // Backend defines a deployment for serving resources specific to the refer.
