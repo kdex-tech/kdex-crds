@@ -171,6 +171,7 @@ _Appears in:_
 | `anonymousEntitlements` _string array_ | anonymousEntitlements is an array of entitlements granted in anonymous (not logged in) access scenarios.<br />In the spirit of least privilege security no entitlements are granted by default. However, in order to make<br />a host's pages generally accessible the scope `page:read` should be granted. |  | Optional: \{\} <br /> |
 | `apiToken` _[APIToken](#apitoken)_ | apiToken is the configuration for this host's PASETO API tokens. |  | Optional: \{\} <br /> |
 | `dynamicClientRegistration` _[DynamicClientRegistration](#dynamicclientregistration)_ | dynamicClientRegistration enables RFC 7591 OAuth 2.0 Dynamic Client<br />Registration for this host (the /-/oauth/register endpoint and the<br />registration_endpoint advertisement in the authorization-server<br />metadata). When nil or enabled=false, DCR is OFF and the endpoint<br />returns 404 — existing hosts are unaffected. Required for zero-touch<br />MCP-client onboarding. |  | Optional: \{\} <br /> |
+| `mintToken` _[MintToken](#minttoken)_ | mintToken configures the mint_token MCP capability. Nil/absent ⇒ off. |  | Optional: \{\} <br /> |
 | `autoExtendSession` _boolean_ | autoExtendSession should be set to true if the refresh token auto extension should be enabled. | true | Optional: \{\} <br /> |
 | `claimMappings` _MappingRule array_ | claimMappings is an array of CEL expressions for extracting custom claims from<br />identity sources and mapping the results onto the Primary Access Token (PAT).<br />This is used to map OIDC claims but can also be used with external data<br />sources like LDAP or others via identity integration. |  | MaxItems: 16 <br />Optional: \{\} <br /> |
 | `jwt` _[JWT](#jwt)_ | jwt is the configuation for JWT token support. |  | Optional: \{\} <br /> |
@@ -2318,6 +2319,28 @@ _Appears in:_
 | --- | --- | --- | --- |
 | `tags` _[Tag](#tag) array_ | Tags are used for grouping and searching functions. |  | MaxItems: 16 <br />Optional: \{\} <br /> |
 | `contact` _[ContactInfo](#contactinfo)_ | Contact provides contact information for the function's owner. |  | Optional: \{\} <br /> |
+
+
+#### MintToken
+
+
+
+MintToken configures the host's `mint_token` MCP capability — the
+caller-driven minting of short-lived, attenuated, optionally bounded-use
+host-audience JWTs surfaced on OAuth2-protected MCP functions. When nil or
+enabled=false the tool is not advertised and mint calls are rejected.
+
+
+
+_Appears in:_
+- [Auth](#auth)
+
+| Field | Description | Default | Validation |
+| --- | --- | --- | --- |
+| `enabled` _boolean_ | enabled turns the mint_token capability on for this host. |  | Optional: \{\} <br /> |
+| `ttlCapSeconds` _integer_ | ttlCapSeconds is the hard server-side ceiling (and default) applied to a<br />requested ttl_seconds. Defaults to 60 when zero. | 60 | Minimum: 1 <br />Optional: \{\} <br /> |
+| `usesCap` _integer_ | usesCap is the hard server-side ceiling applied to a requested uses count.<br />Defaults to 32 when zero. A value of 1 forces single-use for all grants. | 32 | Minimum: 1 <br />Optional: \{\} <br /> |
+| `destructiveVerbs` _string array_ | destructiveVerbs lists entitlement verbs whose presence in a requested<br />entitlement forces uses=1 and the shortest ttl. Defaults to<br />["delete","own"] when nil. |  | Optional: \{\} <br /> |
 
 
 #### ModulePolicy

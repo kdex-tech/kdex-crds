@@ -179,6 +179,10 @@ type Auth struct {
 	// +kubebuilder:validation:Optional
 	DynamicClientRegistration *DynamicClientRegistration `json:"dynamicClientRegistration,omitempty" protobuf:"bytes,9,opt,name=dynamicClientRegistration"`
 
+	// mintToken configures the mint_token MCP capability. Nil/absent ⇒ off.
+	// +kubebuilder:validation:Optional
+	MintToken *MintToken `json:"mintToken,omitempty" protobuf:"bytes,10,opt,name=mintToken"`
+
 	// autoExtendSession should be set to true if the refresh token auto extension should be enabled.
 	// +kubebuilder:validation:Optional
 	// +kubebuilder:default:=true
@@ -262,6 +266,36 @@ type DynamicClientRegistration struct {
 	// +kubebuilder:validation:Optional
 	// +kubebuilder:default:={"https","http-loopback"}
 	AllowedRedirectSchemes []string `json:"allowedRedirectSchemes,omitempty" protobuf:"bytes,4,rep,name=allowedRedirectSchemes"`
+}
+
+// MintToken configures the host's `mint_token` MCP capability — the
+// caller-driven minting of short-lived, attenuated, optionally bounded-use
+// host-audience JWTs surfaced on OAuth2-protected MCP functions. When nil or
+// enabled=false the tool is not advertised and mint calls are rejected.
+type MintToken struct {
+	// enabled turns the mint_token capability on for this host.
+	// +kubebuilder:validation:Optional
+	Enabled bool `json:"enabled" protobuf:"varint,1,opt,name=enabled"`
+
+	// ttlCapSeconds is the hard server-side ceiling (and default) applied to a
+	// requested ttl_seconds. Defaults to 60 when zero.
+	// +kubebuilder:validation:Optional
+	// +kubebuilder:default:=60
+	// +kubebuilder:validation:Minimum=1
+	TTLCapSeconds int `json:"ttlCapSeconds,omitempty" protobuf:"varint,2,opt,name=ttlCapSeconds"`
+
+	// usesCap is the hard server-side ceiling applied to a requested uses count.
+	// Defaults to 32 when zero. A value of 1 forces single-use for all grants.
+	// +kubebuilder:validation:Optional
+	// +kubebuilder:default:=32
+	// +kubebuilder:validation:Minimum=1
+	UsesCap int `json:"usesCap,omitempty" protobuf:"varint,3,opt,name=usesCap"`
+
+	// destructiveVerbs lists entitlement verbs whose presence in a requested
+	// entitlement forces uses=1 and the shortest ttl. Defaults to
+	// ["delete","own"] when nil.
+	// +kubebuilder:validation:Optional
+	DestructiveVerbs []string `json:"destructiveVerbs,omitempty" protobuf:"bytes,4,rep,name=destructiveVerbs"`
 }
 
 // Backend defines a deployment for serving resources specific to the refer.

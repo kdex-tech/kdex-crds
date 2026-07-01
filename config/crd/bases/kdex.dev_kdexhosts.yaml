@@ -224,6 +224,37 @@ spec:
                     description: maxSessionAge enforce a "hard" expiration of the
                       session. This prevents a session from being maintained indefinitely.
                     type: string
+                  mintToken:
+                    description: mintToken configures the mint_token MCP capability.
+                      Nil/absent ⇒ off.
+                    properties:
+                      destructiveVerbs:
+                        description: |-
+                          destructiveVerbs lists entitlement verbs whose presence in a requested
+                          entitlement forces uses=1 and the shortest ttl. Defaults to
+                          ["delete","own"] when nil.
+                        items:
+                          type: string
+                        type: array
+                      enabled:
+                        description: enabled turns the mint_token capability on for
+                          this host.
+                        type: boolean
+                      ttlCapSeconds:
+                        default: 60
+                        description: |-
+                          ttlCapSeconds is the hard server-side ceiling (and default) applied to a
+                          requested ttl_seconds. Defaults to 60 when zero.
+                        minimum: 1
+                        type: integer
+                      usesCap:
+                        default: 32
+                        description: |-
+                          usesCap is the hard server-side ceiling applied to a requested uses count.
+                          Defaults to 32 when zero. A value of 1 forces single-use for all grants.
+                        minimum: 1
+                        type: integer
+                    type: object
                   oidcProvider:
                     description: oidcProvider is the configuration for an optional
                       OIDC provider.
