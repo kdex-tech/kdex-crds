@@ -102,6 +102,14 @@ type Packages struct {
 	// Empty leaves the ephemeral EmptyDir cache (cold installs).
 	// +kubebuilder:validation:Optional
 	CacheClaim string `json:"cacheClaim,omitempty" yaml:"cacheClaim,omitempty"`
+	// Resources sizes the packager Job's containers (get_modules install +
+	// optimize, importmap_generator, package_image). The install step needs
+	// materially more memory under installer=bun than the 256Mi a namespace
+	// LimitRange otherwise defaults it to — bun front-loads dependency
+	// resolution in memory and OOMKills at 256Mi. Defaulted in
+	// LoadConfiguration (bun-safe); override per cluster. See
+	// kdex-tech/nexus-manager#34.
+	Resources corev1.ResourceRequirements `json:"resources" yaml:"resources"`
 }
 
 func LoadConfiguration(configFile string, scheme *runtime.Scheme) NexusConfiguration {
@@ -194,6 +202,13 @@ packages:
   installer: ""
   runtime: ""
   cacheClaim: ""
+  resources:
+    requests:
+      cpu: 100m
+      memory: 256Mi
+    limits:
+      cpu: 500m
+      memory: 1Gi
 `)
 	gvk := GroupVersion.WithKind("NexusConfiguration")
 	decoder := serializer.NewCodecFactory(scheme).UniversalDeserializer()
