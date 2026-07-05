@@ -84,6 +84,17 @@ type Packages struct {
 	PackagerImagePullPolicy corev1.PullPolicy `json:"packagerImagePullPolicy" yaml:"packagerImagePullPolicy"`
 	ToolsImage              string            `json:"toolsImage" yaml:"toolsImage"`
 	ToolsImagePullPolicy    corev1.PullPolicy `json:"toolsImagePullPolicy" yaml:"toolsImagePullPolicy"`
+	// Installer selects the dependency installer for the packaging pipeline's
+	// get_modules step (node-tools >= 0.3.0): "npm" or "bun". Empty leaves the
+	// node-tools image default (npm). See kdex-tech/node-tools#3.
+	// +kubebuilder:validation:Optional
+	Installer string `json:"installer,omitempty" yaml:"installer,omitempty"`
+	// Runtime selects the JS runtime that executes optimize / generate /
+	// bundle_cjs (node-tools >= 0.3.0): "node", "bun", or "deno". Empty leaves
+	// the node-tools image default (node); only node + bun ship in the image.
+	// See kdex-tech/node-tools#3.
+	// +kubebuilder:validation:Optional
+	Runtime string `json:"runtime,omitempty" yaml:"runtime,omitempty"`
 }
 
 func LoadConfiguration(configFile string, scheme *runtime.Scheme) NexusConfiguration {
@@ -173,6 +184,8 @@ packages:
   packagerImagePullPolicy: Always
   toolsImage: ghcr.io/kdex-tech/node-tools:latest
   toolsImagePullPolicy: Always
+  installer: ""
+  runtime: ""
 `)
 	gvk := GroupVersion.WithKind("NexusConfiguration")
 	decoder := serializer.NewCodecFactory(scheme).UniversalDeserializer()
