@@ -95,6 +95,13 @@ type Packages struct {
 	// See kdex-tech/node-tools#3.
 	// +kubebuilder:validation:Optional
 	Runtime string `json:"runtime,omitempty" yaml:"runtime,omitempty"`
+	// CacheClaim names a PersistentVolumeClaim (resolved in each host's
+	// namespace) mounted at /cache to persist the package-manager download
+	// cache (npm + bun) across packaging Jobs, so installs are reusable
+	// ("warm"). The operator provisions the PVC — per-host, typically RWO.
+	// Empty leaves the ephemeral EmptyDir cache (cold installs).
+	// +kubebuilder:validation:Optional
+	CacheClaim string `json:"cacheClaim,omitempty" yaml:"cacheClaim,omitempty"`
 }
 
 func LoadConfiguration(configFile string, scheme *runtime.Scheme) NexusConfiguration {
@@ -186,6 +193,7 @@ packages:
   toolsImagePullPolicy: Always
   installer: ""
   runtime: ""
+  cacheClaim: ""
 `)
 	gvk := GroupVersion.WithKind("NexusConfiguration")
 	decoder := serializer.NewCodecFactory(scheme).UniversalDeserializer()
