@@ -110,6 +110,25 @@ type Packages struct {
 	// LoadConfiguration (bun-safe); override per cluster. See
 	// kdex-tech/nexus-manager#34.
 	Resources corev1.ResourceRequirements `json:"resources" yaml:"resources"`
+	// NodeSelector steers the packager Job pod onto a chosen node pool. With no
+	// selector the pod lands on whatever untainted node exists — on a fully
+	// segregated cluster that is the cold, scale-from-zero build pool, so every
+	// packaging run pays a node spin-up. Set this (with Tolerations) to keep the
+	// packager on a warm, appropriately-tainted pool. See
+	// kdex-tech/nexus-manager#35.
+	// +kubebuilder:validation:Optional
+	NodeSelector map[string]string `json:"nodeSelector,omitempty" yaml:"nodeSelector,omitempty"`
+	// Tolerations let the packager Job pod schedule onto tainted pools (the
+	// companion to NodeSelector when the target warm pool is tainted for
+	// segregation). Empty leaves the pod intolerant — untainted pools only. See
+	// kdex-tech/nexus-manager#35.
+	// +kubebuilder:validation:Optional
+	Tolerations []corev1.Toleration `json:"tolerations,omitempty" yaml:"tolerations,omitempty"`
+	// Affinity applies node/pod (anti-)affinity to the packager Job pod for
+	// finer placement than NodeSelector alone. Nil leaves placement to the
+	// scheduler. See kdex-tech/nexus-manager#35.
+	// +kubebuilder:validation:Optional
+	Affinity *corev1.Affinity `json:"affinity,omitempty" yaml:"affinity,omitempty"`
 }
 
 func LoadConfiguration(configFile string, scheme *runtime.Scheme) NexusConfiguration {
@@ -209,6 +228,8 @@ packages:
     limits:
       cpu: 500m
       memory: 1Gi
+  nodeSelector: {}
+  tolerations: []
 `)
 	gvk := GroupVersion.WithKind("NexusConfiguration")
 	decoder := serializer.NewCodecFactory(scheme).UniversalDeserializer()
