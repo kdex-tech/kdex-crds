@@ -165,3 +165,23 @@ func TestKDexFunctionSpec_BackendIsOptional(t *testing.T) {
 	}
 	assert.NotNil(t, spec.Backend)
 }
+
+// TestKDexFunctionSpec_ScalingIsTopLevelAndDeepCopied asserts kdex-crds#14:
+// Scaling is a top-level KDexFunctionSpec field (origin-agnostic), and it is
+// deep-copied independently — which only holds once `make generate` has
+// regenerated zz_generated.deepcopy.go for the new pointer field.
+func TestKDexFunctionSpec_ScalingIsTopLevelAndDeepCopied(t *testing.T) {
+	min := int32(1)
+	in := &KDexFunctionSpec{
+		API:     API{BasePath: "/v1/x"},
+		HostRef: corev1.LocalObjectReference{Name: "h"},
+		Scaling: &ScalingConfig{MinScale: &min},
+	}
+
+	out := new(KDexFunctionSpec)
+	in.DeepCopyInto(out)
+
+	assert.NotNil(t, out.Scaling, "Scaling must be copied")
+	assert.NotSame(t, in.Scaling, out.Scaling, "Scaling must be DEEP-copied — run `make generate`")
+	assert.Equal(t, int32(1), *out.Scaling.MinScale)
+}

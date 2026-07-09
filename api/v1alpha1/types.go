@@ -576,10 +576,6 @@ type Executable struct {
 	// it may be an artifact native to FaaS Adaptor's target runtime.
 	// +kubebuilder:validation:Optional
 	Image string `json:"image,omitempty" protobuf:"bytes,1,opt,name=image"`
-
-	// Scaling allows configuration for min/max replicas and autoscaler type.
-	// +kubebuilder:validation:Optional
-	Scaling *ScalingConfig `json:"scaling,omitempty" protobuf:"bytes,7,opt,name=scaling"`
 }
 
 // FunctionOrigin defines the origin of the function implementation.

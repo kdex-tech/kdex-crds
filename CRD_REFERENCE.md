@@ -427,7 +427,6 @@ _Appears in:_
 | Field | Description | Default | Validation |
 | --- | --- | --- | --- |
 | `image` _string_ | image is a reference to executable artifact. In most cases this will be a Docker image. In some other cases<br />it may be an artifact native to FaaS Adaptor's target runtime. |  | Optional: \{\} <br /> |
-| `scaling` _[ScalingConfig](#scalingconfig)_ | Scaling allows configuration for min/max replicas and autoscaler type. |  | Optional: \{\} <br /> |
 
 
 #### FunctionBackend
@@ -1179,6 +1178,7 @@ _Appears in:_
 | `volumes` _[Volume](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.35/#volume-v1-core) array_ | volumes are pod-level volumes attached to the function's runtime pod.<br />Forwarded verbatim onto the rendered Knative Service's<br />spec.template.spec.volumes. Use to project ConfigMap/Secret file config<br />(e.g. an app that requires a --config file, or secret/key material that<br />can't survive env injection's UTF-8 constraints) into executable/<br />source-built functions. Requires the cluster to enable the matching<br />Knative kubernetes.podspec-volumes-* feature flag for non-default<br />volume sources. See kdex-tech/kdex-crds#10. |  | Optional: \{\} <br /> |
 | `volumeMounts` _[VolumeMount](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.35/#volumemount-v1-core) array_ | volumeMounts mount the entries from Volumes into the function's runtime<br />container. Forwarded verbatim onto the Knative Service container's<br />volumeMounts. Pairs with Volumes above. See kdex-tech/kdex-crds#10. |  | Optional: \{\} <br /> |
 | `internal` _boolean_ | internal, when true, prevents EXTERNAL exposure of this function: its<br />OpenAPI paths are omitted from the host's /-/openapi catalog, no route<br />is registered on the host mux for its basePath, and (as defense-in-<br />depth) the rendered Knative Service is labeled<br />networking.knative.dev/visibility=cluster-local. The function stays<br />reachable at its Knative Service cluster-local URL<br />(<name>.<namespace>.svc.cluster.local) for in-cluster callers (e.g.<br />host-manager auth.HTTPLookup credential checks, backend-for-backend<br />RPCs, internal webhooks). Defaults to false (existing external-exposure<br />behavior). See kdex-tech/kdex-crds#6. | false | Optional: \{\} <br /> |
+| `scaling` _[ScalingConfig](#scalingconfig)_ | scaling configures autoscaling (min/max replicas, target, autoscaler<br />metric, …) for the function's Knative Service. Honored for every build<br />origin (executable / source / generator); inert for backend-backed<br />functions, which proxy to an existing Service and have no host-managed<br />Knative Service to scale. |  | Optional: \{\} <br /> |
 
 
 #### KDexFunctionState
@@ -2618,7 +2618,7 @@ ScalingConfig defines scaling parameters.
 
 
 _Appears in:_
-- [Executable](#executable)
+- [KDexFunctionSpec](#kdexfunctionspec)
 
 | Field | Description | Default | Validation |
 | --- | --- | --- | --- |

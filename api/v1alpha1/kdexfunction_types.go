@@ -230,6 +230,14 @@ type KDexFunctionSpec struct {
 	// +kubebuilder:validation:Optional
 	// +kubebuilder:default=false
 	Internal bool `json:"internal,omitempty" protobuf:"varint,13,opt,name=internal"`
+
+	// scaling configures autoscaling (min/max replicas, target, autoscaler
+	// metric, …) for the function's Knative Service. Honored for every build
+	// origin (executable / source / generator); inert for backend-backed
+	// functions, which proxy to an existing Service and have no host-managed
+	// Knative Service to scale.
+	// +kubebuilder:validation:Optional
+	Scaling *ScalingConfig `json:"scaling,omitempty" protobuf:"bytes,14,opt,name=scaling"`
 }
 
 // KDexFunctionState reflects the current state of a KDexFunction.
