@@ -69,6 +69,10 @@ spec:
                     PolicyRule holds information that describes a policy rule, but does not
                     contain information about who the rule applies to or which namespace the
                     rule applies to.
+
+                    A rule is exactly one shape: STRUCTURED (resources + verbs, optional
+                    resourceNames) OR OPAQUE (scopes). This mirrors the union in Kubernetes RBAC
+                    (resource rules vs. nonResourceURLs).
                   properties:
                     resourceNames:
                       description: |-
@@ -80,22 +84,42 @@ spec:
                       type: array
                     resources:
                       description: resources is a list of resources this rule applies
-                        to. '*' represents all resources.
+                        to. '*' represents all resources. Required for a structured
+                        rule; omit for an opaque (scopes) rule.
                       items:
                         type: string
-                      minItems: 1
+                      type: array
+                    scopes:
+                      description: |-
+                        scopes is an optional list of OPAQUE capability entitlements granted verbatim (e.g. "vector_stores_create").
+                        An opaque scope is colon-less: it matches a requirement by exact string only and is immune to wildcard grants,
+                        so a context-less capability is never inherited via verbs:[all]. Mutually exclusive with resources / verbs / resourceNames.
+                      items:
+                        type: string
                       type: array
                     verbs:
                       description: verbs is a list of verbs that apply to ALL the
                         resources contained in this rule. '*' represents all verbs.
+                        Required for a structured rule; omit for an opaque (scopes)
+                        rule.
                       items:
                         type: string
-                      minItems: 1
                       type: array
-                  required:
-                  - resources
-                  - verbs
                   type: object
+                  x-kubernetes-validations:
+                  - message: a rule must specify either resources+verbs or scopes,
+                      not both
+                    rule: (has(self.scopes) && self.scopes.size() > 0) != (has(self.resources)
+                      && self.resources.size() > 0)
+                  - message: resources requires verbs
+                    rule: '!(has(self.resources) && self.resources.size() > 0) ||
+                      (has(self.verbs) && self.verbs.size() > 0)'
+                  - message: scopes cannot be combined with verbs or resourceNames
+                    rule: '!(has(self.scopes) && self.scopes.size() > 0) || ((!has(self.verbs)
+                      || self.verbs.size() == 0) && (!has(self.resourceNames) || self.resourceNames.size()
+                      == 0))'
+                  - message: an opaque scope must not contain ':'
+                    rule: '!has(self.scopes) || self.scopes.all(s, !s.contains('':''))'
                 minItems: 1
                 type: array
             required:

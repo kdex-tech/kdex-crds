@@ -67,6 +67,14 @@ type KDexRoleList struct {
 // PolicyRule holds information that describes a policy rule, but does not
 // contain information about who the rule applies to or which namespace the
 // rule applies to.
+//
+// A rule is exactly one shape: STRUCTURED (resources + verbs, optional
+// resourceNames) OR OPAQUE (scopes). This mirrors the union in Kubernetes RBAC
+// (resource rules vs. nonResourceURLs).
+// +kubebuilder:validation:XValidation:rule="(has(self.scopes) && self.scopes.size() > 0) != (has(self.resources) && self.resources.size() > 0)",message="a rule must specify either resources+verbs or scopes, not both"
+// +kubebuilder:validation:XValidation:rule="!(has(self.resources) && self.resources.size() > 0) || (has(self.verbs) && self.verbs.size() > 0)",message="resources requires verbs"
+// +kubebuilder:validation:XValidation:rule="!(has(self.scopes) && self.scopes.size() > 0) || ((!has(self.verbs) || self.verbs.size() == 0) && (!has(self.resourceNames) || self.resourceNames.size() == 0))",message="scopes cannot be combined with verbs or resourceNames"
+// +kubebuilder:validation:XValidation:rule="!has(self.scopes) || self.scopes.all(s, !s.contains(':'))",message="an opaque scope must not contain ':'"
 type PolicyRule struct {
 	// resourceNames is an optional allow list of names that the rule applies to. An empty set means the rule applies to all instances of the resources.
 	// Note: If a resource name contains colons (':'), it must be URL-encoded (e.g., 'foo:bar' -> 'foo%3Abar') to prevent misinterpretation
@@ -74,15 +82,19 @@ type PolicyRule struct {
 	// +kubebuilder:validation:Optional
 	ResourceNames []string `json:"resourceNames,omitempty" protobuf:"bytes,1,rep,name=resourceNames"`
 
-	// resources is a list of resources this rule applies to. '*' represents all resources.
-	// +kubebuilder:validation:Required
-	// +kubebuilder:validation:MinItems=1
-	Resources []string `json:"resources" protobuf:"bytes,2,rep,name=resources"`
+	// resources is a list of resources this rule applies to. '*' represents all resources. Required for a structured rule; omit for an opaque (scopes) rule.
+	// +kubebuilder:validation:Optional
+	Resources []string `json:"resources,omitempty" protobuf:"bytes,2,rep,name=resources"`
 
-	// verbs is a list of verbs that apply to ALL the resources contained in this rule. '*' represents all verbs.
-	// +kubebuilder:validation:Required
-	// +kubebuilder:validation:MinItems=1
-	Verbs []string `json:"verbs" protobuf:"bytes,3,rep,name=verbs"`
+	// verbs is a list of verbs that apply to ALL the resources contained in this rule. '*' represents all verbs. Required for a structured rule; omit for an opaque (scopes) rule.
+	// +kubebuilder:validation:Optional
+	Verbs []string `json:"verbs,omitempty" protobuf:"bytes,3,rep,name=verbs"`
+
+	// scopes is an optional list of OPAQUE capability entitlements granted verbatim (e.g. "vector_stores_create").
+	// An opaque scope is colon-less: it matches a requirement by exact string only and is immune to wildcard grants,
+	// so a context-less capability is never inherited via verbs:[all]. Mutually exclusive with resources / verbs / resourceNames.
+	// +kubebuilder:validation:Optional
+	Scopes []string `json:"scopes,omitempty" protobuf:"bytes,4,rep,name=scopes"`
 }
 
 func init() {
