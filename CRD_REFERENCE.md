@@ -2517,6 +2517,10 @@ PolicyRule holds information that describes a policy rule, but does not
 contain information about who the rule applies to or which namespace the
 rule applies to.
 
+A rule is exactly one shape: STRUCTURED (resources + verbs, optional
+resourceNames) OR OPAQUE (scopes). This mirrors the union in Kubernetes RBAC
+(resource rules vs. nonResourceURLs).
+
 
 
 _Appears in:_
@@ -2525,8 +2529,9 @@ _Appears in:_
 | Field | Description | Default | Validation |
 | --- | --- | --- | --- |
 | `resourceNames` _string array_ | resourceNames is an optional allow list of names that the rule applies to. An empty set means the rule applies to all instances of the resources.<br />Note: If a resource name contains colons (':'), it must be URL-encoded (e.g., 'foo:bar' -> 'foo%3Abar') to prevent misinterpretation<br />by the entitlement pattern splitting logic. |  | Optional: \{\} <br /> |
-| `resources` _string array_ | resources is a list of resources this rule applies to. '*' represents all resources. |  | MinItems: 1 <br />Required: \{\} <br /> |
-| `verbs` _string array_ | verbs is a list of verbs that apply to ALL the resources contained in this rule. '*' represents all verbs. |  | MinItems: 1 <br />Required: \{\} <br /> |
+| `resources` _string array_ | resources is a list of resources this rule applies to. '*' represents all resources. Required for a structured rule; omit for an opaque (scopes) rule. |  | Optional: \{\} <br /> |
+| `verbs` _string array_ | verbs is a list of verbs that apply to ALL the resources contained in this rule. '*' represents all verbs. Required for a structured rule; omit for an opaque (scopes) rule. |  | Optional: \{\} <br /> |
+| `scopes` _string array_ | scopes is an optional list of OPAQUE capability entitlements granted verbatim (e.g. "vector_stores_create").<br />An opaque scope is colon-less: it matches a requirement by exact string only and is immune to wildcard grants,<br />so a context-less capability is never inherited via verbs:[all]. Mutually exclusive with resources / verbs / resourceNames. |  | Optional: \{\} <br /> |
 
 
 #### Registries
