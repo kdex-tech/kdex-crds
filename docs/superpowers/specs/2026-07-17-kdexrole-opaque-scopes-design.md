@@ -155,22 +155,33 @@ never colon-joining.
 
 ## Cross-repo ordering
 
-Both halves ship together (kdex-crds#15 is explicit that a verbless/opaque rule
-is "valid YAML that grants nothing" without the emit side):
+All three actors ship together. kdex-crds#15 is explicit that a verbless/opaque
+rule is "valid YAML that grants nothing" without the emit side; and **every actor
+that deserializes a `KDexRole` must carry the new `Scopes` field** — host-manager
+*and* nexus-manager — or an old build prunes the unknown field when it round-trips
+the object, silently dropping the opaque grant. So nexus-manager is released with
+the CRD change even though it needs no code change.
 
-1. Edit `kdex-crds/api/v1alpha1/kdexrole_types.go` (+ `make manifests generate`).
-2. From the **workspace root**: `./updateCrdUsage.sh -t` — bumps the kdex-crds
-   patch tag, runs `make test lint install docs` in kdex-crds, commits + pushes
-   the bump + tag, then updates `go.mod`/`go.sum` in host-manager and
-   nexus-manager.
-3. Apply the host-manager `buildMappingTable` branch on the bumped dep; commit in
-   kdex-host-manager.
-4. **Deploy ordering for consumers:** a CR that *uses* `scopes` must not be
-   applied until the cluster runs the new CRD (the apiserver rejects an unknown
-   field / the new CEL isn't present). The `updateCrdUsage.sh` flow + the normal
-   CRD rollout path put the schema in the cluster first; the terraform
-   "bump-CRD-and-use-new-field in separate commits" rule applies to any TF-managed
-   CR that adopts `scopes`. Downstream role edits (knowdrive-site#35) follow.
+1. Edit `kdex-crds/api/v1alpha1/kdexrole_types.go` (+ `make manifests generate`);
+   merge to kdex-crds `main`.
+2. From the **workspace root**: `./updateCrdUsage.sh -t -n` — `-t` bumps the
+   kdex-crds patch tag, runs `make test lint install docs`, and commits + pushes
+   the bump + tag; `-n` (`--no-commit`) updates `go.mod`/`go.sum` in **both**
+   host-manager and nexus-manager but leaves those changes in the working tree
+   for review rather than auto-committing.
+3. **host-manager**: commit the `go.mod` bump + the `buildMappingTable` emit
+   branch; PR → merge → release a new host-manager tag.
+4. **nexus-manager**: commit the `go.mod` bump (no code change expected — verify
+   there is no `KDexRole` webhook/reconcile path that must learn about `scopes`);
+   PR → merge → release a new nexus-manager tag. Ships in lockstep with the
+   host-manager release so serialization is consistent across all actors.
+5. **Deploy ordering for consumers:** a CR that *uses* `scopes` must not be
+   applied until the cluster runs the new CRD **and** both the new host-manager
+   and nexus-manager (else an old actor prunes the field). The normal CRD rollout
+   puts the schema in the cluster first; the terraform "bump-CRD-and-use-new-field
+   in separate commits" rule applies to any TF-managed CR that adopts `scopes`.
+   Downstream role edits (knowdrive-site#35) follow only after both releases are
+   deployed.
 
 ## Testing (TDD)
 

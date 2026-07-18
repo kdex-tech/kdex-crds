@@ -16,7 +16,8 @@
 - **Opaque scopes are colon-less by contract** — a scope containing `:` is a validation error (it would parse as structured).
 - **Enumerate-per-role**: no opaque wildcard/catch-all; opaque grants are never inherited via `verbs:[all]`.
 - **No `entitlements`-library change**; no touch to `Dominates`/`VerifyAttenuation`/`Compact` or any requirement-side surface.
-- Branches: kdex-crds `feat/kdexrole-opaque-scopes` (already created, holds the design doc); host-manager a sibling `feat/kdexrole-opaque-scopes`.
+- **All three actors release together.** Every actor that deserializes a `KDexRole` must carry the new `Scopes` field or it prunes the field on round-trip and silently drops the opaque grant — so **both host-manager AND nexus-manager** are rebuilt/released with the CRD change, even though nexus-manager needs no code change. Propagate with `./updateCrdUsage.sh -t -n` (`-n`/`--no-commit` leaves the dependent go.mod bumps in the working tree for review).
+- Branches: kdex-crds `feat/kdexrole-opaque-scopes` (already created, holds the design + plan docs); host-manager and nexus-manager each a sibling `feat/kdexrole-opaque-scopes`.
 
 ---
 
@@ -147,30 +148,30 @@ Co-Authored-By: Claude Opus 4.8 (1M context) <noreply@anthropic.com>"
 
 ---
 
-### Task 2: Propagate the CRD change to host-manager (+ nexus-manager)
+### Task 2: Propagate the CRD change to host-manager + nexus-manager
 
 **Files:**
-- Modify (by the script): `kdex-host-manager/go.mod`, `kdex-host-manager/go.sum`, `kdex-nexus-manager/go.mod`, `kdex-nexus-manager/go.sum`
+- Modify (by the script, left uncommitted): `kdex-host-manager/go.mod`, `kdex-host-manager/go.sum`, `kdex-nexus-manager/go.mod`, `kdex-nexus-manager/go.sum`
 
 **Interfaces:**
-- Consumes: Task 1's committed kdex-crds change.
-- Produces: host-manager's vendored `kdexv1alpha1.PolicyRule` now has `.Scopes` — Task 4 depends on this.
+- Consumes: Task 1's kdex-crds change, merged to kdex-crds `main`.
+- Produces: host-manager AND nexus-manager vendor a `kdexv1alpha1.PolicyRule` with `.Scopes` — Task 3/4 (host-manager) depend on this; nexus-manager needs it for serialization even with no code change.
 
 - [ ] **Step 1: Merge the kdex-crds change to `main` first**
 
-`updateCrdUsage.sh -t` tags off the current kdex-crds `main`. Open a PR for `feat/kdexrole-opaque-scopes` in kdex-crds and merge it (the design doc committed earlier rides along). *(If running fully locally without the PR gate, the script's `--no-commit` flag stages the bump for review instead of pushing — coordinate the tag push, since `go.mod` must resolve a real pushed tag.)*
+`updateCrdUsage.sh -t` tags off kdex-crds `main`, so the tag must point at a `main` commit. Open a PR for kdex-crds `feat/kdexrole-opaque-scopes` and merge it (the design + plan docs ride along).
 
 - [ ] **Step 2: Run the propagation script from the workspace root**
 
-Run: `cd <workspace> && ./updateCrdUsage.sh -t`
-Expected: it increments the kdex-crds patch tag (e.g. `v0.14.231` → `v0.14.232`), runs `make test lint install docs` in kdex-crds, pushes the bump + tag, then updates `go.mod`/`go.sum` in host-manager and nexus-manager to the new tag and pushes those.
+Run: `cd <workspace> && ./updateCrdUsage.sh -t -n`
+Expected: `-t` increments the kdex-crds patch tag (e.g. `v0.14.231` → `v0.14.232`), runs `make test lint install docs` in kdex-crds, and commits + pushes the bump + tag; `-n` updates `go.mod`/`go.sum` in **both** host-manager and nexus-manager to the new tag but **leaves them uncommitted** ("Dependent-project auto-commit disabled" + "Skipping commit/push in kdex-nexus-manager/kdex-host-manager"). The dependent commits happen in Task 3 (host-manager) and Task 5 (nexus-manager) under review.
 
-- [ ] **Step 3: Verify host-manager compiles against the new field**
+- [ ] **Step 3: Verify both dependents resolve the new field**
 
-Run: `cd kdex-host-manager && go build ./...`
-Expected: exit 0. Sanity-check the field is visible:
-Run: `cd kdex-host-manager && go doc kdex.dev/crds/api/v1alpha1.PolicyRule | rg Scopes`
-Expected: a line showing `Scopes []string`.
+Run: `cd kdex-host-manager && go build ./... && go doc kdex.dev/crds/api/v1alpha1.PolicyRule | rg Scopes`
+Expected: build exit 0; a line showing `Scopes []string`.
+Run: `cd kdex-nexus-manager && go build ./...`
+Expected: exit 0 (nexus-manager compiles against the new types — no code change, just the serialization-capable struct).
 
 ---
 
@@ -332,6 +333,47 @@ Co-Authored-By: Claude Opus 4.8 (1M context) <noreply@anthropic.com>"
 
 ---
 
+### Task 5: nexus-manager — carry the new types for serialization + release
+
+**Files:**
+- Modify: `kdex-nexus-manager/go.mod`, `kdex-nexus-manager/go.sum` (the bump left uncommitted by Task 2's `-n`)
+
+**Interfaces:**
+- Consumes: the bumped kdex-crds tag (Task 2).
+- Produces: a released nexus-manager whose vendored `PolicyRule` has `.Scopes`, so it never prunes the field when it deserializes/round-trips a `KDexRole`.
+
+No code change is expected — this task exists because serialization must be consistent across every actor (see Global Constraints).
+
+- [ ] **Step 1: Confirm no KDexRole code path needs `scopes` awareness**
+
+Run: `cd kdex-nexus-manager && rg -n "KDexRole|PolicyRule|\.Rules\b|\.Verbs\b|\.Resources\b" internal/ 2>/dev/null | head`
+Expected: no reconcile/webhook path that constructs or re-serializes `PolicyRule` in a way that would need to know about `Scopes` (nexus-manager reconciles hosts/pages/etc., not roles). If any KDexRole-touching path exists, stop and escalate — it may need a code change beyond the dep bump.
+
+- [ ] **Step 2: Verify build + tests against the new types**
+
+Run: `cd kdex-nexus-manager && go build ./... && make test`
+Expected: exit 0 (the new struct is wire-compatible; existing behavior unchanged).
+
+- [ ] **Step 3: Commit the dep bump on a sibling branch**
+
+```bash
+cd kdex-nexus-manager && git checkout -b feat/kdexrole-opaque-scopes
+git add go.mod go.sum
+git commit -m "chore(deps): bump kdex-crds for PolicyRule.scopes serialization
+
+Carry the new KDexRole opaque-scope field so nexus-manager never prunes
+it on deserialize/round-trip. No behavior change. Part of kdex-crds#15;
+releases in lockstep with the host-manager grant-side change.
+
+Co-Authored-By: Claude Opus 4.8 (1M context) <noreply@anthropic.com>"
+```
+
+- [ ] **Step 4: Release (human gate)**
+
+PR → merge → cut a new nexus-manager release tag, in lockstep with the host-manager release from Task 3. **Rollout ordering:** the new CRD + both the new host-manager and nexus-manager must be deployed before any CR uses `scopes` (an old actor would prune the field). Downstream role edits (knowdrive-site#35) follow only then. This step is a deploy gate — surface it to the human rather than pushing tags autonomously.
+
+---
+
 ## Self-Review
 
 **Spec coverage:**
@@ -339,7 +381,8 @@ Co-Authored-By: Claude Opus 4.8 (1M context) <noreply@anthropic.com>"
 - Relax `Resources`/`Verbs` → Task 1. ✓
 - 4 CEL rules (xor, resources⇒verbs, scopes-forbids-verbs/resourceNames, colon-less) → Task 1 (markers) + Task 4 (enforcement). ✓
 - host-manager emit branch → Task 3. ✓
-- Cross-repo propagation (`updateCrdUsage.sh -t`, both halves together) → Task 2. ✓
+- Cross-repo propagation (`updateCrdUsage.sh -t -n`) → Task 2. ✓
+- nexus-manager carries the new types + releases (serialization across all actors) → Task 5. ✓
 - Testing: field decode (T1), emit + immune-to-wildcard verbatim (T3), CEL admits/denies (T4). ✓
 - Non-goals (no catch-all, no library change, downstream CR edits out of scope) → honored; not implemented, correctly absent. ✓
 
