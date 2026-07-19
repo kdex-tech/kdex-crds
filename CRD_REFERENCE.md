@@ -2024,7 +2024,7 @@ _Appears in:_
 | Field | Description | Default | Validation |
 | --- | --- | --- | --- |
 | `hostRef` _[LocalObjectReference](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.35/#localobjectreference-v1-core)_ | hostRef is a reference to the KDexHost that this binding is for. |  | Required: \{\} <br /> |
-| `rules` _[PolicyRule](#policyrule) array_ | Rules holds all the PolicyRules for this KDexRole |  | MinItems: 1 <br />Required: \{\} <br /> |
+| `rules` _[PolicyRule](#policyrule) array_ | Rules holds all the PolicyRules for this KDexRole |  | MaxItems: 64 <br />MinItems: 1 <br />Required: \{\} <br /> |
 
 
 #### KDexScriptLibrary
@@ -2528,10 +2528,10 @@ _Appears in:_
 
 | Field | Description | Default | Validation |
 | --- | --- | --- | --- |
-| `resourceNames` _string array_ | resourceNames is an optional allow list of names that the rule applies to. An empty set means the rule applies to all instances of the resources.<br />Note: If a resource name contains colons (':'), it must be URL-encoded (e.g., 'foo:bar' -> 'foo%3Abar') to prevent misinterpretation<br />by the entitlement pattern splitting logic. |  | Optional: \{\} <br /> |
-| `resources` _string array_ | resources is a list of resources this rule applies to. '*' represents all resources. Required for a structured rule; omit for an opaque (scopes) rule. |  | Optional: \{\} <br /> |
-| `verbs` _string array_ | verbs is a list of verbs that apply to ALL the resources contained in this rule. '*' represents all verbs. Required for a structured rule; omit for an opaque (scopes) rule. |  | Optional: \{\} <br /> |
-| `scopes` _string array_ | scopes is an optional list of OPAQUE capability entitlements granted verbatim (e.g. "vector_stores_create").<br />An opaque scope is colon-less: it matches a requirement by exact string only and is immune to wildcard grants,<br />so a context-less capability is never inherited via verbs:[all]. Mutually exclusive with resources / verbs / resourceNames. |  | Optional: \{\} <br /> |
+| `resourceNames` _string array_ | resourceNames is an optional allow list of names that the rule applies to. An empty set means the rule applies to all instances of the resources.<br />Note: If a resource name contains colons (':'), it must be URL-encoded (e.g., 'foo:bar' -> 'foo%3Abar') to prevent misinterpretation<br />by the entitlement pattern splitting logic. |  | MaxItems: 64 <br />Optional: \{\} <br />items:MaxLength: 253 <br /> |
+| `resources` _string array_ | resources is a list of resources this rule applies to. '*' represents all resources. Required for a structured rule; omit for an opaque (scopes) rule. |  | MaxItems: 64 <br />Optional: \{\} <br />items:MaxLength: 253 <br /> |
+| `verbs` _string array_ | verbs is a list of verbs that apply to ALL the resources contained in this rule. '*' represents all verbs. Required for a structured rule; omit for an opaque (scopes) rule. |  | MaxItems: 64 <br />Optional: \{\} <br />items:MaxLength: 253 <br /> |
+| `scopes` _string array_ | scopes is an optional list of OPAQUE capability entitlements granted verbatim (e.g. "vector_stores_create").<br />An opaque scope is colon-less: it matches a requirement by exact string only and is immune to wildcard grants,<br />so a context-less capability is never inherited via verbs:[all]. Mutually exclusive with resources / verbs / resourceNames. |  | MaxItems: 64 <br />Optional: \{\} <br />items:MaxLength: 253 <br /> |
 
 
 #### Registries
