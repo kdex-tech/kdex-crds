@@ -31,6 +31,7 @@ type KDexRoleSpec struct {
 	// Rules holds all the PolicyRules for this KDexRole
 	// +kubebuilder:validation:Required
 	// +kubebuilder:validation:MinItems=1
+	// +kubebuilder:validation:MaxItems=64
 	Rules []PolicyRule `json:"rules" protobuf:"bytes,1,rep,name=rules"`
 }
 
@@ -80,20 +81,28 @@ type PolicyRule struct {
 	// Note: If a resource name contains colons (':'), it must be URL-encoded (e.g., 'foo:bar' -> 'foo%3Abar') to prevent misinterpretation
 	// by the entitlement pattern splitting logic.
 	// +kubebuilder:validation:Optional
+	// +kubebuilder:validation:MaxItems=64
+	// +kubebuilder:validation:items:MaxLength=253
 	ResourceNames []string `json:"resourceNames,omitempty" protobuf:"bytes,1,rep,name=resourceNames"`
 
 	// resources is a list of resources this rule applies to. '*' represents all resources. Required for a structured rule; omit for an opaque (scopes) rule.
 	// +kubebuilder:validation:Optional
+	// +kubebuilder:validation:MaxItems=64
+	// +kubebuilder:validation:items:MaxLength=253
 	Resources []string `json:"resources,omitempty" protobuf:"bytes,2,rep,name=resources"`
 
 	// verbs is a list of verbs that apply to ALL the resources contained in this rule. '*' represents all verbs. Required for a structured rule; omit for an opaque (scopes) rule.
 	// +kubebuilder:validation:Optional
+	// +kubebuilder:validation:MaxItems=64
+	// +kubebuilder:validation:items:MaxLength=253
 	Verbs []string `json:"verbs,omitempty" protobuf:"bytes,3,rep,name=verbs"`
 
 	// scopes is an optional list of OPAQUE capability entitlements granted verbatim (e.g. "vector_stores_create").
 	// An opaque scope is colon-less: it matches a requirement by exact string only and is immune to wildcard grants,
 	// so a context-less capability is never inherited via verbs:[all]. Mutually exclusive with resources / verbs / resourceNames.
 	// +kubebuilder:validation:Optional
+	// +kubebuilder:validation:MaxItems=64
+	// +kubebuilder:validation:items:MaxLength=253
 	Scopes []string `json:"scopes,omitempty" protobuf:"bytes,4,rep,name=scopes"`
 }
 

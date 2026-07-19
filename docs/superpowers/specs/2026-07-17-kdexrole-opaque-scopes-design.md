@@ -74,6 +74,18 @@ Field changes:
 - **Relax** `Verbs`: same treatment.
 - `ResourceNames` is already optional; its doc comment stays (it remains valid
   only alongside a structured rule).
+- **Bound every field for the CEL cost estimator** (amendment, 2026-07-18):
+  `MaxItems=64` on `Resources`/`Verbs`/`ResourceNames`/`Scopes` and on
+  `KDexRoleSpec.Rules`, plus `items:MaxLength=253` on each string slice. This is
+  **mandatory, not cosmetic**: the apiserver's CEL cost estimator rejects the
+  whole CRD at install time (`estimated rule cost exceeds budget`) when a
+  rule-level CEL quantifies over an *unbounded* array of *unbounded* strings —
+  `self.scopes.all(s, !s.contains(':'))` alone came in >100× over budget with no
+  bounds, and even the `.size()` rules exceeded the per-rule budget. Without these
+  bounds the CRD **fails `kubectl apply` on any real cluster**. Surfaced by the
+  Task 4 envtest (the first apiserver-integration point); the Go-decode Task 1
+  review could not catch it. `253`/`64` are generous relative to real usage (a
+  resource/verb/scope is a short identifier; roles have a handful of rules).
 
 Resulting field, sketched:
 
