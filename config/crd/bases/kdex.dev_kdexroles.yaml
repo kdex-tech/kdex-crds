@@ -80,14 +80,18 @@ spec:
                         Note: If a resource name contains colons (':'), it must be URL-encoded (e.g., 'foo:bar' -> 'foo%3Abar') to prevent misinterpretation
                         by the entitlement pattern splitting logic.
                       items:
+                        maxLength: 253
                         type: string
+                      maxItems: 64
                       type: array
                     resources:
                       description: resources is a list of resources this rule applies
                         to. '*' represents all resources. Required for a structured
                         rule; omit for an opaque (scopes) rule.
                       items:
+                        maxLength: 253
                         type: string
+                      maxItems: 64
                       type: array
                     scopes:
                       description: |-
@@ -95,7 +99,9 @@ spec:
                         An opaque scope is colon-less: it matches a requirement by exact string only and is immune to wildcard grants,
                         so a context-less capability is never inherited via verbs:[all]. Mutually exclusive with resources / verbs / resourceNames.
                       items:
+                        maxLength: 253
                         type: string
+                      maxItems: 64
                       type: array
                     verbs:
                       description: verbs is a list of verbs that apply to ALL the
@@ -103,7 +109,9 @@ spec:
                         Required for a structured rule; omit for an opaque (scopes)
                         rule.
                       items:
+                        maxLength: 253
                         type: string
+                      maxItems: 64
                       type: array
                   type: object
                   x-kubernetes-validations:
@@ -120,6 +128,7 @@ spec:
                       == 0))'
                   - message: an opaque scope must not contain ':'
                     rule: '!has(self.scopes) || self.scopes.all(s, !s.contains('':''))'
+                maxItems: 64
                 minItems: 1
                 type: array
             required:
