@@ -247,6 +247,13 @@ spec:
                           requested ttl_seconds. Defaults to 60 when zero.
                         minimum: 1
                         type: integer
+                      urlDelivery:
+                        description: |-
+                          urlDelivery permits minting a capability as a redeemable
+                          /-/transfer/<handle> URL (delivery:"url") in addition to the default
+                          bearer token. Off unless set: handing out a credential-less link is a
+                          distinct risk from minting a bearer token, so a host opts in explicitly.
+                        type: boolean
                       usesCap:
                         default: 32
                         description: |-

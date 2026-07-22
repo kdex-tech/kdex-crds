@@ -2341,6 +2341,7 @@ _Appears in:_
 | `ttlCapSeconds` _integer_ | ttlCapSeconds is the hard server-side ceiling (and default) applied to a<br />requested ttl_seconds. Defaults to 60 when zero. | 60 | Minimum: 1 <br />Optional: \{\} <br /> |
 | `usesCap` _integer_ | usesCap is the hard server-side ceiling applied to a requested uses count.<br />Defaults to 32 when zero. A value of 1 forces single-use for all grants. | 32 | Minimum: 1 <br />Optional: \{\} <br /> |
 | `destructiveVerbs` _string array_ | destructiveVerbs lists entitlement verbs whose presence in a requested<br />entitlement forces uses=1 and the shortest ttl. Defaults to<br />["delete","own"] when nil. |  | Optional: \{\} <br /> |
+| `urlDelivery` _boolean_ | urlDelivery permits minting a capability as a redeemable<br />/-/transfer/<handle> URL (delivery:"url") in addition to the default<br />bearer token. Off unless set: handing out a credential-less link is a<br />distinct risk from minting a bearer token, so a host opts in explicitly. |  | Optional: \{\} <br /> |
 
 
 #### ModulePolicy

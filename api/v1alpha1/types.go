@@ -296,6 +296,13 @@ type MintToken struct {
 	// ["delete","own"] when nil.
 	// +kubebuilder:validation:Optional
 	DestructiveVerbs []string `json:"destructiveVerbs,omitempty" protobuf:"bytes,4,rep,name=destructiveVerbs"`
+
+	// urlDelivery permits minting a capability as a redeemable
+	// /-/transfer/<handle> URL (delivery:"url") in addition to the default
+	// bearer token. Off unless set: handing out a credential-less link is a
+	// distinct risk from minting a bearer token, so a host opts in explicitly.
+	// +kubebuilder:validation:Optional
+	URLDelivery bool `json:"urlDelivery,omitempty" protobuf:"varint,5,opt,name=urlDelivery"`
 }
 
 // Backend defines a deployment for serving resources specific to the refer.
