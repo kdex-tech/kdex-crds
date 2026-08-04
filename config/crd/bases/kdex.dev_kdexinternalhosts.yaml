@@ -193,9 +193,24 @@ spec:
                         - https
                         - http-loopback
                         description: |-
-                          allowedRedirectSchemes restricts redirect_uri schemes accepted at
-                          registration. "https" allows any https URI; "http-loopback" allows
-                          http://127.0.0.1 and http://localhost (native-app loopback per RFC 8252).
+                          allowedRedirectSchemes restricts which redirect_uri schemes are accepted
+                          at registration. Two values are named POLICIES that constrain the URL's
+                          structure; every other value is matched as a literal URI scheme:
+                            - "http-loopback": http, but only to a loopback host — http://127.0.0.1,
+                              http://[::1], or http://localhost (native-app loopback, RFC 8252 §7.3).
+                            - "private-use": any non-http(s) reverse-DNS/dotted scheme, e.g.
+                              com.example.app:// (RFC 8252 §7.1; a bare single-label scheme is
+                              rejected under this policy).
+                            - any other value is a literal scheme allow: "https" permits https://…,
+                              "cursor" permits cursor://… (Cursor's native callback), "vscode"
+                              permits vscode://…, and so on — no per-scheme support code needed.
+                          Regardless of the list, a bare "http" literal is never honored (use
+                          "http-loopback") and dangerous schemes (javascript/data/file/vbscript/blob)
+                          are always rejected. When a registration carries several redirect_uris,
+                          only those whose scheme is allowed are kept (the rest are dropped, per
+                          RFC 7591 §3.2.1); the request fails only when none is allowed. All
+                          dynamically-registered clients are public + PKCE with an exact-matched
+                          redirect_uri at /authorize.
                         items:
                           type: string
                         type: array
