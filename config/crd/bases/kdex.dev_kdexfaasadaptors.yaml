@@ -584,6 +584,66 @@ spec:
                     description: image is the image to use for deploying executables
                       into a FaaS runtime.
                     type: string
+                  jobNodeSelector:
+                    additionalProperties:
+                      type: string
+                    description: |-
+                      jobNodeSelector is an optional map of node labels the deployer JOB
+                      pod must match. Distinct from NodeSelector above (which is runtime-pod
+                      payload) for the same reason jobTolerations is distinct from
+                      Tolerations — see jobTolerations. Mirrors Observer.nodeSelector.
+                    type: object
+                  jobTolerations:
+                    description: |-
+                      jobTolerations is an optional list of tolerations applied to the
+                      deployer JOB pod itself — the short-lived pod host-manager runs to
+                      deploy a function's Knative Service — NOT the runtime pod. This is
+                      deliberately distinct from Tolerations above, which is PAYLOAD
+                      forwarded onto the Knative Service runtime pod's
+                      spec.template.spec.tolerations. Use jobTolerations (with
+                      jobNodeSelector) to steer the deployer Job onto a specific tainted
+                      pool; without it the Job can only land on an untainted pool, so a
+                      cluster that taints every pool by purpose has no lever over it.
+                      Mirrors Observer.tolerations, which does the same for observer Job
+                      pods.
+                    items:
+                      description: |-
+                        The pod this Toleration is attached to tolerates any taint that matches
+                        the triple <key,value,effect> using the matching operator <operator>.
+                      properties:
+                        effect:
+                          description: |-
+                            Effect indicates the taint effect to match. Empty means match all taint effects.
+                            When specified, allowed values are NoSchedule, PreferNoSchedule and NoExecute.
+                          type: string
+                        key:
+                          description: |-
+                            Key is the taint key that the toleration applies to. Empty means match all taint keys.
+                            If the key is empty, operator must be Exists; this combination means to match all values and all keys.
+                          type: string
+                        operator:
+                          description: |-
+                            Operator represents a key's relationship to the value.
+                            Valid operators are Exists, Equal, Lt, and Gt. Defaults to Equal.
+                            Exists is equivalent to wildcard for value, so that a pod can
+                            tolerate all taints of a particular category.
+                            Lt and Gt perform numeric comparisons (requires feature gate TaintTolerationComparisonOperators).
+                          type: string
+                        tolerationSeconds:
+                          description: |-
+                            TolerationSeconds represents the period of time the toleration (which must be
+                            of effect NoExecute, otherwise this field is ignored) tolerates the taint. By default,
+                            it is not set, which means tolerate the taint forever (do not evict). Zero and
+                            negative values will be treated as 0 (evict immediately) by the system.
+                          format: int64
+                          type: integer
+                        value:
+                          description: |-
+                            Value is the taint value the toleration matches to.
+                            If the operator is Exists, the value should be empty, otherwise just a regular string.
+                          type: string
+                      type: object
+                    type: array
                   nodeSelector:
                     additionalProperties:
                       type: string

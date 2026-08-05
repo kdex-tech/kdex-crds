@@ -533,6 +533,27 @@ type Deployer struct {
 	// kubernetes.podspec-nodeselector feature flag.
 	// +kubebuilder:validation:Optional
 	NodeSelector map[string]string `json:"nodeSelector,omitempty" protobuf:"bytes,5,rep,name=nodeSelector"`
+
+	// jobTolerations is an optional list of tolerations applied to the
+	// deployer JOB pod itself — the short-lived pod host-manager runs to
+	// deploy a function's Knative Service — NOT the runtime pod. This is
+	// deliberately distinct from Tolerations above, which is PAYLOAD
+	// forwarded onto the Knative Service runtime pod's
+	// spec.template.spec.tolerations. Use jobTolerations (with
+	// jobNodeSelector) to steer the deployer Job onto a specific tainted
+	// pool; without it the Job can only land on an untainted pool, so a
+	// cluster that taints every pool by purpose has no lever over it.
+	// Mirrors Observer.tolerations, which does the same for observer Job
+	// pods.
+	// +kubebuilder:validation:Optional
+	JobTolerations []corev1.Toleration `json:"jobTolerations,omitempty" protobuf:"bytes,6,rep,name=jobTolerations"`
+
+	// jobNodeSelector is an optional map of node labels the deployer JOB
+	// pod must match. Distinct from NodeSelector above (which is runtime-pod
+	// payload) for the same reason jobTolerations is distinct from
+	// Tolerations — see jobTolerations. Mirrors Observer.nodeSelector.
+	// +kubebuilder:validation:Optional
+	JobNodeSelector map[string]string `json:"jobNodeSelector,omitempty" protobuf:"bytes,7,rep,name=jobNodeSelector"`
 }
 
 type Observer struct {
