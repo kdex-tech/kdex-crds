@@ -85,7 +85,7 @@ _Appears in:_
 | --- | --- | --- | --- |
 | `basePath` _string_ | basePath is the base URL path for the function. It must match the regex ^/\w+/\w+ (e.g., /v1/users). |  | Pattern: `^/\w+/\w+` <br />Required: \{\} <br /> |
 | `paths` _object (keys:string, values:[PathItem](#pathitem))_ | paths is a map of paths that exist below the basePath. All keys of the map must be paths prefixed by .spec.api.basePath. |  | MaxProperties: 16 <br />MinProperties: 1 <br />Required: \{\} <br /> |
-| `schemas` _object (keys:string, values:[RawExtension](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.35/#rawextension-runtime-pkg))_ |  |  | MaxProperties: 6 <br />Optional: \{\} <br /> |
+| `schemas` _object (keys:string, values:[RawExtension](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.35/#rawextension-runtime-pkg))_ | schemas is a map of reusable OpenAPI schema objects, referenced from operation<br />definitions as "#/components/schemas/<name>". |  | MaxProperties: 10 <br />Optional: \{\} <br /> |
 
 
 #### APIToken

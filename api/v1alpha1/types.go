@@ -37,8 +37,10 @@ type API struct {
 	// +kubebuilder:validation:Required
 	Paths map[string]PathItem `json:"paths" protobuf:"bytes,2,req,name=paths"`
 
+	// schemas is a map of reusable OpenAPI schema objects, referenced from operation
+	// definitions as "#/components/schemas/<name>".
 	// +kubebuilder:pruning:PreserveUnknownFields
-	// +kubebuilder:validation:MaxProperties=6
+	// +kubebuilder:validation:MaxProperties=10
 	// +kubebuilder:validation:Optional
 	Schemas map[string]runtime.RawExtension `json:"schemas,omitempty" protobuf:"bytes,3,req,name=schemas"`
 }

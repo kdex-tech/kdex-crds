@@ -125,7 +125,10 @@ spec:
                     additionalProperties:
                       type: object
                       x-kubernetes-preserve-unknown-fields: true
-                    maxProperties: 6
+                    description: |-
+                      schemas is a map of reusable OpenAPI schema objects, referenced from operation
+                      definitions as "#/components/schemas/<name>".
+                    maxProperties: 10
                     type: object
                     x-kubernetes-preserve-unknown-fields: true
                 required:
