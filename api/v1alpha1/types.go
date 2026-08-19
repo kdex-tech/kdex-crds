@@ -200,7 +200,7 @@ type Auth struct {
 
 	// jwt is the configuation for JWT token support.
 	// +kubebuilder:validation:Optional
-	JWT JWT `json:"jwt,omitempty" protobuf:"bytes,2,opt,name=jwt"`
+	JWT *JWT `json:"jwt,omitempty" protobuf:"bytes,2,opt,name=jwt"`
 
 	// maxSessionAge enforce a "hard" expiration of the session. This prevents a session from being maintained indefinitely.
 	// +kubebuilder:validation:Optional
@@ -769,7 +769,7 @@ type Metadata struct {
 
 	// Contact provides contact information for the function's owner.
 	// +kubebuilder:validation:Optional
-	Contact ContactInfo `json:"contact,omitempty" protobuf:"bytes,2,opt,name=contact"`
+	Contact *ContactInfo `json:"contact,omitempty" protobuf:"bytes,2,opt,name=contact"`
 }
 
 // ModulePolicy defines the policy for the use of JavaScript Modules.
@@ -794,7 +794,7 @@ type NavigationHints struct {
 
 	// weight is a property that influences the position of the page menu entry. Items at each level are sorted first by ascending weight and then ascending lexicographically.
 	// +kubebuilder:validation:Optional
-	Weight resource.Quantity `json:"weight,omitempty" protobuf:"bytes,2,opt,name=weight"`
+	Weight *resource.Quantity `json:"weight,omitempty" protobuf:"bytes,2,opt,name=weight"`
 }
 
 type OIDCProvider struct {
@@ -1241,7 +1241,7 @@ type Runtime struct {
 	// resources defines the compute resources required by the container.
 	// More info: https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/
 	// +kubebuilder:validation:Optional
-	Resources corev1.ResourceRequirements `json:"resources,omitempty" protobuf:"bytes,3,opt,name=resources"`
+	Resources *corev1.ResourceRequirements `json:"resources,omitempty" protobuf:"bytes,3,opt,name=resources"`
 }
 
 // ScalingConfig defines scaling parameters.

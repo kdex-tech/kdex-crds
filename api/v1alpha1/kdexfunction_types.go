@@ -131,7 +131,18 @@ type ServiceBackend struct {
 	Path string `json:"path,omitempty" protobuf:"bytes,5,opt,name=path"`
 }
 
-// +kubebuilder:validation:XValidation:rule="!((has(self.origin.executable) || has(self.origin.generator) || has(self.origin.source)) && has(self.backend))",message="spec.origin and spec.backend are mutually exclusive"
+// The mutex rule enumerates origin's subfields rather than saying
+// `!(has(self.origin) && has(self.backend))`, and it must keep doing so for now.
+// Origin used to be a value struct, so every stored KDexFunction — including
+// every service-backed one — carries a phantom `origin: {}` it never declared
+// (kdex-crds#19). For those objects `has(self.origin)` is true, so the short
+// form would reject every subsequent write to a function that legitimately has
+// only a backend. Collapse this rule once no cluster still stores a KDexFunction
+// with an empty `origin` key; the pointer above stops new ones being created.
+// The leading `has(self.origin)` guard is required either way: without it,
+// `has(self.origin.executable)` errors on an object that omits origin entirely.
+
+// +kubebuilder:validation:XValidation:rule="!(has(self.origin) && (has(self.origin.executable) || has(self.origin.generator) || has(self.origin.source)) && has(self.backend))",message="spec.origin and spec.backend are mutually exclusive"
 // KDexFunctionSpec defines the desired state of KDexFunction
 type KDexFunctionSpec struct {
 	// api defines the OpenAPI contract for the function.
@@ -162,11 +173,11 @@ type KDexFunctionSpec struct {
 
 	// metadata defines the metadata for the function for cataloging and discovery purposes.
 	// +kubebuilder:validation:Optional
-	Metadata KDexFunctionMetadata `json:"metadata,omitempty" protobuf:"bytes,5,opt,name=metadata"`
+	Metadata *KDexFunctionMetadata `json:"metadata,omitempty" protobuf:"bytes,5,opt,name=metadata"`
 
 	// origin defines the origin of the function implementation.
 	// +kubebuilder:validation:Optional
-	Origin FunctionOrigin `json:"origin,omitempty" protobuf:"bytes,6,opt,name=origin"`
+	Origin *FunctionOrigin `json:"origin,omitempty" protobuf:"bytes,6,opt,name=origin"`
 
 	// Backend selects an existing backend to serve this function's API,
 	// bypassing the FaaS build/deploy pipeline. Mutually exclusive with Origin.
