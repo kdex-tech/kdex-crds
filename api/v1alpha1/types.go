@@ -799,13 +799,37 @@ type NavigationHints struct {
 
 type OIDCProvider struct {
 
-	// oidcProviderURL is the well known URL of the OIDC provider.
+	// oidcProviderURL is the ISSUER URL of the OIDC provider, e.g.
+	// `https://accounts.google.com` -- NOT the discovery document URL.
+	//
+	// The client appends `/.well-known/openid-configuration` to this value
+	// itself, and then requires the `issuer` advertised in that document to
+	// equal what was passed in. A discovery URL therefore fails twice over:
+	// the doubled path 404s, and even if it resolved the issuer comparison
+	// rejects it.
 	// +kubebuilder:validation:Required
+	// +kubebuilder:validation:MaxLength=2048
+	// +kubebuilder:validation:XValidation:rule="!self.endsWith('/.well-known/openid-configuration')",message="oidcProviderURL must be the issuer URL, not the discovery document URL: drop the /.well-known/openid-configuration suffix"
 	OIDCProviderURL string `json:"oidcProviderURL" protobuf:"bytes,4,req,name=oidcProviderURL"`
 
-	// roles is an array of additional roles that will be requested from the provider.
+	// scopes is a list of additional OAuth 2.0 scopes to request from the
+	// provider. They are appended to the always-requested `openid`, `profile`
+	// and `email`.
+	//
+	// These are SCOPES, not roles: a value here is sent to the provider in the
+	// `scope` parameter, and most providers reject the whole authorization
+	// request with `invalid_scope` when handed something they do not publish
+	// in `scopes_supported`. Put role names in a KDexRoleBinding instead.
+	//
+	// Include `offline_access` to ask the provider for a refresh token, which
+	// lets the host re-derive the session from the provider on renewal instead
+	// of replaying the claims captured at login -- and so notice an account
+	// that has since been suspended or had its consent withdrawn. Requesting
+	// it also forces a consent prompt on every login.
 	// +kubebuilder:validation:Optional
-	Scopes []string `json:"roles" protobuf:"bytes,5,rep,name=roles"`
+	// +kubebuilder:validation:MaxItems=32
+	// +kubebuilder:validation:items:MaxLength=256
+	Scopes []string `json:"scopes,omitempty" protobuf:"bytes,5,rep,name=scopes"`
 }
 
 // OpenAPI holds the configuration for the host's OpenAPI support.

@@ -46,6 +46,13 @@ func TestOptionalFieldsAreOmittedWhenUnset(t *testing.T) {
 		{"Runtime.resources", Runtime{}, []string{"resources"}},
 		{"KDexFunctionSpec.metadata+origin", KDexFunctionSpec{}, []string{"metadata", "origin"}},
 		{"KDexHostSpec.registries", KDexHostSpec{}, []string{"registries"}},
+		// A nil slice with no omitempty marshals to JSON `null`, and the CRD
+		// declares this key `type: array`. nexus-manager's mutating webhook
+		// round-trips a KDexHost through these Go types, so the apiserver was
+		// handed back -- and rejected -- an object nobody had written the
+		// field into. It cost a live tenant a pinned workaround before the
+		// cause was found. See kdex-crds#21.
+		{"OIDCProvider.scopes", OIDCProvider{}, []string{"scopes", "roles"}},
 	}
 
 	for _, tt := range tests {

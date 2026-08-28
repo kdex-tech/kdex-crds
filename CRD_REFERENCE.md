@@ -2397,8 +2397,8 @@ _Appears in:_
 
 | Field | Description | Default | Validation |
 | --- | --- | --- | --- |
-| `oidcProviderURL` _string_ | oidcProviderURL is the well known URL of the OIDC provider. |  | Required: \{\} <br /> |
-| `roles` _string array_ | roles is an array of additional roles that will be requested from the provider. |  | Optional: \{\} <br /> |
+| `oidcProviderURL` _string_ | oidcProviderURL is the ISSUER URL of the OIDC provider, e.g.<br />`https://accounts.google.com` -- NOT the discovery document URL.<br />The client appends `/.well-known/openid-configuration` to this value<br />itself, and then requires the `issuer` advertised in that document to<br />equal what was passed in. A discovery URL therefore fails twice over:<br />the doubled path 404s, and even if it resolved the issuer comparison<br />rejects it. |  | MaxLength: 2048 <br />Required: \{\} <br /> |
+| `scopes` _string array_ | scopes is a list of additional OAuth 2.0 scopes to request from the<br />provider. They are appended to the always-requested `openid`, `profile`<br />and `email`.<br />These are SCOPES, not roles: a value here is sent to the provider in the<br />`scope` parameter, and most providers reject the whole authorization<br />request with `invalid_scope` when handed something they do not publish<br />in `scopes_supported`. Put role names in a KDexRoleBinding instead.<br />Include `offline_access` to ask the provider for a refresh token, which<br />lets the host re-derive the session from the provider on renewal instead<br />of replaying the claims captured at login -- and so notice an account<br />that has since been suspended or had its consent withdrawn. Requesting<br />it also forces a consent prompt on every login. |  | MaxItems: 32 <br />Optional: \{\} <br />items:MaxLength: 256 <br /> |
 
 
 #### Observer
