@@ -22,6 +22,12 @@ linters:
     - unparam
     - unused
   settings:
+    goconst:
+      # Table-driven tests repeat literals by construction -- the same status
+      # string across twenty cases is the point of the table, not a missing
+      # constant. Without this, goconst reports 35 findings in _test.go files
+      # and 1 in real code.
+      ignore-tests: true
     revive:
       rules:
         - name: comment-spacings

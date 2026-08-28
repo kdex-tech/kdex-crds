@@ -131,7 +131,7 @@ CONTROLLER_TOOLS_VERSION ?= v0.20.1
 # https://github.com/elastic/crd-ref-docs/releases/latest
 CRD_REF_DOCS_VERSION ?= v0.3.0
 # https://github.com/golangci/golangci-lint/releases/latest
-GOLANGCI_LINT_VERSION ?= v2.10.1
+GOLANGCI_LINT_VERSION ?= v2.13.2
 
 .PHONY: kustomize
 kustomize: $(KUSTOMIZE) ## Download kustomize locally if necessary.

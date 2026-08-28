@@ -96,7 +96,7 @@ func TestNoOptionalValueStructFields(t *testing.T) {
 
 	var walk func(reflect.Type)
 	walk = func(t reflect.Type) {
-		for t.Kind() == reflect.Ptr || t.Kind() == reflect.Slice ||
+		for t.Kind() == reflect.Pointer || t.Kind() == reflect.Slice ||
 			t.Kind() == reflect.Array || t.Kind() == reflect.Map {
 			t = t.Elem()
 		}

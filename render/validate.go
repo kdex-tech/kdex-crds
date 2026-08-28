@@ -10,6 +10,15 @@ import (
 	"k8s.io/apimachinery/pkg/api/resource"
 )
 
+// Base paths of the sample pages in templateData below. Named because the
+// same path appears as both a BasePath and an Href within one page entry,
+// which is what the fixture is demonstrating -- not a magic value.
+const (
+	samplePathOne   = "/one"
+	samplePathTwo   = "/two"
+	samplePathThree = "/three"
+)
+
 var renderer Renderer
 var templateData TemplateData
 
@@ -44,26 +53,26 @@ func init() {
 		LeftToRight:  true,
 		Meta:         `<meta charset="UTF-8">`,
 		Organization: "KDex Tech Inc.",
-		BasePath:     "/one",
+		BasePath:     samplePathOne,
 		PageMap: map[string]any{
 			"One": PageEntry{
-				BasePath: "/one",
-				Href:     "/one",
+				BasePath: samplePathOne,
+				Href:     samplePathOne,
 				Icon:     "one",
 				Label:    "One",
 				Name:     "one",
 				Weight:   resource.MustParse("0"),
 			},
 			"Two": PageEntry{
-				BasePath: "/two",
-				Href:     "/two",
+				BasePath: samplePathTwo,
+				Href:     samplePathTwo,
 				Icon:     "two",
 				Label:    "Two",
 				Name:     "two",
 				Weight:   resource.MustParse("1"),
 			},
 			"Three": PageEntry{
-				BasePath: "/three",
+				BasePath: samplePathThree,
 				Children: &map[string]any{
 					"Four": PageEntry{
 						BasePath: "/four",
@@ -74,7 +83,7 @@ func init() {
 						Weight:   resource.MustParse("0"),
 					},
 				},
-				Href:   "/three",
+				Href:   samplePathThree,
 				Icon:   "three",
 				Label:  "Three",
 				Name:   "three",
