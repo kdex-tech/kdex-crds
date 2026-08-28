@@ -131,6 +131,10 @@ CONTROLLER_TOOLS_VERSION ?= v0.20.1
 # https://github.com/elastic/crd-ref-docs/releases/latest
 CRD_REF_DOCS_VERSION ?= v0.3.0
 # https://github.com/golangci/golangci-lint/releases/latest
+# Keep in lockstep with the golangci-lint-action `version:` in
+# .github/workflows/ci.yml -- CI installs the linter from the action,
+# NOT from this variable, so a bump here alone changes nothing in CI
+# and a config key the older version rejects fails the build.
 GOLANGCI_LINT_VERSION ?= v2.13.2
 
 .PHONY: kustomize
