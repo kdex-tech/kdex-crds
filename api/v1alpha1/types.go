@@ -26,9 +26,21 @@ var pathItemPathRegex regexp.Regexp = *regexp.MustCompile(`^(?<basePath>/\w+/\w+
 
 // +kubebuilder:validation:XValidation:rule="self.paths.all(k, k.startsWith(self.basePath))",message="all keys of .spec.api.paths must be prefixed by .spec.api.basePath"
 type API struct {
-	// basePath is the base URL path for the function. It must match the regex ^/\w+/\w+ (e.g., /v1/users).
+	// basePath is the base URL path for the function: 2 to 8 path segments, each
+	// starting with a word character ([0-9A-Za-z_]) and otherwise made up of word
+	// characters or hyphens. It must match ^(/\w[\w-]*){2,8}$ and be at most 64
+	// characters (e.g., /v1/users, /api/v1/vector_stores, /v1/credential-check).
+	//
+	// The pattern is anchored at BOTH ends deliberately. host-manager interpolates
+	// this value into the RFC 9728 resource_metadata parameter of a WWW-Authenticate
+	// header, which is an HTTP quoted-string; when the pattern was anchored only at
+	// the start, an author could smuggle a quote through it and inject a second
+	// resource_metadata parameter pointing an RFC 9728 client at an attacker-run
+	// authorization server. Requiring every segment to begin with a word character
+	// additionally keeps the host's reserved /-/ route prefix unauthorable.
 	// +kubebuilder:validation:Required
-	// +kubebuilder:validation:Pattern=`^/\w+/\w+`
+	// +kubebuilder:validation:MaxLength=64
+	// +kubebuilder:validation:Pattern=`^(/\w[\w-]*){2,8}$`
 	BasePath string `json:"basePath" protobuf:"bytes,1,req,name=basePath"`
 
 	// paths is a map of paths that exist below the basePath. All keys of the map must be paths prefixed by .spec.api.basePath.
