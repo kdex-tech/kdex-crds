@@ -1903,7 +1903,7 @@ _Appears in:_
 
 | Field | Description | Default | Validation |
 | --- | --- | --- | --- |
-| `contentEntries` _[ContentEntry](#contententry) array_ | contentEntries is a set of content entries to bind to this page. They may be either raw HTML fragments or KDexApp references. |  | ExactlyOneOf: [appRef rawHTML] <br />MaxItems: 32 <br />MinItems: 1 <br />Required: \{\} <br /> |
+| `contentEntries` _[ContentEntry](#contententry) array_ | contentEntries is a set of content entries to bind to this page. They may be either raw HTML fragments or KDexApp references. |  | ExactlyOneOf: [appRef rawHTML] <br />MaxItems: 32 <br />Optional: \{\} <br /> |
 | `hostRef` _[LocalObjectReference](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.35/#localobjectreference-v1-core)_ | hostRef is a reference to the KDexHost that this binding is for. |  | Required: \{\} <br /> |
 | `label` _string_ | label is the value used in menus and page titles before localization occurs (or when no translation exists for the current language). |  | MaxLength: 256 <br />MinLength: 3 <br />Required: \{\} <br /> |
 | `tags` _[Tag](#tag) array_ | Tags are used for grouping and searching functions. |  | MaxItems: 16 <br />Optional: \{\} <br /> |
@@ -1918,6 +1918,9 @@ _Appears in:_
 | `patternPath` _string_ | patternPath, which must be prefixed by BasePath, is an extension of basePath that adds pattern matching as defined by https://pkg.go.dev/net/http#hdr-Patterns-ServeMux. This path is subject to being prefixed for localization by `/\{l10n\}` such as when the user selects a non-default language. |  | Optional: \{\} <br /> |
 | `scriptLibraryRef` _[KDexObjectReference](#kdexobjectreference)_ | scriptLibraryRef is an optional reference to a KDexScriptLibrary resource. |  | Optional: \{\} <br /> |
 | `security` _[SecurityRequirement](#securityrequirement)_ | Optional security requirements that override top-level security. |  |  |
+| `localized` _boolean_ | localized controls whether language-prefixed routes (/<lang>/…) are<br />registered for this page. Default true. Set false for a page that must live<br />at exactly one path (robots.txt, llms.txt, sitemap.xml). | true | Optional: \{\} <br /> |
+| `mimeType` _string_ | mimeType, when set, serves the page as a raw text document of this type<br />instead of composing HTML from an archetype. |  | Enum: [txt json yaml markdown xml] <br />Optional: \{\} <br /> |
+| `body` _string_ | body is the content served when mimeType is set. It runs through the same<br />[[ ]] template + translation pipeline as a rawHTML content entry. |  | MaxLength: 65536 <br />Optional: \{\} <br /> |
 
 
 #### KDexRole
