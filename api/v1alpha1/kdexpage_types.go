@@ -60,15 +60,16 @@ type KDexPageList struct {
 }
 
 // KDexPageSpec defines the desired state of KDexPage
+//
+// +kubebuilder:validation:XValidation:rule="has(self.mimeType) == has(self.body)",message="mimeType and body must be set together"
+// +kubebuilder:validation:XValidation:rule="has(self.mimeType) || (has(self.contentEntries) && self.contentEntries.exists(x, x.slot == 'main'))",message="an HTML page (no mimeType) must declare contentEntries with a 'main' slot"
 type KDexPageSpec struct {
 	// contentEntries is a set of content entries to bind to this page. They may be either raw HTML fragments or KDexApp references.
 	// +listType=map
 	// +listMapKey=slot
 	// +kubebuilder:validation:MaxItems=32
-	// +kubebuilder:validation:MinItems=1
-	// +kubebuilder:validation:Required
-	// +kubebuilder:validation:XValidation:rule="self.exists(x, x.slot == 'main')",message="slot 'main' must be specified"
-	ContentEntries []ContentEntry `json:"contentEntries" protobuf:"bytes,1,rep,name=contentEntries"`
+	// +kubebuilder:validation:Optional
+	ContentEntries []ContentEntry `json:"contentEntries,omitempty" protobuf:"bytes,1,rep,name=contentEntries"`
 
 	// hostRef is a reference to the KDexHost that this binding is for.
 	// +kubebuilder:validation:Required
@@ -123,6 +124,25 @@ type KDexPageSpec struct {
 
 	// Optional security requirements that override top-level security.
 	Security *[]SecurityRequirement `json:"security,omitempty" yaml:"security,omitempty" protobuf:"bytes,13,rep,name=security"`
+
+	// localized controls whether language-prefixed routes (/<lang>/…) are
+	// registered for this page. Default true. Set false for a page that must live
+	// at exactly one path (robots.txt, llms.txt, sitemap.xml).
+	// +kubebuilder:default=true
+	// +kubebuilder:validation:Optional
+	Localized *bool `json:"localized,omitempty" protobuf:"varint,14,opt,name=localized"`
+
+	// mimeType, when set, serves the page as a raw text document of this type
+	// instead of composing HTML from an archetype.
+	// +kubebuilder:validation:Enum=txt;json;yaml;markdown;xml
+	// +kubebuilder:validation:Optional
+	MimeType string `json:"mimeType,omitempty" protobuf:"bytes,15,opt,name=mimeType"`
+
+	// body is the content served when mimeType is set. It runs through the same
+	// [[ ]] template + translation pipeline as a rawHTML content entry.
+	// +kubebuilder:validation:MaxLength=65536
+	// +kubebuilder:validation:Optional
+	Body string `json:"body,omitempty" protobuf:"bytes,16,opt,name=body"`
 }
 
 func init() {

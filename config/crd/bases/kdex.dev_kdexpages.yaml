@@ -70,6 +70,12 @@ spec:
                   a non-default language.
                 pattern: ^/
                 type: string
+              body:
+                description: |-
+                  body is the content served when mimeType is set. It runs through the same
+                  [[ ]] template + translation pipeline as a rawHTML content entry.
+                maxLength: 65536
+                type: string
               contact:
                 description: Contact provides contact information for the function's
                   owner.
@@ -144,14 +150,10 @@ spec:
                     rule: '[has(self.appRef),has(self.rawHTML)].filter(x,x==true).size()
                       == 1'
                 maxItems: 32
-                minItems: 1
                 type: array
                 x-kubernetes-list-map-keys:
                 - slot
                 x-kubernetes-list-type: map
-                x-kubernetes-validations:
-                - message: slot 'main' must be specified
-                  rule: self.exists(x, x.slot == 'main')
               hostRef:
                 description: hostRef is a reference to the KDexHost that this binding
                   is for.
@@ -176,6 +178,24 @@ spec:
                   language).
                 maxLength: 256
                 minLength: 3
+                type: string
+              localized:
+                default: true
+                description: |-
+                  localized controls whether language-prefixed routes (/<lang>/…) are
+                  registered for this page. Default true. Set false for a page that must live
+                  at exactly one path (robots.txt, llms.txt, sitemap.xml).
+                type: boolean
+              mimeType:
+                description: |-
+                  mimeType, when set, serves the page as a raw text document of this type
+                  instead of composing HTML from an archetype.
+                enum:
+                - txt
+                - json
+                - yaml
+                - markdown
+                - xml
                 type: string
               navigationHints:
                 description: navigationHints are optional navigation properties that
@@ -396,11 +416,16 @@ spec:
                 x-kubernetes-list-type: map
             required:
             - basePath
-            - contentEntries
             - hostRef
             - label
             type: object
             x-kubernetes-validations:
+            - message: mimeType and body must be set together
+              rule: has(self.mimeType) == has(self.body)
+            - message: an HTML page (no mimeType) must declare contentEntries with
+                a 'main' slot
+              rule: has(self.mimeType) || (has(self.contentEntries) && self.contentEntries.exists(x,
+                x.slot == 'main'))
             - message: if patternPath is specified, basePath must be a prefix of patternPath
               rule: '!has(self.patternPath) || self.patternPath.startsWith(self.basePath)'
           status:
