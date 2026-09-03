@@ -32,6 +32,77 @@ func TestRenderOne_InvalidTemplate(t *testing.T) {
 	assert.Error(t, err)
 }
 
+// TestRenderOne_EscapesHTMLSpecialChars documents the reason RenderOneText
+// exists: RenderOne uses html/template, so an action's output is
+// HTML-escaped. That's correct for HTML pages but corrupts a text/plain,
+// JSON, or markdown body (e.g. robots.txt/llms.txt) that happens to embed
+// a translated or user-supplied string containing HTML-special characters.
+func TestRenderOne_EscapesHTMLSpecialChars(t *testing.T) {
+	data := TemplateData{
+		Extra: map[string]any{
+			"val": `R&D <tag> "q"`,
+		},
+	}
+	templateContent := `[[ .Extra.val ]]`
+
+	r := &Renderer{}
+	actual, err := r.RenderOne("test", templateContent, data)
+	assert.NoError(t, err)
+	assert.Equal(t, `R&amp;D &lt;tag&gt; &#34;q&#34;`, actual)
+}
+
+// TestRenderOneText_DoesNotEscapeHTMLSpecialChars proves RenderOneText (the
+// text/template render path) emits an action's output verbatim, unlike
+// RenderOne above, which escapes the identical input.
+func TestRenderOneText_DoesNotEscapeHTMLSpecialChars(t *testing.T) {
+	data := TemplateData{
+		Extra: map[string]any{
+			"val": `R&D <tag> "q"`,
+		},
+	}
+	templateContent := `[[ .Extra.val ]]`
+
+	r := &Renderer{}
+	actual, err := r.RenderOneText("test", templateContent, data)
+	assert.NoError(t, err)
+	assert.Equal(t, `R&D <tag> "q"`, actual)
+}
+
+func TestRenderOneText_InvalidTemplate(t *testing.T) {
+	data := TemplateData{
+		Title: "World",
+	}
+	templateContent := "Hello, [[.Invalid]]!"
+
+	r := &Renderer{}
+	_, err := r.RenderOneText("test", templateContent, data)
+	assert.Error(t, err)
+}
+
+// TestRenderOneText_SharesFuncMap confirms RenderOneText has access to the
+// same funcmap (sprig + l10n/number/currency/percent/bytes/date/pop/sortBy)
+// as RenderOne, since both are built from the shared funcMap() helper.
+func TestRenderOneText_SharesFuncMap(t *testing.T) {
+	data := TemplateData{
+		PageMap: map[string]any{
+			"home": PageEntry{
+				Label:  "Home",
+				Weight: resource.MustParse("0m"),
+			},
+			"about": PageEntry{
+				Label:  "About",
+				Weight: resource.MustParse("1m"),
+			},
+		},
+	}
+	templateContent := `[[ .PageMap | values | sortBy "Weight" true | extract "Label" | join "," ]]`
+
+	r := &Renderer{}
+	actual, err := r.RenderOneText("test", templateContent, data)
+	assert.NoError(t, err)
+	assert.Equal(t, "Home,About", actual)
+}
+
 func TestRenderAll(t *testing.T) {
 	lastModified, _ := time.Parse("2006-01-02", "2025-09-20")
 

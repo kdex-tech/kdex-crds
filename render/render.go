@@ -7,6 +7,7 @@ import (
 	"maps"
 	"reflect"
 	"sort"
+	texttemplate "text/template"
 	"time"
 
 	"github.com/Masterminds/sprig/v3"
@@ -122,11 +123,11 @@ func (r *Renderer) TemplateData() (TemplateData, error) {
 	return templateData, nil
 }
 
-func (r *Renderer) RenderOne(
-	templateName string,
-	templateContent string,
-	data TemplateData,
-) (string, error) {
+// funcMap builds the function map shared by both RenderOne (html/template)
+// and RenderOneText (text/template). html/template.FuncMap is a type alias
+// for text/template.FuncMap (both are map[string]any under the hood), so a
+// single map value works unmodified with either engine's .Funcs() call.
+func (r *Renderer) funcMap() texttemplate.FuncMap {
 	funcs := sprig.FuncMap()
 	funcs["extract"] = func(key string, v any) ([]any, error) {
 		rv := reflect.ValueOf(v)
@@ -253,7 +254,41 @@ func (r *Renderer) RenderOne(
 		}
 	}
 
-	instance, err := template.New(templateName).Delims("[[", "]]").Funcs(funcs).Parse(templateContent)
+	return funcs
+}
+
+// RenderOne renders templateContent using html/template, so an action's
+// output is HTML-escaped based on the surrounding markup context. Use this
+// for HTML pages/fragments, which depend on that escaping.
+func (r *Renderer) RenderOne(
+	templateName string,
+	templateContent string,
+	data TemplateData,
+) (string, error) {
+	instance, err := template.New(templateName).Delims("[[", "]]").Funcs(r.funcMap()).Parse(templateContent)
+	if err != nil {
+		return "", err
+	}
+
+	var buffer bytes.Buffer
+	if err := instance.Execute(&buffer, data); err != nil {
+		return "", err
+	}
+
+	return buffer.String(), nil
+}
+
+// RenderOneText renders templateContent using text/template, so an action's
+// output is emitted verbatim with no HTML auto-escaping. Use this for
+// non-HTML bodies (e.g. robots.txt, llms.txt, JSON, markdown), where
+// html/template's escaping would corrupt the output (or, for a structured
+// body, could trip an html/template context error at Execute).
+func (r *Renderer) RenderOneText(
+	templateName string,
+	templateContent string,
+	data TemplateData,
+) (string, error) {
+	instance, err := texttemplate.New(templateName).Delims("[[", "]]").Funcs(r.funcMap()).Parse(templateContent)
 	if err != nil {
 		return "", err
 	}
