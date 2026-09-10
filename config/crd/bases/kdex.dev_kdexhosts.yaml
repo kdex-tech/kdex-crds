@@ -164,6 +164,27 @@ spec:
                       type: object
                     maxItems: 16
                     type: array
+                  defaultLandingPaths:
+                    description: |-
+                      defaultLandingPaths is an ordered list of page basePaths a caller is
+                      redirected to after the page gate denies the page they requested — for
+                      example a gated `/` after login when the caller lacks access to it. The
+                      first entry the caller is entitled to render wins, checked exactly like
+                      the page gate; entries the caller cannot reach, or that name no page, are
+                      skipped. When the list is empty/unset or nothing matches, the host falls
+                      back to the first authorized page in navigation order. Entries are
+                      canonical basePaths ("/dashboard"); the language prefix is applied
+                      automatically at redirect time.
+                    items:
+                      maxLength: 512
+                      pattern: ^/.*
+                      type: string
+                      x-kubernetes-validations:
+                      - message: defaultLandingPaths entries must not be under the
+                          reserved /-/ prefix
+                        rule: '!self.startsWith(''/-/'')'
+                    maxItems: 16
+                    type: array
                   dynamicClientRegistration:
                     description: |-
                       dynamicClientRegistration enables RFC 7591 OAuth 2.0 Dynamic Client

@@ -143,6 +143,11 @@ func (in *Auth) DeepCopyInto(out *Auth) {
 		*out = make([]dmapper.MappingRule, len(*in))
 		copy(*out, *in)
 	}
+	if in.DefaultLandingPaths != nil {
+		in, out := &in.DefaultLandingPaths, &out.DefaultLandingPaths
+		*out = make([]string, len(*in))
+		copy(*out, *in)
+	}
 	if in.JWT != nil {
 		in, out := &in.JWT, &out.JWT
 		*out = new(JWT)

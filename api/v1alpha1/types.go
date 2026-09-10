@@ -210,6 +210,22 @@ type Auth struct {
 	// +kubebuilder:validation:MaxItems=16
 	ClaimMappings []dmapper.MappingRule `json:"claimMappings,omitempty" protobuf:"bytes,3,rep,name=claimMappings"`
 
+	// defaultLandingPaths is an ordered list of page basePaths a caller is
+	// redirected to after the page gate denies the page they requested — for
+	// example a gated `/` after login when the caller lacks access to it. The
+	// first entry the caller is entitled to render wins, checked exactly like
+	// the page gate; entries the caller cannot reach, or that name no page, are
+	// skipped. When the list is empty/unset or nothing matches, the host falls
+	// back to the first authorized page in navigation order. Entries are
+	// canonical basePaths ("/dashboard"); the language prefix is applied
+	// automatically at redirect time.
+	// +kubebuilder:validation:Optional
+	// +kubebuilder:validation:MaxItems=16
+	// +kubebuilder:validation:items:MaxLength=512
+	// +kubebuilder:validation:items:Pattern=`^/.*`
+	// +kubebuilder:validation:items:XValidation:rule="!self.startsWith('/-/')",message="defaultLandingPaths entries must not be under the reserved /-/ prefix"
+	DefaultLandingPaths []string `json:"defaultLandingPaths,omitempty" protobuf:"bytes,11,rep,name=defaultLandingPaths"`
+
 	// jwt is the configuation for JWT token support.
 	// +kubebuilder:validation:Optional
 	JWT *JWT `json:"jwt,omitempty" protobuf:"bytes,2,opt,name=jwt"`
