@@ -103,6 +103,29 @@ func TestRenderOneText_SharesFuncMap(t *testing.T) {
 	assert.Equal(t, "Home,About", actual)
 }
 
+// TestPageEntry_Tags confirms a page's tags are carried on the navigation
+// entry and can be ranged over from a nav template, including the per-tag
+// Description and URL. A page with no tags renders nothing (omitempty).
+func TestPageEntry_Tags(t *testing.T) {
+	data := TemplateData{
+		PageMap: map[string]any{
+			"docs": PageEntry{
+				Label: "Docs",
+				Tags: []PageTag{
+					{Name: "beta", Description: "Beta feature", URL: "https://example.com/beta"},
+					{Name: "new"},
+				},
+			},
+		},
+	}
+	templateContent := `[[- range $p := .PageMap | values ]][[- range $t := $p.Tags ]][[ $t.Name ]]([[ $t.Description ]]|[[ $t.URL ]]);[[- end ]][[- end ]]`
+
+	r := &Renderer{}
+	actual, err := r.RenderOneText("test", templateContent, data)
+	assert.NoError(t, err)
+	assert.Equal(t, "beta(Beta feature|https://example.com/beta);new(|);", actual)
+}
+
 func TestRenderAll(t *testing.T) {
 	lastModified, _ := time.Parse("2006-01-02", "2025-09-20")
 

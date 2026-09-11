@@ -15,7 +15,19 @@ type PageEntry struct {
 	Icon     string            `json:"icon,omitempty" yaml:"icon,omitempty"`
 	Label    string            `json:"label" yaml:"label"`
 	Name     string            `json:"name" yaml:"name"`
+	Tags     []PageTag         `json:"tags,omitempty" yaml:"tags,omitempty"`
 	Weight   resource.Quantity `json:"weight" yaml:"weight,omitempty"`
+}
+
+// PageTag is a navigation-facing projection of a page's spec.tags entry. It
+// mirrors api/v1alpha1.Tag's fields deliberately rather than importing that
+// type, so the render package keeps its zero-dependency boundary on the API
+// types. Populated by the navigation builder; consumed by nav templates as
+// [[ range $t := $value.Tags ]].
+type PageTag struct {
+	Name        string `json:"name" yaml:"name"`
+	Description string `json:"description,omitempty" yaml:"description,omitempty"`
+	URL         string `json:"url,omitempty" yaml:"url,omitempty"`
 }
 
 type Renderer struct {
