@@ -348,6 +348,21 @@ type MintToken struct {
 	// distinct risk from minting a bearer token, so a host opts in explicitly.
 	// +kubebuilder:validation:Optional
 	URLDelivery bool `json:"urlDelivery,omitempty" protobuf:"varint,5,opt,name=urlDelivery"`
+
+	// capabilityTtlCapSeconds is the server-side ttl ceiling applied ONLY to the
+	// REST /-/capabilities/mint surface. The MCP mint_token tool always uses
+	// ttlCapSeconds regardless of this field. When unset (zero) it falls back to
+	// ttlCapSeconds, so a host that never sets it behaves exactly as before —
+	// which is why this field, unlike ttlCapSeconds, carries no default: a
+	// default of 60 would override the fall-back and cap the REST surface at 60
+	// even where ttlCapSeconds is higher. The two surfaces exist for different
+	// callers — the MCP tool mints short-lived bearers for immediate off-context
+	// REST calls, while /-/capabilities/mint serves CI jobs and ops scripts that
+	// legitimately need longer-lived capabilities — so a host can raise the REST
+	// ceiling without loosening the MCP one.
+	// +kubebuilder:validation:Optional
+	// +kubebuilder:validation:Minimum=1
+	CapabilityTTLCapSeconds int `json:"capabilityTtlCapSeconds,omitempty" protobuf:"varint,6,opt,name=capabilityTtlCapSeconds"`
 }
 
 // Backend defines a deployment for serving resources specific to the refer.
