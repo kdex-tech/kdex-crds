@@ -873,6 +873,28 @@ type OIDCProvider struct {
 	// +kubebuilder:validation:MaxItems=32
 	// +kubebuilder:validation:items:MaxLength=256
 	Scopes []string `json:"scopes,omitempty" protobuf:"bytes,5,rep,name=scopes"`
+
+	// roleBindingClaim is the OIDC/identity claim whose value KDexRoleBinding.Subject
+	// is matched against. Default "sub" preserves matching the opaque provider
+	// subject. Set to "email" (with a provider like Google that issues an opaque
+	// numeric sub) so operators can author bindings against a human-readable,
+	// regex-matchable value (an exact address, or /@acme\.com$/). When the named
+	// claim is absent or empty for a login (e.g. a local or PAT credential),
+	// matching falls back to "sub".
+	// +kubebuilder:validation:Optional
+	// +kubebuilder:default="sub"
+	// +kubebuilder:validation:MaxLength=256
+	RoleBindingClaim string `json:"roleBindingClaim,omitempty" protobuf:"bytes,6,opt,name=roleBindingClaim"`
+
+	// requireEmailVerified gates use of the email claim as the role-binding key on
+	// email_verified == true in the login claims. It only has effect when
+	// roleBindingClaim == "email". Unset defaults to TRUE (a pointer, so "unset"
+	// resolves to the SECURE value rather than Go's zero-value false): an unverified
+	// email is a role-authoring key an attacker could assert at a permissive IdP.
+	// Google satisfies this automatically. Set explicitly to false only for a
+	// trusted enterprise IdP that does not emit email_verified.
+	// +kubebuilder:validation:Optional
+	RequireEmailVerified *bool `json:"requireEmailVerified,omitempty" protobuf:"varint,7,opt,name=requireEmailVerified"`
 }
 
 // OpenAPI holds the configuration for the host's OpenAPI support.

@@ -53,3 +53,35 @@ func TestOIDCProviderScopesSerializeAsScopes(t *testing.T) {
 	assert.Equal(t, []string{"offline_access"}, decoded.Scopes,
 		"a CR written against the documented key must decode")
 }
+
+// TestOIDCProviderRoleBindingClaimSerialization pins the new #<issue> fields:
+// the role-binding key claim and the email_verified gate.
+func TestOIDCProviderRoleBindingClaimSerialization(t *testing.T) {
+	verified := true
+	raw, err := json.Marshal(OIDCProvider{
+		OIDCProviderURL:      "https://accounts.google.com",
+		RoleBindingClaim:     "email",
+		RequireEmailVerified: &verified,
+	})
+	require.NoError(t, err)
+
+	var got map[string]json.RawMessage
+	require.NoError(t, json.Unmarshal(raw, &got))
+	assert.Contains(t, got, "roleBindingClaim", "got %s", raw)
+	assert.Contains(t, got, "requireEmailVerified", "got %s", raw)
+
+	// Both are optional/omitempty: a bare provider serializes neither.
+	rawEmpty, err := json.Marshal(OIDCProvider{OIDCProviderURL: "https://accounts.google.com"})
+	require.NoError(t, err)
+	var gotEmpty map[string]json.RawMessage
+	require.NoError(t, json.Unmarshal(rawEmpty, &gotEmpty))
+	assert.NotContains(t, gotEmpty, "roleBindingClaim", "unset must omit, got %s", rawEmpty)
+	assert.NotContains(t, gotEmpty, "requireEmailVerified", "unset must omit, got %s", rawEmpty)
+
+	// A CR written against the documented keys decodes.
+	var decoded OIDCProvider
+	require.NoError(t, json.Unmarshal([]byte(`{"roleBindingClaim":"email","requireEmailVerified":false}`), &decoded))
+	assert.Equal(t, "email", decoded.RoleBindingClaim)
+	require.NotNil(t, decoded.RequireEmailVerified)
+	assert.False(t, *decoded.RequireEmailVerified)
+}

@@ -334,6 +334,28 @@ spec:
                             discovery document URL: drop the /.well-known/openid-configuration
                             suffix'
                           rule: '!self.endsWith(''/.well-known/openid-configuration'')'
+                      requireEmailVerified:
+                        description: |-
+                          requireEmailVerified gates use of the email claim as the role-binding key on
+                          email_verified == true in the login claims. It only has effect when
+                          roleBindingClaim == "email". Unset defaults to TRUE (a pointer, so "unset"
+                          resolves to the SECURE value rather than Go's zero-value false): an unverified
+                          email is a role-authoring key an attacker could assert at a permissive IdP.
+                          Google satisfies this automatically. Set explicitly to false only for a
+                          trusted enterprise IdP that does not emit email_verified.
+                        type: boolean
+                      roleBindingClaim:
+                        default: sub
+                        description: |-
+                          roleBindingClaim is the OIDC/identity claim whose value KDexRoleBinding.Subject
+                          is matched against. Default "sub" preserves matching the opaque provider
+                          subject. Set to "email" (with a provider like Google that issues an opaque
+                          numeric sub) so operators can author bindings against a human-readable,
+                          regex-matchable value (an exact address, or /@acme\.com$/). When the named
+                          claim is absent or empty for a login (e.g. a local or PAT credential),
+                          matching falls back to "sub".
+                        maxLength: 256
+                        type: string
                       scopes:
                         description: |-
                           scopes is a list of additional OAuth 2.0 scopes to request from the
