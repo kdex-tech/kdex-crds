@@ -62,7 +62,10 @@ type KDexPageList struct {
 // KDexPageSpec defines the desired state of KDexPage
 //
 // +kubebuilder:validation:XValidation:rule="has(self.mimeType) == has(self.body)",message="mimeType and body must be set together"
-// +kubebuilder:validation:XValidation:rule="has(self.mimeType) || (has(self.contentEntries) && self.contentEntries.exists(x, x.slot == 'main'))",message="an HTML page (no mimeType) must declare contentEntries with a 'main' slot"
+// +kubebuilder:validation:XValidation:rule="has(self.mimeType) || has(self.rewrite) || (has(self.contentEntries) && self.contentEntries.exists(x, x.slot == 'main'))",message="an HTML page (no mimeType, no rewrite) must declare contentEntries with a 'main' slot"
+// +kubebuilder:validation:XValidation:rule="!(has(self.rewrite) && has(self.mimeType))",message="rewrite and mimeType are mutually exclusive"
+// +kubebuilder:validation:XValidation:rule="!has(self.rewrite) || !(has(self.contentEntries) || has(self.pageArchetypeRef) || has(self.overrideHeaderRef) || has(self.overrideFooterRef) || has(self.overrideNavigationRefs) || has(self.scriptLibraryRef))",message="a rewrite page must not set contentEntries, pageArchetypeRef, override*Refs or scriptLibraryRef"
+// +kubebuilder:validation:XValidation:rule="!(has(self.mimeType) && has(self.patternPath))",message="a text page (mimeType set) must not set patternPath"
 type KDexPageSpec struct {
 	// contentEntries is a set of content entries to bind to this page. They may be either raw HTML fragments or KDexApp references.
 	// +listType=map
@@ -143,6 +146,10 @@ type KDexPageSpec struct {
 	// +kubebuilder:validation:MaxLength=65536
 	// +kubebuilder:validation:Optional
 	Body string `json:"body,omitempty" protobuf:"bytes,16,opt,name=body"`
+
+	// rewrite, when set, makes this page an internal alias of another KDexPage or KDexFunction on the same host. Mutually exclusive with contentEntries and mimeType/body.
+	// +kubebuilder:validation:Optional
+	Rewrite *RewriteSpec `json:"rewrite,omitempty" protobuf:"bytes,17,opt,name=rewrite"`
 }
 
 func init() {

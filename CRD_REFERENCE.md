@@ -1585,6 +1585,7 @@ _Appears in:_
 - [KDexThemeSpec](#kdexthemespec)
 - [KDexUtilityPageSpec](#kdexutilitypagespec)
 - [PackageReference](#packagereference)
+- [RewriteSpec](#rewritespec)
 - [UtilityPages](#utilitypages)
 
 | Field | Description | Default | Validation |
@@ -1915,13 +1916,14 @@ _Appears in:_
 | `overrideNavigationRefs` _object (keys:string, values:[KDexObjectReference](#kdexobjectreference))_ | overrideNavigationRefs is an optional map of keyed navigation object references. When not empty, the 'main' key must be specified. These navigations will be merged with the navigations from the archetype. |  | MaxProperties: 10 <br />Optional: \{\} <br /> |
 | `pageArchetypeRef` _[KDexObjectReference](#kdexobjectreference)_ | pageArchetypeRef is a reference to the KDexPageArchetype that this binding is for. If not specified a default will be used. If no default is found the page will be considered degraded. |  | Optional: \{\} <br /> |
 | `parentPageRef` _[LocalObjectReference](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.35/#localobjectreference-v1-core)_ | parentPageRef is a reference to the KDexPage bellow which this page will appear in the main navigation. If not set, the page will be placed in the top level of the navigation. |  | Optional: \{\} <br /> |
-| `basePath` _string_ | basePath is the shortest path by which the page may be accessed. It must not contain path parameters. This path will be used in site navigation. This path is subject to being prefixed for localization by `/\{l10n\}` and will be when the user selects a non-default language. |  | Pattern: `^/` <br />Required: \{\} <br /> |
-| `patternPath` _string_ | patternPath, which must be prefixed by BasePath, is an extension of basePath that adds pattern matching as defined by https://pkg.go.dev/net/http#hdr-Patterns-ServeMux. This path is subject to being prefixed for localization by `/\{l10n\}` such as when the user selects a non-default language. |  | Optional: \{\} <br /> |
+| `basePath` _string_ | basePath is the shortest path by which the page may be accessed. It must not contain path parameters. This path will be used in site navigation. For a localized page (the default) it is also registered under a literal "/<lang>" prefix for every non-default language. |  | Pattern: `^/` <br />Required: \{\} <br /> |
+| `patternPath` _string_ | patternPath, which must be prefixed by BasePath, is an extension of basePath that adds pattern matching as defined by https://pkg.go.dev/net/http#hdr-Patterns-ServeMux. For a localized page it is also registered under a literal "/<lang>" prefix for every non-default language. Not allowed on a text page (mimeType set). |  | Optional: \{\} <br /> |
 | `scriptLibraryRef` _[KDexObjectReference](#kdexobjectreference)_ | scriptLibraryRef is an optional reference to a KDexScriptLibrary resource. |  | Optional: \{\} <br /> |
 | `security` _[SecurityRequirement](#securityrequirement)_ | Optional security requirements that override top-level security. |  |  |
 | `localized` _boolean_ | localized controls whether language-prefixed routes (/<lang>/…) are<br />registered for this page. Default true. Set false for a page that must live<br />at exactly one path (robots.txt, llms.txt, sitemap.xml). | true | Optional: \{\} <br /> |
 | `mimeType` _string_ | mimeType, when set, serves the page as a raw text document of this type<br />instead of composing HTML from an archetype. |  | Enum: [txt json yaml markdown xml] <br />Optional: \{\} <br /> |
 | `body` _string_ | body is the content served when mimeType is set. It runs through the same<br />[[ ]] template + translation pipeline as a rawHTML content entry. |  | MaxLength: 65536 <br />Optional: \{\} <br /> |
+| `rewrite` _[RewriteSpec](#rewritespec)_ | rewrite, when set, makes this page an internal alias of another KDexPage or KDexFunction on the same host. Mutually exclusive with contentEntries and mimeType/body. |  | Optional: \{\} <br /> |
 
 
 #### KDexRole
@@ -2515,8 +2517,8 @@ _Appears in:_
 
 | Field | Description | Default | Validation |
 | --- | --- | --- | --- |
-| `basePath` _string_ | basePath is the shortest path by which the page may be accessed. It must not contain path parameters. This path will be used in site navigation. This path is subject to being prefixed for localization by `/\{l10n\}` and will be when the user selects a non-default language. |  | Pattern: `^/` <br />Required: \{\} <br /> |
-| `patternPath` _string_ | patternPath, which must be prefixed by BasePath, is an extension of basePath that adds pattern matching as defined by https://pkg.go.dev/net/http#hdr-Patterns-ServeMux. This path is subject to being prefixed for localization by `/\{l10n\}` such as when the user selects a non-default language. |  | Optional: \{\} <br /> |
+| `basePath` _string_ | basePath is the shortest path by which the page may be accessed. It must not contain path parameters. This path will be used in site navigation. For a localized page (the default) it is also registered under a literal "/<lang>" prefix for every non-default language. |  | Pattern: `^/` <br />Required: \{\} <br /> |
+| `patternPath` _string_ | patternPath, which must be prefixed by BasePath, is an extension of basePath that adds pattern matching as defined by https://pkg.go.dev/net/http#hdr-Patterns-ServeMux. For a localized page it is also registered under a literal "/<lang>" prefix for every non-default language. Not allowed on a text page (mimeType set). |  | Optional: \{\} <br /> |
 
 
 #### PolicyRule
@@ -2560,6 +2562,26 @@ _Appears in:_
 | --- | --- | --- | --- |
 | `imageRegistry` _string_ | imageRegistry is the default image registry used by this host. If not set the value will be inherited from the default configuration.<br />Credentials should be provided as a Secret associated to the ServiceAccount referenced by spec.serviceAccountRef. |  | Optional: \{\} <br /> |
 | `npmRegistry` _string_ | npmRegistry is the default npm registry used by this host. If not set the value will be inherited from the default configuration.<br />Credentials should be provided as a Secret associated to the ServiceAccount referenced by spec.serviceAccountRef. |  | Optional: \{\} <br /> |
+
+
+#### RewriteSpec
+
+
+
+RewriteSpec makes a KDexPage an internal alias of another KDexPage or
+KDexFunction on the same host: the page's routes serve the target's response
+without a redirect. See kdex-tech/host-manager#217.
+
+
+
+_Appears in:_
+- [KDexPageSpec](#kdexpagespec)
+
+| Field | Description | Default | Validation |
+| --- | --- | --- | --- |
+| `targetRef` _[KDexObjectReference](#kdexobjectreference)_ | targetRef names the KDexPage or KDexFunction whose response this page serves. It is resolved in the page's own namespace; namespace is ignored. |  | Required: \{\} <br /> |
+| `path` _string_ | path is joined to the target's basePath with exactly one '/'. \{name\} placeholders are substituted from this page's patternPath wildcards. Empty means the target's own registered route. |  | MaxLength: 512 <br />Optional: \{\} <br />Pattern: `^[^:?#]*$` <br /> |
+| `canonical` _boolean_ | canonical, when true, adds `Link: <target URL>; rel="canonical"` so the alias does not compete with the target in search indexes. |  | Optional: \{\} <br /> |
 
 
 #### Routing

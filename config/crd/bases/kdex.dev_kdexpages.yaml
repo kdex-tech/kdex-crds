@@ -65,9 +65,9 @@ spec:
               basePath:
                 description: basePath is the shortest path by which the page may be
                   accessed. It must not contain path parameters. This path will be
-                  used in site navigation. This path is subject to being prefixed
-                  for localization by `/{l10n}` and will be when the user selects
-                  a non-default language.
+                  used in site navigation. For a localized page (the default) it is
+                  also registered under a literal "/<lang>" prefix for every non-default
+                  language.
                 pattern: ^/
                 type: string
               body:
@@ -352,9 +352,63 @@ spec:
               patternPath:
                 description: patternPath, which must be prefixed by BasePath, is an
                   extension of basePath that adds pattern matching as defined by https://pkg.go.dev/net/http#hdr-Patterns-ServeMux.
-                  This path is subject to being prefixed for localization by `/{l10n}`
-                  such as when the user selects a non-default language.
+                  For a localized page it is also registered under a literal "/<lang>"
+                  prefix for every non-default language. Not allowed on a text page
+                  (mimeType set).
                 type: string
+              rewrite:
+                description: rewrite, when set, makes this page an internal alias
+                  of another KDexPage or KDexFunction on the same host. Mutually exclusive
+                  with contentEntries and mimeType/body.
+                properties:
+                  canonical:
+                    description: 'canonical, when true, adds `Link: <target URL>;
+                      rel="canonical"` so the alias does not compete with the target
+                      in search indexes.'
+                    type: boolean
+                  path:
+                    description: path is joined to the target's basePath with exactly
+                      one '/'. {name} placeholders are substituted from this page's
+                      patternPath wildcards. Empty means the target's own registered
+                      route.
+                    maxLength: 512
+                    pattern: ^[^:?#]*$
+                    type: string
+                    x-kubernetes-validations:
+                    - message: rewrite.path must not contain '//', '.' or '..' segments
+                      rule: '!self.contains(''//'') && !self.matches(''(^|/)[.][.]?(/|$)'')'
+                  targetRef:
+                    description: targetRef names the KDexPage or KDexFunction whose
+                      response this page serves. It is resolved in the page's own
+                      namespace; namespace is ignored.
+                    properties:
+                      kind:
+                        description: Kind is the type of resource being referenced
+                        type: string
+                      name:
+                        description: Name of the referent.
+                        type: string
+                      namespace:
+                        description: |-
+                          Namespace, if set, causes the lookup for the namespace scoped Kind of the referent to use the specified
+                          namespace. If not set, the namespace of the resource will be used to lookup the namespace scoped Kind of the
+                          referent.
+                          If the referring resource is cluster scoped, this field is ignored.
+                          Defaulted to nil.
+                        type: string
+                    required:
+                    - kind
+                    - name
+                    type: object
+                    x-kubernetes-map-type: atomic
+                    x-kubernetes-validations:
+                    - message: rewrite.targetRef.name must not be empty
+                      rule: self.name.size() > 0
+                    - message: '''kind'' must be either KDexPage or KDexFunction'
+                      rule: self.kind == "KDexPage" || self.kind == "KDexFunction"
+                required:
+                - targetRef
+                type: object
               scriptLibraryRef:
                 description: scriptLibraryRef is an optional reference to a KDexScriptLibrary
                   resource.
@@ -422,10 +476,19 @@ spec:
             x-kubernetes-validations:
             - message: mimeType and body must be set together
               rule: has(self.mimeType) == has(self.body)
-            - message: an HTML page (no mimeType) must declare contentEntries with
-                a 'main' slot
-              rule: has(self.mimeType) || (has(self.contentEntries) && self.contentEntries.exists(x,
-                x.slot == 'main'))
+            - message: an HTML page (no mimeType, no rewrite) must declare contentEntries
+                with a 'main' slot
+              rule: has(self.mimeType) || has(self.rewrite) || (has(self.contentEntries)
+                && self.contentEntries.exists(x, x.slot == 'main'))
+            - message: rewrite and mimeType are mutually exclusive
+              rule: '!(has(self.rewrite) && has(self.mimeType))'
+            - message: a rewrite page must not set contentEntries, pageArchetypeRef,
+                override*Refs or scriptLibraryRef
+              rule: '!has(self.rewrite) || !(has(self.contentEntries) || has(self.pageArchetypeRef)
+                || has(self.overrideHeaderRef) || has(self.overrideFooterRef) || has(self.overrideNavigationRefs)
+                || has(self.scriptLibraryRef))'
+            - message: a text page (mimeType set) must not set patternPath
+              rule: '!(has(self.mimeType) && has(self.patternPath))'
             - message: if patternPath is specified, basePath must be a prefix of patternPath
               rule: '!has(self.patternPath) || self.patternPath.startsWith(self.basePath)'
           status:

@@ -157,6 +157,87 @@ func TestKDexPageGeneratedSchema(t *testing.T) {
 	}
 	assert.Contains(t, rules, `has(self.mimeType) == has(self.body)`,
 		"mimeType/body must-be-set-together CEL must be present")
-	assert.Contains(t, rules, `has(self.mimeType) || (has(self.contentEntries) && self.contentEntries.exists(x, x.slot == 'main'))`,
-		"main-slot-unless-text-page CEL must be present")
+	assert.Contains(t, rules, `has(self.mimeType) || has(self.rewrite) || (has(self.contentEntries) && self.contentEntries.exists(x, x.slot == 'main'))`,
+		"main-slot-unless-text-or-rewrite-page CEL must be present")
+}
+
+// TestKDexPageSpec_RewriteDecodes pins the rewrite-mode field shape (#217).
+func TestKDexPageSpec_RewriteDecodes(t *testing.T) {
+	specYaml := `
+hostRef: { name: test-host }
+label: docs latest
+basePath: /docs/latest
+patternPath: /docs/latest/{rest...}
+rewrite:
+  targetRef: { kind: KDexPage, name: docs-v3 }
+  path: "{rest}"
+  canonical: true
+`
+	var spec KDexPageSpec
+	require.NoError(t, yaml.Unmarshal([]byte(specYaml), &spec))
+	require.NotNil(t, spec.Rewrite)
+	assert.Equal(t, "KDexPage", spec.Rewrite.TargetRef.Kind)
+	assert.Equal(t, "docs-v3", spec.Rewrite.TargetRef.Name)
+	assert.Equal(t, "{rest}", spec.Rewrite.Path)
+	assert.True(t, spec.Rewrite.Canonical)
+	assert.Empty(t, spec.ContentEntries)
+
+	raw, err := json.Marshal(KDexPageSpec{})
+	require.NoError(t, err)
+	assert.NotContains(t, string(raw), "rewrite", "an unset rewrite must not serialize")
+}
+
+// TestKDexPageGeneratedSchema_RewriteMode pins the rewrite property and the
+// mode-exclusion CEL in the generated CRD (#217, #201).
+func TestKDexPageGeneratedSchema_RewriteMode(t *testing.T) {
+	raw, err := os.ReadFile(filepath.Join("..", "..", "config", "crd", "bases", "kdex.dev_kdexpages.yaml"))
+	require.NoError(t, err)
+
+	var crd struct {
+		Spec struct {
+			Versions []struct {
+				Schema struct {
+					OpenAPIV3Schema struct {
+						Properties struct {
+							Spec struct {
+								Properties struct {
+									Rewrite struct {
+										Required   []string `json:"required"`
+										Properties struct {
+											Path struct {
+												MaxLength int    `json:"maxLength"`
+												Pattern   string `json:"pattern"`
+											} `json:"path"`
+											Canonical struct {
+												Type string `json:"type"`
+											} `json:"canonical"`
+										} `json:"properties"`
+									} `json:"rewrite"`
+								} `json:"properties"`
+								XKubernetesValidations []struct {
+									Rule string `json:"rule"`
+								} `json:"x-kubernetes-validations"`
+							} `json:"spec"`
+						} `json:"properties"`
+					} `json:"openAPIV3Schema"`
+				} `json:"schema"`
+			} `json:"versions"`
+		} `json:"spec"`
+	}
+	require.NoError(t, yaml.Unmarshal(raw, &crd))
+	spec := crd.Spec.Versions[0].Schema.OpenAPIV3Schema.Properties.Spec
+
+	assert.Contains(t, spec.Properties.Rewrite.Required, "targetRef")
+	assert.Equal(t, 512, spec.Properties.Rewrite.Properties.Path.MaxLength)
+	assert.Equal(t, `^[^:?#]*$`, spec.Properties.Rewrite.Properties.Path.Pattern)
+	assert.Equal(t, "boolean", spec.Properties.Rewrite.Properties.Canonical.Type)
+
+	rules := make([]string, 0, len(spec.XKubernetesValidations))
+	for _, r := range spec.XKubernetesValidations {
+		rules = append(rules, r.Rule)
+	}
+	assert.Contains(t, rules, `has(self.mimeType) || has(self.rewrite) || (has(self.contentEntries) && self.contentEntries.exists(x, x.slot == 'main'))`)
+	assert.Contains(t, rules, `!(has(self.rewrite) && has(self.mimeType))`)
+	assert.Contains(t, rules, `!has(self.rewrite) || !(has(self.contentEntries) || has(self.pageArchetypeRef) || has(self.overrideHeaderRef) || has(self.overrideFooterRef) || has(self.overrideNavigationRefs) || has(self.scriptLibraryRef))`)
+	assert.Contains(t, rules, `!(has(self.mimeType) && has(self.patternPath))`)
 }

@@ -1239,14 +1239,36 @@ func (pi *PathItem) SetTrace(op *openapi.Operation) {
 
 // +kubebuilder:validation:XValidation:rule="!has(self.patternPath) || self.patternPath.startsWith(self.basePath)",message="if patternPath is specified, basePath must be a prefix of patternPath"
 type Paths struct {
-	// basePath is the shortest path by which the page may be accessed. It must not contain path parameters. This path will be used in site navigation. This path is subject to being prefixed for localization by `/{l10n}` and will be when the user selects a non-default language.
+	// basePath is the shortest path by which the page may be accessed. It must not contain path parameters. This path will be used in site navigation. For a localized page (the default) it is also registered under a literal "/<lang>" prefix for every non-default language.
 	// +kubebuilder:validation:Pattern=`^/`
 	// +kubebuilder:validation:Required
 	BasePath string `json:"basePath" protobuf:"bytes,1,opt,name=basePath"`
 
-	// patternPath, which must be prefixed by BasePath, is an extension of basePath that adds pattern matching as defined by https://pkg.go.dev/net/http#hdr-Patterns-ServeMux. This path is subject to being prefixed for localization by `/{l10n}` such as when the user selects a non-default language.
+	// patternPath, which must be prefixed by BasePath, is an extension of basePath that adds pattern matching as defined by https://pkg.go.dev/net/http#hdr-Patterns-ServeMux. For a localized page it is also registered under a literal "/<lang>" prefix for every non-default language. Not allowed on a text page (mimeType set).
 	// +kubebuilder:validation:Optional
 	PatternPath string `json:"patternPath,omitempty" protobuf:"bytes,2,opt,name=patternPath"`
+}
+
+// RewriteSpec makes a KDexPage an internal alias of another KDexPage or
+// KDexFunction on the same host: the page's routes serve the target's response
+// without a redirect. See kdex-tech/host-manager#217.
+type RewriteSpec struct {
+	// targetRef names the KDexPage or KDexFunction whose response this page serves. It is resolved in the page's own namespace; namespace is ignored.
+	// +kubebuilder:validation:Required
+	// +kubebuilder:validation:XValidation:rule="self.name.size() > 0",message="rewrite.targetRef.name must not be empty"
+	// +kubebuilder:validation:XValidation:rule=`self.kind == "KDexPage" || self.kind == "KDexFunction"`,message="'kind' must be either KDexPage or KDexFunction"
+	TargetRef KDexObjectReference `json:"targetRef" protobuf:"bytes,1,req,name=targetRef"`
+
+	// path is joined to the target's basePath with exactly one '/'. {name} placeholders are substituted from this page's patternPath wildcards. Empty means the target's own registered route.
+	// +kubebuilder:validation:MaxLength=512
+	// +kubebuilder:validation:Pattern=`^[^:?#]*$`
+	// +kubebuilder:validation:XValidation:rule="!self.contains('//') && !self.matches('(^|/)[.][.]?(/|$)')",message="rewrite.path must not contain '//', '.' or '..' segments"
+	// +kubebuilder:validation:Optional
+	Path string `json:"path,omitempty" protobuf:"bytes,2,opt,name=path"`
+
+	// canonical, when true, adds `Link: <target URL>; rel="canonical"` so the alias does not compete with the target in search indexes.
+	// +kubebuilder:validation:Optional
+	Canonical bool `json:"canonical,omitempty" protobuf:"varint,3,opt,name=canonical"`
 }
 
 type Registries struct {
