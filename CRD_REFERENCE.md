@@ -1562,6 +1562,28 @@ _Appears in:_
 | `hostRef` _[LocalObjectReference](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.35/#localobjectreference-v1-core)_ | hostRef is a reference to the KDexInternalHost that this utility page belongs to. |  | Required: \{\} <br /> |
 
 
+#### KDexNamespacedTranslationSpec
+
+
+
+KDexNamespacedTranslationSpec is the spec of a namespaced KDexTranslation: the
+shared translation content plus an optional self-attachment to a host.
+
+It is a separate type from KDexTranslationSpec, because that type is also the
+spec of KDexClusterTranslation (which cannot name a namespaced host) and is
+inlined into KDexInternalTranslationSpec next to that kind's own hostRef.
+
+
+
+_Appears in:_
+- [KDexTranslation](#kdextranslation)
+
+| Field | Description | Default | Validation |
+| --- | --- | --- | --- |
+| `translations` _[Translation](#translation) array_ | translations is an array of objects where each one specifies a language (lang) and a map (keysAndValues) consisting of key/value pairs. If the lang property is not unique in the array and its keysAndValues map contains the same keys, the last one takes precedence. |  | MaxItems: 32 <br />MinItems: 1 <br />Required: \{\} <br /> |
+| `hostRef` _[LocalObjectReference](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.35/#localobjectreference-v1-core)_ | hostRef optionally attaches this translation to the named KDexHost in the<br />same namespace, in addition to any host that lists it in<br />spec.translationRefs. When two translations attached to one host define the<br />same language and key, precedence from lowest to highest is: the default<br />translation, self-attached translations (by name), then the host's<br />translationRefs (in list order). |  | Optional: \{\} <br /> |
+
+
 #### KDexObjectReference
 
 
@@ -2187,7 +2209,7 @@ _Appears in:_
 | `apiVersion` _string_ | `kdex.dev/v1alpha1` | | |
 | `kind` _string_ | `KDexTranslation` | | |
 | `metadata` _[ObjectMeta](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.35/#objectmeta-v1-meta)_ | Refer to Kubernetes API documentation for fields of `metadata`. |  | Optional: \{\} <br /> |
-| `spec` _[KDexTranslationSpec](#kdextranslationspec)_ | spec defines the desired state of KDexTranslation |  | Required: \{\} <br /> |
+| `spec` _[KDexNamespacedTranslationSpec](#kdexnamespacedtranslationspec)_ | spec defines the desired state of KDexTranslation |  | Required: \{\} <br /> |
 
 
 #### KDexTranslationList
@@ -2219,7 +2241,7 @@ KDexTranslationSpec defines the desired state of KDexTranslation
 _Appears in:_
 - [KDexClusterTranslation](#kdexclustertranslation)
 - [KDexInternalTranslationSpec](#kdexinternaltranslationspec)
-- [KDexTranslation](#kdextranslation)
+- [KDexNamespacedTranslationSpec](#kdexnamespacedtranslationspec)
 
 | Field | Description | Default | Validation |
 | --- | --- | --- | --- |
@@ -2791,6 +2813,7 @@ _Appears in:_
 
 _Appears in:_
 - [KDexInternalTranslationSpec](#kdexinternaltranslationspec)
+- [KDexNamespacedTranslationSpec](#kdexnamespacedtranslationspec)
 - [KDexTranslationSpec](#kdextranslationspec)
 
 | Field | Description | Default | Validation |

@@ -17,6 +17,7 @@ limitations under the License.
 package v1alpha1
 
 import (
+	corev1 "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
 
@@ -45,7 +46,7 @@ type KDexTranslation struct {
 
 	// spec defines the desired state of KDexTranslation
 	// +kubebuilder:validation:Required
-	Spec KDexTranslationSpec `json:"spec"`
+	Spec KDexNamespacedTranslationSpec `json:"spec"`
 }
 
 // +kubebuilder:object:root=true
@@ -66,6 +67,26 @@ type KDexTranslationSpec struct {
 	// +kubebuilder:validation:MinItems=1
 	// +kubebuilder:validation:Required
 	Translations []Translation `json:"translations" protobuf:"bytes,2,rep,name=translations"`
+}
+
+// KDexNamespacedTranslationSpec is the spec of a namespaced KDexTranslation: the
+// shared translation content plus an optional self-attachment to a host.
+//
+// It is a separate type from KDexTranslationSpec, because that type is also the
+// spec of KDexClusterTranslation (which cannot name a namespaced host) and is
+// inlined into KDexInternalTranslationSpec next to that kind's own hostRef.
+type KDexNamespacedTranslationSpec struct {
+	KDexTranslationSpec `json:",inline" protobuf:"bytes,1,req,name=translationSpec"`
+
+	// hostRef optionally attaches this translation to the named KDexHost in the
+	// same namespace, in addition to any host that lists it in
+	// spec.translationRefs. When two translations attached to one host define the
+	// same language and key, precedence from lowest to highest is: the default
+	// translation, self-attached translations (by name), then the host's
+	// translationRefs (in list order).
+	// +kubebuilder:validation:Optional
+	// +kubebuilder:validation:XValidation:rule="self.name.size() > 0",message="hostRef.name must not be empty"
+	HostRef *corev1.LocalObjectReference `json:"hostRef,omitempty" protobuf:"bytes,2,opt,name=hostRef"`
 }
 
 func init() {
