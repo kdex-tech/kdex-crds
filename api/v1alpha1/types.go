@@ -206,6 +206,17 @@ type Auth struct {
 	// identity sources and mapping the results onto the Primary Access Token (PAT).
 	// This is used to map OIDC claims but can also be used with external data
 	// sources like LDAP or others via identity integration.
+	//
+	// Rules apply in order and each sees earlier rules' output in `self`. A
+	// rule whose target already holds a list ACCUMULATES by default: its list
+	// result is unioned onto the existing list (existing items first, then new
+	// items not already present), so a rule such as `self.extra_grants`
+	// targeting `entitlements` adds to the static grants rather than replacing
+	// them, and restating `self.entitlements` is harmless. Values already at
+	// the target, including claims asserted by the identity provider, stay.
+	// Scalars and maps replace. Set `merge: Replace` on a rule meant to
+	// filter, transform, normalise or override a list already at its own
+	// target.
 	// +kubebuilder:validation:Optional
 	// +kubebuilder:validation:MaxItems=16
 	ClaimMappings []dmapper.MappingRule `json:"claimMappings,omitempty" protobuf:"bytes,3,rep,name=claimMappings"`

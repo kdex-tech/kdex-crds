@@ -148,11 +148,39 @@ spec:
                       identity sources and mapping the results onto the Primary Access Token (PAT).
                       This is used to map OIDC claims but can also be used with external data
                       sources like LDAP or others via identity integration.
+
+                      Rules apply in order and each sees earlier rules' output in `self`. A
+                      rule whose target already holds a list ACCUMULATES by default: its list
+                      result is unioned onto the existing list (existing items first, then new
+                      items not already present), so a rule such as `self.extra_grants`
+                      targeting `entitlements` adds to the static grants rather than replacing
+                      them, and restating `self.entitlements` is harmless. Values already at
+                      the target, including claims asserted by the identity provider, stay.
+                      Scalars and maps replace. Set `merge: Replace` on a rule meant to
+                      filter, transform, normalise or override a list already at its own
+                      target.
                     items:
                       description: |-
                         MappingRule defines a transformation rule for mapping arbitrary data from an
                         input to an output.
                       properties:
+                        merge:
+                          description: |-
+                            merge controls how the rule's result combines with a value already at
+                            targetPropPath. Accumulate (the default when empty): when both the
+                            existing value and the result are lists, the result is the existing list
+                            followed by the result's items not already present (order-preserving
+                            set-union), so restating self.<target> is harmless and idempotent.
+                            Values already at that path in the input — including claims asserted by
+                            an identity provider — therefore stay in the output. Any other shape
+                            pair (scalar, map, list vs non-list) replaces. Replace: the result
+                            always replaces. Use it for any rule meant to filter, transform,
+                            normalise or override a list already at its own target (e.g. a rule
+                            that reads self.groups and writes groups).
+                          enum:
+                          - Accumulate
+                          - Replace
+                          type: string
                         required:
                           default: false
                           description: |-
