@@ -48,6 +48,12 @@ type KDexInternalHostSpec struct {
 	// +listMapKey=name
 	// +kubebuilder:validation:Optional
 	InternalTranslationRefs []corev1.LocalObjectReference `json:"internalTranslationRefs,omitempty" protobuf:"bytes,6,rep,name=internalTranslationRefs"`
+
+	// extensions are the KDexHostExtensions the host applies, in application
+	// order (weight, then name). Written by nexus-manager; see EffectiveAuth.
+	// +kubebuilder:validation:Optional
+	// +kubebuilder:validation:MaxItems=32
+	Extensions []InternalHostExtension `json:"extensions,omitempty" protobuf:"bytes,7,rep,name=extensions"`
 }
 
 // +kubebuilder:object:root=true

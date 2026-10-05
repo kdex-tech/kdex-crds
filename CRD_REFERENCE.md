@@ -36,6 +36,8 @@ Package v1alpha1 contains API Schema definitions for the  v1alpha1 API group.
 - [KDexFunction](#kdexfunction)
 - [KDexFunctionList](#kdexfunctionlist)
 - [KDexHost](#kdexhost)
+- [KDexHostExtension](#kdexhostextension)
+- [KDexHostExtensionList](#kdexhostextensionlist)
 - [KDexHostList](#kdexhostlist)
 - [KDexInternalHost](#kdexinternalhost)
 - [KDexInternalHostList](#kdexinternalhostlist)
@@ -569,6 +571,27 @@ _Appears in:_
 | --- | --- | --- | --- |
 | `values` _string_ | values is the inline YAML values for the kdex-host-manager chart. |  | Optional: \{\} <br /> |
 | `version` _string_ | version is the version of the kdex-host-manager chart. |  | Optional: \{\} <br /> |
+
+
+#### InternalHostExtension
+
+
+
+InternalHostExtension is one KDexHostExtension a host applies, copied into
+the KDexInternalHost by nexus-manager in application order.
+
+
+
+_Appears in:_
+- [KDexInternalHostSpec](#kdexinternalhostspec)
+
+| Field | Description | Default | Validation |
+| --- | --- | --- | --- |
+| `name` _string_ | name is the source KDexHostExtension's name. |  | Required: \{\} <br /> |
+| `generation` _integer_ | generation is the source KDexHostExtension's metadata.generation. |  | Optional: \{\} <br /> |
+| `weight` _integer_ | weight is the source KDexHostExtension's spec.weight. |  | Optional: \{\} <br /> |
+| `claimMappings` _MappingRule array_ |  |  | MaxItems: 16 <br />Optional: \{\} <br /> |
+| `anonymousEntitlements` _string array_ |  |  | MaxItems: 64 <br />Optional: \{\} <br />items:MaxLength: 256 <br /> |
 
 
 #### JWT
@@ -1233,6 +1256,67 @@ _Appears in:_
 | `spec` _[KDexHostSpec](#kdexhostspec)_ | spec defines the desired state of KDexHost |  | Required: \{\} <br /> |
 
 
+#### KDexHostExtension
+
+
+
+KDexHostExtension is the Schema for the kdexhostextensions API
+
+A KDexHostExtension carries contributions a companion chart makes to a
+KDexHost it does not own: claimMappings and anonymousEntitlements. It
+applies only when it names the host in spec.hostRef AND its labels match the
+host's spec.extensionSelector; a host without a selector accepts none.
+
+
+
+_Appears in:_
+- [KDexHostExtensionList](#kdexhostextensionlist)
+
+| Field | Description | Default | Validation |
+| --- | --- | --- | --- |
+| `apiVersion` _string_ | `kdex.dev/v1alpha1` | | |
+| `kind` _string_ | `KDexHostExtension` | | |
+| `metadata` _[ObjectMeta](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.35/#objectmeta-v1-meta)_ | Refer to Kubernetes API documentation for fields of `metadata`. |  | Optional: \{\} <br /> |
+| `spec` _[KDexHostExtensionSpec](#kdexhostextensionspec)_ | spec defines the desired state of KDexHostExtension |  | Required: \{\} <br /> |
+
+
+#### KDexHostExtensionList
+
+
+
+KDexHostExtensionList contains a list of KDexHostExtension
+
+
+
+
+
+| Field | Description | Default | Validation |
+| --- | --- | --- | --- |
+| `apiVersion` _string_ | `kdex.dev/v1alpha1` | | |
+| `kind` _string_ | `KDexHostExtensionList` | | |
+| `metadata` _[ListMeta](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.35/#listmeta-v1-meta)_ | Refer to Kubernetes API documentation for fields of `metadata`. |  |  |
+| `items` _[KDexHostExtension](#kdexhostextension) array_ |  |  |  |
+
+
+#### KDexHostExtensionSpec
+
+
+
+KDexHostExtensionSpec defines the desired state of KDexHostExtension
+
+
+
+_Appears in:_
+- [KDexHostExtension](#kdexhostextension)
+
+| Field | Description | Default | Validation |
+| --- | --- | --- | --- |
+| `hostRef` _[LocalObjectReference](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.35/#localobjectreference-v1-core)_ | hostRef names the KDexHost in the same namespace this extension<br />contributes to. The host must also select this extension through its<br />spec.extensionSelector. |  | Required: \{\} <br /> |
+| `weight` _integer_ | weight orders this extension among the extensions a host applies: lower<br />runs first, ties by name. The host's own claimMappings always run before<br />every extension's. | 0 | Maximum: 1000 <br />Minimum: -1000 <br />Optional: \{\} <br /> |
+| `claimMappings` _MappingRule array_ | claimMappings are appended after the host's own claimMappings. List<br />targets accumulate, so a rule adds to what the host already maps. |  | MaxItems: 16 <br />Optional: \{\} <br /> |
+| `anonymousEntitlements` _string array_ | anonymousEntitlements are unioned into the host's anonymousEntitlements. |  | MaxItems: 64 <br />Optional: \{\} <br />items:MaxLength: 256 <br /> |
+
+
 #### KDexHostList
 
 
@@ -1289,6 +1373,7 @@ _Appears in:_
 | `scriptLibraryRef` _[KDexObjectReference](#kdexobjectreference)_ | scriptLibraryRef is an optional reference to a KDexScriptLibrary resource. |  | Optional: \{\} <br /> |
 | `security` _[SecurityRequirement](#securityrequirement)_ | Optional top level security requirements. |  |  |
 | `secretSelector` _[LabelSelector](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.35/#labelselector-v1-meta)_ | SecretSelector is an optional label selector matching Secrets in<br />the host's namespace that participate in the host's auth,<br />credential, and registry-pull configuration. When nil, no Secrets<br />are resolved. When non-nil, standard metav1.LabelSelector<br />semantics apply — an explicit empty selector `\{\}` matches every<br />Secret in the namespace, so prefer a `matchLabels` clause scoped<br />to the host.<br />Recommended convention: label rotation-managed Secrets with<br />`kdex.dev/host: <hostName>` and use a `matchLabels` selector on<br />that key. The controller does not enforce this convention —<br />selectors may legitimately match Secrets across multiple hosts in<br />the same namespace (e.g. a shared docker-pull Secret).<br />Per-Secret role within the matched set is determined by Secret<br />type and by the `kdex.dev/secret-type` annotation. Each matched<br />Secret must match one of the following cases:<br />- is annotated with 'kdex.dev/secret-type = api-key' (multiple)<br />    An api-key secret is used to define a PASETO key that will be used to sign api tokens and served at '/.well-known/pks.json'.<br />    - must contain key 'private-key'<br />    - may contain key 'public-key'<br />    - may be annotated with 'kdex.dev/active-key = true'<br />- is annotated with 'kdex.dev/secret-type = auth-client' (multiple)<br />    An auth-client secret is used to define a OAuth2 client.<br />    - must contain key 'client-id' OR 'client_id'<br />    - may contain key 'public' (true\|false, default: false)<br />    - if not public, must contain key 'client-secret' OR 'client_secret'<br />    - must contain key 'redirect-uris' OR 'redirect_uris' (comma separated list)<br />    - may contain key 'allowed-grant-types' OR 'allowed_grant_types' (comma separated list)<br />    - may contain key 'allowed-scopes' OR 'allowed_scopes' (comma separated list)<br />    - may contain key 'require-pkce' OR 'require_pkce' (true\|false, default: false)<br />    - may contain key 'name'<br />    - may contain key 'description'<br />- is annotated with 'kdex.dev/secret-type = git' (first, sorted newest to oldest)<br />    A git secret is used to define a Git repository.<br />    - must contain key 'host'<br />    - must contain key 'org'<br />    - must contain key 'password'<br />    - must contain key 'repo'<br />    - must contain key 'username'<br />- is annotated with 'kdex.dev/secret-type = helm' (multiple)<br />    A helm secret is used to define a set of Helm repository credentials.<br />    - must contain key 'password'<br />    - must contain key 'repository' (the hostname, port and base path of the repository)<br />    - must contain key 'username'<br />    - may contain key 'plainHTTP' (true\|false, default false)<br />- is annotated with 'kdex.dev/secret-type = http-lookup-auth' (first, sorted newest to oldest, filtered by kdex.dev/active-key=true)<br />    An http-lookup-auth secret defines an external HTTP credential-check<br />    endpoint that the host-manager's auth.Lookup chain calls during<br />    /-/login. Discovered by the controller alongside the existing<br />    secret-driven and LDAP lookups; slotted into the chain after<br />    SecretLookup (preserving bootstrap-admin) and before LDAP.<br />    - must contain key 'url' (full URL of the credential-check endpoint)<br />    - must contain key 'shared-secret' (>= 32 raw bytes; HMAC-SHA256 key)<br />    - may contain key 'timeout-ms' (integer milliseconds; default 2000)<br />    - must be annotated with 'kdex.dev/active-key = true' to be picked up<br />    The endpoint contract (mirrored by the credential-check function):<br />    Request:<br />        POST <url><br />        Content-Type: application/json<br />        X-K-CNAS-Lookup-Timestamp: <unix-millis><br />        X-K-CNAS-Lookup-Signature: hex(hmac-sha256(shared-secret, timestamp + "." + body))<br />        \{ "subject": "<login-identifier>", "password": "<plaintext>" \}<br />    The endpoint MUST verify the HMAC over (timestamp + "." + body) and<br />    reject requests with stale timestamps (>5s old recommended).<br />    Response on success (HTTP 200):<br />        \{<br />            "ok": true,<br />            "claims": \{<br />                "sub": "<canonical-subject-id>",<br />                "email": "...", "given_name": "...", "family_name": "...",<br />                "amr": ["pwd"], "acr": "1"<br />            \},<br />            "next_step": null<br />        \}<br />    Response on failure (HTTP 200):<br />        \{ "ok": false, "reason": "invalid_credentials" \}<br />    The 'claims' map becomes the JWT claims (entitlements/roles layered<br />    on by KDexRoleBinding resolution). The 'next_step' field is reserved<br />    for future multi-step (MFA) extensions; today the host-manager<br />    ignores its value but the field shape must be preserved. An empty<br />    string is treated identically to null - never set "next_step": "".<br />    A sniffer-shaped curl that generates a KDexFunction CR matching this<br />    contract when posted to a devMode KDexHost (granted functions:create):<br />        curl -L -X POST \<br />          -H "Authorization: Bearer $TOKEN" \<br />          -H "Content-Type: application/json" \<br />          -H "X-KDex-Function-Name: user-credential-check" \<br />          -H "X-KDex-Function-Pattern-Path: /v1/credential-check" \<br />          -H "X-KDex-Function-Operation-ID: credentialCheck" \<br />          -H "X-KDex-Function-Tags: auth-internal" \<br />          -H "X-KDex-Function-Summary: Verify subject+password, return JWT claims" \<br />          -d '\{"subject":"alice@example.com","password":"hunter2"\}' \<br />          https://<dev-host>/v1/credential-check<br />- is annotated with 'kdex.dev/secret-type = jwt-keys' (multiple)<br />    A jwt-keys secret is used to define a JWT key that will be used to sign tokens and served at '/.well-known/jwks.json'.<br />    - must contain key 'private-key'<br />    - may be annotated with 'kdex.dev/active-key = true'<br />- is annotated with 'kdex.dev/secret-type = ldap' (first, sorted newest to oldest)<br />    A ldap secret is used to define a LDAP server connection that will be used to authenticate users.<br />    - must contain key 'active-directory' (true\|false)<br />    - must contain key 'addr'<br />    - must contain key 'base-dn'<br />    - must contain key 'bind-dn'<br />    - must contain key 'bind-user'<br />    - must contain key 'bind-pass'<br />    - must contain key 'user-filter'<br />    - may contain key 'attributes' (comma separated list of attributes to retrieve)<br />- is annotated with 'kdex.dev/secret-type = npm' (multiple)<br />    A npm secret is used to define a npm registry connection that will be used to retrieve packages.<br />    - must contain key '.npmrc' (formatted as a complete .npmrc file)<br />- is annotated with 'kdex.dev/secret-type = oidc-client' (first, sorted newest to oldest)<br />    An oidc-client secret is used to define the OpenID Connect client configuration for the host.<br />    - must contain key 'client-id' OR 'client_id'<br />    - must contain key 'client-secret' OR 'client_secret'<br />    - may contain a key 'name'<br />    - may contain key 'block-key' OR 'block_key'<br />- is annotated with 'kdex.dev/secret-type = subject' (multiple)<br />    A subject secret is used to define a subject that will be used to authenticate users. These are generally used to define low level system accounts.<br />    - must contain key 'sub' (used as the username or unique identifier)<br />    - must contain key 'password'<br />    - may contain key 'email' (if present, can also be used as the login username)<br />    - may contain arbitrary key(string)/value(string\|yaml) pairs which can be mapped to the claims using the spec.auth.claimMappings<br />- is of type 'kubernetes.io/dockerconfigjson'<br />    A dockerconfigjson secret is used to define a docker registry connection that will be used to pull (or push) images.<br />    - the pull scenario: (multiple)<br />        - no additional annotations are required<br />    - the push scenario: (first, sorted newest to oldest)<br />        - must be annotated with 'kdex.dev/secret-type = docker-push'<br />- is of type 'kubernetes.io/tls' (first, sorted newest to oldest)<br />    A tls secret is used to define a TLS certificate that will be used to secure connections to the host. |  | Optional: \{\} <br /> |
+| `extensionSelector` _[LabelSelector](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.35/#labelselector-v1-meta)_ | extensionSelector selects the KDexHostExtensions in this namespace whose<br />contributions this host accepts. An extension applies only when it names<br />this host in spec.hostRef AND its labels match this selector. Unset accepts<br />none: extensions grant authority, so consent is explicit. An empty<br />selector (\{\}) accepts every extension that names this host. |  | Optional: \{\} <br /> |
 | `themeRef` _[KDexObjectReference](#kdexobjectreference)_ | themeRef is a reference to the theme that should apply to all pages bound to this host. |  | Optional: \{\} <br /> |
 | `translationRefs` _[KDexObjectReference](#kdexobjectreference) array_ | translationRefs is an array of references to KDexTranslation or KDexClusterTranslation resources that define the translations that should apply to this host. |  | Optional: \{\} <br /> |
 | `helm` _[HelmConfig](#helmconfig)_ | helm holds the Helm configuration for the host. |  | Optional: \{\} <br /> |
@@ -1375,6 +1460,7 @@ _Appears in:_
 | `scriptLibraryRef` _[KDexObjectReference](#kdexobjectreference)_ | scriptLibraryRef is an optional reference to a KDexScriptLibrary resource. |  | Optional: \{\} <br /> |
 | `security` _[SecurityRequirement](#securityrequirement)_ | Optional top level security requirements. |  |  |
 | `secretSelector` _[LabelSelector](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.35/#labelselector-v1-meta)_ | SecretSelector is an optional label selector matching Secrets in<br />the host's namespace that participate in the host's auth,<br />credential, and registry-pull configuration. When nil, no Secrets<br />are resolved. When non-nil, standard metav1.LabelSelector<br />semantics apply — an explicit empty selector `\{\}` matches every<br />Secret in the namespace, so prefer a `matchLabels` clause scoped<br />to the host.<br />Recommended convention: label rotation-managed Secrets with<br />`kdex.dev/host: <hostName>` and use a `matchLabels` selector on<br />that key. The controller does not enforce this convention —<br />selectors may legitimately match Secrets across multiple hosts in<br />the same namespace (e.g. a shared docker-pull Secret).<br />Per-Secret role within the matched set is determined by Secret<br />type and by the `kdex.dev/secret-type` annotation. Each matched<br />Secret must match one of the following cases:<br />- is annotated with 'kdex.dev/secret-type = api-key' (multiple)<br />    An api-key secret is used to define a PASETO key that will be used to sign api tokens and served at '/.well-known/pks.json'.<br />    - must contain key 'private-key'<br />    - may contain key 'public-key'<br />    - may be annotated with 'kdex.dev/active-key = true'<br />- is annotated with 'kdex.dev/secret-type = auth-client' (multiple)<br />    An auth-client secret is used to define a OAuth2 client.<br />    - must contain key 'client-id' OR 'client_id'<br />    - may contain key 'public' (true\|false, default: false)<br />    - if not public, must contain key 'client-secret' OR 'client_secret'<br />    - must contain key 'redirect-uris' OR 'redirect_uris' (comma separated list)<br />    - may contain key 'allowed-grant-types' OR 'allowed_grant_types' (comma separated list)<br />    - may contain key 'allowed-scopes' OR 'allowed_scopes' (comma separated list)<br />    - may contain key 'require-pkce' OR 'require_pkce' (true\|false, default: false)<br />    - may contain key 'name'<br />    - may contain key 'description'<br />- is annotated with 'kdex.dev/secret-type = git' (first, sorted newest to oldest)<br />    A git secret is used to define a Git repository.<br />    - must contain key 'host'<br />    - must contain key 'org'<br />    - must contain key 'password'<br />    - must contain key 'repo'<br />    - must contain key 'username'<br />- is annotated with 'kdex.dev/secret-type = helm' (multiple)<br />    A helm secret is used to define a set of Helm repository credentials.<br />    - must contain key 'password'<br />    - must contain key 'repository' (the hostname, port and base path of the repository)<br />    - must contain key 'username'<br />    - may contain key 'plainHTTP' (true\|false, default false)<br />- is annotated with 'kdex.dev/secret-type = http-lookup-auth' (first, sorted newest to oldest, filtered by kdex.dev/active-key=true)<br />    An http-lookup-auth secret defines an external HTTP credential-check<br />    endpoint that the host-manager's auth.Lookup chain calls during<br />    /-/login. Discovered by the controller alongside the existing<br />    secret-driven and LDAP lookups; slotted into the chain after<br />    SecretLookup (preserving bootstrap-admin) and before LDAP.<br />    - must contain key 'url' (full URL of the credential-check endpoint)<br />    - must contain key 'shared-secret' (>= 32 raw bytes; HMAC-SHA256 key)<br />    - may contain key 'timeout-ms' (integer milliseconds; default 2000)<br />    - must be annotated with 'kdex.dev/active-key = true' to be picked up<br />    The endpoint contract (mirrored by the credential-check function):<br />    Request:<br />        POST <url><br />        Content-Type: application/json<br />        X-K-CNAS-Lookup-Timestamp: <unix-millis><br />        X-K-CNAS-Lookup-Signature: hex(hmac-sha256(shared-secret, timestamp + "." + body))<br />        \{ "subject": "<login-identifier>", "password": "<plaintext>" \}<br />    The endpoint MUST verify the HMAC over (timestamp + "." + body) and<br />    reject requests with stale timestamps (>5s old recommended).<br />    Response on success (HTTP 200):<br />        \{<br />            "ok": true,<br />            "claims": \{<br />                "sub": "<canonical-subject-id>",<br />                "email": "...", "given_name": "...", "family_name": "...",<br />                "amr": ["pwd"], "acr": "1"<br />            \},<br />            "next_step": null<br />        \}<br />    Response on failure (HTTP 200):<br />        \{ "ok": false, "reason": "invalid_credentials" \}<br />    The 'claims' map becomes the JWT claims (entitlements/roles layered<br />    on by KDexRoleBinding resolution). The 'next_step' field is reserved<br />    for future multi-step (MFA) extensions; today the host-manager<br />    ignores its value but the field shape must be preserved. An empty<br />    string is treated identically to null - never set "next_step": "".<br />    A sniffer-shaped curl that generates a KDexFunction CR matching this<br />    contract when posted to a devMode KDexHost (granted functions:create):<br />        curl -L -X POST \<br />          -H "Authorization: Bearer $TOKEN" \<br />          -H "Content-Type: application/json" \<br />          -H "X-KDex-Function-Name: user-credential-check" \<br />          -H "X-KDex-Function-Pattern-Path: /v1/credential-check" \<br />          -H "X-KDex-Function-Operation-ID: credentialCheck" \<br />          -H "X-KDex-Function-Tags: auth-internal" \<br />          -H "X-KDex-Function-Summary: Verify subject+password, return JWT claims" \<br />          -d '\{"subject":"alice@example.com","password":"hunter2"\}' \<br />          https://<dev-host>/v1/credential-check<br />- is annotated with 'kdex.dev/secret-type = jwt-keys' (multiple)<br />    A jwt-keys secret is used to define a JWT key that will be used to sign tokens and served at '/.well-known/jwks.json'.<br />    - must contain key 'private-key'<br />    - may be annotated with 'kdex.dev/active-key = true'<br />- is annotated with 'kdex.dev/secret-type = ldap' (first, sorted newest to oldest)<br />    A ldap secret is used to define a LDAP server connection that will be used to authenticate users.<br />    - must contain key 'active-directory' (true\|false)<br />    - must contain key 'addr'<br />    - must contain key 'base-dn'<br />    - must contain key 'bind-dn'<br />    - must contain key 'bind-user'<br />    - must contain key 'bind-pass'<br />    - must contain key 'user-filter'<br />    - may contain key 'attributes' (comma separated list of attributes to retrieve)<br />- is annotated with 'kdex.dev/secret-type = npm' (multiple)<br />    A npm secret is used to define a npm registry connection that will be used to retrieve packages.<br />    - must contain key '.npmrc' (formatted as a complete .npmrc file)<br />- is annotated with 'kdex.dev/secret-type = oidc-client' (first, sorted newest to oldest)<br />    An oidc-client secret is used to define the OpenID Connect client configuration for the host.<br />    - must contain key 'client-id' OR 'client_id'<br />    - must contain key 'client-secret' OR 'client_secret'<br />    - may contain a key 'name'<br />    - may contain key 'block-key' OR 'block_key'<br />- is annotated with 'kdex.dev/secret-type = subject' (multiple)<br />    A subject secret is used to define a subject that will be used to authenticate users. These are generally used to define low level system accounts.<br />    - must contain key 'sub' (used as the username or unique identifier)<br />    - must contain key 'password'<br />    - may contain key 'email' (if present, can also be used as the login username)<br />    - may contain arbitrary key(string)/value(string\|yaml) pairs which can be mapped to the claims using the spec.auth.claimMappings<br />- is of type 'kubernetes.io/dockerconfigjson'<br />    A dockerconfigjson secret is used to define a docker registry connection that will be used to pull (or push) images.<br />    - the pull scenario: (multiple)<br />        - no additional annotations are required<br />    - the push scenario: (first, sorted newest to oldest)<br />        - must be annotated with 'kdex.dev/secret-type = docker-push'<br />- is of type 'kubernetes.io/tls' (first, sorted newest to oldest)<br />    A tls secret is used to define a TLS certificate that will be used to secure connections to the host. |  | Optional: \{\} <br /> |
+| `extensionSelector` _[LabelSelector](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.35/#labelselector-v1-meta)_ | extensionSelector selects the KDexHostExtensions in this namespace whose<br />contributions this host accepts. An extension applies only when it names<br />this host in spec.hostRef AND its labels match this selector. Unset accepts<br />none: extensions grant authority, so consent is explicit. An empty<br />selector (\{\}) accepts every extension that names this host. |  | Optional: \{\} <br /> |
 | `themeRef` _[KDexObjectReference](#kdexobjectreference)_ | themeRef is a reference to the theme that should apply to all pages bound to this host. |  | Optional: \{\} <br /> |
 | `translationRefs` _[KDexObjectReference](#kdexobjectreference) array_ | translationRefs is an array of references to KDexTranslation or KDexClusterTranslation resources that define the translations that should apply to this host. |  | Optional: \{\} <br /> |
 | `helm` _[HelmConfig](#helmconfig)_ | helm holds the Helm configuration for the host. |  | Optional: \{\} <br /> |
@@ -1384,6 +1470,7 @@ _Appears in:_
 | `loginRef` _[LocalObjectReference](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.35/#localobjectreference-v1-core)_ | loginRef is a reference to the KDexInternalUtilityPage that provides the login page. |  | Optional: \{\} <br /> |
 | `requiredBackends` _[KDexObjectReference](#kdexobjectreference) array_ | requiredBackends is a set of references to KDexApp or KDexScriptLibrary resources that specify a backend. |  | Optional: \{\} <br /> |
 | `internalTranslationRefs` _[LocalObjectReference](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.35/#localobjectreference-v1-core) array_ | internalTranslationRefs is a set of references to KDexInternalTranslation resources that specify a translation. |  | Optional: \{\} <br /> |
+| `extensions` _[InternalHostExtension](#internalhostextension) array_ | extensions are the KDexHostExtensions the host applies, in application<br />order (weight, then name). Written by nexus-manager; see EffectiveAuth. |  | MaxItems: 32 <br />Optional: \{\} <br /> |
 
 
 #### KDexInternalPackageReferences

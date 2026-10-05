@@ -620,6 +620,137 @@ spec:
                     type: string
                 type: object
                 x-kubernetes-map-type: atomic
+              extensionSelector:
+                description: |-
+                  extensionSelector selects the KDexHostExtensions in this namespace whose
+                  contributions this host accepts. An extension applies only when it names
+                  this host in spec.hostRef AND its labels match this selector. Unset accepts
+                  none: extensions grant authority, so consent is explicit. An empty
+                  selector ({}) accepts every extension that names this host.
+                properties:
+                  matchExpressions:
+                    description: matchExpressions is a list of label selector requirements.
+                      The requirements are ANDed.
+                    items:
+                      description: |-
+                        A label selector requirement is a selector that contains values, a key, and an operator that
+                        relates the key and values.
+                      properties:
+                        key:
+                          description: key is the label key that the selector applies
+                            to.
+                          type: string
+                        operator:
+                          description: |-
+                            operator represents a key's relationship to a set of values.
+                            Valid operators are In, NotIn, Exists and DoesNotExist.
+                          type: string
+                        values:
+                          description: |-
+                            values is an array of string values. If the operator is In or NotIn,
+                            the values array must be non-empty. If the operator is Exists or DoesNotExist,
+                            the values array must be empty. This array is replaced during a strategic
+                            merge patch.
+                          items:
+                            type: string
+                          type: array
+                          x-kubernetes-list-type: atomic
+                      required:
+                      - key
+                      - operator
+                      type: object
+                    type: array
+                    x-kubernetes-list-type: atomic
+                  matchLabels:
+                    additionalProperties:
+                      type: string
+                    description: |-
+                      matchLabels is a map of {key,value} pairs. A single {key,value} in the matchLabels
+                      map is equivalent to an element of matchExpressions, whose key field is "key", the
+                      operator is "In", and the values array contains only "value". The requirements are ANDed.
+                    type: object
+                type: object
+                x-kubernetes-map-type: atomic
+              extensions:
+                description: |-
+                  extensions are the KDexHostExtensions the host applies, in application
+                  order (weight, then name). Written by nexus-manager; see EffectiveAuth.
+                items:
+                  description: |-
+                    InternalHostExtension is one KDexHostExtension a host applies, copied into
+                    the KDexInternalHost by nexus-manager in application order.
+                  properties:
+                    anonymousEntitlements:
+                      items:
+                        maxLength: 256
+                        type: string
+                      maxItems: 64
+                      type: array
+                    claimMappings:
+                      items:
+                        description: |-
+                          MappingRule defines a transformation rule for mapping arbitrary data from an
+                          input to an output.
+                        properties:
+                          merge:
+                            description: |-
+                              merge controls how the rule's result combines with a value already at
+                              targetPropPath. Accumulate (the default when empty): when both the
+                              existing value and the result are lists, the result is the existing list
+                              followed by the result's items not already present (order-preserving
+                              set-union), so restating self.<target> is harmless and idempotent.
+                              Values already at that path in the input — including claims asserted by
+                              an identity provider — therefore stay in the output. Any other shape
+                              pair (scalar, map, list vs non-list) replaces. Replace: the result
+                              always replaces. Use it for any rule meant to filter, transform,
+                              normalise or override a list already at its own target (e.g. a rule
+                              that reads self.groups and writes groups).
+                            enum:
+                            - Accumulate
+                            - Replace
+                            type: string
+                          required:
+                            default: false
+                            description: |-
+                              required indicates that if the rule fails to produce a value the rule
+                              will be skipped. Otherwise the execution should fail.
+                            type: boolean
+                          sourceExpression:
+                            description: |-
+                              sourceExpression is CEL program to compute a transformation of input into
+                              a new form.
+                            example: self.oidc.groups.filter(g, g.startsWith('app_')).join(',')
+                            minLength: 2
+                            type: string
+                          targetPropPath:
+                            description: |-
+                              targetPropPath is a dot-separated property path for where the result
+                              should be attached in the output.
+                            example: auth.internal_groups
+                            minLength: 2
+                            type: string
+                        required:
+                        - sourceExpression
+                        - targetPropPath
+                        type: object
+                      maxItems: 16
+                      type: array
+                    generation:
+                      description: generation is the source KDexHostExtension's metadata.generation.
+                      format: int64
+                      type: integer
+                    name:
+                      description: name is the source KDexHostExtension's name.
+                      type: string
+                    weight:
+                      description: weight is the source KDexHostExtension's spec.weight.
+                      format: int32
+                      type: integer
+                  required:
+                  - name
+                  type: object
+                maxItems: 32
+                type: array
               faasAdaptorRef:
                 description: faasAdaptorRef is an optional reference to the FaaS Adaptor
                   that will drive KDexFunction generation of code and deployment for

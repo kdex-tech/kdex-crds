@@ -291,6 +291,14 @@ type KDexHostSpec struct {
 	// +kubebuilder:validation:Optional
 	SecretSelector *metav1.LabelSelector `json:"secretSelector,omitempty" protobuf:"bytes,20,opt,name=secretSelector"`
 
+	// extensionSelector selects the KDexHostExtensions in this namespace whose
+	// contributions this host accepts. An extension applies only when it names
+	// this host in spec.hostRef AND its labels match this selector. Unset accepts
+	// none: extensions grant authority, so consent is explicit. An empty
+	// selector ({}) accepts every extension that names this host.
+	// +kubebuilder:validation:Optional
+	ExtensionSelector *metav1.LabelSelector `json:"extensionSelector,omitempty" protobuf:"bytes,21,opt,name=extensionSelector"`
+
 	// themeRef is a reference to the theme that should apply to all pages bound to this host.
 	// +kubebuilder:validation:Optional
 	// +kubebuilder:validation:XValidation:rule=`self.kind == "KDexTheme" || self.kind == "KDexClusterTheme"`,message="'kind' must be either KDexTheme or KDexClusterTheme"
