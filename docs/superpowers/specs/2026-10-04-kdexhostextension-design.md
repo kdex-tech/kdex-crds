@@ -24,8 +24,12 @@ Of the patch's sections, translations (`KDexTranslation.spec.hostRef`), roles (`
   not enough (tenant namespaces hold several companion/workload service accounts; nexus/host-manager
   install charts from registries into them), and GHSA-qp3j-f436-pggf was a grant-escalation fix days
   ago.
-- An extension can only **add**; it can never strip or rewrite the host's own grants or a token's
-  identity claims.
+- Trust model (user decision, 2026-10-05): the host's `extensionSelector` opt-in **is** the
+  operator's consent. A selected extension's rules run with the same power as the host's own rules,
+  including `required` semantics (a `required` extension rule that fails breaks the mapper exactly
+  as a host rule would). The CRD guards only against reserved token claims, `merge: Replace`,
+  wildcard / empty anonymous names, and oversized expressions (`sourceExpression` > 4096
+  characters); it does not try to prove an extension harmless.
 - The merged result is deterministic (tokens byte-stable across reconciles) and auditable (which
   extension contributed what).
 - Room for more contribution kinds later without a new CRD.
@@ -71,6 +75,8 @@ status:
 - `anonymousEntitlements[]` must have the form `resource:name:verb` with a name segment that is
   neither empty nor `*`. An empty or `*` name matches every name on both sides of the entitlement
   comparison, so `pages:/:read` / `pages::read` would open every page to anonymous callers.
+- `claimMappings[].sourceExpression` must be at most 4096 characters, so one extension cannot bloat
+  the internal host (and every token mapper built from it).
 - Every list and string the CEL rules range over carries `maxItems` / `maxLength` bounds, because an
   unbounded list under a CEL rule makes the whole CRD fail to install (apiserver cost estimator).
   `dmapper.MappingRule` fields carry no `maxLength` today, so rules are attached at the item level
@@ -100,8 +106,12 @@ ExtensionSelector *metav1.LabelSelector `json:"extensionSelector,omitempty"`
   update the old and new objects both enqueue, so a moved hostRef or a relabel re-reconciles both
   hosts. The KDexHost watch already re-reconciles on `extensionSelector` edits.
 - Per host, the applied set = extensions in the host's namespace that name it, match
-  `extensionSelector`, and have no `deletionTimestamp`; sorted by **(weight ascending, name
-  ascending)**.
+  `extensionSelector`, have no `deletionTimestamp`, and whose `claimMappings` compile
+  (`dmapper.NewMapper`); sorted by **(weight ascending, name ascending)** and capped at 32. An
+  extension whose `claimMappings` fail to compile is excluded **before** the cap (it never consumes
+  a slot) and reported as `InvalidClaimMappings`; extensions past the cap are reported as
+  `LimitExceeded`. The host reconciler and the extension status controller share one selection
+  function (`selectExtensions`), so the applied set and the conditions never disagree.
 - `KDexInternalHostSpec` gains `Extensions []InternalHostExtension` (maxItems 32) in that order:
 
 ```go
@@ -118,11 +128,16 @@ type InternalHostExtension struct {
   reject a host + extensions overflow, and would lose provenance). No internal copy objects are
   created, so nothing needs pruning: the list is rewritten on every reconcile.
 - Status:
-  - Each extension gets a condition written by the host reconciler (`kdexhostextensions/status`):
-    `Attached` (with the host's observed generation), `NotSelected` (host selector unset or not
-    matching), `HostNotFound`.
-  - `KDexHost.status` records the applied set (`name@generation`, weight) for audit.
-- RBAC (`rbac.go`): `kdexhostextensions` get/list/watch and `/status` get/update/patch.
+  - Each extension gets an `Attached` condition written by nexus's KDexHostExtension status
+    controller (`kdexhostextensions/status`), with `observedGeneration`. Reasons: `Attached`
+    (True), and with False: `NotSelected` (host selector unset, not matching, or invalid),
+    `HostNotFound`, `InvalidClaimMappings` (message carries the compile error), `LimitExceeded`
+    (beyond the 32 the host applies).
+  - `KDexHost.status.attributes` records one `<name>.extension.generation` attribute per applied
+    extension (value: that extension's generation) for audit; stale ones are removed on every
+    reconcile.
+- RBAC: nexus `rbac.go` (and the chart's role) grants `kdexhostextensions`
+  get/list/watch/create/update/patch/delete, `/finalizers` update and `/status` get/update/patch.
 
 ### 4. Composition (host-manager)
 
@@ -136,9 +151,9 @@ type InternalHostExtension struct {
 - A host with zero mappings (no host rules, no extensions) still projects FATs; pinned by test (the
   knowdrive-site prod outage concern — current code already signs unconditionally,
   `internal/host/proxy.go` NewSigner; this keeps it so).
-- Install RBAC: host-manager's Helm client installs companion charts, so `kdexhostextensions`
-  create/update/delete/get/list/watch must pass through the three places infra named: host-manager
-  `rbac.go`, nexus `rbac.go` (which grants it to host-manager), and the host-controller role.
+- Install RBAC: companion charts are installed by **nexus's** Helm client, so the
+  `kdexhostextensions` RBAC lives in nexus (`rbac.go` + the chart role, §3). host-manager reads
+  extensions only through the internal host's `spec.extensions` and needs no new RBAC.
 
 ### 5. Release
 
@@ -148,19 +163,29 @@ repins all three together.
 
 ## Error handling
 
-- Invalid extension → rejected by the apiserver (CRD validation); never reaches nexus.
+- Extension violating a CRD rule (reserved target, `merge: Replace`, wildcard / empty anonymous
+  name, oversized expression) → rejected by the apiserver at apply time.
+- Extension whose CEL does not compile → admitted by the apiserver, **excluded by nexus**: it is
+  not applied, does not count toward the 32 cap, and gets `Attached=False` /
+  `InvalidClaimMappings` with the compile error. The host's other extensions still apply, so one
+  bad companion cannot freeze the host's auth config.
+- Invalid `extensionSelector` → fails closed: no extensions apply, the host is `Degraded`, and the
+  internal host is still written (without extensions).
 - Extension naming a missing host → `HostNotFound` condition; no effect.
 - Selector does not match → `NotSelected` condition; no effect.
 - A contributed rule failing CEL at runtime behaves as any non-`Required` rule does (skipped).
 
 ## Testing
 
-- **kdex-crds (envtest):** rejects reserved targets (exact and dotted), `merge: Replace`, wildcard /
-  empty anonymous names; accepts a valid extension; the CRD installs (CEL cost).
+- **kdex-crds (unit):** the generated schema carries every rule; every `config/crd/bases` file is
+  listed in `config/crd/kustomization.yaml` (so the release installer ships the CRD).
+- **nexus (envtest, kdex-crds has none):** rejects reserved targets (exact and dotted),
+  `merge: Replace`, wildcard / empty anonymous names, a 4097-character `sourceExpression`; accepts
+  a valid extension; the CRD installs (CEL cost).
 - **nexus (envtest):** no extension applies when `extensionSelector` is unset; label removal and
   hostRef move detach from the old host; equal weights order by name, deterministically across
-  reconciles; deletion detaches; each status condition reached; `KDexHost.status` lists the applied
-  set.
+  reconciles; deletion detaches; each status condition reached (including `InvalidClaimMappings`, with the
+  invalid extension absent from the internal host); `KDexHost.status` lists the applied set.
 - **host-manager (unit):** composition order host → extensions → fn; anonymous union; extension rule
   accumulates onto host entitlements (no restatement); zero-mapping host still projects FATs.
 

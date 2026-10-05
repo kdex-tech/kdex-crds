@@ -120,6 +120,7 @@ func TestKDexHostExtensionGeneratedSchema_ValidationRules(t *testing.T) {
 	assert.ElementsMatch(t, []string{
 		"an extension claimMapping cannot use merge: Replace",
 		"an extension claimMapping must not target a reserved token claim",
+		"an extension claimMapping sourceExpression must be at most 4096 characters",
 	}, messages(cmItems))
 
 	anonItems := props["anonymousEntitlements"].(map[string]any)["items"].(map[string]any)

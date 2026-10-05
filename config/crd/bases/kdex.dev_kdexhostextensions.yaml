@@ -84,7 +84,8 @@ spec:
                   targets accumulate, so a rule adds to what the host already maps.
                   An extension may not use merge: Replace and may not target a reserved
                   token claim (sub, iss, aud, exp, nbf, iat, jti, scope, scp, act,
-                  grant_type, auth_method, idp, or any path beneath them).
+                  grant_type, auth_method, idp, or any path beneath them), and each
+                  sourceExpression is at most 4096 characters.
                 items:
                   description: |-
                     MappingRule defines a transformation rule for mapping arbitrary data from an
@@ -139,6 +140,9 @@ spec:
                     rule: '![''sub'',''iss'',''aud'',''exp'',''nbf'',''iat'',''jti'',''scope'',''scp'',''act'',''grant_type'',''auth_method'',''idp''].exists(c,
                       self.targetPropPath == c || self.targetPropPath.startsWith(c
                       + ''.''))'
+                  - message: an extension claimMapping sourceExpression must be at
+                      most 4096 characters
+                    rule: self.sourceExpression.size() <= 4096
                 maxItems: 16
                 type: array
               hostRef:
