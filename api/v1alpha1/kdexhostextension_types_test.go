@@ -103,3 +103,25 @@ func TestEffectiveAuth_ComposesInOrder(t *testing.T) {
 	assert.Equal(t, []dmapper.MappingRule{hostRule}, s.Auth.ClaimMappings)
 	assert.Equal(t, []string{"pages:/home:read"}, s.Auth.AnonymousEntitlements)
 }
+
+func TestKDexHostExtensionGeneratedSchema_ValidationRules(t *testing.T) {
+	props := translationCRDSpecSchema(t, "kdex.dev_kdexhostextensions.yaml")["properties"].(map[string]any)
+
+	messages := func(items map[string]any) []string {
+		rules := items["x-kubernetes-validations"].([]any)
+		out := make([]string, 0, len(rules))
+		for _, r := range rules {
+			out = append(out, r.(map[string]any)["message"].(string))
+		}
+		return out
+	}
+
+	cmItems := props["claimMappings"].(map[string]any)["items"].(map[string]any)
+	assert.ElementsMatch(t, []string{
+		"an extension claimMapping cannot use merge: Replace",
+		"an extension claimMapping must not target a reserved token claim",
+	}, messages(cmItems))
+
+	anonItems := props["anonymousEntitlements"].(map[string]any)["items"].(map[string]any)
+	assert.Equal(t, []string{"anonymousEntitlements must be resource:name:verb with a name other than empty or *"}, messages(anonItems))
+}

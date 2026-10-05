@@ -82,14 +82,21 @@ type KDexHostExtensionSpec struct {
 
 	// claimMappings are appended after the host's own claimMappings. List
 	// targets accumulate, so a rule adds to what the host already maps.
+	// An extension may not use merge: Replace and may not target a reserved
+	// token claim (sub, iss, aud, exp, nbf, iat, jti, scope, scp, act,
+	// grant_type, auth_method, idp, or any path beneath them).
 	// +kubebuilder:validation:Optional
 	// +kubebuilder:validation:MaxItems=16
+	// +kubebuilder:validation:items:XValidation:rule="!has(self.merge) || self.merge != 'Replace'",message="an extension claimMapping cannot use merge: Replace"
+	// +kubebuilder:validation:items:XValidation:rule="!['sub','iss','aud','exp','nbf','iat','jti','scope','scp','act','grant_type','auth_method','idp'].exists(c, self.targetPropPath == c || self.targetPropPath.startsWith(c + '.'))",message="an extension claimMapping must not target a reserved token claim"
 	ClaimMappings []dmapper.MappingRule `json:"claimMappings,omitempty" protobuf:"bytes,3,rep,name=claimMappings"`
 
 	// anonymousEntitlements are unioned into the host's anonymousEntitlements.
+	// Each must be resource:name:verb with a name that is neither empty nor *.
 	// +kubebuilder:validation:Optional
 	// +kubebuilder:validation:MaxItems=64
 	// +kubebuilder:validation:items:MaxLength=256
+	// +kubebuilder:validation:items:XValidation:rule="self.matches('^[^:]+:[^:]+:[^:]+$') && self.split(':')[1] != '*'",message="anonymousEntitlements must be resource:name:verb with a name other than empty or *"
 	AnonymousEntitlements []string `json:"anonymousEntitlements,omitempty" protobuf:"bytes,4,rep,name=anonymousEntitlements"`
 }
 
