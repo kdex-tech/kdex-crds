@@ -1468,6 +1468,7 @@ _Appears in:_
 | `announcementRef` _[LocalObjectReference](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.35/#localobjectreference-v1-core)_ | announcementRef is a reference to the KDexInternalUtilityPage that provides the announcement page. |  | Optional: \{\} <br /> |
 | `errorRef` _[LocalObjectReference](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.35/#localobjectreference-v1-core)_ | errorRef is a reference to the KDexInternalUtilityPage that provides the error page. |  | Optional: \{\} <br /> |
 | `loginRef` _[LocalObjectReference](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.35/#localobjectreference-v1-core)_ | loginRef is a reference to the KDexInternalUtilityPage that provides the login page. |  | Optional: \{\} <br /> |
+| `consentRef` _[LocalObjectReference](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.35/#localobjectreference-v1-core)_ | consentRef is a reference to the KDexInternalUtilityPage that provides the consent page. |  | Optional: \{\} <br /> |
 | `requiredBackends` _[KDexObjectReference](#kdexobjectreference) array_ | requiredBackends is a set of references to KDexApp or KDexScriptLibrary resources that specify a backend. |  | Optional: \{\} <br /> |
 | `internalTranslationRefs` _[LocalObjectReference](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.35/#localobjectreference-v1-core) array_ | internalTranslationRefs is a set of references to KDexInternalTranslation resources that specify a translation. |  | Optional: \{\} <br /> |
 | `extensions` _[InternalHostExtension](#internalhostextension) array_ | extensions are the KDexHostExtensions the host applies, in application<br />order (weight, then name). Written by nexus-manager; see EffectiveAuth. |  | MaxItems: 32 <br />Optional: \{\} <br /> |
@@ -1639,7 +1640,7 @@ _Appears in:_
 
 | Field | Description | Default | Validation |
 | --- | --- | --- | --- |
-| `type` _[KDexUtilityPageType](#kdexutilitypagetype)_ | type indicates the purpose of this utility page. |  | Enum: [Announcement Error Login] <br />Required: \{\} <br /> |
+| `type` _[KDexUtilityPageType](#kdexutilitypagetype)_ | type indicates the purpose of this utility page. |  | Enum: [Announcement Consent Error Login] <br />Required: \{\} <br /> |
 | `contentEntries` _[ContentEntry](#contententry) array_ | contentEntries is a set of content entries to bind to this page. They may be either raw HTML fragments or KDexApp references. |  | ExactlyOneOf: [appRef rawHTML] <br />MaxItems: 8 <br />MinItems: 1 <br />Required: \{\} <br /> |
 | `overrideFooterRef` _[KDexObjectReference](#kdexobjectreference)_ | overrideFooterRef is an optional reference to a KDexPageFooter resource. If not specified, the footer from the archetype will be used. |  | Optional: \{\} <br /> |
 | `overrideHeaderRef` _[KDexObjectReference](#kdexobjectreference)_ | overrideHeaderRef is an optional reference to a KDexPageHeader resource. If not specified, the header from the archetype will be used. |  | Optional: \{\} <br /> |
@@ -2391,7 +2392,7 @@ _Appears in:_
 
 | Field | Description | Default | Validation |
 | --- | --- | --- | --- |
-| `type` _[KDexUtilityPageType](#kdexutilitypagetype)_ | type indicates the purpose of this utility page. |  | Enum: [Announcement Error Login] <br />Required: \{\} <br /> |
+| `type` _[KDexUtilityPageType](#kdexutilitypagetype)_ | type indicates the purpose of this utility page. |  | Enum: [Announcement Consent Error Login] <br />Required: \{\} <br /> |
 | `contentEntries` _[ContentEntry](#contententry) array_ | contentEntries is a set of content entries to bind to this page. They may be either raw HTML fragments or KDexApp references. |  | ExactlyOneOf: [appRef rawHTML] <br />MaxItems: 8 <br />MinItems: 1 <br />Required: \{\} <br /> |
 | `overrideFooterRef` _[KDexObjectReference](#kdexobjectreference)_ | overrideFooterRef is an optional reference to a KDexPageFooter resource. If not specified, the footer from the archetype will be used. |  | Optional: \{\} <br /> |
 | `overrideHeaderRef` _[KDexObjectReference](#kdexobjectreference)_ | overrideHeaderRef is an optional reference to a KDexPageHeader resource. If not specified, the header from the archetype will be used. |  | Optional: \{\} <br /> |
@@ -2407,7 +2408,7 @@ _Underlying type:_ _string_
 KDexUtilityPageType defines the type of utility page.
 
 _Validation:_
-- Enum: [Announcement Error Login]
+- Enum: [Announcement Consent Error Login]
 
 _Appears in:_
 - [KDexInternalUtilityPageSpec](#kdexinternalutilitypagespec)
@@ -2417,6 +2418,7 @@ _Appears in:_
 | --- | --- |
 | `Announcement` | AnnouncementUtilityPageType represents an announcement page.<br /> |
 | `Error` | ErrorUtilityPageType represents an error page.<br /> |
+| `Consent` | ConsentUtilityPageType represents an OAuth consent page.<br /> |
 | `Login` | LoginUtilityPageType represents a login page.<br /> |
 
 
@@ -2946,5 +2948,6 @@ _Appears in:_
 | `announcementRef` _[KDexObjectReference](#kdexobjectreference)_ | announcementRef is a reference to a KDexUtilityPage or KDexClusterUtilityPage that defines the announcement page. |  | Optional: \{\} <br /> |
 | `errorRef` _[KDexObjectReference](#kdexobjectreference)_ | errorRef is a reference to a KDexUtilityPage or KDexClusterUtilityPage that defines the error page. |  | Optional: \{\} <br /> |
 | `loginRef` _[KDexObjectReference](#kdexobjectreference)_ | loginRef is a reference to a KDexUtilityPage or KDexClusterUtilityPage that defines the login page. |  | Optional: \{\} <br /> |
+| `consentRef` _[KDexObjectReference](#kdexobjectreference)_ | consentRef is a reference to a KDexUtilityPage or KDexClusterUtilityPage that defines the consent page. |  | Optional: \{\} <br /> |
 
 

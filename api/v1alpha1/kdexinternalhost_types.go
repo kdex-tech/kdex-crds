@@ -37,6 +37,10 @@ type KDexInternalHostSpec struct {
 	// +kubebuilder:validation:Optional
 	LoginRef *corev1.LocalObjectReference `json:"loginRef,omitempty" protobuf:"bytes,4,opt,name=loginRef"`
 
+	// consentRef is a reference to the KDexInternalUtilityPage that provides the consent page.
+	// +kubebuilder:validation:Optional
+	ConsentRef *corev1.LocalObjectReference `json:"consentRef,omitempty" protobuf:"bytes,8,opt,name=consentRef"`
+
 	// requiredBackends is a set of references to KDexApp or KDexScriptLibrary resources that specify a backend.
 	// +listType=map
 	// +listMapKey=name

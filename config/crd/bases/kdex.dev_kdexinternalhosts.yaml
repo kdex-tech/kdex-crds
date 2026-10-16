@@ -434,6 +434,21 @@ spec:
                   to the host. For example, it may be used as alt text for the logo
                   displayed in the page header.
                 type: string
+              consentRef:
+                description: consentRef is a reference to the KDexInternalUtilityPage
+                  that provides the consent page.
+                properties:
+                  name:
+                    default: ""
+                    description: |-
+                      Name of the referent.
+                      This field is effectively required, but due to backwards compatibility is
+                      allowed to be empty. Instances of this type with an empty value here are
+                      almost certainly wrong.
+                      More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#names
+                    type: string
+                type: object
+                x-kubernetes-map-type: atomic
               defaultLang:
                 description: |-
                   defaultLang is a string containing a BCP 47 language tag.
@@ -1567,6 +1582,32 @@ spec:
                   announcementRef:
                     description: announcementRef is a reference to a KDexUtilityPage
                       or KDexClusterUtilityPage that defines the announcement page.
+                    properties:
+                      kind:
+                        description: Kind is the type of resource being referenced
+                        type: string
+                      name:
+                        description: Name of the referent.
+                        type: string
+                      namespace:
+                        description: |-
+                          Namespace, if set, causes the lookup for the namespace scoped Kind of the referent to use the specified
+                          namespace. If not set, the namespace of the resource will be used to lookup the namespace scoped Kind of the
+                          referent.
+                          If the referring resource is cluster scoped, this field is ignored.
+                          Defaulted to nil.
+                        type: string
+                    required:
+                    - kind
+                    - name
+                    type: object
+                    x-kubernetes-map-type: atomic
+                    x-kubernetes-validations:
+                    - message: '''kind'' must be either KDexUtilityPage or KDexClusterUtilityPage'
+                      rule: self.kind == "KDexUtilityPage" || self.kind == "KDexClusterUtilityPage"
+                  consentRef:
+                    description: consentRef is a reference to a KDexUtilityPage or
+                      KDexClusterUtilityPage that defines the consent page.
                     properties:
                       kind:
                         description: Kind is the type of resource being referenced

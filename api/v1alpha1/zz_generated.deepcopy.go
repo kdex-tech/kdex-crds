@@ -1933,6 +1933,11 @@ func (in *KDexInternalHostSpec) DeepCopyInto(out *KDexInternalHostSpec) {
 		*out = new(v1.LocalObjectReference)
 		**out = **in
 	}
+	if in.ConsentRef != nil {
+		in, out := &in.ConsentRef, &out.ConsentRef
+		*out = new(v1.LocalObjectReference)
+		**out = **in
+	}
 	if in.RequiredBackends != nil {
 		in, out := &in.RequiredBackends, &out.RequiredBackends
 		*out = make([]KDexObjectReference, len(*in))
@@ -3964,6 +3969,11 @@ func (in *UtilityPages) DeepCopyInto(out *UtilityPages) {
 	}
 	if in.LoginRef != nil {
 		in, out := &in.LoginRef, &out.LoginRef
+		*out = new(KDexObjectReference)
+		**out = **in
+	}
+	if in.ConsentRef != nil {
+		in, out := &in.ConsentRef, &out.ConsentRef
 		*out = new(KDexObjectReference)
 		**out = **in
 	}

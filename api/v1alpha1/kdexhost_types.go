@@ -404,6 +404,11 @@ type UtilityPages struct {
 	// +kubebuilder:validation:Optional
 	// +kubebuilder:validation:XValidation:rule=`self.kind == "KDexUtilityPage" || self.kind == "KDexClusterUtilityPage"`,message="'kind' must be either KDexUtilityPage or KDexClusterUtilityPage"
 	LoginRef *KDexObjectReference `json:"loginRef,omitempty" protobuf:"bytes,3,opt,name=loginRef"`
+
+	// consentRef is a reference to a KDexUtilityPage or KDexClusterUtilityPage that defines the consent page.
+	// +kubebuilder:validation:Optional
+	// +kubebuilder:validation:XValidation:rule=`self.kind == "KDexUtilityPage" || self.kind == "KDexClusterUtilityPage"`,message="'kind' must be either KDexUtilityPage or KDexClusterUtilityPage"
+	ConsentRef *KDexObjectReference `json:"consentRef,omitempty" protobuf:"bytes,4,opt,name=consentRef"`
 }
 
 func init() {
