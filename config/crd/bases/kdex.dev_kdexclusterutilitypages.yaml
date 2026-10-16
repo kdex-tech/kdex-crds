@@ -296,8 +296,8 @@ spec:
             x-kubernetes-validations:
             - message: 'a Consent page cannot reference scripts: no scriptLibraryRef
                 and no appRef content'
-              rule: self.type != 'Consent' || (!has(self.scriptLibraryRef) && !self.contentEntries.exists(e,
-                has(e.appRef)))
+              rule: self.type != 'Consent' || (!has(self.scriptLibraryRef) && self.contentEntries.all(e,
+                !has(e.appRef)))
           status:
             description: status defines the observed state of KDexClusterUtilityPage
             properties:

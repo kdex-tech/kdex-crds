@@ -25,11 +25,15 @@ func TestKDexUtilityPageGeneratedSchema_Consent(t *testing.T) {
 
 			rules, ok := spec["x-kubernetes-validations"].([]any)
 			require.True(t, ok, "spec must carry validations")
-			messages := make([]any, 0, len(rules))
+			found := false
 			for _, r := range rules {
-				messages = append(messages, r.(map[string]any)["message"])
+				rm := r.(map[string]any)
+				if rm["message"] == "a Consent page cannot reference scripts: no scriptLibraryRef and no appRef content" {
+					found = true
+					assert.Equal(t, "self.type != 'Consent' || (!has(self.scriptLibraryRef) && self.contentEntries.all(e, !has(e.appRef)))", rm["rule"])
+				}
 			}
-			assert.Contains(t, messages, "a Consent page cannot reference scripts: no scriptLibraryRef and no appRef content")
+			assert.True(t, found, "Consent scripts rule missing")
 		})
 	}
 }

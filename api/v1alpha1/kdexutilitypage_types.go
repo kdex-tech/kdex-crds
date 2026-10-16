@@ -74,7 +74,7 @@ type KDexUtilityPageList struct {
 }
 
 // KDexUtilityPageSpec defines the desired state of KDexUtilityPage
-// +kubebuilder:validation:XValidation:rule=`self.type != 'Consent' || (!has(self.scriptLibraryRef) && !self.contentEntries.exists(e, has(e.appRef)))`,message="a Consent page cannot reference scripts: no scriptLibraryRef and no appRef content"
+// +kubebuilder:validation:XValidation:rule=`self.type != 'Consent' || (!has(self.scriptLibraryRef) && self.contentEntries.all(e, !has(e.appRef)))`,message="a Consent page cannot reference scripts: no scriptLibraryRef and no appRef content"
 type KDexUtilityPageSpec struct {
 	// type indicates the purpose of this utility page.
 	// +kubebuilder:validation:Required
