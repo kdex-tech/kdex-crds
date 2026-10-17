@@ -111,6 +111,7 @@ _Appears in:_
 | Field | Description | Default | Validation |
 | --- | --- | --- | --- |
 | `tokenPrefix` _string_ | tokenPrefix replaces the PASETO "v4.public." header on this host's minted<br />API tokens with the given brand prefix (e.g. "acme_pat_"). When empty,<br />tokens are emitted as bare "v4.public." PASETO strings (no prefixing).<br />The pattern forbids "." and whitespace so the prefix can never collide<br />with the header it replaces. |  | MaxLength: 32 <br />Optional: \{\} <br />Pattern: `^[A-Za-z0-9_-]+$` <br /> |
+| `maxTTL` _string_ | maxTTL is the longest lifetime this host mints an API token for, as a Go<br />duration (e.g. "2160h"). It bounds every mint path: self-mint,<br />impersonation, and the MCP token exchange. A mint request whose ttl<br />exceeds it is refused with a 400 naming the maximum (it is never<br />silently shortened), and a request with no ttl gets the 24h default<br />capped at this maximum. The value is published as max_ttl in<br />/.well-known/pks.json. When unset, mint lifetimes are unbounded. |  | MaxLength: 32 <br />Optional: \{\} <br /> |
 
 
 #### Asset

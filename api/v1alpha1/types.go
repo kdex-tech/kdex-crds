@@ -274,6 +274,18 @@ type APIToken struct {
 	// +kubebuilder:validation:Pattern=`^[A-Za-z0-9_-]+$`
 	// +kubebuilder:validation:MaxLength=32
 	TokenPrefix string `json:"tokenPrefix,omitempty" protobuf:"bytes,1,opt,name=tokenPrefix"`
+
+	// maxTTL is the longest lifetime this host mints an API token for, as a Go
+	// duration (e.g. "2160h"). It bounds every mint path: self-mint,
+	// impersonation, and the MCP token exchange. A mint request whose ttl
+	// exceeds it is refused with a 400 naming the maximum (it is never
+	// silently shortened), and a request with no ttl gets the 24h default
+	// capped at this maximum. The value is published as max_ttl in
+	// /.well-known/pks.json. When unset, mint lifetimes are unbounded.
+	// +kubebuilder:validation:Optional
+	// +kubebuilder:validation:MaxLength=32
+	// +kubebuilder:validation:XValidation:rule=`duration(self) > duration('0s')`,message="maxTTL must be a positive Go duration such as 2160h"
+	MaxTTL string `json:"maxTTL,omitempty" protobuf:"bytes,2,opt,name=maxTTL"`
 }
 
 // DynamicClientRegistration is the per-host configuration for RFC 7591 OAuth

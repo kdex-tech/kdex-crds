@@ -126,6 +126,20 @@ spec:
                     description: apiToken is the configuration for this host's PASETO
                       API tokens.
                     properties:
+                      maxTTL:
+                        description: |-
+                          maxTTL is the longest lifetime this host mints an API token for, as a Go
+                          duration (e.g. "2160h"). It bounds every mint path: self-mint,
+                          impersonation, and the MCP token exchange. A mint request whose ttl
+                          exceeds it is refused with a 400 naming the maximum (it is never
+                          silently shortened), and a request with no ttl gets the 24h default
+                          capped at this maximum. The value is published as max_ttl in
+                          /.well-known/pks.json. When unset, mint lifetimes are unbounded.
+                        maxLength: 32
+                        type: string
+                        x-kubernetes-validations:
+                        - message: maxTTL must be a positive Go duration such as 2160h
+                          rule: duration(self) > duration('0s')
                       tokenPrefix:
                         description: |-
                           tokenPrefix replaces the PASETO "v4.public." header on this host's minted
