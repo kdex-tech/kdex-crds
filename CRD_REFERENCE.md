@@ -539,6 +539,24 @@ _Appears in:_
 | `committerName` _string_ | committerName is the name that will be used for git commits. |  | Required: \{\} <br /> |
 
 
+#### HSTS
+
+
+
+HSTS tunes the Strict-Transport-Security response header.
+
+
+
+_Appears in:_
+- [Routing](#routing)
+
+| Field | Description | Default | Validation |
+| --- | --- | --- | --- |
+| `maxAge` _integer_ | maxAge in seconds. 0 sends max-age=0, which tells browsers to forget<br />the policy (the way to back one out). Unset means 31536000. |  | Maximum: 6.3072e+07 <br />Minimum: 0 <br />Optional: \{\} <br /> |
+| `includeSubDomains` _boolean_ | includeSubDomains extends the policy to every subdomain. Opt-in:<br />it pins tenant subdomains of the same apex. |  | Optional: \{\} <br /> |
+| `preload` _boolean_ | preload adds the preload token. The HSTS preload list requires<br />includeSubDomains and a max-age of at least 31536000. |  | Optional: \{\} <br /> |
+
+
 #### HelmConfig
 
 
@@ -2715,6 +2733,7 @@ _Appears in:_
 | `scheme` _string_ | scheme is the scheme to use for the host. If not specified https is assumed. | https | Optional: \{\} <br /> |
 | `strategy` _[RoutingStrategy](#routingstrategy)_ | strategy is the routing strategy to use. If not specified Ingress is assumed. | Ingress | Enum: [Ingress HTTPRoute] <br />Optional: \{\} <br /> |
 | `parentRefs` _ParentReference array_ | parentRefs is the list of Gateways the generated HTTPRoute attaches to<br />when strategy is HTTPRoute. Each entry follows the<br />gateway.networking.k8s.io/v1 ParentReference shape (name, namespace,<br />sectionName, port, kind, group). Ignored when strategy is Ingress.<br />When unset under HTTPRoute strategy, the host-manager falls back to<br />the operator's chart-level default parent Gateway. |  | Optional: \{\} <br /> |
+| `hsts` _[HSTS](#hsts)_ | hsts tunes the Strict-Transport-Security header host-manager sends on<br />rendered pages when scheme is https. Unset sends max-age=31536000 with<br />neither includeSubDomains nor preload. |  | Optional: \{\} <br /> |
 
 
 #### RoutingStrategy

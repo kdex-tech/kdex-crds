@@ -1345,6 +1345,31 @@ type Routing struct {
 	// the operator's chart-level default parent Gateway.
 	// +kubebuilder:validation:Optional
 	ParentRefs []gatewayv1.ParentReference `json:"parentRefs,omitempty" protobuf:"bytes,5,rep,name=parentRefs"`
+
+	// hsts tunes the Strict-Transport-Security header host-manager sends on
+	// rendered pages when scheme is https. Unset sends max-age=31536000 with
+	// neither includeSubDomains nor preload.
+	// +kubebuilder:validation:Optional
+	HSTS *HSTS `json:"hsts,omitempty" protobuf:"bytes,6,opt,name=hsts"`
+}
+
+// HSTS tunes the Strict-Transport-Security response header.
+// +kubebuilder:validation:XValidation:rule="!has(self.preload) || !self.preload || (has(self.includeSubDomains) && self.includeSubDomains && (!has(self.maxAge) || self.maxAge >= 31536000))",message="preload requires includeSubDomains and a maxAge of at least 31536000"
+type HSTS struct {
+	// maxAge in seconds. 0 sends max-age=0, which tells browsers to forget
+	// the policy (the way to back one out). Unset means 31536000.
+	// +kubebuilder:validation:Optional
+	// +kubebuilder:validation:Minimum=0
+	// +kubebuilder:validation:Maximum=63072000
+	MaxAge *int32 `json:"maxAge,omitempty" protobuf:"varint,1,opt,name=maxAge"`
+	// includeSubDomains extends the policy to every subdomain. Opt-in:
+	// it pins tenant subdomains of the same apex.
+	// +kubebuilder:validation:Optional
+	IncludeSubDomains bool `json:"includeSubDomains,omitempty" protobuf:"varint,2,opt,name=includeSubDomains"`
+	// preload adds the preload token. The HSTS preload list requires
+	// includeSubDomains and a max-age of at least 31536000.
+	// +kubebuilder:validation:Optional
+	Preload bool `json:"preload,omitempty" protobuf:"varint,3,opt,name=preload"`
 }
 
 // RoutingStrategy defines the routing strategy to use.

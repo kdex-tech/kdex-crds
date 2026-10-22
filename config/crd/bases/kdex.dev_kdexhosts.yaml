@@ -889,6 +889,37 @@ spec:
                       type: string
                     minItems: 1
                     type: array
+                  hsts:
+                    description: |-
+                      hsts tunes the Strict-Transport-Security header host-manager sends on
+                      rendered pages when scheme is https. Unset sends max-age=31536000 with
+                      neither includeSubDomains nor preload.
+                    properties:
+                      includeSubDomains:
+                        description: |-
+                          includeSubDomains extends the policy to every subdomain. Opt-in:
+                          it pins tenant subdomains of the same apex.
+                        type: boolean
+                      maxAge:
+                        description: |-
+                          maxAge in seconds. 0 sends max-age=0, which tells browsers to forget
+                          the policy (the way to back one out). Unset means 31536000.
+                        format: int32
+                        maximum: 63072000
+                        minimum: 0
+                        type: integer
+                      preload:
+                        description: |-
+                          preload adds the preload token. The HSTS preload list requires
+                          includeSubDomains and a max-age of at least 31536000.
+                        type: boolean
+                    type: object
+                    x-kubernetes-validations:
+                    - message: preload requires includeSubDomains and a maxAge of
+                        at least 31536000
+                      rule: '!has(self.preload) || !self.preload || (has(self.includeSubDomains)
+                        && self.includeSubDomains && (!has(self.maxAge) || self.maxAge
+                        >= 31536000))'
                   ingressClassName:
                     description: |-
                       ingressClassName is the name of an IngressClass cluster resource. Ingress
