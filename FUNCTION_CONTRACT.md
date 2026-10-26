@@ -51,13 +51,14 @@ The same document is served at `status.openAPISchemaURL`
 document itself, byte for byte, from the CR (it can't fetch the document for an `internal`
 function).
 
-- **Today:** fngogen's parked `fngogen build-spec` / `fngogen local`
-  (branch `parked/local-codegen-cli`) does this with a port of `BuildOneOff`, golden-tested
-  against host-manager output.
-- ***Proposed:*** move the one-off builder into kdex-crds (e.g. a `kdex.dev/crds/openapi`
-  package), so that host-manager, fngogen and the CLI all import **one** implementation
-  instead of keeping two copies in lockstep. Non-Go generators then consume its output (a
-  `build-spec` binary or the document file), never a re-port.
+- The builder lives in kdex-crds as `kdex.dev/crds/openapi`: `NewOneOffBuilder().BuildOneOff(serverURL, fn)`
+  for client-side use, plus the host's scheme registry (`SecuritySchemes()`).
+  host-manager and `fngogen build-spec` / `fngogen local` import this one implementation,
+  and golden tests (`openapi/testdata/oneoff`) pin its output byte for byte.
+- Non-Go generators consume its output (the `fngogen build-spec` binary or the document
+  file). They never re-port it.
+- The document is serialized with `json.MarshalIndent(doc, "", "  ")` plus a trailing
+  newline.
 
 The host-defined schemes are:
 
@@ -356,5 +357,5 @@ deployed with. Proposed:
 | §8 exchange helper / raw token access | ✅ `runtime/kdexauth` | ❌ |
 | §9.2 one stub per operation, drift is a compile error | ✅ | ✅ |
 | §9.6 pinned toolchain | ❌ ogen `@latest` on `main` (fngogen#16); ✅ ogen v1.22.0 as a library on `parked/local-codegen-cli` | ✅ npm semver ranges + lockfile |
-| §2.1 client-side one-off document | ✅ `fngogen build-spec` on `parked/local-codegen-cli` (not on `main`) | ❌ expects the document as input |
+| §2.1 client-side one-off document | ✅ `fngogen build-spec` (via `kdex.dev/crds/openapi`) | ❌ expects the document as input |
 | entitlements library | current | `^0.1.23` (current release is 0.6.0) |
