@@ -91,8 +91,10 @@ spec:
                   subjectKinds restricts the binding to subjects of the listed kinds.
                   When absent, the binding applies to a subject of any kind.
 
-                  "User" is a human (OIDC or local identity); "Client" is a registered auth
-                  client (configured or DCR). When the subject's kind is not listed, the
+                  "User" is a human (OIDC or local identity), including the tokens a
+                  dynamically registered (DCR) app holds on a person's behalf; "Client"
+                  is an operator-configured auth client acting as itself
+                  (client_credentials). When the subject's kind is not listed, the
                   binding does not contribute. "ServiceAccount" is the reserved next kind.
                 items:
                   description: SubjectKind is the kind of principal a KDexRoleBinding

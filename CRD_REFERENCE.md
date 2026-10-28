@@ -2127,7 +2127,7 @@ _Appears in:_
 | `hostRef` _[LocalObjectReference](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.35/#localobjectreference-v1-core)_ | hostRef is a reference to the KDexHost that this binding is for. |  | Required: \{\} <br /> |
 | `roles` _string array_ | roles is a list of KDexRole names bound to this subject. |  | MinItems: 1 <br />Required: \{\} <br /> |
 | `subject` _string_ | subject is the subject identifier. It should be from the OIDC provider (e.g. Google).<br />However, if the ServiceAccount referenced by the host has secrets attached labelled with<br />"kdex.dev/secret-type=subject" then it contains a local identity managed<br />through the Secret.<br />subject must be non-empty. It accepts the host-manager matcher's three<br />forms: an exact identifier (OIDC/local "sub"), the "*" wildcard (match<br />any subject), or a "/regex/" slash-delimited Go regex. minLength=1<br />admits "*" and short identifiers; the previous minLength=5 wrongly<br />rejected the documented "*" wildcard and any sub-5-char username.<br />See kdex-tech/kdex-crds#3.<br />To restrict a "*" or "/regex/" subject to a kind of principal, use<br />subjectKinds. |  | MinLength: 1 <br />Required: \{\} <br /> |
-| `subjectKinds` _[SubjectKind](#subjectkind) array_ | subjectKinds restricts the binding to subjects of the listed kinds.<br />When absent, the binding applies to a subject of any kind.<br />"User" is a human (OIDC or local identity); "Client" is a registered auth<br />client (configured or DCR). When the subject's kind is not listed, the<br />binding does not contribute. "ServiceAccount" is the reserved next kind. |  | Enum: [User Client] <br />MaxItems: 8 <br />MinItems: 1 <br />Optional: \{\} <br /> |
+| `subjectKinds` _[SubjectKind](#subjectkind) array_ | subjectKinds restricts the binding to subjects of the listed kinds.<br />When absent, the binding applies to a subject of any kind.<br />"User" is a human (OIDC or local identity), including the tokens a<br />dynamically registered (DCR) app holds on a person's behalf; "Client"<br />is an operator-configured auth client acting as itself<br />(client_credentials). When the subject's kind is not listed, the<br />binding does not contribute. "ServiceAccount" is the reserved next kind. |  | Enum: [User Client] <br />MaxItems: 8 <br />MinItems: 1 <br />Optional: \{\} <br /> |
 
 
 #### KDexRoleList
@@ -2908,7 +2908,7 @@ _Appears in:_
 | Field | Description |
 | --- | --- |
 | `User` | SubjectKindUser is a human principal (OIDC or local identity).<br /> |
-| `Client` | SubjectKindClient is a registered auth client (configured or DCR).<br /> |
+| `Client` | SubjectKindClient is an operator-configured auth client acting as<br />itself (client_credentials, and the API tokens and function tokens<br />issued to it). A dynamically registered (DCR) app only ever holds a<br />person's tokens, which are User.<br /> |
 
 
 #### Tag

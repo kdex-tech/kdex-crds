@@ -17,6 +17,8 @@ limitations under the License.
 package v1alpha1
 
 import (
+	"slices"
+
 	corev1 "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
@@ -28,22 +30,22 @@ type SubjectKind string
 const (
 	// SubjectKindUser is a human principal (OIDC or local identity).
 	SubjectKindUser SubjectKind = "User"
-	// SubjectKindClient is a registered auth client (configured or DCR).
+	// SubjectKindClient is an operator-configured auth client acting as
+	// itself (client_credentials, and the API tokens and function tokens
+	// issued to it). A dynamically registered (DCR) app only ever holds a
+	// person's tokens, which are User.
 	SubjectKindClient SubjectKind = "Client"
 )
 
-// SubjectKinds is the list of known subject kinds, in declaration order.
-// ServiceAccount is the reserved next kind and is not yet known.
+// SubjectKinds is the list of known subject kinds, in declaration order. It
+// must match the Enum marker on SubjectKind; the generated-schema test pins
+// the two together. ServiceAccount is the reserved next kind and is not yet
+// known.
 var SubjectKinds = []SubjectKind{SubjectKindUser, SubjectKindClient}
 
 // Known reports whether k is one of SubjectKinds.
 func (k SubjectKind) Known() bool {
-	for _, known := range SubjectKinds {
-		if k == known {
-			return true
-		}
-	}
-	return false
+	return slices.Contains(SubjectKinds, k)
 }
 
 // KDexRoleBindingSpec defines the desired state of KDexRoleBinding
@@ -79,8 +81,10 @@ type KDexRoleBindingSpec struct {
 	// subjectKinds restricts the binding to subjects of the listed kinds.
 	// When absent, the binding applies to a subject of any kind.
 	//
-	// "User" is a human (OIDC or local identity); "Client" is a registered auth
-	// client (configured or DCR). When the subject's kind is not listed, the
+	// "User" is a human (OIDC or local identity), including the tokens a
+	// dynamically registered (DCR) app holds on a person's behalf; "Client"
+	// is an operator-configured auth client acting as itself
+	// (client_credentials). When the subject's kind is not listed, the
 	// binding does not contribute. "ServiceAccount" is the reserved next kind.
 	// +optional
 	// +listType=set
