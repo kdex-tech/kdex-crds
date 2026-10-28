@@ -81,8 +81,30 @@ spec:
                   admits "*" and short identifiers; the previous minLength=5 wrongly
                   rejected the documented "*" wildcard and any sub-5-char username.
                   See kdex-tech/kdex-crds#3.
+
+                  To restrict a "*" or "/regex/" subject to a kind of principal, use
+                  subjectKinds.
                 minLength: 1
                 type: string
+              subjectKinds:
+                description: |-
+                  subjectKinds restricts the binding to subjects of the listed kinds.
+                  When absent, the binding applies to a subject of any kind.
+
+                  "User" is a human (OIDC or local identity); "Client" is a registered auth
+                  client (configured or DCR). When the subject's kind is not listed, the
+                  binding does not contribute. "ServiceAccount" is the reserved next kind.
+                items:
+                  description: SubjectKind is the kind of principal a KDexRoleBinding
+                    can be restricted to.
+                  enum:
+                  - User
+                  - Client
+                  type: string
+                maxItems: 8
+                minItems: 1
+                type: array
+                x-kubernetes-list-type: set
             required:
             - hostRef
             - roles

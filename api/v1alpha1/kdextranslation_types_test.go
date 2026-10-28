@@ -1,8 +1,6 @@
 package v1alpha1
 
 import (
-	"os"
-	"path/filepath"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
@@ -49,22 +47,11 @@ spec:
 	assert.NotContains(t, string(out), "hostRef")
 }
 
-func translationCRDSpecSchema(t *testing.T, file string) map[string]any {
-	t.Helper()
-	raw, err := os.ReadFile(filepath.Join("..", "..", "config", "crd", "bases", file))
-	require.NoError(t, err)
-	var crd map[string]any
-	require.NoError(t, yaml.Unmarshal(raw, &crd))
-	versions := crd["spec"].(map[string]any)["versions"].([]any)
-	schema := versions[0].(map[string]any)["schema"].(map[string]any)["openAPIV3Schema"].(map[string]any)
-	return schema["properties"].(map[string]any)["spec"].(map[string]any)
-}
-
 // Asserts on the generated CRD so a marker that silently fails to apply is
 // caught. CEL rejection itself is exercised by kdex-nexus-manager's envtest
 // (kdex-crds has no envtest).
 func TestKDexTranslationGeneratedSchema_HostRef(t *testing.T) {
-	spec := translationCRDSpecSchema(t, "kdex.dev_kdextranslations.yaml")
+	spec := crdSpecSchema(t, "kdex.dev_kdextranslations.yaml")
 	props := spec["properties"].(map[string]any)
 
 	hostRef, ok := props["hostRef"].(map[string]any)
@@ -80,7 +67,7 @@ func TestKDexTranslationGeneratedSchema_HostRef(t *testing.T) {
 }
 
 func TestKDexClusterTranslationGeneratedSchema_HasNoHostRef(t *testing.T) {
-	spec := translationCRDSpecSchema(t, "kdex.dev_kdexclustertranslations.yaml")
+	spec := crdSpecSchema(t, "kdex.dev_kdexclustertranslations.yaml")
 	_, has := spec["properties"].(map[string]any)["hostRef"]
 	assert.False(t, has, "a cluster-scoped translation cannot attach to a namespaced host")
 }

@@ -17,14 +17,11 @@ limitations under the License.
 package v1alpha1
 
 import (
-	"os"
-	"path/filepath"
 	"regexp"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
-	"sigs.k8s.io/yaml"
 )
 
 // TestKDexFunctionBasePathSchema asserts on the *generated* CRD rather than on
@@ -34,39 +31,21 @@ import (
 // quoted-string), so the pattern must be anchored at both ends and must admit
 // no quote, backslash, or whitespace.
 func TestKDexFunctionBasePathSchema(t *testing.T) {
-	raw, err := os.ReadFile(filepath.Join("..", "..", "config", "crd", "bases", "kdex.dev_kdexfunctions.yaml"))
-	require.NoError(t, err)
-
-	var crd struct {
-		Spec struct {
-			Versions []struct {
-				Name   string `json:"name"`
-				Schema struct {
-					OpenAPIV3Schema struct {
-						Properties struct {
-							Spec struct {
-								Properties struct {
-									API struct {
-										Properties struct {
-											BasePath struct {
-												Pattern   string `json:"pattern"`
-												MaxLength int    `json:"maxLength"`
-											} `json:"basePath"`
-										} `json:"properties"`
-									} `json:"api"`
-								} `json:"properties"`
-							} `json:"spec"`
-						} `json:"properties"`
-					} `json:"openAPIV3Schema"`
-				} `json:"schema"`
-			} `json:"versions"`
-		} `json:"spec"`
+	var spec struct {
+		Properties struct {
+			API struct {
+				Properties struct {
+					BasePath struct {
+						Pattern   string `json:"pattern"`
+						MaxLength int    `json:"maxLength"`
+					} `json:"basePath"`
+				} `json:"properties"`
+			} `json:"api"`
+		} `json:"properties"`
 	}
-	require.NoError(t, yaml.Unmarshal(raw, &crd))
-	require.NotEmpty(t, crd.Spec.Versions)
-
-	basePath := crd.Spec.Versions[0].Schema.OpenAPIV3Schema.Properties.Spec.Properties.API.Properties.BasePath
-	assert.Equal(t, "v1alpha1", crd.Spec.Versions[0].Name)
+	decodeSchema(t, crdSpecSchema(t, "kdex.dev_kdexfunctions.yaml"), &spec)
+	basePath := spec.Properties.API.Properties.BasePath
+	assert.Equal(t, "v1alpha1", crdVersion(t, "kdex.dev_kdexfunctions.yaml")["name"])
 	assert.Equal(t, `^(/\w[\w-]*){2,8}$`, basePath.Pattern, "generated CRD lost the basePath pattern")
 	assert.Equal(t, 64, basePath.MaxLength, "generated CRD lost the basePath maxLength")
 

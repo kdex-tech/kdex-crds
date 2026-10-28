@@ -21,6 +21,31 @@ import (
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
 
+// SubjectKind is the kind of principal a KDexRoleBinding can be restricted to.
+// +kubebuilder:validation:Enum=User;Client
+type SubjectKind string
+
+const (
+	// SubjectKindUser is a human principal (OIDC or local identity).
+	SubjectKindUser SubjectKind = "User"
+	// SubjectKindClient is a registered auth client (configured or DCR).
+	SubjectKindClient SubjectKind = "Client"
+)
+
+// SubjectKinds is the list of known subject kinds, in declaration order.
+// ServiceAccount is the reserved next kind and is not yet known.
+var SubjectKinds = []SubjectKind{SubjectKindUser, SubjectKindClient}
+
+// Known reports whether k is one of SubjectKinds.
+func (k SubjectKind) Known() bool {
+	for _, known := range SubjectKinds {
+		if k == known {
+			return true
+		}
+	}
+	return false
+}
+
 // KDexRoleBindingSpec defines the desired state of KDexRoleBinding
 type KDexRoleBindingSpec struct {
 	// hostRef is a reference to the KDexHost that this binding is for.
@@ -44,9 +69,24 @@ type KDexRoleBindingSpec struct {
 	// admits "*" and short identifiers; the previous minLength=5 wrongly
 	// rejected the documented "*" wildcard and any sub-5-char username.
 	// See kdex-tech/kdex-crds#3.
+	//
+	// To restrict a "*" or "/regex/" subject to a kind of principal, use
+	// subjectKinds.
 	// +kubebuilder:validation:Required
 	// +kubebuilder:validation:MinLength=1
 	Subject string `json:"subject" protobuf:"bytes,5,req,name=subject"`
+
+	// subjectKinds restricts the binding to subjects of the listed kinds.
+	// When absent, the binding applies to a subject of any kind.
+	//
+	// "User" is a human (OIDC or local identity); "Client" is a registered auth
+	// client (configured or DCR). When the subject's kind is not listed, the
+	// binding does not contribute. "ServiceAccount" is the reserved next kind.
+	// +optional
+	// +listType=set
+	// +kubebuilder:validation:MinItems=1
+	// +kubebuilder:validation:MaxItems=8
+	SubjectKinds []SubjectKind `json:"subjectKinds,omitempty" protobuf:"bytes,6,rep,name=subjectKinds,casttype=SubjectKind"`
 }
 
 // +kubebuilder:object:root=true

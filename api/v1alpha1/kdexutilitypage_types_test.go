@@ -14,7 +14,7 @@ func TestKDexUtilityPageGeneratedSchema_Consent(t *testing.T) {
 		"kdex.dev_kdexinternalutilitypages.yaml",
 	} {
 		t.Run(file, func(t *testing.T) {
-			spec := translationCRDSpecSchema(t, file)
+			spec := crdSpecSchema(t, file)
 			typ := spec["properties"].(map[string]any)["type"].(map[string]any)
 			// The type's enum is emitted once per marker, under allOf.
 			allOf := typ["allOf"].([]any)
@@ -39,7 +39,7 @@ func TestKDexUtilityPageGeneratedSchema_Consent(t *testing.T) {
 }
 
 func TestKDexHostGeneratedSchema_ConsentRef(t *testing.T) {
-	spec := translationCRDSpecSchema(t, "kdex.dev_kdexhosts.yaml")
+	spec := crdSpecSchema(t, "kdex.dev_kdexhosts.yaml")
 	up := spec["properties"].(map[string]any)["utilityPages"].(map[string]any)
 	ref, ok := up["properties"].(map[string]any)["consentRef"].(map[string]any)
 	require.True(t, ok, "utilityPages must expose consentRef")
@@ -51,7 +51,7 @@ func TestKDexHostGeneratedSchema_ConsentRef(t *testing.T) {
 }
 
 func TestKDexInternalHostGeneratedSchema_ConsentRef(t *testing.T) {
-	spec := translationCRDSpecSchema(t, "kdex.dev_kdexinternalhosts.yaml")
+	spec := crdSpecSchema(t, "kdex.dev_kdexinternalhosts.yaml")
 	_, ok := spec["properties"].(map[string]any)["consentRef"]
 	assert.True(t, ok, "internal host spec must expose consentRef")
 }

@@ -30,7 +30,7 @@ func TestAPIToken_MaxTTL_RoundTrips(t *testing.T) {
 func TestAPITokenGeneratedSchema_MaxTTL(t *testing.T) {
 	for _, file := range []string{"kdex.dev_kdexhosts.yaml", "kdex.dev_kdexinternalhosts.yaml"} {
 		t.Run(file, func(t *testing.T) {
-			spec := translationCRDSpecSchema(t, file)
+			spec := crdSpecSchema(t, file)
 			auth := spec["properties"].(map[string]any)["auth"].(map[string]any)
 			apiToken := auth["properties"].(map[string]any)["apiToken"].(map[string]any)
 			maxTTL, ok := apiToken["properties"].(map[string]any)["maxTTL"].(map[string]any)

@@ -31,7 +31,7 @@ spec:
 }
 
 func TestKDexHostExtensionGeneratedSchema(t *testing.T) {
-	spec := translationCRDSpecSchema(t, "kdex.dev_kdexhostextensions.yaml")
+	spec := crdSpecSchema(t, "kdex.dev_kdexhostextensions.yaml")
 	props := spec["properties"].(map[string]any)
 
 	hostRef := props["hostRef"].(map[string]any)
@@ -53,14 +53,14 @@ func TestKDexHostExtensionGeneratedSchema(t *testing.T) {
 }
 
 func TestKDexHostGeneratedSchema_ExtensionSelector(t *testing.T) {
-	spec := translationCRDSpecSchema(t, "kdex.dev_kdexhosts.yaml")
+	spec := crdSpecSchema(t, "kdex.dev_kdexhosts.yaml")
 	_, ok := spec["properties"].(map[string]any)["extensionSelector"]
 	assert.True(t, ok, "KDexHost spec must expose extensionSelector")
 	assert.NotContains(t, spec["required"], "extensionSelector")
 }
 
 func TestKDexInternalHostGeneratedSchema_Extensions(t *testing.T) {
-	spec := translationCRDSpecSchema(t, "kdex.dev_kdexinternalhosts.yaml")
+	spec := crdSpecSchema(t, "kdex.dev_kdexinternalhosts.yaml")
 	ext, ok := spec["properties"].(map[string]any)["extensions"].(map[string]any)
 	require.True(t, ok, "KDexInternalHost spec must expose extensions")
 	assert.EqualValues(t, 32, ext["maxItems"])
@@ -105,7 +105,7 @@ func TestEffectiveAuth_ComposesInOrder(t *testing.T) {
 }
 
 func TestKDexHostExtensionGeneratedSchema_ValidationRules(t *testing.T) {
-	props := translationCRDSpecSchema(t, "kdex.dev_kdexhostextensions.yaml")["properties"].(map[string]any)
+	props := crdSpecSchema(t, "kdex.dev_kdexhostextensions.yaml")["properties"].(map[string]any)
 
 	messages := func(items map[string]any) []string {
 		rules := items["x-kubernetes-validations"].([]any)

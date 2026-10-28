@@ -18,8 +18,6 @@ package v1alpha1
 
 import (
 	"encoding/json"
-	"os"
-	"path/filepath"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
@@ -90,52 +88,33 @@ body: "User-agent: *\nDisallow:\n"
 // apiserver's per-rule cost budget) is exercised by kdex-host-manager's envtest
 // suite in a later phase of this plan.
 func TestKDexPageGeneratedSchema(t *testing.T) {
-	raw, err := os.ReadFile(filepath.Join("..", "..", "config", "crd", "bases", "kdex.dev_kdexpages.yaml"))
-	require.NoError(t, err)
-
-	var crd struct {
-		Spec struct {
-			Versions []struct {
-				Name   string `json:"name"`
-				Schema struct {
-					OpenAPIV3Schema struct {
-						Properties struct {
-							Spec struct {
-								Required   []string `json:"required"`
-								Properties struct {
-									Localized struct {
-										Type    string `json:"type"`
-										Default bool   `json:"default"`
-									} `json:"localized"`
-									MimeType struct {
-										Type string   `json:"type"`
-										Enum []string `json:"enum"`
-									} `json:"mimeType"`
-									Body struct {
-										Type      string `json:"type"`
-										MaxLength int    `json:"maxLength"`
-									} `json:"body"`
-									ContentEntries struct {
-										MinItems *int `json:"minItems"`
-										MaxItems int  `json:"maxItems"`
-									} `json:"contentEntries"`
-								} `json:"properties"`
-								XKubernetesValidations []struct {
-									Rule    string `json:"rule"`
-									Message string `json:"message"`
-								} `json:"x-kubernetes-validations"`
-							} `json:"spec"`
-						} `json:"properties"`
-					} `json:"openAPIV3Schema"`
-				} `json:"schema"`
-			} `json:"versions"`
-		} `json:"spec"`
+	var spec struct {
+		Required   []string `json:"required"`
+		Properties struct {
+			Localized struct {
+				Type    string `json:"type"`
+				Default bool   `json:"default"`
+			} `json:"localized"`
+			MimeType struct {
+				Type string   `json:"type"`
+				Enum []string `json:"enum"`
+			} `json:"mimeType"`
+			Body struct {
+				Type      string `json:"type"`
+				MaxLength int    `json:"maxLength"`
+			} `json:"body"`
+			ContentEntries struct {
+				MinItems *int `json:"minItems"`
+				MaxItems int  `json:"maxItems"`
+			} `json:"contentEntries"`
+		} `json:"properties"`
+		XKubernetesValidations []struct {
+			Rule    string `json:"rule"`
+			Message string `json:"message"`
+		} `json:"x-kubernetes-validations"`
 	}
-	require.NoError(t, yaml.Unmarshal(raw, &crd))
-	require.NotEmpty(t, crd.Spec.Versions)
-
-	spec := crd.Spec.Versions[0].Schema.OpenAPIV3Schema.Properties.Spec
-	assert.Equal(t, "v1alpha1", crd.Spec.Versions[0].Name)
+	decodeSchema(t, crdSpecSchema(t, "kdex.dev_kdexpages.yaml"), &spec)
+	assert.Equal(t, "v1alpha1", crdVersion(t, "kdex.dev_kdexpages.yaml")["name"])
 
 	assert.Equal(t, "boolean", spec.Properties.Localized.Type, "localized must be a boolean")
 	assert.True(t, spec.Properties.Localized.Default, "localized must default to true")
@@ -190,42 +169,26 @@ rewrite:
 // TestKDexPageGeneratedSchema_RewriteMode pins the rewrite property and the
 // mode-exclusion CEL in the generated CRD (#217, #201).
 func TestKDexPageGeneratedSchema_RewriteMode(t *testing.T) {
-	raw, err := os.ReadFile(filepath.Join("..", "..", "config", "crd", "bases", "kdex.dev_kdexpages.yaml"))
-	require.NoError(t, err)
-
-	var crd struct {
-		Spec struct {
-			Versions []struct {
-				Schema struct {
-					OpenAPIV3Schema struct {
-						Properties struct {
-							Spec struct {
-								Properties struct {
-									Rewrite struct {
-										Required   []string `json:"required"`
-										Properties struct {
-											Path struct {
-												MaxLength int    `json:"maxLength"`
-												Pattern   string `json:"pattern"`
-											} `json:"path"`
-											Canonical struct {
-												Type string `json:"type"`
-											} `json:"canonical"`
-										} `json:"properties"`
-									} `json:"rewrite"`
-								} `json:"properties"`
-								XKubernetesValidations []struct {
-									Rule string `json:"rule"`
-								} `json:"x-kubernetes-validations"`
-							} `json:"spec"`
-						} `json:"properties"`
-					} `json:"openAPIV3Schema"`
-				} `json:"schema"`
-			} `json:"versions"`
-		} `json:"spec"`
+	var spec struct {
+		Properties struct {
+			Rewrite struct {
+				Required   []string `json:"required"`
+				Properties struct {
+					Path struct {
+						MaxLength int    `json:"maxLength"`
+						Pattern   string `json:"pattern"`
+					} `json:"path"`
+					Canonical struct {
+						Type string `json:"type"`
+					} `json:"canonical"`
+				} `json:"properties"`
+			} `json:"rewrite"`
+		} `json:"properties"`
+		XKubernetesValidations []struct {
+			Rule string `json:"rule"`
+		} `json:"x-kubernetes-validations"`
 	}
-	require.NoError(t, yaml.Unmarshal(raw, &crd))
-	spec := crd.Spec.Versions[0].Schema.OpenAPIV3Schema.Properties.Spec
+	decodeSchema(t, crdSpecSchema(t, "kdex.dev_kdexpages.yaml"), &spec)
 
 	assert.Contains(t, spec.Properties.Rewrite.Required, "targetRef")
 	assert.Equal(t, 512, spec.Properties.Rewrite.Properties.Path.MaxLength)

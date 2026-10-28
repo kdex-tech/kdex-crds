@@ -39,7 +39,7 @@ func TestRouting_HSTS_RoundTrips(t *testing.T) {
 func TestRoutingGeneratedSchema_HSTS(t *testing.T) {
 	for _, file := range []string{"kdex.dev_kdexhosts.yaml", "kdex.dev_kdexinternalhosts.yaml"} {
 		t.Run(file, func(t *testing.T) {
-			spec := translationCRDSpecSchema(t, file)
+			spec := crdSpecSchema(t, file)
 			routing := spec["properties"].(map[string]any)["routing"].(map[string]any)
 			hsts, ok := routing["properties"].(map[string]any)["hsts"].(map[string]any)
 			require.True(t, ok, "routing must expose hsts")
