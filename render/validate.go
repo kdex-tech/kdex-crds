@@ -61,6 +61,7 @@ func init() {
 				Icon:     "one",
 				Label:    "One",
 				Name:     "one",
+				Type:     PageTypeHTML,
 				Weight:   resource.MustParse("0"),
 			},
 			"Two": PageEntry{
@@ -69,6 +70,7 @@ func init() {
 				Icon:     "two",
 				Label:    "Two",
 				Name:     "two",
+				Type:     PageTypeHTML,
 				Weight:   resource.MustParse("1"),
 			},
 			"Three": PageEntry{
@@ -80,6 +82,7 @@ func init() {
 						Icon:     "four",
 						Label:    "Four",
 						Name:     "four",
+						Type:     PageTypeHTML,
 						Weight:   resource.MustParse("0"),
 					},
 				},
@@ -87,6 +90,7 @@ func init() {
 				Icon:   "three",
 				Label:  "Three",
 				Name:   "three",
+				Type:   PageTypeHTML,
 				Weight: resource.MustParse("3"),
 			},
 		},

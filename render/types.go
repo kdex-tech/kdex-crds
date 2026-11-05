@@ -8,15 +8,57 @@ import (
 	"k8s.io/apimachinery/pkg/api/resource"
 )
 
+// PageType is a page's operating mode, as a PageEntry reports it. A KDexPage
+// runs in exactly one mode, chosen by which fields its spec sets.
+type PageType string
+
+const (
+	// PageTypeHTML is a page composed from an archetype (spec.contentEntries).
+	PageTypeHTML PageType = "html"
+	// PageTypeText is a raw text document (spec.mimeType + spec.body), such as
+	// robots.txt, llms.txt or sitemap.xml.
+	PageTypeText PageType = "text"
+	// PageTypeRewrite is an internal alias of another KDexPage or KDexFunction
+	// (spec.rewrite).
+	PageTypeRewrite PageType = "rewrite"
+)
+
+// PageEntry is one page in a page tree (.PageMap), as navigation and text-page
+// templates see it. Children holds the pages that name this one as their
+// parent, keyed by label.
 type PageEntry struct {
-	BasePath string            `json:"basePath" yaml:"basePath"`
-	Children *map[string]any   `json:"children,omitempty" yaml:"children,omitempty"`
-	Href     string            `json:"href,omitempty" yaml:"href,omitempty"`
-	Icon     string            `json:"icon,omitempty" yaml:"icon,omitempty"`
-	Label    string            `json:"label" yaml:"label"`
-	Name     string            `json:"name" yaml:"name"`
-	Tags     []PageTag         `json:"tags,omitempty" yaml:"tags,omitempty"`
-	Weight   resource.Quantity `json:"weight" yaml:"weight,omitempty"`
+	BasePath string          `json:"basePath" yaml:"basePath"`
+	Children *map[string]any `json:"children,omitempty" yaml:"children,omitempty"`
+	Href     string          `json:"href,omitempty" yaml:"href,omitempty"`
+	Icon     string          `json:"icon,omitempty" yaml:"icon,omitempty"`
+	Label    string          `json:"label" yaml:"label"`
+	// MimeType is a text page's spec.mimeType (txt, json, yaml, markdown or
+	// xml). Empty unless Type is PageTypeText.
+	MimeType string `json:"mimeType,omitempty" yaml:"mimeType,omitempty"`
+	Name     string `json:"name" yaml:"name"`
+	// Rewrite describes an alias's target. Nil unless Type is PageTypeRewrite.
+	Rewrite *PageRewrite `json:"rewrite,omitempty" yaml:"rewrite,omitempty"`
+	Tags    []PageTag    `json:"tags,omitempty" yaml:"tags,omitempty"`
+	// Type is the page's operating mode: html, text or rewrite. A template
+	// compares it as a string: [[ if eq $p.Type "html" ]].
+	Type   PageType          `json:"type,omitempty" yaml:"type,omitempty"`
+	Weight resource.Quantity `json:"weight" yaml:"weight,omitempty"`
+}
+
+// PageRewrite is a rewrite page's target, as a PageEntry reports it.
+type PageRewrite struct {
+	// Canonical is the alias's spec.rewrite.canonical: the alias sends
+	// Link: <target URL>; rel="canonical".
+	Canonical bool `json:"canonical,omitempty" yaml:"canonical,omitempty"`
+	// Href is the path the alias's own Href serves, in the same language as
+	// the entry's Href: the URL to list in a sitemap instead of the alias.
+	// Empty when the target is not servable (missing, not Ready, internal, or
+	// itself a rewrite).
+	Href string `json:"href,omitempty" yaml:"href,omitempty"`
+	// Kind is the target's kind: KDexPage or KDexFunction.
+	Kind string `json:"kind" yaml:"kind"`
+	// Name is the target's name.
+	Name string `json:"name" yaml:"name"`
 }
 
 // PageTag is a navigation-facing projection of a page's spec.tags entry. It
