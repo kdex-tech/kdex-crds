@@ -76,10 +76,15 @@ type KDexRoleList struct {
 // +kubebuilder:validation:XValidation:rule="!(has(self.resources) && self.resources.size() > 0) || (has(self.verbs) && self.verbs.size() > 0)",message="resources requires verbs"
 // +kubebuilder:validation:XValidation:rule="!(has(self.scopes) && self.scopes.size() > 0) || ((!has(self.verbs) || self.verbs.size() == 0) && (!has(self.resourceNames) || self.resourceNames.size() == 0))",message="scopes cannot be combined with verbs or resourceNames"
 // +kubebuilder:validation:XValidation:rule="!has(self.scopes) || self.scopes.all(s, !s.contains(':'))",message="an opaque scope must not contain ':'"
+// +kubebuilder:validation:XValidation:rule="!has(self.resourceNames) || self.resourceNames.all(n, !n.contains(':') && !n.contains('{') && !n.contains('}'))",message="a resourceName must not contain ':', '{' or '}': percent-encode them (':' is %3A, '{' is %7B, '}' is %7D). A role cannot express a placeholder such as {id}"
+// +kubebuilder:validation:XValidation:rule="!has(self.resources) || self.resources.all(r, !r.contains(':'))",message="a resource must not contain ':'"
+// +kubebuilder:validation:XValidation:rule="!has(self.verbs) || self.verbs.all(v, !v.contains(':'))",message="a verb must not contain ':'"
 type PolicyRule struct {
 	// resourceNames is an optional allow list of names that the rule applies to. An empty set means the rule applies to all instances of the resources.
-	// Note: If a resource name contains colons (':'), it must be URL-encoded (e.g., 'foo:bar' -> 'foo%3Abar') to prevent misinterpretation
-	// by the entitlement pattern splitting logic.
+	// A name must not contain ':', '{' or '}': a ':' would be read as a segment separator, and '{name}' looks like a requirement placeholder
+	// but a grant is never bound, so it would only ever match the literal text. Percent-encode such characters as the entitlements
+	// canonical encoding does (e.g. 'foo:bar' -> 'foo%3Abar'). A role cannot grant "the caller's own id"; that is a requirement
+	// placeholder (x-entitlement-binding) checked against a concrete grant.
 	// +kubebuilder:validation:Optional
 	// +kubebuilder:validation:MaxItems=64
 	// +kubebuilder:validation:items:MaxLength=253

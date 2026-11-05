@@ -77,8 +77,10 @@ spec:
                     resourceNames:
                       description: |-
                         resourceNames is an optional allow list of names that the rule applies to. An empty set means the rule applies to all instances of the resources.
-                        Note: If a resource name contains colons (':'), it must be URL-encoded (e.g., 'foo:bar' -> 'foo%3Abar') to prevent misinterpretation
-                        by the entitlement pattern splitting logic.
+                        A name must not contain ':', '{' or '}': a ':' would be read as a segment separator, and '{name}' looks like a requirement placeholder
+                        but a grant is never bound, so it would only ever match the literal text. Percent-encode such characters as the entitlements
+                        canonical encoding does (e.g. 'foo:bar' -> 'foo%3Abar'). A role cannot grant "the caller's own id"; that is a requirement
+                        placeholder (x-entitlement-binding) checked against a concrete grant.
                       items:
                         maxLength: 253
                         type: string
@@ -128,6 +130,15 @@ spec:
                       == 0))'
                   - message: an opaque scope must not contain ':'
                     rule: '!has(self.scopes) || self.scopes.all(s, !s.contains('':''))'
+                  - message: 'a resourceName must not contain '':'', ''{'' or ''}'':
+                      percent-encode them ('':'' is %3A, ''{'' is %7B, ''}'' is %7D).
+                      A role cannot express a placeholder such as {id}'
+                    rule: '!has(self.resourceNames) || self.resourceNames.all(n, !n.contains('':'')
+                      && !n.contains(''{'') && !n.contains(''}''))'
+                  - message: a resource must not contain ':'
+                    rule: '!has(self.resources) || self.resources.all(r, !r.contains('':''))'
+                  - message: a verb must not contain ':'
+                    rule: '!has(self.verbs) || self.verbs.all(v, !v.contains('':''))'
                 maxItems: 64
                 minItems: 1
                 type: array
