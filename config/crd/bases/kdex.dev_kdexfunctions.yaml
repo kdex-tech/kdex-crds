@@ -166,8 +166,9 @@ spec:
                         minLength: 1
                         type: string
                       namespace:
-                        description: Namespace of the target Service. Defaults to
-                          the KDexFunction's namespace.
+                        description: |-
+                          Namespace of the target Service. Defaults to the KDexFunction's namespace. Another namespace must be listed in
+                          the KDexHost's spec.referenceNamespaces, or the backend is refused.
                         type: string
                       path:
                         description: |-
@@ -608,7 +609,8 @@ spec:
                                 description: |-
                                   Namespace, if set, causes the lookup for the namespace scoped Kind of the referent to use the specified
                                   namespace. If not set, the namespace of the resource will be used to lookup the namespace scoped Kind of the
-                                  referent.
+                                  referent. A namespace other than the referrer's own must be listed in the KDexHost's spec.referenceNamespaces,
+                                  or the reference is refused.
                                   If the referring resource is cluster scoped, this field is ignored.
                                   Defaulted to nil.
                                 type: string
@@ -3344,7 +3346,8 @@ spec:
                             description: |-
                               Namespace, if set, causes the lookup for the namespace scoped Kind of the referent to use the specified
                               namespace. If not set, the namespace of the resource will be used to lookup the namespace scoped Kind of the
-                              referent.
+                              referent. A namespace other than the referrer's own must be listed in the KDexHost's spec.referenceNamespaces,
+                              or the reference is refused.
                               If the referring resource is cluster scoped, this field is ignored.
                               Defaulted to nil.
                             type: string

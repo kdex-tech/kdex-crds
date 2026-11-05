@@ -109,7 +109,8 @@ type ServiceBackend struct {
 	// +kubebuilder:validation:MinLength=1
 	Name string `json:"name" protobuf:"bytes,1,req,name=name"`
 
-	// Namespace of the target Service. Defaults to the KDexFunction's namespace.
+	// Namespace of the target Service. Defaults to the KDexFunction's namespace. Another namespace must be listed in
+	// the KDexHost's spec.referenceNamespaces, or the backend is refused.
 	// +kubebuilder:validation:Optional
 	Namespace string `json:"namespace,omitempty" protobuf:"bytes,2,opt,name=namespace"`
 

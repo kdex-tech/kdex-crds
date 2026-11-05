@@ -815,7 +815,8 @@ type KDexObjectReference struct {
 
 	// Namespace, if set, causes the lookup for the namespace scoped Kind of the referent to use the specified
 	// namespace. If not set, the namespace of the resource will be used to lookup the namespace scoped Kind of the
-	// referent.
+	// referent. A namespace other than the referrer's own must be listed in the KDexHost's spec.referenceNamespaces,
+	// or the reference is refused.
 	// If the referring resource is cluster scoped, this field is ignored.
 	// Defaulted to nil.
 	// +kubebuilder:validation:Optional
@@ -956,7 +957,7 @@ type PackageReference struct {
 	//
 	// +kubebuilder:validation:Optional
 	// +kubebuilder:validation:XValidation:rule=`self.kind == "Secret"`,message="'kind' must be Secret"
-	// +kubebuilder:validation:XValidation:rule=`!has(self.namespace) || self.namespace == ""`,message="secretRef.namespace is not supported: the Secret must be in the host's own namespace"
+	// +kubebuilder:validation:XValidation:rule=`!has(self.__namespace__) || self.__namespace__ == ""`,message="secretRef.namespace is not supported: the Secret must be in the host's own namespace"
 	SecretRef *KDexObjectReference `json:"secretRef,omitempty" protobuf:"bytes,4,opt,name=secretRef"`
 
 	// version contains a specific npm package version.
