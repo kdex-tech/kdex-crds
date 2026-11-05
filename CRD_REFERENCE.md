@@ -1723,7 +1723,7 @@ _Appears in:_
 | --- | --- | --- | --- |
 | `name` _string_ | Name of the referent. |  | Required: \{\} <br /> |
 | `kind` _string_ | Kind is the type of resource being referenced |  | Required: \{\} <br /> |
-| `namespace` _string_ | Namespace, if set, causes the lookup for the namespace scoped Kind of the referent to use the specified<br />namespace. If not set, the namespace of the resource will be used to lookup the namespace scoped Kind of the<br />referent.<br />If the referring resource is cluster scoped, this field is ignored.<br />Defaulted to nil. |  | Optional: \{\} <br /> |
+| `namespace` _string_ | Namespace, if set, causes the lookup for the namespace scoped Kind of the referent to use the specified<br />namespace. If not set, the namespace of the resource will be used to lookup the namespace scoped Kind of the<br />referent. A namespace other than the referrer's own must be listed in the KDexHost's spec.referenceNamespaces,<br />or the reference is refused.<br />If the referring resource is cluster scoped, this field is ignored.<br />Defaulted to nil. |  | Optional: \{\} <br /> |
 
 
 #### KDexObjectStatus
@@ -2866,7 +2866,7 @@ _Appears in:_
 | Field | Description | Default | Validation |
 | --- | --- | --- | --- |
 | `name` _string_ | Name of the target Service. |  | MinLength: 1 <br />Required: \{\} <br /> |
-| `namespace` _string_ | Namespace of the target Service. Defaults to the KDexFunction's namespace. |  | Optional: \{\} <br /> |
+| `namespace` _string_ | Namespace of the target Service. Defaults to the KDexFunction's namespace. Another namespace must be listed in<br />the KDexHost's spec.referenceNamespaces, or the backend is refused. |  | Optional: \{\} <br /> |
 | `port` _[IntOrString](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.35/#intorstring-intstr-util)_ | Port on the target Service. Accepts either a numeric port or a Service<br />named port (resolved against Service.Spec.Ports at reconcile time). |  | Required: \{\} <br /> |
 | `scheme` _string_ | Scheme is the URL scheme used to reach the Service. Defaults to http. | http | Enum: [http https] <br />Optional: \{\} <br /> |
 | `path` _string_ | Path prefix prepended to the upstream request after the function's<br />basePath is stripped. Defaults to "/". |  | Optional: \{\} <br />Pattern: `^/.*` <br /> |
