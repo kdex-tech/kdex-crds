@@ -956,6 +956,21 @@ spec:
 
                   Note that the image format is specialized. See https://github.com/kdex-tech/cli-tools/blob/main/README.md
                 type: string
+              referenceNamespaces:
+                description: |-
+                  referenceNamespaces lists the namespaces, besides the host's own, in which the host's resources may reference
+                  namespaced objects: a KDexObjectReference.namespace (a page's archetype, a theme, a script library) or a
+                  function's backend.service.namespace. Empty (the default) means the host's own namespace only. A reference to a
+                  namespace not listed here is refused, and host-manager neither caches nor watches objects outside these
+                  namespaces. Secrets are never read outside the host's own namespace, whatever this lists. Changing the list
+                  restarts the host's host-manager.
+                items:
+                  maxLength: 63
+                  pattern: ^[a-z0-9]([-a-z0-9]*[a-z0-9])?$
+                  type: string
+                maxItems: 16
+                type: array
+                x-kubernetes-list-type: set
               registries:
                 description: registries defines the registries that should be used
                   for this host. If not provided these will be inherited from the

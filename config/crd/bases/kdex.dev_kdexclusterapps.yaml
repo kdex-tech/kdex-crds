@@ -273,6 +273,7 @@ spec:
                       - is annotated with 'kdex.dev/secret-type = npm' (single)
                           - must contain key '.npmrc' (formatted as a complete .npmrc file)
                           - the .npmrc file must contain a credential entry for the registry specified in the PackageReference
+                      - is in the host's own namespace: secretRef.namespace is not supported (host-manager#242)
                     properties:
                       kind:
                         description: Kind is the type of resource being referenced
@@ -296,6 +297,9 @@ spec:
                     x-kubernetes-validations:
                     - message: '''kind'' must be Secret'
                       rule: self.kind == "Secret"
+                    - message: 'secretRef.namespace is not supported: the Secret must
+                        be in the host''s own namespace'
+                      rule: '!has(self.namespace) || self.namespace == ""'
                   version:
                     description: version contains a specific npm package version.
                     type: string

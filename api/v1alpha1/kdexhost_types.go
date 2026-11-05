@@ -120,6 +120,19 @@ type KDexHostSpec struct {
 	// +kubebuilder:validation:Optional
 	PackagesImage string `json:"packagesImage,omitempty" protobuf:"bytes,11,opt,name=packagesImage"`
 
+	// referenceNamespaces lists the namespaces, besides the host's own, in which the host's resources may reference
+	// namespaced objects: a KDexObjectReference.namespace (a page's archetype, a theme, a script library) or a
+	// function's backend.service.namespace. Empty (the default) means the host's own namespace only. A reference to a
+	// namespace not listed here is refused, and host-manager neither caches nor watches objects outside these
+	// namespaces. Secrets are never read outside the host's own namespace, whatever this lists. Changing the list
+	// restarts the host's host-manager.
+	// +kubebuilder:validation:Optional
+	// +kubebuilder:validation:MaxItems=16
+	// +kubebuilder:validation:items:MaxLength=63
+	// +kubebuilder:validation:items:Pattern=`^[a-z0-9]([-a-z0-9]*[a-z0-9])?$`
+	// +listType=set
+	ReferenceNamespaces []string `json:"referenceNamespaces,omitempty" protobuf:"bytes,22,rep,name=referenceNamespaces"`
+
 	// registries defines the registries that should be used for this host. If not provided these will be inherited from the default configuration.
 	// +kubebuilder:validation:Optional
 	Registries *Registries `json:"registries,omitempty" protobuf:"bytes,12,opt,name=registries"`

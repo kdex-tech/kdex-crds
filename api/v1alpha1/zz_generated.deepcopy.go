@@ -1796,6 +1796,11 @@ func (in *KDexHostSpec) DeepCopyInto(out *KDexHostSpec) {
 		**out = **in
 	}
 	in.OpenAPI.DeepCopyInto(&out.OpenAPI)
+	if in.ReferenceNamespaces != nil {
+		in, out := &in.ReferenceNamespaces, &out.ReferenceNamespaces
+		*out = make([]string, len(*in))
+		copy(*out, *in)
+	}
 	if in.Registries != nil {
 		in, out := &in.Registries, &out.Registries
 		*out = new(Registries)

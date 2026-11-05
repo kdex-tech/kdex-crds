@@ -952,9 +952,11 @@ type PackageReference struct {
 	// - is annotated with 'kdex.dev/secret-type = npm' (single)
 	//     - must contain key '.npmrc' (formatted as a complete .npmrc file)
 	//     - the .npmrc file must contain a credential entry for the registry specified in the PackageReference
+	// - is in the host's own namespace: secretRef.namespace is not supported (host-manager#242)
 	//
 	// +kubebuilder:validation:Optional
 	// +kubebuilder:validation:XValidation:rule=`self.kind == "Secret"`,message="'kind' must be Secret"
+	// +kubebuilder:validation:XValidation:rule=`!has(self.namespace) || self.namespace == ""`,message="secretRef.namespace is not supported: the Secret must be in the host's own namespace"
 	SecretRef *KDexObjectReference `json:"secretRef,omitempty" protobuf:"bytes,4,opt,name=secretRef"`
 
 	// version contains a specific npm package version.
