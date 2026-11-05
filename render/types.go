@@ -32,8 +32,8 @@ type PageEntry struct {
 	Href     string          `json:"href,omitempty" yaml:"href,omitempty"`
 	Icon     string          `json:"icon,omitempty" yaml:"icon,omitempty"`
 	Label    string          `json:"label" yaml:"label"`
-	// MimeType is a text page's spec.mimeType (txt, json, yaml, markdown or
-	// xml). Empty unless Type is PageTypeText.
+	// MimeType is a text page's spec.mimeType, one of the values that
+	// field's enum allows. Empty unless Type is PageTypeText.
 	MimeType string `json:"mimeType,omitempty" yaml:"mimeType,omitempty"`
 	Name     string `json:"name" yaml:"name"`
 	// Rewrite describes an alias's target. Nil unless Type is PageTypeRewrite.
@@ -50,10 +50,13 @@ type PageRewrite struct {
 	// Canonical is the alias's spec.rewrite.canonical: the alias sends
 	// Link: <target URL>; rel="canonical".
 	Canonical bool `json:"canonical,omitempty" yaml:"canonical,omitempty"`
-	// Href is the path the alias's own Href serves, in the same language as
-	// the entry's Href: the URL to list in a sitemap instead of the alias.
-	// Empty when the target is not servable (missing, not Ready, internal, or
-	// itself a rewrite).
+	// Href is the path a request at the alias's own Href is served from,
+	// after any redirect the server follows internally: the URL to list in a
+	// sitemap instead of the alias. Empty when the target is not servable
+	// (missing, not Ready, internal, or itself a rewrite), when the path
+	// cannot be built (rewrite.path needs a wildcard value the alias's
+	// Href does not supply), or when the target is a page the tree leaves
+	// out for its caller.
 	Href string `json:"href,omitempty" yaml:"href,omitempty"`
 	// Kind is the target's kind: KDexPage or KDexFunction.
 	Kind string `json:"kind" yaml:"kind"`
