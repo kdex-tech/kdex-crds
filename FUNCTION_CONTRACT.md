@@ -111,8 +111,8 @@ Source: host-manager `internal/deploy/deploy.go`.
 | `AUDIENCE` | `http://<fn-name>.<fn-namespace>.svc.cluster.local` | Expected `aud` of every token addressed to this function (§5). |
 | `ISSUER` | `<host scheme>://<host domains[0]>` | Expected `iss`; also the base of `ISSUER + "/-/token"` for token exchange (§8). |
 | `JWKS_URL` | `http://<host>.<host-ns>.svc.cluster.local:8090/.well-known/jwks.json` | JWT verification keys (in-cluster, no egress needed). |
-| `PKS_URL` | `…:8090/.well-known/pks.json` | PASETO public keys. |
-| `PASETO_TOKEN_PREFIX` | host white-label prefix, or empty | §5.2 |
+| `PKS_URL` | `…:8090/.well-known/pks.json` | PASETO public keys. Still injected, but unused: functions do not verify API tokens (§5.2). |
+| `PASETO_TOKEN_PREFIX` | host white-label prefix, or empty | Still injected, but unused (§5.2). |
 | `FUNCTION_NAME`, `FUNCTION_NAMESPACE`, `FUNCTION_HOST` | identity | informational |
 | `FUNCTION_BASEPATH` | `spec.api.basePath` | informational. Requests already carry the full path (§6.1). |
 | `FUNCTION_GENERATION` | `metadata.generation` | Changes on every spec edit, which forces a new Knative Revision. |
@@ -131,8 +131,7 @@ the runtime pod. Generated servers read these optional knobs:
 
 | Var | Default | Meaning |
 |---|---|---|
-| `ANONYMOUS_ENTITLEMENTS` | empty | Space-separated entitlements granted to callers with no credential. **Not** derived from the host's anonymous entitlements, so the author must keep them in step. |
-| `DEFAULT_SECURITY_SCHEME` | `bearer` | Entitlements checker default scheme. |
+| `ANONYMOUS_ENTITLEMENTS` | empty | Passed to fngogen's entitlements checker. It does **not** open an operation to callers with no token: that is declared in `spec.api` (§6.2). The host's anonymous set is never injected. |
 | `SHUTDOWN_GRACE_SECONDS` | `20` | §3 |
 | `DEBUG` | `false` | Verbose claim and requirement logging. |
 
@@ -169,29 +168,20 @@ A function MUST verify the FAT as follows:
 4. `exp` is **present** and not past. Libraries that treat `exp` as optional (golang-jwt, jose) MUST be configured to require it.
 5. `sub` is a non-empty string.
 
-### 5.2 API tokens (PASETO)
+The FAT is a generated function's **only** credential, and its `entitlements` claim is the
+function's **only** authority. A missing or `null` `entitlements` claim is an empty list,
+not an error. The other claims are context for the handler, never authority. In particular,
+**`scp` grants nothing even though the FAT carries it**, and neither do `scope` or `scopes`.
 
-API tokens are PASETO `v4.public`, carried in the `X-API-TOKEN` cookie, the `X-API-TOKEN`
-header or the `api_token` query parameter. The host forwards all three unchanged; every
-other cookie is stripped.
+### 5.2 Credentials a function does not accept
 
-For a request carrying an API token, the host also resolves the token's subject and mints a
-FAT. So a function whose operations accept `bearer` as an alternative never needs to parse
-the PASETO.
+A generated function verifies nothing but the FAT in `Authorization: Bearer`. It ignores a
+PASETO API token, the `X-API-TOKEN` cookie or header, and the `api_token` query parameter,
+even though the host forwards them unchanged.
 
-A function that does verify a PASETO MUST:
-
-1. If `PASETO_TOKEN_PREFIX` is non-empty, the token does not start with `v4.public.`, and
-   it starts with the prefix, replace the prefix with `v4.public.`.
-2. Read `kid` from the JSON footer.
-3. Resolve the key from `PKS_URL`. The document is
-   `{"keys":[{"kid":"…","key":"k4.public.<base64url>"}]}`; refresh it periodically
-   (reference: 15 minutes) and on an unknown `kid`.
-4. Check that the token is not expired, is valid now, `aud` = `AUDIENCE`, and `iss` = `ISSUER`.
-
-> **Open question (§10.2):** PATs minted by `/-/apitokens/mint` carry the *host* audience,
-> not the function's, so step 4's audience check rejects them at the function. Today only
-> operations that also accept `bearer` (and therefore the bridged FAT) work with such tokens.
+API tokens are still honored, by the **host**. For a request carrying one, the host resolves
+the token's subject and mints a FAT, and the function authorizes that FAT like any other
+(kdex-tech/fngogen#18).
 
 ## 6. Requests
 
@@ -210,30 +200,37 @@ A function that does verify a PASETO MUST:
 ### 6.2 Authorization: host gate then function check
 
 Before proxying, the host binds placeholders (§6.3) and verifies the caller's entitlements
-against the operation's requirements. A request reaching the function has passed that gate.
+against the operation's requirements. **The host honors every scheme `spec.api` declares**
+(`bearer`, `oauth2`, `oidc`/openIdConnect, `apiKeyCookie`/`Header`/`Query`), and the published
+`/-/openapi` keeps them all.
 
-The function MUST still verify, because `internal` and in-cluster callers bypass the host.
-For each operation the function MUST:
+The function MUST still verify, because `internal` functions and in-cluster callers bypass
+the host (§8). It treats every scheme the same way:
 
-1. Accept the request if **any one** of the operation's security requirement alternatives
-   is satisfied (OpenAPI semantics).
-2. For a requirement under scheme *S*, take the caller's entitlements from the claim named
-   in the table below.
-3. Bind the requirements (§6.3), then verify the claims against them with the
-   `kdex-tech/entitlements` checker for the function's language. Every port implements
-   the same semantics (`entitlements/SPEC.md`).
-4. Grant `ANONYMOUS_ENTITLEMENTS` to callers with no credential.
+1. An operation's `security` is a list of **alternatives**, OR'd. They are never merged into
+   one list.
+2. A non-empty alternative is satisfied when the FAT's `entitlements` hold **every**
+   requirement string the alternative lists, across all of its schemes. Whether a string was
+   declared under `bearer`, `oauth2`, `oidc` or an `apiKey*` scheme makes no difference.
+3. Requirements are bound first (§6.3), then verified with the `kdex-tech/entitlements`
+   checker for the function's language. Every port implements the same semantics
+   (`entitlements/SPEC.md`); generated functions need entitlements v0.7.0 or later.
+4. **Anonymous access must be declared.**
+   - `security: []`: no auth at all.
+   - An empty alternative `{}`: optional auth. A caller with no token is admitted. A valid
+     FAT populates the handler's claims when it satisfies one of the other alternatives;
+     one that satisfies none falls through to `{}` and is admitted without claims.
 
-| Scheme type | Claim read by the reference generator | Host bucket (for comparison) |
-|---|---|---|
-| `http`/`bearer` | `entitlements` | `entitlements` |
-| `apiKey` (PASETO) | `scp` | (bridged to a FAT; see §5.2) |
-| `oauth2` | `scopes` | `entitlements` (PAT bridge) + `scope` |
-| `openIdConnect` | `scopes` | `scope` |
+   The function does not apply the host's anonymous set to operation requirements.
+5. An invalid token (signature, `aud`, `iss`, `exp`) is always refused, even on an
+   operation that has `{}`.
 
-> **Known divergence (§10.1):** the host never mints a `scopes` claim, so a function
-> operation declaring only `oauth2` or `openIdConnect` refuses every host-minted FAT unless
-> a `claimMappings` rule writes `scopes`.
+The reference implementation is fngogen's `--prepare` step. It rewrites each non-empty
+alternative to `{bearer: [<union of its strings>]}`, leaves `{}` alone, and reduces
+`components.securitySchemes` to `bearer`. The generated code then authorizes from its own
+per-operation table of the original alternatives, not from ogen's roles, because ogen merges
+same-scheme alternatives. The rewrite is internal to codegen; the host gate and `/-/openapi`
+never see it.
 
 ### 6.3 Placeholder binding
 
@@ -259,6 +256,9 @@ The function returns the codes its `spec.api` declares. For authorization failur
 SHOULD use 401 when no valid credential was presented and 403 when the entitlements do not
 match. The host's own denial contract is authoritative for external callers
 (host-manager `docs/superpowers/specs/2026-08-28-denial-contract-design.md`).
+
+Today fngogen answers 401 for every security failure (through ogen), while fnnodejsgen
+answers 401 for a missing or invalid token and 403 for an entitlements mismatch.
 
 ### 7.2 Cookies and grant invalidation
 
@@ -289,6 +289,20 @@ resource=<target function AUDIENCE>
 A 200 response carries `access_token` (a FAT for the target) and `expires_in`. Generated
 servers SHOULD expose the raw inbound token to handlers and SHOULD ship an exchange helper
 (reference: fngogen `runtime/kdexauth`).
+
+**Direct in-cluster calls** with no inbound FAT (troubleshooting, load tests) use a
+confidential client whose `allowed-resources` names the target's `basePath`:
+
+```
+POST ISSUER/-/token
+grant_type=client_credentials&resource=<target basePath>
+```
+
+This yields a JWT with `aud` = the target's address and the **client's own** role-resolved
+`entitlements`, which the target authorizes like any FAT.
+- **Verified** on dev 2026-11-01 against knowdb: resource token → 200, host-audience token
+  → 401, no token → 403.
+- **Recipe:** infra `tools/knowdb-search-loadtest/get-token.sh knowdb-loadtest dev /api/v1/search`.
 
 ## 9. Generator requirements
 
@@ -331,31 +345,32 @@ deployed with. Proposed:
 
 ## 10. Known gaps and open questions
 
-1. **`scopes` claim.** Both generators read `scopes` for `oauth2`/`openIdConnect`, but the
-   host mints `scope` (and buckets `entitlements` for bridged PATs). Decide the claim and
-   fix both sides together.
-2. **PAT audience at the function.** See §5.2. Either the function also accepts the host
-   audience for PASETO, or the host only forwards resource-bound PATs to functions.
-3. **Anonymous entitlements.** These are configured twice (host and `ANONYMOUS_ENTITLEMENTS`)
-   with nothing keeping them in step. The deployer could inject the host's value.
+1. ~~**`scopes` claim.**~~ Resolved in fngogen and fnnodejsgen by FAT-only security
+   (kdex-tech/fngogen#18): every scheme authorizes on `entitlements` (§6.2).
+2. ~~**PAT audience at the function.**~~ No longer applies: functions do not verify PATs
+   (§5.2).
+3. **Bypass paths skip the identity check.** The host gate also requires
+   `functions:<basePath>:read`. A caller arriving by token exchange or `client_credentials`
+   reaches the function without the gate, and the function does not add that check. Whether
+   it should is open (fngogen#18 design, "calls made by the designer").
 4. **Logs and metrics.** No defined log format, trace propagation or metrics endpoint.
 5. **Readiness.** There is no readiness endpoint, so a function that is listening but
    cannot reach JWKS is still routed.
 
 ## 11. Generator conformance (as of this draft)
 
-| Requirement | fngogen (Go, ogen) | fnnodejsgen (TS, Fastify) v0.1.5 |
+| Requirement | fngogen (Go, ogen) | fnnodejsgen (TS, Fastify) v0.2.0 |
 |---|---|---|
 | §3 `PORT` default 8080 | ✅ | ✅ |
 | §3 SIGTERM drain with `SHUTDOWN_GRACE_SECONDS` | ✅ | ⚠️ closes on SIGTERM, no grace bound |
 | §3 JWKS startup backoff | ✅ | ❌ |
-| §5.1 `exp` required | ✅ (fngogen#13) | ❌ jose `jwtVerify` without `requiredClaims: ["exp"]` |
-| §5.2 PASETO + white-label prefix | ✅ | ✅ |
-| §6.2 claim per scheme | ⚠️ `scopes` (§10.1) | ⚠️ `scopes` (§10.1) |
-| §6.3 `x-entitlement-binding` | ✅ (fngogen#15) | ❌ placeholders verified unbound |
+| §5.1 `exp` required | ✅ (fngogen#13) | ✅ (`requiredClaims: ["exp"]`) |
+| §5.1/§5.2 FAT-only, authority is `entitlements` | ✅ (fngogen#18) | ✅ (fngogen#18) |
+| §6.2 alternatives OR'd, `{}` optional auth | ✅ | ✅ |
+| §6.3 `x-entitlement-binding` | ✅ (fngogen#15) | ❌ placeholders verified unbound (fnnodejsgen#3) |
 | §7.3 SSE streaming | ✅ (fngogen#9) | ❌ |
 | §8 exchange helper / raw token access | ✅ `runtime/kdexauth` | ❌ |
 | §9.2 one stub per operation, drift is a compile error | ✅ | ✅ |
-| §9.6 pinned toolchain | ❌ ogen `@latest` on `main` (fngogen#16); ✅ ogen v1.22.0 as a library on `parked/local-codegen-cli` | ✅ npm semver ranges + lockfile |
-| §2.1 client-side one-off document | ✅ `fngogen build-spec` (via `kdex.dev/crds/openapi`) | ❌ expects the document as input |
-| entitlements library | current | `^0.1.23` (current release is 0.6.0) |
+| §9.6 pinned toolchain | ❌ ogen `@latest` in `entry-point.sh` (fngogen#16); ✅ ogen v1.22.0 as a library in `fngogen local` (fngogen#17) | ✅ npm semver ranges + lockfile |
+| §2.1 client-side one-off document | ✅ `fngogen build-spec` (via `kdex.dev/crds/openapi`, fngogen#17) | ❌ expects the document as input |
+| entitlements library | ≥ v0.7.0 floor | ≥ v0.7.0 floor |
