@@ -9,6 +9,10 @@ import (
 	"github.com/stretchr/testify/require"
 )
 
+// describedReservedClaims captures the reserved-claim list a claimMappings
+// description spells out: "(sub, iss, ..., kdx_cap, or any path beneath them".
+var describedReservedClaims = regexp.MustCompile(`\((sub, [^()]*?),? or any path beneath them`)
+
 var celStringList = regexp.MustCompile(`\[('[^']*'(?:,'[^']*')*)\]`)
 
 // reservedRule returns the reserved-target rule on a claimMappings items
@@ -53,11 +57,12 @@ func TestClaimMappings_RefuseReservedTargets(t *testing.T) {
 		rules[name] = reservedRule(t, claimMappingsItems(t, props))
 
 		// The description kubectl explain shows lists the reserved claims by
-		// hand; it must name every one the rule refuses.
-		description := props["claimMappings"].(map[string]any)["description"].(string)
-		for _, claim := range ReservedClaimTargets() {
-			assert.Contains(t, description, claim, "%s: the claimMappings description omits %s", name, claim)
-		}
+		// hand; the list must be exactly the ones the rule refuses.
+		description := strings.Join(strings.Fields(props["claimMappings"].(map[string]any)["description"].(string)), " ")
+		listed := describedReservedClaims.FindStringSubmatch(description)
+		require.NotNil(t, listed, "%s: the claimMappings description lists the reserved claims", name)
+		assert.ElementsMatch(t, ReservedClaimTargets(), strings.Split(listed[1], ", "),
+			"%s: the claimMappings description's reserved claims", name)
 	}
 
 	want := rules["KDexHost spec.auth"]
