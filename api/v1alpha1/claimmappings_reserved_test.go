@@ -51,6 +51,13 @@ func TestClaimMappings_RefuseReservedTargets(t *testing.T) {
 		"KDexHostExtension spec": ext,
 	} {
 		rules[name] = reservedRule(t, claimMappingsItems(t, props))
+
+		// The description kubectl explain shows lists the reserved claims by
+		// hand; it must name every one the rule refuses.
+		description := props["claimMappings"].(map[string]any)["description"].(string)
+		for _, claim := range ReservedClaimTargets() {
+			assert.Contains(t, description, claim, "%s: the claimMappings description omits %s", name, claim)
+		}
 	}
 
 	want := rules["KDexHost spec.auth"]
