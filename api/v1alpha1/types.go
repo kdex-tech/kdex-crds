@@ -221,7 +221,6 @@ type Auth struct {
 	// A rule may not target a reserved claim (sub, iss, aud, exp, nbf, iat,
 	// jti, scope, scp, act, grant_type, auth_method, idp, knd, pat_bridge,
 	// kdx_cap, or any path beneath them): the host decides those.
-	// ReservedClaimTargets lists them.
 	// +kubebuilder:validation:Optional
 	// +kubebuilder:validation:MaxItems=16
 	// +kubebuilder:validation:items:XValidation:rule="!['sub','iss','aud','exp','nbf','iat','jti','scope','scp','act','grant_type','auth_method','idp','knd','pat_bridge','kdx_cap'].exists(c, self.targetPropPath == c || self.targetPropPath.startsWith(c + '.'))",message="a claimMapping must not target a reserved token claim"

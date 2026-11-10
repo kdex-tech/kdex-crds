@@ -84,9 +84,8 @@ type KDexHostExtensionSpec struct {
 	// targets accumulate, so a rule adds to what the host already maps.
 	// An extension may not use merge: Replace and may not target a reserved
 	// claim (sub, iss, aud, exp, nbf, iat, jti, scope, scp, act, grant_type,
-	// auth_method, idp, knd, pat_bridge, kdx_cap, or any path beneath them;
-	// see ReservedClaimTargets), and each sourceExpression is at most 4096
-	// characters.
+	// auth_method, idp, knd, pat_bridge, kdx_cap, or any path beneath them),
+	// and each sourceExpression is at most 4096 characters.
 	// +kubebuilder:validation:Optional
 	// +kubebuilder:validation:MaxItems=16
 	// +kubebuilder:validation:items:XValidation:rule="!has(self.merge) || self.merge != 'Replace'",message="an extension claimMapping cannot use merge: Replace"

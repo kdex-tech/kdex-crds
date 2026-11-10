@@ -341,8 +341,9 @@ type CompanionChart struct {
 	Chart string `json:"chart" protobuf:"bytes,1,req,name=chart"`
 
 	// name is the name of the Helm release: a lowercase DNS subdomain of at
-	// most 53 characters, as Helm requires. It may not be the name of a
-	// KDexHost in the namespace, whose own release has that name.
+	// most 53 characters, as Helm requires. A name that matches a KDexHost
+	// in the namespace, whose own release has that name, is refused when the
+	// host is reconciled.
 	// +kubebuilder:validation:Required
 	// +kubebuilder:validation:MinLength=5
 	// +kubebuilder:validation:MaxLength=53
