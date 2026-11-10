@@ -340,9 +340,13 @@ type CompanionChart struct {
 	// +kubebuilder:validation:MinLength=5
 	Chart string `json:"chart" protobuf:"bytes,1,req,name=chart"`
 
-	// name is the name of the Helm release.
+	// name is the name of the Helm release: a lowercase DNS subdomain of at
+	// most 53 characters, as Helm requires. It may not be the name of a
+	// KDexHost in the namespace, whose own release has that name.
 	// +kubebuilder:validation:Required
 	// +kubebuilder:validation:MinLength=5
+	// +kubebuilder:validation:MaxLength=53
+	// +kubebuilder:validation:Pattern=`^[a-z0-9]([-a-z0-9]*[a-z0-9])?(\.[a-z0-9]([-a-z0-9]*[a-z0-9])?)*$`
 	Name string `json:"name" protobuf:"bytes,2,req,name=name"`
 
 	// repository is the URL of the Helm repository.

@@ -171,12 +171,13 @@ type KDexFunctionSpec struct {
 	// filter, transform, normalise or override a list already at its own
 	// target.
 	//
-	// A rule may not target a reserved token claim (sub, iss, aud, exp, nbf,
-	// iat, jti, scope, scp, act, grant_type, auth_method, idp, knd, or any
-	// path beneath them): the mint decides those.
+	// A rule may not target a reserved claim (sub, iss, aud, exp, nbf, iat,
+	// jti, scope, scp, act, grant_type, auth_method, idp, knd, pat_bridge,
+	// kdx_cap, or any path beneath them): the host decides those.
+	// ReservedClaimTargets lists them.
 	// +kubebuilder:validation:Optional
 	// +kubebuilder:validation:MaxItems=16
-	// +kubebuilder:validation:items:XValidation:rule="!['sub','iss','aud','exp','nbf','iat','jti','scope','scp','act','grant_type','auth_method','idp','knd'].exists(c, self.targetPropPath == c || self.targetPropPath.startsWith(c + '.'))",message="a claimMapping must not target a reserved token claim"
+	// +kubebuilder:validation:items:XValidation:rule="!['sub','iss','aud','exp','nbf','iat','jti','scope','scp','act','grant_type','auth_method','idp','knd','pat_bridge','kdx_cap'].exists(c, self.targetPropPath == c || self.targetPropPath.startsWith(c + '.'))",message="a claimMapping must not target a reserved token claim"
 	ClaimMappings []dmapper.MappingRule `json:"claimMappings,omitempty" protobuf:"bytes,2,rep,name=claimMappings"`
 
 	// env is the environment variables to set in the function's runtime.

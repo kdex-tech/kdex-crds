@@ -9,20 +9,11 @@ import (
 	"github.com/stretchr/testify/require"
 )
 
-// reservedClaimTargets are the token claims nothing but the mint may set. It
-// mirrors host-manager's sign.ReservedClaims, which drops a rule writing one of
-// them at mint time (kdex-tech/host-manager#211); the admission rule refuses
-// the rule up front so an author learns it has no effect.
-var reservedClaimTargets = []string{
-	"sub", "iss", "aud", "exp", "nbf", "iat", "jti", "scope", "scp", "act",
-	"grant_type", "auth_method", "idp", "knd",
-}
-
 var celStringList = regexp.MustCompile(`\[('[^']*'(?:,'[^']*')*)\]`)
 
-// reservedRuleTargets returns the claim list of the reserved-target rule on a
-// claimMappings items schema, failing if there is no such rule.
-func reservedRuleTargets(t *testing.T, items map[string]any) []string {
+// reservedRule returns the reserved-target rule on a claimMappings items
+// schema, failing if there is no such rule.
+func reservedRule(t *testing.T, items map[string]any) string {
 	t.Helper()
 	rules, _ := items["x-kubernetes-validations"].([]any)
 	for _, r := range rules {
@@ -30,12 +21,10 @@ func reservedRuleTargets(t *testing.T, items map[string]any) []string {
 		if !strings.Contains(rule["message"].(string), "reserved token claim") {
 			continue
 		}
-		m := celStringList.FindStringSubmatch(rule["rule"].(string))
-		require.NotNil(t, m, "the reserved-target rule names its claims as a CEL list")
-		return strings.Split(strings.ReplaceAll(m[1], "'", ""), ",")
+		return rule["rule"].(string)
 	}
 	t.Fatal("no reserved-target rule on claimMappings items")
-	return nil
+	return ""
 }
 
 func claimMappingsItems(t *testing.T, props map[string]any) map[string]any {
@@ -47,18 +36,48 @@ func claimMappingsItems(t *testing.T, props map[string]any) map[string]any {
 
 // Every claimMappings field refuses the same reserved targets: the host's own,
 // a KDexFunction's (whose rules shape that function's FAT) and an extension's.
+// The rules are string literals in three markers, so each is pinned to one
+// rule text, and that text's claim list to ReservedClaimTargets, the list
+// host-manager builds its own reserved set from.
 func TestClaimMappings_RefuseReservedTargets(t *testing.T) {
 	hostAuth := crdSpecSchema(t, "kdex.dev_kdexhosts.yaml")["properties"].(map[string]any)["auth"].(map[string]any)["properties"].(map[string]any)
 	fn := crdSpecSchema(t, "kdex.dev_kdexfunctions.yaml")["properties"].(map[string]any)
 	ext := crdSpecSchema(t, "kdex.dev_kdexhostextensions.yaml")["properties"].(map[string]any)
 
+	rules := map[string]string{}
 	for name, props := range map[string]map[string]any{
 		"KDexHost spec.auth":     hostAuth,
 		"KDexFunction spec":      fn,
 		"KDexHostExtension spec": ext,
 	} {
-		t.Run(name, func(t *testing.T) {
-			assert.ElementsMatch(t, reservedClaimTargets, reservedRuleTargets(t, claimMappingsItems(t, props)))
-		})
+		rules[name] = reservedRule(t, claimMappingsItems(t, props))
+	}
+
+	want := rules["KDexHost spec.auth"]
+	for name, rule := range rules {
+		assert.Equal(t, want, rule, "%s: the reserved-target rule differs from KDexHost's", name)
+	}
+
+	m := celStringList.FindStringSubmatch(want)
+	require.NotNil(t, m, "the reserved-target rule names its claims as a CEL list")
+	assert.ElementsMatch(t, ReservedClaimTargets(), strings.Split(strings.ReplaceAll(m[1], "'", ""), ","))
+	assert.Contains(t, want, "self.targetPropPath == c || self.targetPropPath.startsWith(c + '.')",
+		"the rule refuses a path beneath a reserved claim, not only the claim itself")
+}
+
+// A companion's name is a Helm release name, and the operator's record of the
+// companions it installed is a comma-separated list of them: a name that is not
+// a DNS subdomain (a comma, say) would let one entry stand for two releases.
+func TestCompanionChartName_IsAHelmReleaseName(t *testing.T) {
+	helm := crdSpecSchema(t, "kdex.dev_kdexhosts.yaml")["properties"].(map[string]any)["helm"].(map[string]any)["properties"].(map[string]any)
+	name := helm["companionCharts"].(map[string]any)["items"].(map[string]any)["properties"].(map[string]any)["name"].(map[string]any)
+
+	assert.EqualValues(t, 53, name["maxLength"])
+	pattern := regexp.MustCompile(name["pattern"].(string))
+	for _, ok := range []string{"audit-sync", "valkey", "a.b-c.d1"} {
+		assert.True(t, pattern.MatchString(ok), ok)
+	}
+	for _, bad := range []string{"audit,sync", "Audit-Sync", "-valkey", "valkey-", "a..b", "a b"} {
+		assert.False(t, pattern.MatchString(bad), bad)
 	}
 }

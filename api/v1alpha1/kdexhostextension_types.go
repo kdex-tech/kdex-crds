@@ -83,13 +83,14 @@ type KDexHostExtensionSpec struct {
 	// claimMappings are appended after the host's own claimMappings. List
 	// targets accumulate, so a rule adds to what the host already maps.
 	// An extension may not use merge: Replace and may not target a reserved
-	// token claim (sub, iss, aud, exp, nbf, iat, jti, scope, scp, act,
-	// grant_type, auth_method, idp, knd, or any path beneath them), and each
-	// sourceExpression is at most 4096 characters.
+	// claim (sub, iss, aud, exp, nbf, iat, jti, scope, scp, act, grant_type,
+	// auth_method, idp, knd, pat_bridge, kdx_cap, or any path beneath them;
+	// see ReservedClaimTargets), and each sourceExpression is at most 4096
+	// characters.
 	// +kubebuilder:validation:Optional
 	// +kubebuilder:validation:MaxItems=16
 	// +kubebuilder:validation:items:XValidation:rule="!has(self.merge) || self.merge != 'Replace'",message="an extension claimMapping cannot use merge: Replace"
-	// +kubebuilder:validation:items:XValidation:rule="!['sub','iss','aud','exp','nbf','iat','jti','scope','scp','act','grant_type','auth_method','idp','knd'].exists(c, self.targetPropPath == c || self.targetPropPath.startsWith(c + '.'))",message="an extension claimMapping must not target a reserved token claim"
+	// +kubebuilder:validation:items:XValidation:rule="!['sub','iss','aud','exp','nbf','iat','jti','scope','scp','act','grant_type','auth_method','idp','knd','pat_bridge','kdx_cap'].exists(c, self.targetPropPath == c || self.targetPropPath.startsWith(c + '.'))",message="an extension claimMapping must not target a reserved token claim"
 	// +kubebuilder:validation:items:XValidation:rule="self.sourceExpression.size() <= 4096",message="an extension claimMapping sourceExpression must be at most 4096 characters"
 	ClaimMappings []dmapper.MappingRule `json:"claimMappings,omitempty" protobuf:"bytes,3,rep,name=claimMappings"`
 

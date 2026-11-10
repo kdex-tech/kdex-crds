@@ -159,9 +159,10 @@ spec:
                       filter, transform, normalise or override a list already at its own
                       target.
 
-                      A rule may not target a reserved token claim (sub, iss, aud, exp, nbf,
-                      iat, jti, scope, scp, act, grant_type, auth_method, idp, knd, or any
-                      path beneath them): the mint decides those.
+                      A rule may not target a reserved claim (sub, iss, aud, exp, nbf, iat,
+                      jti, scope, scp, act, grant_type, auth_method, idp, knd, pat_bridge,
+                      kdx_cap, or any path beneath them): the host decides those.
+                      ReservedClaimTargets lists them.
                     items:
                       description: |-
                         MappingRule defines a transformation rule for mapping arbitrary data from an
@@ -210,7 +211,7 @@ spec:
                       type: object
                       x-kubernetes-validations:
                       - message: a claimMapping must not target a reserved token claim
-                        rule: '![''sub'',''iss'',''aud'',''exp'',''nbf'',''iat'',''jti'',''scope'',''scp'',''act'',''grant_type'',''auth_method'',''idp'',''knd''].exists(c,
+                        rule: '![''sub'',''iss'',''aud'',''exp'',''nbf'',''iat'',''jti'',''scope'',''scp'',''act'',''grant_type'',''auth_method'',''idp'',''knd'',''pat_bridge'',''kdx_cap''].exists(c,
                           self.targetPropPath == c || self.targetPropPath.startsWith(c
                           + ''.''))'
                     maxItems: 16
@@ -713,8 +714,13 @@ spec:
                           minLength: 5
                           type: string
                         name:
-                          description: name is the name of the Helm release.
+                          description: |-
+                            name is the name of the Helm release: a lowercase DNS subdomain of at
+                            most 53 characters, as Helm requires. It may not be the name of a
+                            KDexHost in the namespace, whose own release has that name.
+                          maxLength: 53
                           minLength: 5
+                          pattern: ^[a-z0-9]([-a-z0-9]*[a-z0-9])?(\.[a-z0-9]([-a-z0-9]*[a-z0-9])?)*$
                           type: string
                         repository:
                           description: repository is the URL of the Helm repository.
