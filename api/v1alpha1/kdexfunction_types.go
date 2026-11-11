@@ -173,10 +173,10 @@ type KDexFunctionSpec struct {
 	//
 	// A rule may not target a reserved claim (sub, iss, aud, exp, nbf, iat,
 	// jti, scope, scp, act, grant_type, auth_method, idp, knd, pat_bridge,
-	// kdx_cap, or any path beneath them): the host decides those.
+	// kdx_cap, client_id, or any path beneath them): the host decides those.
 	// +kubebuilder:validation:Optional
 	// +kubebuilder:validation:MaxItems=16
-	// +kubebuilder:validation:items:XValidation:rule="!['sub','iss','aud','exp','nbf','iat','jti','scope','scp','act','grant_type','auth_method','idp','knd','pat_bridge','kdx_cap'].exists(c, self.targetPropPath == c || self.targetPropPath.startsWith(c + '.'))",message="a claimMapping must not target a reserved token claim"
+	// +kubebuilder:validation:items:XValidation:rule="!['sub','iss','aud','exp','nbf','iat','jti','scope','scp','act','grant_type','auth_method','idp','knd','pat_bridge','kdx_cap','client_id'].exists(c, self.targetPropPath == c || self.targetPropPath.startsWith(c + '.'))",message="a claimMapping must not target a reserved token claim"
 	ClaimMappings []dmapper.MappingRule `json:"claimMappings,omitempty" protobuf:"bytes,2,rep,name=claimMappings"`
 
 	// env is the environment variables to set in the function's runtime.

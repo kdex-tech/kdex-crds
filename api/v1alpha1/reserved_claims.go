@@ -13,7 +13,7 @@ import "slices"
 // kdex-tech/host-manager#211.
 var reservedClaimTargets = []string{
 	"sub", "iss", "aud", "exp", "nbf", "iat", "jti", "scope", "scp", "act",
-	"grant_type", "auth_method", "idp", "knd", "pat_bridge", "kdx_cap",
+	"grant_type", "auth_method", "idp", "knd", "pat_bridge", "kdx_cap", "client_id",
 }
 
 // ReservedClaimTargets returns the claims a claimMappings rule may not target.

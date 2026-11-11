@@ -5,12 +5,13 @@ import (
 	"strings"
 	"testing"
 
+	"github.com/google/cel-go/cel"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 )
 
 // describedReservedClaims captures the reserved-claim list a claimMappings
-// description spells out: "(sub, iss, ..., kdx_cap, or any path beneath them".
+// description spells out: "(sub, iss, ..., client_id, or any path beneath them".
 var describedReservedClaims = regexp.MustCompile(`\((sub, [^()]*?),? or any path beneath them`)
 
 var celStringList = regexp.MustCompile(`\[('[^']*'(?:,'[^']*')*)\]`)
@@ -91,5 +92,37 @@ func TestCompanionChartName_IsAHelmReleaseName(t *testing.T) {
 	}
 	for _, bad := range []string{"audit,sync", "Audit-Sync", "-valkey", "valkey-", "a..b", "a b"} {
 		assert.False(t, pattern.MatchString(bad), bad)
+	}
+}
+
+// client_id is the RFC 9068 client the mint issued a FAT to; no claimMappings
+// rule may write it, nor a path beneath it (kdex-tech/host-manager#295).
+func TestClaimMappings_RefuseClientID(t *testing.T) {
+	assert.Contains(t, ReservedClaimTargets(), "client_id")
+
+	hostAuth := crdSpecSchema(t, "kdex.dev_kdexhosts.yaml")["properties"].(map[string]any)["auth"].(map[string]any)["properties"].(map[string]any)
+	fn := crdSpecSchema(t, "kdex.dev_kdexfunctions.yaml")["properties"].(map[string]any)
+	ext := crdSpecSchema(t, "kdex.dev_kdexhostextensions.yaml")["properties"].(map[string]any)
+
+	env, err := cel.NewEnv(cel.Variable("self", cel.MapType(cel.StringType, cel.StringType)))
+	require.NoError(t, err)
+
+	for name, props := range map[string]map[string]any{
+		"KDexHost spec.auth":     hostAuth,
+		"KDexFunction spec":      fn,
+		"KDexHostExtension spec": ext,
+	} {
+		ast, iss := env.Compile(reservedRule(t, claimMappingsItems(t, props)))
+		require.NoError(t, iss.Err(), name)
+		prg, err := env.Program(ast)
+		require.NoError(t, err, name)
+		admits := func(target string) bool {
+			out, _, err := prg.Eval(map[string]any{"self": map[string]string{"targetPropPath": target}})
+			require.NoError(t, err, name)
+			return out.Value().(bool)
+		}
+		assert.False(t, admits("client_id"), "%s: client_id", name)
+		assert.False(t, admits("client_id.x"), "%s: client_id.x", name)
+		assert.True(t, admits("client_ids"), "%s: client_ids is a different claim", name)
 	}
 }

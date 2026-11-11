@@ -84,7 +84,8 @@ spec:
                   targets accumulate, so a rule adds to what the host already maps.
                   An extension may not use merge: Replace and may not target a reserved
                   claim (sub, iss, aud, exp, nbf, iat, jti, scope, scp, act, grant_type,
-                  auth_method, idp, knd, pat_bridge, kdx_cap, or any path beneath them),
+                  auth_method, idp, knd, pat_bridge, kdx_cap, client_id, or any path beneath
+                  them),
                   and each sourceExpression is at most 4096 characters.
                 items:
                   description: |-
@@ -137,7 +138,7 @@ spec:
                     rule: '!has(self.merge) || self.merge != ''Replace'''
                   - message: an extension claimMapping must not target a reserved
                       token claim
-                    rule: '![''sub'',''iss'',''aud'',''exp'',''nbf'',''iat'',''jti'',''scope'',''scp'',''act'',''grant_type'',''auth_method'',''idp'',''knd'',''pat_bridge'',''kdx_cap''].exists(c,
+                    rule: '![''sub'',''iss'',''aud'',''exp'',''nbf'',''iat'',''jti'',''scope'',''scp'',''act'',''grant_type'',''auth_method'',''idp'',''knd'',''pat_bridge'',''kdx_cap'',''client_id''].exists(c,
                       self.targetPropPath == c || self.targetPropPath.startsWith(c
                       + ''.''))'
                   - message: an extension claimMapping sourceExpression must be at
