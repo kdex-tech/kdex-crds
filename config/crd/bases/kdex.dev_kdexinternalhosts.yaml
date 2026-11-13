@@ -816,7 +816,7 @@ spec:
                 x-kubernetes-map-type: atomic
                 x-kubernetes-validations:
                 - message: '''kind'' must be either KDexFaaSAdaptor or KDexClusterFaaSAdaptor'
-                  rule: self.kind == "KDexScriptLibrary" || self.kind == "KDexClusterScriptLibrary"
+                  rule: self.kind == "KDexFaaSAdaptor" || self.kind == "KDexClusterFaaSAdaptor"
               faviconSVGTemplate:
                 description: faviconSVGTemplate contains SVG code marked up with go
                   string template to which will be passed the render.TemplateData
