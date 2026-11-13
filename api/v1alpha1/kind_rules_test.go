@@ -18,8 +18,8 @@ var (
 	kdexKind     = regexp.MustCompile(`KDex\w+`)
 )
 
-// walkValidations calls fn for every x-kubernetes-validations rule in schema,
-// with the schema it is declared on.
+// walkValidations calls fn for every x-kubernetes-validations rule under node,
+// with the path of the schema that declares it.
 func walkValidations(node any, path string, fn func(path string, rule map[string]any)) {
 	switch n := node.(type) {
 	case map[string]any:
