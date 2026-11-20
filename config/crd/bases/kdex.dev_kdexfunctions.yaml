@@ -134,9 +134,12 @@ spec:
                       host-manager serves only declared paths; any other path under basePath
                       answers 404. Each key is a Go ServeMux pattern. A key may end in a trailing
                       catch-all segment {name...} (e.g., /api/v1/notes/{rest...}) to declare a
-                      subtree: it routes every path beneath it under its own operations'
-                      security. The catch-all is a path remainder and is never an entitlement
-                      binding target.
+                      subtree: it routes the subtree root (/api/v1/notes) and every path beneath
+                      it under its own operations' security. The catch-all is a path remainder
+                      and is never an entitlement binding target. A key without a catch-all
+                      matches exactly: /api/v1/notes does not match /api/v1/notes/ or anything
+                      deeper. A key that is not a valid pattern, or that conflicts with another
+                      key, leaves the function unrouted.
 
                       At most 32 paths. Each path adds its full operations to the object, and
                       client-side apply copies the whole manifest into the
