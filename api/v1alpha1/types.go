@@ -44,8 +44,21 @@ type API struct {
 	BasePath string `json:"basePath" protobuf:"bytes,1,req,name=basePath"`
 
 	// paths is a map of paths that exist below the basePath. All keys of the map must be paths prefixed by .spec.api.basePath.
+	//
+	// host-manager serves only declared paths; any other path under basePath
+	// answers 404. Each key is a Go ServeMux pattern. A key may end in a trailing
+	// catch-all segment {name...} (e.g., /api/v1/notes/{rest...}) to declare a
+	// subtree: it routes every path beneath it under its own operations'
+	// security. The catch-all is a path remainder and is never an entitlement
+	// binding target.
+	//
+	// At most 32 paths. Each path adds its full operations to the object, and
+	// client-side apply copies the whole manifest into the
+	// kubectl.kubernetes.io/last-applied-configuration annotation, which counts
+	// against the 256 KiB annotation limit. Deliver large spec.api functions
+	// with server-side apply.
 	// +kubebuilder:validation:MinProperties=1
-	// +kubebuilder:validation:MaxProperties=16
+	// +kubebuilder:validation:MaxProperties=32
 	// +kubebuilder:validation:Required
 	Paths map[string]PathItem `json:"paths" protobuf:"bytes,2,req,name=paths"`
 
